@@ -1,0 +1,51 @@
+{% extends 'base/layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'education/styles.css' %}">
+{% block education_css %}{% endblock %}
+{% endblock %}
+
+{% block mobile_submenu_training %}
+<a href="{% url 'training_directory' %}" class="mobile-nav-sublink {% if request.resolver_match.url_name == 'training_directory' %}active{% endif %}">
+    <span class="material-symbols-outlined">explore</span>
+    {% trans "Explore Courses" %}
+</a>
+<a href="{% url 'training_dashboard' %}" class="mobile-nav-sublink {% if request.resolver_match.url_name == 'training_dashboard' %}active{% endif %}">
+    <span class="material-symbols-outlined">grid_view</span>
+    {% trans "Training Dashboard" %}
+</a>
+<a href="{% url 'verify_certificates' %}" class="mobile-nav-sublink {% if request.resolver_match.url_name == 'verify_certificates' or request.resolver_match.url_name == 'submit_certificate' %}active{% endif %}">
+    <span class="material-symbols-outlined">verified_user</span>
+    {% trans "Verify Certificate" %}
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="edu-layout-inner edu-container">
+    <aside class="edu-sidebar">
+        <nav class="edu-sidebar-nav">
+            <a href="{% url 'training_directory' %}" class="edu-nav-item {% if request.resolver_match.url_name == 'training_directory' %}active{% endif %}">
+                <span class="material-symbols-outlined">explore</span>
+                <span class="nav-label-full">{% trans "Explore courses" %}</span>
+                <span class="nav-label-short">{% trans "Explore" %}</span>
+            </a>
+            <a href="{% url 'training_dashboard' %}" class="edu-nav-item {% if request.resolver_match.url_name == 'training_dashboard' %}active{% endif %}">
+                <span class="material-symbols-outlined">grid_view</span>
+                <span class="nav-label-full">{% trans "Training dashboard" %}</span>
+                <span class="nav-label-short">{% trans "Dashboard" %}</span>
+            </a>
+            <a href="{% url 'verify_certificates' %}" class="edu-nav-item {% if request.resolver_match.url_name == 'verify_certificates' or request.resolver_match.url_name == 'submit_certificate' %}active{% endif %}">
+                <span class="material-symbols-outlined">verified_user</span>
+                <span class="nav-label-full">{% trans "Verify certificate" %}</span>
+                <span class="nav-label-short">{% trans "Verify" %}</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="edu-main">
+        {% block education_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}

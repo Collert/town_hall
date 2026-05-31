@@ -1,0 +1,130 @@
+{% extends "education/module_layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block module_css %}
+    <link rel="stylesheet" href="{% static 'education/module_overview.css' %}">
+{% endblock %}
+
+{% block module_content %}
+<!-- Module Header -->
+<header class="module-header">
+    <div class="header-inner">
+        <div class="header-text">
+            <span class="module-category">{% if module.topic %}{{ module.topic.name }}{% else %}{% trans "Module" %}{% endif %}</span>
+            <h1 class="module-title">{{ module.title }}</h1>
+        </div>
+        <div class="header-progress">
+            <div class="progress-pill">
+                <span class="progress-text">{{ progress }}% {% trans "completed" %}</span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width: {{ progress }}%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Featured Image -->
+<div class="featured-image-card group">
+    {% if module.photo %}
+        <img src="{{ module.photo.url }}" alt="{{ module.title }}" class="featured-img card-image">
+    {% else %}
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWMTT0FRD4NMGLTy3dz7vo_v8kwamtZoRLS8d0J4GufXH4DrggKsbv8bspB0Y85-YGmOQvnlntlpPklsIqafue-sfUxLuYV8MHbFxoWJ3rWNLOQ4NTaY54nhjuy1I1ObtkBiy3KjLwqE1Ulgq6cCyOET8Gl0UbKbMIsKyfXUhvkf4tQMuZ_HlnYpO4ZQkJU_gmxkrusEp9hcoy1dAsv2ZyzCFfCxCYWUUPFZuDlf3WCO-YpROdby4BBXUyyTYHKTTG66mhHENDQIU" alt="Training Venue" class="featured-img card-image">
+    {% endif %}
+    
+    <div class="image-gradient"></div>
+    <div class="image-overlay-content">
+        <div class="stats-row">
+            <div class="stat-glass">
+                <span class="material-symbols-outlined stat-icon">group</span>
+                <div class="stat-text">
+                    <p class="stat-label">{% trans "Volunteers Joined" %}</p>
+                    <p class="stat-value">{{ participants_count }}</p>
+                </div>
+            </div>
+            <div class="stat-glass">
+                <span class="material-symbols-outlined stat-icon">schedule</span>
+                <div class="stat-text">
+                    <p class="stat-label">{% trans "Duration" %}</p>
+                    <p class="stat-value">{% if total_length > 0 %}{{ total_length }} {% trans "mins" %}{% else %}{% trans "TBD" %}{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Stats (visible only on small screens) -->
+<div class="mobile-stats-row">
+    <div class="stat-glass">
+        <span class="material-symbols-outlined stat-icon">group</span>
+        <div class="stat-text">
+            <p class="stat-label">{% trans "Volunteers Joined" %}</p>
+            <p class="stat-value">{{ participants_count }}</p>
+        </div>
+    </div>
+    <div class="stat-glass">
+        <span class="material-symbols-outlined stat-icon">schedule</span>
+        <div class="stat-text">
+            <p class="stat-label">{% trans "Duration" %}</p>
+            <p class="stat-value">{% if total_length > 0 %}{{ total_length }} {% trans "mins" %}{% else %}{% trans "TBD" %}{% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Overview Section -->
+<section class="overview-section">
+    <div class="overview-content">
+        <h2 class="section-title">
+            <span class="title-indicator"></span>
+            {% trans "Module Overview" %}
+        </h2>
+        <div class="overview-text">
+            {{ module.description|linebreaks }}
+        </div>
+    </div>
+</section>
+
+<!-- Roles Section -->
+{% if roles.exists %}
+<section class="roles-section">
+    <h2 class="section-title text-only">{% trans "Required for these Roles" %}</h2>
+    <div class="roles-grid">
+        {% for role in roles %}
+        <div class="role-card group">
+            <!-- Alternating colors based on loop counter for visual variety -->
+            <div class="role-icon-box {% cycle 'bg-primary-container' 'bg-secondary' %}">
+                <span class="material-symbols-outlined {% cycle 'color-text-primary' 'color-white fill-icon' %}">{% if role.icon %}{{ role.icon }}{% else %}engineering{% endif %}</span>
+            </div>
+            <h3 class="role-title">{{ role.name }}</h3>
+            <p class="role-desc">{{ role.description|truncatewords:20 }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- Primary CTA -->
+<div class="cta-section">
+    {% if lessons.exists %}
+        <a href="{% url 'lesson_detail' module_id=module.id lesson_id=lessons.first.id %}" style="text-decoration: none;">
+            <button class="btn-primary group">
+                {% trans "Start Module" %}
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </a>
+    {% elif quizzes.exists %}
+        <a href="#" style="text-decoration: none;">
+            <button class="btn-primary group">
+                {% trans "Start Module" %}
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </a>
+    {% else %}
+        <button class="btn-primary group" style="opacity: 0.5; cursor: not-allowed;" title="{% trans 'No content available yet' %}">
+            {% trans "Start Module" %}
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,248 @@
+{% extends 'base/layout.html' %}
+{% load i18n %}
+{% load form_utils %}
+
+{% block content %}
+<div class="settings-page">
+    <div class="settings-header">
+        <h1>{% trans "Theme Settings" %}</h1>
+        <p>{% trans "Customize the colors used throughout the site." %}</p>
+    </div>
+
+    <form method="post" class="settings-form">
+        {% csrf_token %}
+        
+        {% for group_name, field_names in field_groups.items %}
+            <fieldset class="color-group">
+                <legend>{{ group_name }}</legend>
+                <div class="color-fields">
+                    {% for field_name in field_names %}
+                        {% with field=form|get_field:field_name %}
+                            <div class="color-field">
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                <div class="color-input-wrapper">
+                                    {{ field }}
+                                    <input 
+                                        type="text" 
+                                        class="color-hex-input"
+                                        value="{{ field.value }}"
+                                        data-color-for="{{ field.id_for_label }}"
+                                        maxlength="7"
+                                        pattern="^#[0-9A-Fa-f]{6}$"
+                                    >
+                                </div>
+                                {% if field.help_text %}
+                                    <small class="help-text">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            </fieldset>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% trans "Save Changes" %}
+            </button>
+            <a href="{% url 'home' %}" class="btn btn-secondary">
+                {% trans "Cancel" %}
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .settings-page {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .settings-header {
+        margin-bottom: 2rem;
+    }
+
+    .settings-header h1 {
+        color: var(--color-text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .settings-header p {
+        color: var(--color-text-secondary);
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-success {
+        background-color: rgba(from var(--color-success) r g b / 0.15);
+        color: var(--color-success);
+        border: 1px solid var(--color-success);
+    }
+
+    .settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .color-group {
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .color-group legend {
+        font-weight: 600;
+        color: var(--color-text-primary);
+        padding: 0 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .color-fields {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .color-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .color-field label {
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+        text-transform: capitalize;
+    }
+
+    .color-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--color-bg-secondary);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: 0.25rem;
+    }
+
+    .color-input-wrapper input[type="color"] {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .color-input-wrapper input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 2px;
+    }
+
+    .color-input-wrapper input[type="color"]::-webkit-color-swatch {
+        border-radius: 4px;
+        border: none;
+    }
+
+    .color-hex-input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: var(--color-text-primary);
+        text-transform: uppercase;
+        padding: 0.5rem;
+    }
+
+    .color-hex-input:focus {
+        outline: none;
+    }
+
+    .help-text {
+        font-size: 0.75rem;
+        color: var(--color-text-tertiary);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-start;
+        padding-top: 1rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: var(--color-accent);
+        color: var(--color-text-primary);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-accent-dark);
+    }
+
+    .btn-secondary {
+        background-color: var(--color-bg-secondary);
+        color: var(--color-text-primary);
+        border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--color-border);
+    }
+</style>
+
+<script>
+    // Sync color picker with hex input
+    document.querySelectorAll('.color-input-wrapper').forEach(wrapper => {
+        const colorInput = wrapper.querySelector('input[type="color"]');
+        const hexInput = wrapper.querySelector('.color-hex-input');
+        
+        // Update hex input when color picker changes
+        colorInput.addEventListener('input', (e) => {
+            hexInput.value = e.target.value.toUpperCase();
+        });
+        
+        // Update color picker when hex input changes
+        hexInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                colorInput.value = value;
+            }
+        });
+        
+        // Add # if missing
+        hexInput.addEventListener('blur', (e) => {
+            let value = e.target.value.trim();
+            if (value && !value.startsWith('#')) {
+                value = '#' + value;
+            }
+            if (/^#[0-9A-Fa-f]{6}$/i.test(value)) {
+                e.target.value = value.toUpperCase();
+                colorInput.value = value;
+            }
+        });
+    });
+</script>
+{% endblock %}

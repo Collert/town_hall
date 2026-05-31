@@ -1,0 +1,896 @@
+/* =========================================================
+   Profile Page — full-width, sections one after another
+   ========================================================= */
+
+.profile-page {
+    max-width: 1536px;
+    margin: 0 auto;
+    padding: 5rem 2rem 4rem;
+}
+
+/* =========================================================
+   1. Profile Header
+      left: [avatar] [name / level / location / bio]
+      right: [buttons]
+   ========================================================= */
+
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+    margin-bottom: 4rem;
+}
+
+.profile-header-identity {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+/* Avatar block */
+.profile-avatar-block {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-avatar-block img,
+.profile-avatar-fallback {
+    width: 160px;
+    height: 160px;
+    border-radius: 1rem;
+    object-fit: cover;
+}
+
+.profile-avatar-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Manrope', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.profile-verified-pill {
+    position: absolute;
+    bottom: -14px;
+    right: -14px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: var(--color-primary-contrast);
+    padding: 0.2rem 0.875rem;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* Info block (right of avatar) */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 640px;
+}
+
+.profile-name {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.1;
+}
+
+.profile-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.profile-level-badge {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    padding: 0.25rem 1rem;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+}
+
+.profile-location .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.profile-bio {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Action buttons */
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    min-width: 180px;
+}
+
+.profile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 9999px;
+    border: none;
+    cursor: pointer;
+    transition: all 150ms ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.profile-btn .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.profile-btn:active {
+    transform: scale(0.96);
+}
+
+.profile-btn-primary {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.profile-btn-primary:hover {
+    opacity: 0.88;
+}
+
+.profile-btn-ghost {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+
+.profile-btn-ghost:hover {
+    background: var(--color-bg-secondary);
+}
+
+.profile-btn-text {
+    background: none;
+    color: var(--color-accent);
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.profile-btn-text:hover {
+    text-decoration: underline;
+}
+
+/* =========================================================
+   2. Bento Grid — Impact Dashboard (8/12) + Core Skills (4/12)
+   ========================================================= */
+
+.profile-bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+/* Impact Dashboard */
+.bento-impact {
+    grid-column: span 8;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.bento-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem;
+}
+
+.bento-section-title .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+.impact-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.impact-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.impact-stat-value {
+    font-family: 'Manrope', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--color-text-primary);
+}
+
+.impact-stat-value.accent {
+    color: var(--color-accent);
+}
+
+.impact-stat-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-tertiary);
+}
+
+.level-progress-wrap {
+    margin-top: auto;
+}
+
+.progress-track {
+    height: 8px;
+    background: rgba(from var(--color-text-primary) r g b / 0.08);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+    border-radius: 9999px;
+}
+
+.progress-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+}
+
+/* Core Skills card (dark) */
+.bento-skills {
+    grid-column: span 4;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.bento-skills .bento-section-title {
+    color: var(--color-primary-contrast);
+}
+
+.skills-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: auto;
+}
+
+.skill-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(from var(--color-primary-contrast) r g b / 0.12);
+    color: var(--color-primary-contrast);
+    padding: 0.4rem 0.875rem;
+    border-radius: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.skill-chip .material-symbols-outlined {
+    font-size: 0.875rem;
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+}
+
+.recently-endorsed-block {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(from var(--color-primary-contrast) r g b / 0.15);
+}
+
+.recently-endorsed-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 0.875rem;
+}
+
+.endorser-avatars {
+    display: flex;
+    align-items: center;
+}
+
+.endorser-avatar-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary);
+    margin-left: -10px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.endorser-avatar-item:first-child {
+    margin-left: 0;
+}
+
+.endorser-avatar-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.endorser-avatar-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.endorser-overflow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary);
+    margin-left: -10px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* =========================================================
+   3. Training & Certificates Section
+   ========================================================= */
+
+.profile-section {
+    margin-bottom: 4rem;
+}
+
+.profile-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+}
+
+.profile-section-header h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.875rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem;
+}
+
+.profile-section-header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.view-all-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+/* Certificate cards grid */
+.cert-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.cert-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    border: 1px solid rgba(from var(--color-text-primary) r g b / 0.06);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    transition: box-shadow 300ms ease;
+}
+
+.cert-card:hover {
+    box-shadow: 0 8px 24px rgba(from var(--color-primary) r g b / 0.12);
+}
+
+.cert-card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cert-icon-wrap {
+    width: 48px;
+    height: 48px;
+    background: var(--color-bg-tertiary);
+    border-radius: 0.625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cert-icon-wrap .material-symbols-outlined {
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+}
+
+.cert-card h4 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem;
+}
+
+.cert-card p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    margin: 0;
+}
+
+.cert-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cert-status {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.25rem;
+}
+
+.cert-status.status-verified {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+
+.cert-status.status-expiring {
+    background: rgba(from var(--color-warning) r g b / 0.15);
+    color: var(--color-warning);
+}
+
+.cert-status.status-expired {
+    background: rgba(from var(--color-error) r g b / 0.12);
+    color: var(--color-error);
+}
+
+.cert-download-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: var(--color-text-tertiary);
+    transition: color 200ms ease;
+    line-height: 1;
+}
+
+.cert-download-btn:hover {
+    color: var(--color-accent);
+}
+
+.cert-download-btn .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+/* =========================================================
+   4. Activity History Table
+   ========================================================= */
+
+.activity-table-wrap {
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(from var(--color-primary) r g b / 0.06);
+}
+
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.activity-table thead tr {
+    background: var(--color-bg-tertiary);
+}
+
+.activity-table thead th {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text-tertiary);
+    padding: 1.125rem 2rem;
+}
+
+.activity-table thead th.th-right {
+    text-align: right;
+}
+
+.activity-table tbody tr {
+    transition: background 150ms ease;
+}
+
+.activity-table tbody tr:hover {
+    background: rgba(from var(--color-bg-tertiary) r g b / 0.5);
+}
+
+.activity-table tbody tr+tr td {
+    box-shadow: inset 0 1px 0 rgba(from var(--color-text-primary) r g b / 0.05);
+}
+
+.activity-table tbody td {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    padding: 1.25rem 2rem;
+    color: var(--color-text-primary);
+}
+
+.activity-table tbody td.td-event {
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.activity-table tbody td.td-role {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.activity-table tbody td.td-date {
+    color: var(--color-text-tertiary);
+}
+
+.activity-table tbody td.td-hours {
+    font-weight: 900;
+    color: var(--color-accent);
+    text-align: right;
+}
+
+.activity-empty {
+    text-align: center;
+    padding: 2.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-tertiary);
+}
+
+/* =========================================================
+   5. Endorsements Section
+      left: summary (4/12) | right: feedback feed (8/12)
+   ========================================================= */
+
+.endorsements-section {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Summary panel */
+.endorsements-summary {
+    grid-column: span 4;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.endorsements-summary h2,
+.feedback-feed h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin: 0 0 1.5rem;
+}
+
+.endorsement-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.endorsement-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: var(--color-bg-tertiary);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(from var(--color-text-primary) r g b / 0.04);
+}
+
+.endorsement-row-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.endorsement-row-count {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+}
+
+/* Feedback feed panel */
+.feedback-feed {
+    grid-column: span 8;
+    background: var(--color-bg-secondary);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+.feedback-feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.feedback-feed-header h2 {
+    margin: 0;
+}
+
+.feedback-view-all {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+.feedback-view-all:hover {
+    text-decoration: underline;
+}
+
+.feedback-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 520px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.feedback-list::-webkit-scrollbar {
+    display: none;
+}
+
+.feedback-item {
+    background: var(--color-bg-tertiary);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    border-left: 4px solid var(--color-accent);
+    transition: box-shadow 150ms ease;
+}
+
+.feedback-item:hover {
+    box-shadow: 0 4px 12px rgba(from var(--color-primary) r g b / 0.08);
+}
+
+.feedback-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.feedback-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid var(--color-bg-secondary);
+}
+
+.feedback-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feedback-avatar-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.feedback-item-meta strong {
+    display: block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+}
+
+.feedback-item-meta span {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+}
+
+.feedback-quote {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0 0 0.75rem;
+}
+
+.feedback-skill-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    background: rgba(from var(--color-accent) r g b / 0.1);
+    color: var(--color-accent);
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .profile-bento {
+        grid-template-columns: 1fr;
+    }
+
+    .bento-impact,
+    .bento-skills {
+        grid-column: span 1;
+    }
+
+    .cert-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .endorsements-section {
+        grid-template-columns: 1fr;
+    }
+
+    .endorsements-summary,
+    .feedback-feed {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-page {
+        padding-top: 4rem;
+    }
+
+    .profile-header {
+        flex-direction: column;
+    }
+
+    .profile-header-identity {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-meta-row {
+        justify-content: center;
+    }
+
+    .profile-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: unset;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cert-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .impact-stats-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .impact-stat-value {
+        font-size: 2rem;
+    }
+}

@@ -1,0 +1,6 @@
+django
+django-modeltranslation
+Pillow
+yt-dlp
+markdown
+qrcode[pil]

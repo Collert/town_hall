@@ -1,0 +1,251 @@
+{% extends 'base/layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'events/my_events.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="my-events-page">
+
+    <!-- Page Header -->
+    <header class="my-events-header">
+        <div class="my-events-header-inner">
+            <div class="my-events-header-text">
+                <h1>{% trans "My Events" %}</h1>
+                <p>{% trans "Track your upcoming commitments and celebrate your completed community impact." %}</p>
+            </div>
+            <div class="my-events-stats">
+                <div class="stat-chip">
+                    <span class="stat-chip-value">{{ total_available|intcomma }}</span>
+                    <span class="stat-chip-label">{% trans "available events" %}</span>
+                </div>
+                <div class="stat-chip-divider"></div>
+                <div class="stat-chip">
+                    <span class="stat-chip-value text-accent">{{ upcoming_count }}</span>
+                    <span class="stat-chip-label">{% trans "Upcoming" %}</span>
+                </div>
+                <div class="stat-chip-divider"></div>
+                <div class="stat-chip">
+                    <span class="stat-chip-value">{{ impact_points|intcomma }}</span>
+                    <span class="stat-chip-label">{% trans "Impact Pts" %}</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Body Grid -->
+    <div class="my-events-body">
+
+        <!-- Main Column -->
+        <main class="my-events-main">
+
+            <!-- Upcoming Events -->
+            <section class="my-events-section">
+                <div class="section-title-row">
+                    <h2 class="section-heading">
+                        <span class="section-bar"></span>
+                        {% trans "Upcoming Events" %}
+                    </h2>
+                    {% if today_shifts_count > 0 %}
+                    <span class="today-badge">
+                        <span class="material-symbols-outlined">wb_sunny</span>
+                        {% blocktrans with count=today_shifts_count %}Today: {{ count }} Shift{% endblocktrans %}
+                    </span>
+                    {% endif %}
+                </div>
+
+                {% if upcoming_events %}
+                <div class="upcoming-events-list">
+                    {% for item in upcoming_events %}
+                    {% with event=item.event slot=item.slot %}
+                    <article class="upcoming-event-card {% if event.is_today %}is-today{% endif %}">
+                        <div class="upcoming-event-image">
+                            {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                            {% else %}
+                            <div class="upcoming-event-image-placeholder">
+                                <span class="material-symbols-outlined">event</span>
+                            </div>
+                            {% endif %}
+                            {% if event.is_today %}
+                            <span class="event-status-chip chip-today">{% trans "Today" %}</span>
+                            {% else %}
+                            <span class="event-status-chip chip-upcoming">{{ event.start_date|date:"M j" }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="upcoming-event-info">
+                            <h3>{{ event.title }}</h3>
+
+                            <div class="event-meta-list">
+                                <div class="event-meta-item">
+                                    <span class="material-symbols-outlined">assignment_ind</span>
+                                    <span>{{ slot.role.name }}</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="material-symbols-outlined">schedule</span>
+                                    <span>
+                                        {% if event.is_today %}
+                                            {% trans "Today" %},
+                                        {% else %}
+                                            {{ slot.start_time|date:"M j" }},
+                                        {% endif %}
+                                        {{ slot.start_time|date:"g:i A" }} – {{ slot.end_time|date:"g:i A" }}
+                                    </span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="material-symbols-outlined">location_on</span>
+                                    <span>{{ event.location }}</span>
+                                </div>
+                            </div>
+
+                            <div class="upcoming-event-actions">
+                                {% if event.is_today %}
+                                <button type="button"
+                                        class="btn-event-cta btn-checkin"
+                                        onclick="openCheckinDialog('checkin-dialog-{{ event.pk }}')">
+                                    <span class="material-symbols-outlined">login</span>
+                                    {% trans "Check-in Now" %}
+                                </button>
+                                {% else %}
+                                <a href="{% url 'opportunity_detail' event.pk %}" class="btn-event-cta btn-view">
+                                    {% trans "View Details" %}
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <span class="material-symbols-outlined empty-state-icon">event_available</span>
+                    <p>{% trans "You haven't signed up for any upcoming events yet." %}</p>
+                    <a href="{% url 'explore_opportunities' %}" class="btn-browse">
+                        <span class="material-symbols-outlined">explore</span>
+                        {% trans "Browse Opportunities" %}
+                    </a>
+                </div>
+                {% endif %}
+            </section>
+
+            <!-- Past Events -->
+            <section class="my-events-section">
+                <div class="section-title-row">
+                    <h2 class="section-heading">
+                        <span class="section-bar"></span>
+                        {% trans "Past Events & Verified Impact" %}
+                    </h2>
+                </div>
+
+                {% if past_events %}
+                <div class="past-events-table">
+                    {% for item in past_events %}
+                    {% with event=item.event slot=item.slot %}
+                    <div class="past-event-row">
+                        <div class="past-event-thumb">
+                            {% if event.image %}
+                            <img src="{{ event.image.url }}" alt="{{ event.title }}">
+                            {% else %}
+                            <div class="past-event-thumb-placeholder">
+                                <span class="material-symbols-outlined">event</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="past-event-info">
+                            <span class="past-event-title">{{ event.title }}</span>
+                            <span class="past-event-location">
+                                <span class="material-symbols-outlined">location_on</span>
+                                {{ event.location }}
+                            </span>
+                        </div>
+
+                        <div class="past-event-date">
+                            <span class="material-symbols-outlined">calendar_today</span>
+                            {{ event.end_date|date:"M j, Y" }}
+                        </div>
+
+                        <div class="past-event-role">
+                            {% if slot.role.icon %}
+                            <span class="material-symbols-outlined">{{ slot.role.icon }}</span>
+                            {% endif %}
+                            {{ slot.role.name }}
+                        </div>
+
+                        <div class="past-event-hours">
+                            <span class="material-symbols-outlined">timer</span>
+                            {{ item.hours }} {% trans "Hours" %}
+                        </div>
+
+                        <div class="past-event-action">
+                            <a href="{% url 'opportunity_detail' event.pk %}" class="btn-report">
+                                <span class="material-symbols-outlined">analytics</span>
+                                {% trans "View Report" %}
+                            </a>
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state empty-state-sm">
+                    <span class="material-symbols-outlined empty-state-icon">history</span>
+                    <p>{% trans "Your completed events will appear here." %}</p>
+                </div>
+                {% endif %}
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<!-- Check-in Dialogs -->
+{% for item in upcoming_events %}
+{% if item.event.is_today %}
+{% with event=item.event slot=item.slot %}
+<dialog id="checkin-dialog-{{ event.pk }}" class="checkin-dialog">
+    <div class="checkin-dialog-inner">
+        <button type="button" class="checkin-dialog-close" onclick="closeCheckinDialog('checkin-dialog-{{ event.pk }}')" aria-label="{% trans 'Close' %}">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <div class="checkin-dialog-icon">
+            <span class="material-symbols-outlined">where_to_vote</span>
+        </div>
+        <h2 class="checkin-dialog-title">{% trans "Where to Check In" %}</h2>
+        <p class="checkin-dialog-event">{{ event.title }}</p>
+        <div class="checkin-dialog-location">
+            <span class="material-symbols-outlined">location_on</span>
+            <span>{% if event.report_to_location %}{{ event.report_to_location }}{% else %}{{ event.location }}{% endif %}</span>
+        </div>
+        <a href="{% url 'opportunity_detail' event.pk %}" class="checkin-dialog-details-link">
+            {% trans "View full event details" %}
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+    </div>
+</dialog>
+{% endwith %}
+{% endif %}
+{% endfor %}
+
+<script>
+function openCheckinDialog(id) {
+    const dialog = document.getElementById(id);
+    if (dialog) dialog.showModal();
+}
+function closeCheckinDialog(id) {
+    const dialog = document.getElementById(id);
+    if (dialog) dialog.close();
+}
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('checkin-dialog')) {
+        e.target.close();
+    }
+});
+</script>
+{% endblock %}

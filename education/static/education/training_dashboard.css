@@ -1,0 +1,792 @@
+/* ============================================================
+   Training Dashboard — training_dashboard.css
+   Follows the Empowered Architect design system.
+   No-Line rule: tonal layering via bg shifts, not 1px borders.
+   Manrope for headlines, Inter for body.
+   ============================================================ */
+
+.td-body {
+    padding: 2.5rem 0 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ─── Hero Header ─────────────────────────────────────────── */
+.td-hero {
+    background: var(--color-bg-secondary);
+    border-radius: 1.75rem;
+    padding: 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.td-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: var(--color-primary-light);
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.td-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: 30%;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--color-accent-light);
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.td-hero--empty {
+    background: var(--color-primary-dark);
+    color: var(--color-primary-contrast);
+}
+
+.td-hero--empty .td-greeting,
+.td-hero--empty .td-subgreeting {
+    color: var(--color-primary-contrast);
+}
+
+@media (min-width: 800px) {
+    .td-hero {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.td-hero-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.td-greeting {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.td-subgreeting {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    max-width: 42rem;
+}
+
+.td-hero-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Chips */
+.td-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.td-chip--primary {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.td-chip--level {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+}
+
+.td-chip--muted {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--color-primary-contrast);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.td-chip .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.td-chip-value {
+    font-weight: 800;
+}
+
+.td-chip-label {
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+/* ─── Stats Bar ───────────────────────────────────────────── */
+.td-stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.td-stat-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.td-stat-icon {
+    font-size: 1.75rem;
+    color: var(--color-accent);
+    flex-shrink: 0;
+}
+
+.td-stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.td-stat-value {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    line-height: 1;
+}
+
+.td-stat-denom,
+.td-stat-unit {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.td-stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.td-stat-progress-bar {
+    height: 4px;
+    background: var(--color-bg-tertiary);
+    border-radius: 2px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.td-stat-progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: width 0.6s ease;
+}
+
+/* ─── Content Grid ────────────────────────────────────────── */
+.td-content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (min-width: 1100px) {
+    .td-content-grid {
+        grid-template-columns: 1fr 340px;
+    }
+}
+
+/* ─── Shared Section styles ───────────────────────────────── */
+.td-section {
+    background: var(--color-bg-secondary);
+    border-radius: 1.5rem;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.td-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 0.75rem;
+}
+
+.td-section-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.td-section-icon {
+    color: var(--color-accent);
+    font-size: 1.4rem;
+}
+
+.td-section-title {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.td-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.td-link-btn:hover {
+    opacity: 0.75;
+}
+
+.td-link-btn .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+/* ─── Track Groups ────────────────────────────────────────── */
+.td-track-group {
+    margin-bottom: 1.5rem;
+}
+
+.td-track-group:last-child {
+    margin-bottom: 0;
+}
+
+.td-track-group-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+    padding: 0 0.25rem;
+}
+
+.td-track-group-label .material-symbols-outlined {
+    font-size: 0.95rem;
+}
+
+/* ─── Module Cards ────────────────────────────────────────── */
+.td-module-card {
+    background: var(--color-bg-tertiary);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 0.75rem;
+    transition: transform 0.18s, box-shadow 0.18s;
+}
+
+@media (min-width: 640px) {
+    .td-module-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.td-module-card:last-child {
+    margin-bottom: 0;
+}
+
+.td-module-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.td-module-card-icon {
+    width: 3rem;
+    height: 3rem;
+    background: var(--color-primary-light);
+    border-radius: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-bottom: 0.75rem;
+}
+
+.td-module-card-icon--done {
+    background: var(--color-success, #22c55e);
+    color: #fff;
+}
+
+@media (min-width: 640px) {
+    .td-module-card-icon {
+        margin-bottom: 0;
+    }
+}
+
+.td-module-card-icon .material-symbols-outlined {
+    font-size: 1.4rem;
+}
+
+.td-module-card-body {
+    flex: 1;
+    min-width: 0;
+    padding-right: 0.5rem;
+}
+
+.td-module-title {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.td-module-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.td-module-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.td-module-progress-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--color-bg-primary);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.td-module-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+.td-module-progress-pct {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.td-completed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-success, #16a34a);
+    margin-top: 0.15rem;
+}
+
+.td-completed-badge .material-symbols-outlined {
+    font-size: 0.9rem;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.td-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: none;
+}
+
+.td-btn--resume {
+    background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-accent) 100%);
+    color: var(--color-primary-contrast);
+    box-shadow: var(--shadow-sm);
+    align-self: flex-start;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .td-btn--resume {
+        align-self: center;
+        margin-top: 0;
+    }
+}
+
+.td-btn--resume:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.td-btn--review {
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    align-self: flex-start;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .td-btn--review {
+        align-self: center;
+        margin-top: 0;
+    }
+}
+
+.td-btn--review:hover {
+    background: var(--color-bg-secondary);
+}
+
+.td-btn--start {
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-size: 0.78rem;
+}
+
+.td-btn--start:hover {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.td-btn--cta {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: var(--color-primary-contrast);
+    padding: 0.85rem 2rem;
+    font-size: 0.95rem;
+    border-radius: 2rem;
+    box-shadow: var(--shadow-md);
+    margin-top: 1.25rem;
+    display: inline-flex;
+}
+
+.td-btn--cta:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.td-btn--outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid rgba(from var(--color-primary) r g b / 0.25);
+}
+
+.td-btn--outline:hover {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.td-btn--full {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* ─── Empty State ─────────────────────────────────────────── */
+.td-empty-state {
+    text-align: center;
+    padding: 2rem 1rem 1.5rem;
+}
+
+.td-empty-icon {
+    width: 4rem;
+    height: 4rem;
+    background: var(--color-bg-tertiary);
+    border-radius: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.td-empty-icon .material-symbols-outlined {
+    font-size: 2rem;
+    color: var(--color-text-secondary);
+}
+
+.td-empty-title {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+}
+
+.td-empty-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    max-width: 30rem;
+    margin: 0 auto;
+}
+
+/* ─── Suggested Modules ───────────────────────────────────── */
+.td-suggested-modules {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.td-suggested-card {
+    background: var(--color-bg-tertiary);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.td-suggested-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--color-primary-light);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.td-suggested-icon .material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+.td-suggested-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.td-suggested-title {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.td-suggested-desc {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ─── Certificates ────────────────────────────────────────── */
+.td-certificates {
+    background: var(--color-bg-secondary);
+}
+
+.td-cert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.td-cert-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-bg-tertiary);
+    border-radius: 1rem;
+    transition: transform 0.18s;
+}
+
+.td-cert-item:hover {
+    transform: translateX(2px);
+}
+
+.td-cert-icon-wrap {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-light);
+    border-radius: 0.75rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.td-cert-icon-wrap .material-symbols-outlined {
+    font-size: 1.25rem;
+}
+
+.td-cert-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.td-cert-name {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.td-cert-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+}
+
+.td-verified-icon {
+    font-size: 0.85rem !important;
+    color: var(--color-success, #16a34a);
+}
+
+.td-pending-badge {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 1rem;
+    background: var(--color-warning, #f59e0b);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.td-cert-overflow {
+    font-size: 0.78rem;
+    color: var(--color-text-tertiary);
+    text-align: center;
+    padding: 0.5rem;
+}
+
+/* ─── Certificate Empty State ─────────────────────────────── */
+.td-cert-empty {
+    text-align: center;
+    padding: 1.5rem 0.5rem 1rem;
+}
+
+.td-cert-empty-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: var(--color-bg-tertiary);
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.85rem;
+}
+
+.td-cert-empty-icon .material-symbols-outlined {
+    font-size: 1.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.td-cert-empty-title {
+    font-family: 'Manrope', var(--font-display, sans-serif);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem;
+}
+
+.td-cert-empty-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.td-cert-info-box {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    background: var(--color-bg-tertiary);
+    border-radius: 0.875rem;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.td-info-icon {
+    font-size: 1rem !important;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+}
+
+.td-info-text {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.55;
+}
+
+/* ─── Responsive tweaks ───────────────────────────────────── */
+@media (max-width: 639px) {
+    .td-body {
+        padding: 1.5rem 0 3rem;
+    }
+
+    .td-greeting {
+        font-size: 1.6rem;
+    }
+
+    .td-section {
+        padding: 1.25rem;
+    }
+}

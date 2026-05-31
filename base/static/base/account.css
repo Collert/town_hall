@@ -1,0 +1,635 @@
+/* ========================================
+   Account / Edit Profile Page
+   ======================================== */
+
+.account-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+}
+
+.account-page-header {
+    margin-bottom: 2.5rem;
+}
+
+.account-page-header h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+
+.account-page-header p {
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+}
+
+.account-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* ---- Sidebar ---- */
+.account-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 5rem;
+}
+
+.account-avatar-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1.25rem;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.account-avatar-wrap {
+    position: relative;
+    width: 96px;
+    height: 96px;
+}
+
+.account-avatar-wrap img,
+.account-avatar-wrap .avatar-placeholder {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    font-size: 2.5rem;
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.avatar-edit-btn:hover {
+    background: var(--color-primary-dark);
+}
+
+.avatar-edit-btn .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.account-avatar-card h3 {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.account-avatar-card .account-location {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    margin: 0;
+}
+
+/* Security & Login links card */
+.account-security-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1.25rem;
+    overflow: hidden;
+}
+
+.account-security-card h4 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text-tertiary);
+    padding: 1rem 1.25rem 0.5rem;
+}
+
+.security-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: background 0.15s;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.security-link:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.security-link .material-symbols-outlined {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+}
+
+.security-link.danger .material-symbols-outlined {
+    color: var(--color-error);
+}
+
+.security-link.danger {
+    color: var(--color-error);
+}
+
+.security-link-arrow {
+    margin-left: auto;
+    color: var(--color-text-tertiary) !important;
+    font-size: 1rem !important;
+}
+
+/* ---- Main Content ---- */
+.account-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.account-section-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1.25rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.account-section-card:last-of-type {
+    margin-bottom: 0;
+}
+
+.account-section-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 1.5rem;
+}
+
+/* ---- Form Fields ---- */
+.account-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.account-form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.account-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.account-field label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.account-field input,
+.account-field textarea {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    background: var(--color-bg-primary);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: box-shadow 0.2s;
+    resize: none;
+}
+
+.account-field input:focus,
+.account-field textarea:focus {
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.account-field textarea {
+    min-height: 96px;
+}
+
+/* ---- Skills Section ---- */
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.skill-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 100px;
+    transition: background 0.15s;
+}
+
+.skill-tag-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.skill-tag:has(.skill-tag-remove:hover) {
+    background: rgba(from var(--color-error) r g b / 0.15);
+    color: var(--color-error);
+}
+
+.skill-tag:has(.skill-tag-remove:hover) .skill-tag-remove {
+    opacity: 1;
+    color: var(--color-error);
+}
+
+.skill-tag-remove .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.skills-add-row {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-skills-new {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.btn-skills-new:hover {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.btn-skills-new .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.skills-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    background: var(--color-bg-primary);
+    border-radius: 0.875rem;
+    box-shadow: 0 8px 32px rgba(from var(--color-text-primary) r g b / 0.12);
+    min-width: 200px;
+    max-height: 240px;
+    overflow-y: auto;
+    z-index: 200;
+    display: none;
+    padding: 0.4rem 0;
+}
+
+.skills-dropdown.open {
+    display: block;
+}
+
+.skills-dropdown-item {
+    padding: 0.65rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.skills-dropdown-item:hover {
+    background: var(--color-bg-secondary);
+}
+
+.skills-dropdown-item.already-added {
+    display: none;
+}
+
+.skills-count {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    margin-top: 0.5rem;
+}
+
+/* ---- Action Bar ---- */
+.account-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+/* ---- Account Dialogs ---- */
+@keyframes accountDialogIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 20px)) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes accountDialogOut {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 20px)) scale(0.96);
+    }
+}
+
+@keyframes backdropIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes backdropOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+dialog.account-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-bg-primary);
+    width: 100%;
+    max-width: 420px;
+    border-radius: 1rem;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.25);
+    border: none;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+dialog.account-dialog[open] {
+    animation: accountDialogIn 0.3s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+dialog.account-dialog.dialog-closing {
+    animation: accountDialogOut 0.2s ease-in forwards;
+}
+
+dialog.account-dialog:not([open]) {
+    display: none;
+}
+
+dialog.account-dialog::backdrop {
+    background: rgba(from var(--color-primary) r g b / 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: backdropIn 0.25s ease forwards;
+}
+
+dialog.account-dialog.dialog-closing::backdrop {
+    animation: backdropOut 0.2s ease forwards;
+}
+
+.account-dialog-header {
+    background: var(--color-bg-secondary);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-dialog-header h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.account-dialog-close {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+}
+
+.account-dialog-close:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-primary);
+}
+
+.account-dialog-body {
+    padding: 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.account-dialog-body p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.account-dialog-footer {
+    padding: 1.25rem 2rem;
+    background: var(--color-bg-primary);
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1rem;
+}
+
+.account-dialog-footer .btn {
+    flex: 1;
+    text-align: center;
+}
+
+.password-field-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.password-field-wrap label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.password-input-row {
+    position: relative;
+}
+
+.password-input-row input {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    background: var(--color-bg-secondary);
+    border: none;
+    border-radius: 0.75rem;
+    padding: 0.75rem 3rem 0.75rem 1rem;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s;
+}
+
+.password-input-row input:focus {
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    display: flex;
+    align-items: center;
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.password-toggle:hover {
+    color: var(--color-primary);
+}
+
+.password-hint {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    margin: 0;
+}
+
+.deactivate-warning-box {
+    background: rgba(from var(--color-error) r g b / 0.08);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.deactivate-warning-box .material-symbols-outlined {
+    color: var(--color-error);
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.deactivate-warning-box p {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 840px) {
+    .account-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .account-sidebar {
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .account-avatar-card {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .account-security-card {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .account-form-grid {
+        grid-template-columns: 1fr;
+    }
+}

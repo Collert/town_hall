@@ -1,0 +1,203 @@
+/* .edu-container is the main bounding box for the education single-page app view */
+.edu-container {
+    max-width: 1536px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    font-family: inherit;
+    color: var(--color-text-primary);
+}
+
+@media (min-width: 640px) {
+    .edu-container {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .edu-container {
+        padding: 0 2rem;
+    }
+}
+
+.edu-layout-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+@media (min-width: 1024px) {
+    .edu-layout-inner {
+        flex-direction: row;
+    }
+}
+
+/* Sidebar - desktop only */
+.edu-sidebar {
+    display: none;
+    flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+    .edu-sidebar {
+        display: block;
+        width: 16rem;
+        min-height: 100vh;
+        padding: 2.5rem 2rem 2.5rem 0;
+        border-right: 1px solid var(--color-border);
+    }
+}
+
+/* Labels: full on desktop, short handled by subnav */
+.nav-label-short {
+    display: none;
+}
+
+.nav-label-full {
+    display: block;
+}
+
+.edu-sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+}
+
+.edu-sidebar-logo-icon {
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--color-text-primary);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary-contrast);
+}
+
+.edu-sidebar-logo-text {
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+}
+
+.edu-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.edu-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.edu-nav-item.active {
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+
+.edu-nav-item:hover:not(.active) {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.edu-sidebar-divider {
+    height: 1px;
+    background-color: var(--color-border);
+    margin: 2rem 0;
+}
+
+.edu-nav-subhead {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--color-text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+}
+
+.edu-nav-badge {
+    margin-left: auto;
+    background-color: var(--color-accent);
+    color: var(--color-primary-contrast);
+    font-size: 0.625rem;
+    font-weight: 800;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+}
+
+.edu-sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    margin-top: 2rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+}
+
+.edu-sidebar-profile:hover {
+    background-color: var(--color-bg-secondary);
+}
+
+.edu-profile-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    background-color: var(--color-bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+/* Main Content */
+.edu-main {
+    flex: 1;
+    padding: 2rem 0;
+    padding-bottom: 5rem;
+    min-width: 0;
+}
+
+@media (min-width: 1024px) {
+    .edu-main {
+        padding: 2.5rem 0 2.5rem 3rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .edu-main {
+        padding: 3rem 0 3rem 4rem;
+    }
+}
+
+/* Utilities */
+.material-icons-outlined {
+    font-family: 'Material Icons Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
+.card-image {
+    view-transition-name: card-image;
+}

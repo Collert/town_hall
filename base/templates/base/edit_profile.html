@@ -1,0 +1,443 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% load i18n %}
+{% load avatar_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/account.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="account-page">
+    <div class="account-page-header">
+        <h1>{% trans "Edit Your Profile" %}</h1>
+        <p>{% trans "Manage your public identity and account preferences." %}</p>
+    </div>
+
+    <div class="account-layout">
+
+        <!-- Sidebar -->
+        <aside class="account-sidebar">
+            <!-- Avatar Card -->
+            <div class="account-avatar-card">
+                <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data" id="avatar-upload-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="save">
+                    <div class="account-avatar-wrap">
+                        {% if profile.avatar %}
+                            <img id="avatar-preview" src="{{ profile.avatar.url }}" alt="{{ user.get_full_name }}">
+                        {% else %}
+                            {% with display_name=user.get_full_name|default:user.username %}
+                            <div class="avatar-placeholder" id="avatar-preview-placeholder" style="background-color: {{ display_name|avatar_color }}; color: #fff; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 2rem; letter-spacing: 0.04em;">
+                                {{ display_name|initials }}
+                            </div>
+                            {% endwith %}
+                        {% endif %}
+                        <button type="button" class="avatar-edit-btn" id="avatar-edit-trigger" title="{% trans 'Change photo' %}">
+                            <span class="material-symbols-outlined">photo_camera</span>
+                        </button>
+                        <input type="file" id="avatar-input" name="avatar" accept="image/*" style="display:none;">
+                    </div>
+                </form>
+                <h3>{{ user.get_full_name|default:user.username }}</h3>
+                {% if profile.location %}<p class="account-location">{{ profile.location }}</p>{% endif %}
+            </div>
+
+            <!-- Security & Login Links -->
+            <div class="account-security-card">
+                <h4>{% trans "Security & Login" %}</h4>
+                <button type="button" class="security-link" id="open-change-password">
+                    <span class="material-symbols-outlined">lock</span>
+                    {% trans "Change Password" %}
+                    <span class="material-symbols-outlined security-link-arrow">chevron_right</span>
+                </button>
+                <button type="button" class="security-link danger" id="open-deactivate">
+                    <span class="material-symbols-outlined">delete</span>
+                    {% trans "Deactivate Account" %}
+                    <span class="material-symbols-outlined security-link-arrow">chevron_right</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <div class="account-main">
+            <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data" id="profile-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="save">
+
+                <!-- Basic Information -->
+                <div class="account-section-card">
+                    <h2 class="account-section-title">{% trans "Basic Information" %}</h2>
+                    <div class="account-form-grid">
+                        <div class="account-field">
+                            <label for="first_name">{% trans "First Name" %}</label>
+                            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" placeholder="Alex">
+                        </div>
+                        <div class="account-field">
+                            <label for="last_name">{% trans "Last Name" %}</label>
+                            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" placeholder="Rivera">
+                        </div>
+                        <div class="account-field">
+                            <label for="email">{% trans "Email Address" %}</label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="you@example.com">
+                        </div>
+                        <div class="account-field">
+                            <label for="phone">{% trans "Phone Number" %}</label>
+                            <input type="tel" id="phone" name="phone" value="{{ profile.phone }}" placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div class="account-field">
+                            <label for="location">{% trans "Location" %}</label>
+                            <input type="text" id="location" name="location" value="{{ profile.location }}" placeholder="San Francisco, CA">
+                        </div>
+                        <div class="account-field full-width">
+                            <label for="bio">{% trans "Bio / About Me" %}</label>
+                            <textarea id="bio" name="bio" placeholder="{% trans 'Tell us about yourself...' %}">{{ profile.bio }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="account-section-card">
+                    <h2 class="account-section-title">{% trans "Skills" %}</h2>
+
+                    <div class="skills-list" id="skills-list">
+                        {% for skill in user_skills %}
+                        <span class="skill-tag" data-skill-id="{{ skill.id }}">
+                            {{ skill.name }}
+                            <button type="button" class="skill-tag-remove" data-skill-id="{{ skill.id }}" title="{% trans 'Remove' %}">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </span>
+                        {% endfor %}
+                    </div>
+
+                    <p class="skills-count" id="skills-count">
+                        {{ user_skills|length }} / {{ max_skills }} {% trans "skills" %}
+                    </p>
+
+                    <div class="skills-add-row">
+                        <button type="button" class="btn-skills-new" id="skills-new-btn">
+                            <span class="material-symbols-outlined">add</span>
+                            {% trans "New" %}
+                        </button>
+                        <div class="skills-dropdown" id="skills-dropdown" role="listbox">
+                            {% for skill in all_skills %}
+                            <div class="skills-dropdown-item{% if skill.id in user_skill_ids %} already-added{% endif %}"
+                                 data-skill-id="{{ skill.id }}"
+                                 data-skill-name="{{ skill.name }}"
+                                 role="option">
+                                {{ skill.name }}
+                            </div>
+                            {% empty %}
+                            <div style="padding:0.75rem 1rem; color:var(--color-text-tertiary); font-family:'Inter',sans-serif; font-size:0.85rem;">
+                                {% trans "No skills available." %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action bar -->
+                <div class="account-actions">
+                    <a href="{% url 'home' %}" class="btn btn-outline btn-rounded">{% trans "Cancel" %}</a>
+                    <button type="submit" class="btn btn-primary btn-rounded">{% trans "Save Changes" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Dialog -->
+<dialog class="account-dialog" id="change-password-dialog">
+    <header class="account-dialog-header">
+        <h2>{% trans "Change Password" %}</h2>
+        <button type="button" class="account-dialog-close" data-close-dialog="change-password-dialog">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </header>
+    <form method="POST" action="{% url 'change_password' %}">
+        {% csrf_token %}
+        <div class="account-dialog-body">
+            <p>{% trans "Update your password to keep your account secure." %}</p>
+
+            <div class="password-field-wrap">
+                <label for="cp-current">{% trans "Current Password" %}</label>
+                <div class="password-input-row">
+                    <input type="password" id="cp-current" name="current_password" required placeholder="••••••••">
+                    <button type="button" class="password-toggle" data-target="cp-current">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="password-field-wrap">
+                <label for="cp-new">{% trans "New Password" %}</label>
+                <div class="password-input-row">
+                    <input type="password" id="cp-new" name="new_password" required placeholder="••••••••">
+                    <button type="button" class="password-toggle" data-target="cp-new">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
+                <p class="password-hint">{% trans "Must be at least 8 characters long and include a number and symbol." %}</p>
+            </div>
+
+            <div class="password-field-wrap">
+                <label for="cp-confirm">{% trans "Confirm New Password" %}</label>
+                <div class="password-input-row">
+                    <input type="password" id="cp-confirm" name="confirm_password" required placeholder="••••••••">
+                    <button type="button" class="password-toggle" data-target="cp-confirm">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <footer class="account-dialog-footer">
+            <button type="submit" class="btn btn-primary btn-rounded">{% trans "Update Password" %}</button>
+            <button type="button" class="btn btn-outline btn-rounded" data-close-dialog="change-password-dialog">{% trans "Cancel" %}</button>
+        </footer>
+    </form>
+</dialog>
+
+<!-- Deactivate Account Dialog -->
+<dialog class="account-dialog" id="deactivate-dialog">
+    <header class="account-dialog-header">
+        <h2>{% trans "Deactivate Account" %}</h2>
+        <button type="button" class="account-dialog-close" data-close-dialog="deactivate-dialog">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </header>
+    <form method="POST" action="{% url 'deactivate_account' %}">
+        {% csrf_token %}
+        <div class="account-dialog-body">
+            <div class="deactivate-warning-box">
+                <span class="material-symbols-outlined">warning</span>
+                <p>{% trans "This action is permanent and cannot be easily undone. Deactivating your account will immediately disable your profile, remove you from all active event rosters, and permanently hide your training history from public view." %}</p>
+            </div>
+            <p>{% trans "Are you absolutely sure you want to proceed?" %}</p>
+
+            <div class="password-field-wrap">
+                <label for="da-password">{% trans "Type your password to confirm deactivation" %}</label>
+                <div class="password-input-row">
+                    <input type="password" id="da-password" name="password" required placeholder="••••••••">
+                    <button type="button" class="password-toggle" data-target="da-password">
+                        <span class="material-symbols-outlined">visibility</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <footer class="account-dialog-footer">
+            <button type="submit" class="btn btn-rounded" style="background:var(--color-error);color:#fff;flex:1;">{% trans "Deactivate My Account" %}</button>
+            <button type="button" class="btn btn-outline btn-rounded" data-close-dialog="deactivate-dialog" style="flex:1;">{% trans "Cancel" %}</button>
+        </footer>
+    </form>
+</dialog>
+
+<script>
+(function () {
+    // ---- Avatar upload ----
+    const avatarTrigger = document.getElementById('avatar-edit-trigger');
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarForm = document.getElementById('avatar-upload-form');
+
+    avatarTrigger.addEventListener('click', () => avatarInput.click());
+    avatarInput.addEventListener('change', () => {
+        if (avatarInput.files && avatarInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let preview = document.getElementById('avatar-preview');
+                const placeholder = document.getElementById('avatar-preview-placeholder');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'avatar-preview';
+                    preview.alt = '{{ user.get_full_name }}';
+                    if (placeholder) placeholder.replaceWith(preview);
+                }
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(avatarInput.files[0]);
+            // Move the file input into the main profile form so it submits together
+            document.getElementById('profile-form').appendChild(avatarInput);
+        }
+    });
+
+    // ---- Skills ----
+    const maxSkills = {{ max_skills }};
+    const addedIds = new Set({{ user_skill_ids|safe }});
+
+    const skillsList = document.getElementById('skills-list');
+    const skillsCount = document.getElementById('skills-count');
+    const newBtn = document.getElementById('skills-new-btn');
+    const dropdown = document.getElementById('skills-dropdown');
+
+    function updateCount() {
+        skillsCount.textContent = addedIds.size + ' / ' + maxSkills + ' {% trans "skills" %}';
+    }
+
+    function refreshNewButton() {
+        const anyVisible = dropdown.querySelector('.skills-dropdown-item:not([style*="display: none"])');
+        newBtn.style.display = anyVisible ? '' : 'none';
+    }
+
+    function hideDropdownItem(skillId) {
+        const dropItem = dropdown.querySelector(`[data-skill-id="${skillId}"]`);
+        if (dropItem) dropItem.style.display = 'none';
+        refreshNewButton();
+    }
+
+    function showDropdownItem(skillId) {
+        const dropItem = dropdown.querySelector(`[data-skill-id="${skillId}"]`);
+        if (dropItem) dropItem.style.display = '';
+        refreshNewButton();
+    }
+
+    // Hide already-added skills on load
+    addedIds.forEach(id => hideDropdownItem(String(id)));
+
+    // Toggle dropdown
+    newBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target) && e.target !== newBtn) {
+            dropdown.classList.remove('open');
+        }
+    });
+
+    // Select skill from dropdown
+    dropdown.addEventListener('click', (e) => {
+        const item = e.target.closest('.skills-dropdown-item');
+        if (!item) return;
+
+        const skillId = item.dataset.skillId;
+        const skillName = item.dataset.skillName;
+
+        if (addedIds.size >= maxSkills) {
+            window.showToast(
+                `{% trans "You can only add up to" %} ${maxSkills} {% trans "skills." %}`,
+                'warning'
+            );
+            dropdown.classList.remove('open');
+            return;
+        }
+
+        // AJAX call
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const body = new URLSearchParams({ action: 'add_skill', skill_id: skillId, csrfmiddlewaretoken: csrf });
+
+        fetch('{% url "edit_profile" %}', { method: 'POST', body })
+            .then(r => r.json())
+            .then(data => {
+                if (data.ok) {
+                    addedIds.add(parseInt(skillId));
+                    hideDropdownItem(skillId);
+                    addSkillTag(skillId, skillName);
+                    updateCount();
+                    dropdown.classList.remove('open');
+                } else if (data.error === 'limit') {
+                    window.showToast(
+                        `{% trans "You can only add up to" %} ${data.max} {% trans "skills." %}`,
+                        'warning'
+                    );
+                    dropdown.classList.remove('open');
+                }
+            })
+            .catch(() => {
+                window.showToast('{% trans "Something went wrong. Please try again." %}', 'error');
+            });
+    });
+
+    function addSkillTag(skillId, skillName) {
+        const tag = document.createElement('span');
+        tag.className = 'skill-tag';
+        tag.dataset.skillId = skillId;
+        tag.innerHTML = `${skillName}<button type="button" class="skill-tag-remove" data-skill-id="${skillId}" title="{% trans 'Remove' %}"><span class="material-symbols-outlined">close</span></button>`;
+        skillsList.appendChild(tag);
+        tag.querySelector('.skill-tag-remove').addEventListener('click', handleRemove);
+    }
+
+    function handleRemove(e) {
+        const btn = e.currentTarget;
+        const skillId = btn.dataset.skillId;
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const body = new URLSearchParams({ action: 'remove_skill', skill_id: skillId, csrfmiddlewaretoken: csrf });
+
+        fetch('{% url "edit_profile" %}', { method: 'POST', body })
+            .then(r => r.json())
+            .then(data => {
+                if (data.ok) {
+                    const tag = skillsList.querySelector(`[data-skill-id="${skillId}"]`);
+                    if (tag) tag.remove();
+                    addedIds.delete(parseInt(skillId));
+                    updateCount();
+                    showDropdownItem(skillId);
+                }
+            });
+    }
+
+    // Bind remove on existing tags
+    skillsList.querySelectorAll('.skill-tag-remove').forEach(btn => btn.addEventListener('click', handleRemove));
+
+    // ---- Animated dialog close helper ----
+    function closeDialog(dialog) {
+        dialog.classList.add('dialog-closing');
+        dialog.addEventListener('animationend', () => {
+            dialog.classList.remove('dialog-closing');
+            dialog.close();
+            document.body.style.overflow = '';
+        }, { once: true });
+    }
+
+    // ---- Dialog triggers ----
+    document.getElementById('open-change-password').addEventListener('click', () => {
+        document.getElementById('change-password-dialog').showModal();
+        document.body.style.overflow = 'hidden';
+    });
+
+    document.getElementById('open-deactivate').addEventListener('click', () => {
+        document.getElementById('deactivate-dialog').showModal();
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Close buttons (X and Cancel) via data-close-dialog
+    document.querySelectorAll('[data-close-dialog]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const dialog = document.getElementById(btn.dataset.closeDialog);
+            if (dialog) closeDialog(dialog);
+        });
+    });
+
+    // Close on backdrop click
+    document.querySelectorAll('dialog.account-dialog').forEach(dialog => {
+        dialog.addEventListener('close', () => { document.body.style.overflow = ''; });
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) closeDialog(dialog);
+        });
+    });
+
+    // ---- Password toggle ----
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const input = document.getElementById(btn.dataset.target);
+            if (!input) return;
+            const showing = input.type === 'text';
+            input.type = showing ? 'password' : 'text';
+            btn.querySelector('.material-symbols-outlined').textContent = showing ? 'visibility' : 'visibility_off';
+        });
+    });
+
+    // Auto-open dialog if there were form errors on password/deactivate
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'password' in message.message|lower or 'incorrect' in message.message|lower %}
+                document.getElementById('change-password-dialog').showModal();
+            {% endif %}
+            {% if 'deactivated' in message.message|lower and 'not' in message.message|lower %}
+                document.getElementById('deactivate-dialog').showModal();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+})();
+</script>
+{% endblock %}

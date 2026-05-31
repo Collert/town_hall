@@ -1,0 +1,117 @@
+{% extends "education/module_layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block module_css %}
+    <link rel="stylesheet" href="{% static 'education/quiz_detail.css' %}">
+{% endblock %}
+
+{% block module_content %}
+<!-- Quiz Header -->
+<section class="quiz-header-section">
+    <p class="quiz-module-title">{{ module.title }}</p>
+    <h1 class="quiz-title">{% trans "Knowledge Check:" %} {{ quiz.title }}</h1>
+    <p class="quiz-instructions">
+        <span class="material-symbols-outlined">info</span>
+        {% blocktrans with count=questions.count %}Answer all {{ count }} questions below{% endblocktrans %}
+    </p>
+</section>
+
+<!-- Quiz Form -->
+<form method="post" action="{% url 'submit_quiz' module_id=module.id quiz_id=quiz.id %}" class="quiz-form">
+    {% csrf_token %}
+
+    {% for question in questions %}
+    <div class="quiz-question-card">
+        <div class="question-header">
+            <span class="question-number">{% trans "Question" %} {{ forloop.counter }}</span>
+        </div>
+        <p class="question-text">{{ question.question_text }}</p>
+
+        <div class="question-options">
+            <label class="option-label">
+                <input type="radio" name="question_{{ question.id }}" value="A" required>
+                <span class="option-indicator">A</span>
+                <span class="option-text">{{ question.option_a }}</span>
+            </label>
+            <label class="option-label">
+                <input type="radio" name="question_{{ question.id }}" value="B">
+                <span class="option-indicator">B</span>
+                <span class="option-text">{{ question.option_b }}</span>
+            </label>
+            {% if question.option_c %}
+            <label class="option-label">
+                <input type="radio" name="question_{{ question.id }}" value="C">
+                <span class="option-indicator">C</span>
+                <span class="option-text">{{ question.option_c }}</span>
+            </label>
+            {% endif %}
+            {% if question.option_d %}
+            <label class="option-label">
+                <input type="radio" name="question_{{ question.id }}" value="D">
+                <span class="option-indicator">D</span>
+                <span class="option-text">{{ question.option_d }}</span>
+            </label>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="quiz-submit-btn">
+        <span>{% trans "Submit Quiz" %}</span>
+        <span class="material-symbols-outlined">send</span>
+    </button>
+</form>
+{% endblock %}
+
+{% block module_units %}
+    <!-- Introduction -->
+    <a href="{% url 'module_overview' module.id %}" class="unit-item link">
+        <div class="unit-indicator">
+            <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        </div>
+        <div class="unit-details">
+            <p class="unit-title completed-text">{% trans "Introduction" %}</p>
+        </div>
+    </a>
+
+    {% for l in lessons %}
+    <a href="{% url 'lesson_detail' module_id=module.id lesson_id=l.id %}" class="unit-item link" style="text-decoration: none; color: inherit;">
+        <div class="unit-indicator">
+            {% if request.user in l.completed_by.all %}
+                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            {% else %}
+                <span class="unit-number">{{ forloop.counter|stringformat:"02d" }}</span>
+            {% endif %}
+        </div>
+        <div class="unit-details">
+            <p class="unit-title {% if request.user in l.completed_by.all %}completed-text{% endif %}">{{ l.title }}</p>
+            <p class="unit-meta">{{ l.get_overall_length }} {% trans "mins" %}</p>
+        </div>
+    </a>
+    {% endfor %}
+
+    {% for q in quizzes %}
+    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=q.id %}" class="unit-item {% if current_quiz and current_quiz.id == q.id %}active{% else %}link{% endif %}" style="text-decoration: none; color: inherit;">
+        <div class="unit-indicator">
+            {% if request.user in q.completed_by.all %}
+                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            {% elif current_quiz and current_quiz.id == q.id %}
+                <span class="material-symbols-outlined">quiz</span>
+            {% else %}
+                <span class="material-symbols-outlined">quiz</span>
+            {% endif %}
+        </div>
+        <div class="unit-details">
+            <p class="unit-title {% if request.user in q.completed_by.all %}{% if not current_quiz or current_quiz.id != q.id %}completed-text{% endif %}{% endif %}">
+                {% if q.title %}{{ q.title }}{% else %}{% trans "Final Quiz" %}{% endif %}
+            </p>
+            {% if current_quiz and current_quiz.id == q.id %}
+                <p class="unit-status">{% trans "Current Quiz" %}</p>
+            {% else %}
+                <p class="unit-meta">{{ q.get_total_length }} {% trans "mins" %}</p>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+{% endblock %}

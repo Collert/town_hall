@@ -1,0 +1,94 @@
+{% extends "education/education_layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block education_css %}
+    <link rel="stylesheet" href="{% static 'education/module_layout.css' %}">
+    {% block module_css %}{% endblock %}
+{% endblock %}
+
+{% block education_content %}
+<div class="module-layout-container">
+    <!-- Main Content Canvas -->
+    <div class="module-content">
+        {% block module_content %}{% endblock %}
+    </div>
+
+    <!-- Curriculum Sidebar -->
+    <aside class="module-sidebar">
+        <div class="module-structure-card glass-panel">
+            <div class="module-structure-header">
+                <h3>{% trans "Module Structure" %}</h3>
+                <p class="unit-count">{{ total_units|default:"0" }} {% trans "Units" %}</p>
+            </div>
+            
+            <div class="module-units">
+                {% block module_units %}
+                    <!-- Introduction -->
+                    <a href="{% url 'module_overview' module.id %}" class="unit-item {% if not current_lesson and not current_quiz %}active{% else %}link{% endif %}">
+                        <span class="unit-number">
+                            <span class="material-symbols-outlined" style="font-size: 1rem;">home</span>
+                        </span>
+                        <div class="unit-details">
+                            <p class="unit-title">{% trans "Introduction" %}</p>
+                            {% if not current_lesson and not current_quiz %}
+                                <p class="unit-status">{% trans "Overview" %}</p>
+                            {% endif %}
+                        </div>
+                        {% if not current_lesson and not current_quiz %}
+                            <span class="material-symbols-outlined">play_circle</span>
+                        {% else %}
+                            <span class="material-symbols-outlined hover-icon">check_circle</span>
+                        {% endif %}
+                    </a>
+
+                    <!-- Dynamic Units -->
+                    {% for lesson in lessons %}
+                    <a href="{% url 'lesson_detail' module_id=module.id lesson_id=lesson.id %}" class="unit-item {% if current_lesson and current_lesson.id == lesson.id %}active{% else %}link{% endif %}" style="text-decoration: none; color: inherit;">
+                        <div class="unit-indicator">
+                            {% if request.user in lesson.completed_by.all %}
+                                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            {% elif current_lesson and current_lesson.id == lesson.id %}
+                                <span class="material-symbols-outlined">play_circle</span>
+                            {% else %}
+                                <span class="unit-number">{{ forloop.counter|stringformat:"02d" }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="unit-details">
+                            <p class="unit-title {% if request.user in lesson.completed_by.all and current_lesson and current_lesson.id != lesson.id %}completed-text{% elif request.user in lesson.completed_by.all and not current_lesson %}completed-text{% endif %}">{{ lesson.title }}</p>
+                            {% if current_lesson and current_lesson.id == lesson.id %}
+                                <p class="unit-status">{% trans "Current Lesson" %}</p>
+                            {% else %}
+                                <p class="unit-meta">{{ lesson.get_overall_length }} {% blocktranslate count counter=lesson.get_overall_length %}min{%plural%}mins{% endblocktranslate %}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% empty %}
+                        <p class="unit-title" style="opacity: 0.7; font-size: 0.8rem; padding: 1rem;">{% trans "No lessons available." %}</p>
+                    {% endfor %}
+
+                    {% for quiz in quizzes %}
+                    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=quiz.id %}" class="unit-item {% if current_quiz and current_quiz.id == quiz.id %}active{% else %}link{% endif %}" style="text-decoration: none; color: inherit;">
+                        <div class="unit-indicator">
+                            {% if request.user in quiz.completed_by.all %}
+                                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            {% else %}
+                                <span class="material-symbols-outlined">quiz</span>
+                            {% endif %}
+                        </div>
+                        <div class="unit-details">
+                            <p class="unit-title {% if request.user in quiz.completed_by.all %}completed-text{% endif %}">{% if quiz.title %}{{ quiz.title }}{% else %}{% trans "Final Quiz" %}{% endif %}</p>
+                            {% if current_quiz and current_quiz.id == quiz.id %}
+                                <p class="unit-status">{% trans "Current Quiz" %}</p>
+                            {% else %}
+                                <p class="unit-meta">{{ quiz.get_total_length }} {% blocktranslate count counter=quiz.get_total_length %}min{%plural%}mins{% endblocktranslate %}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endfor %}
+                {% endblock %}
+            </div>
+        </div>
+    </aside>
+</div>
+{% endblock %}

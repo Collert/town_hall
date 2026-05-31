@@ -1,0 +1,54 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 500px;">
+        <div class="auth-card">
+            <h1>Welcome Back</h1>
+        <p>Sign in to continue building your community.</p>
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="auth-form-group has-icon">
+                <label for="email">Email Address</label>
+                <span class="material-symbols-outlined">mail</span>
+                <input type="email" id="email" name="email" placeholder="name@example.com" required>
+            </div>
+            
+            <div class="auth-form-group has-icon">
+                <label for="password" class="label-flex">
+                    <span>Password</span>
+                    <a href="#">Forgot Password?</a>
+                </label>
+                <span class="material-symbols-outlined">lock</span>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn btn-accent btn-rounded auth-submit-btn">
+                Sign In <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span style="font-style: italic; text-transform: none; font-weight: normal; letter-spacing: normal;">secure connection established</span>
+        </div>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="{% url 'signup' %}">Sign Up</a>
+        </div>
+    </div>
+
+    <div class="auth-testimonial-login">
+            <img alt="Volunteer Advocate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6XhqdfqTZ9Ot_wikeMiDvOgwhNYj3PWej-weFeoLDZ_oeJccxjZBjzU7UaQEFsEdfTeddaqItPQ0x_z4tzewkENIKqpIUr5wmk_vSkegqN0dY0eXUggGnrp4-vNOjtnB9AHAI3Dv9MhDKfVyGEGcfHhrIa0WE5mq8SLEllM7P_l3_em2F51yZqCMGEvhmOqzpLw5SpVameuYGMdJ3lbqT2NTRCDyP2OGg4QLrefzKwIroMnF5Y8X0d6jor7e8J6AT8k-utj7RRzI"/> 
+            <div class="quote">
+                "Volunteering here changed my life. Join thousands making an impact."
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

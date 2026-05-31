@@ -1,0 +1,193 @@
+{% extends 'education/education_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block education_css %}
+<link rel="stylesheet" href="{% static 'education/verify_certificates.css' %}">
+{% endblock %}
+
+{% block mobile_submenu_training %}
+<a href="{% url 'training_directory' %}" class="mobile-nav-sublink">
+    <span class="material-symbols-outlined">explore</span>
+    {% trans "Explore Courses" %}
+</a>
+<a href="{% url 'verify_certificates' %}" class="mobile-nav-sublink active">
+    <span class="material-symbols-outlined">verified_user</span>
+    {% trans "Verify Certificate" %}
+</a>
+{% endblock %}
+
+{% block education_content %}
+<div class="sc-split-view">
+
+    <!-- Left Panel: Certificate Info -->
+    <div class="sc-left-panel">
+        <div class="sc-status-chip {% if status.code == 0 %}sc-status-not-submitted{% elif status.code == 1 %}sc-status-action-required{% elif status.code == 2 %}sc-status-approved{% endif %}">
+            <span class="material-symbols-outlined">{% if status.code == 0 %}pending_actions{% elif status.code == 1 %}hourglass_top{% elif status.code == 2 %}verified{% endif %}</span>
+            {% trans "Status:" %} <strong>{{ status.text }}</strong>
+        </div>
+
+        <div class="sc-cert-header">
+            <div class="sc-cert-icon">
+                <span class="material-symbols-outlined">{{ certificate.icon|default:"workspace_premium" }}</span>
+            </div>
+            <div>
+                <h1 class="sc-cert-title">{{ certificate.name }}</h1>
+            </div>
+        </div>
+
+        <div class="sc-panel-section">
+            <h2 class="sc-panel-heading">{% trans "Description" %}</h2>
+            <p class="sc-panel-text">{{ certificate.description }}</p>
+        </div>
+
+        {% if required_docs %}
+        <div class="sc-panel-section">
+            <h2 class="sc-panel-heading">{% trans "Required documents" %}</h2>
+            <ul class="sc-docs-list">
+                {% for doc in required_docs %}
+                <li class="sc-docs-item">
+                    <span class="material-symbols-outlined sc-docs-icon">check_circle</span>
+                    {{ doc }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Right Panel: Upload Form -->
+    <div class="sc-right-panel">
+        <div class="sc-right-inner">
+            <div class="sc-right-header">
+                <h2 class="sc-right-title">{% trans "Document Upload" %}</h2>
+                <span class="sc-required-tag">{% trans "Required" %}</span>
+            </div>
+            <p class="sc-right-desc">
+                {% blocktrans with name=certificate.name %}
+                Please upload a clear, legible copy of your {{ name }} certificate. Ensure the issue date and expiration date are visible. Allowed formats: PDF, JPG, PNG (Max 5 MB).
+                {% endblocktrans %}
+            </p>
+
+            <form method="post" enctype="multipart/form-data" class="sc-upload-form" id="sc-upload-form">
+                {% csrf_token %}
+                <div class="sc-drop-zone" id="sc-drop-zone">
+                    <span class="material-symbols-outlined sc-drop-icon">upload_file</span>
+                    <p class="sc-drop-label">{% trans "Select a file or drag and drop here" %}</p>
+                    <p class="sc-drop-sub">{% trans "PDF, JPG, or PNG up to 5 MB" %}</p>
+                    <label for="sc-file-input" class="sc-browse-btn">{% trans "Browse Files" %}</label>
+                    <input type="file" id="sc-file-input" name="documents" multiple accept=".pdf,.jpg,.jpeg,.png" class="sc-file-input">
+                    <div class="sc-spinner" id="sc-spinner"></div>
+                </div>
+
+                <div class="sc-attached-section">
+                    <div class="sc-attached-header">
+                        <span class="material-symbols-outlined">description</span>
+                        <span class="sc-attached-count" id="sc-attached-count">
+                            {% trans "Files Attached" %} <strong>{{ existing_files.count }}</strong>
+                        </span>
+                    </div>
+                    <ul class="sc-attached-list" id="sc-attached-list">
+                        {% if existing_files %}
+                            {% for f in existing_files %}
+                            <li class="sc-attached-item">
+                                <span class="material-symbols-outlined">attach_file</span>
+                                {{ f.file.name|cut:"certification_files/" }}
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                        <li class="sc-no-files" id="sc-no-files">
+                            <span class="material-symbols-outlined">description</span>
+                            {% trans "No files attached yet." %}
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <p class="sc-consent-text">
+                    {% trans "By submitting, you confirm that the provided documents are authentic and accurate." %}
+                </p>
+
+                {% if status.code == 0 %}
+                <button type="submit" class="sc-submit-btn">
+                    {% trans "Submit Verification" %}
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+                {% elif status.code == 1 %}
+                <button type="submit" class="sc-submit-btn">
+                    {% trans "Update Documents" %}
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const input = document.getElementById('sc-file-input');
+    const dropZone = document.getElementById('sc-drop-zone');
+    const list = document.getElementById('sc-attached-list');
+    const countEl = document.getElementById('sc-attached-count');
+    const noFiles = document.getElementById('sc-no-files');
+    let newFiles = [];
+    let cancelTimer = null;
+
+    function showSpinner() {
+        if (cancelTimer) { clearTimeout(cancelTimer); cancelTimer = null; }
+        dropZone.classList.add('sc-drop-zone--loading');
+    }
+
+    function hideSpinner() {
+        if (cancelTimer) { clearTimeout(cancelTimer); cancelTimer = null; }
+        dropZone.classList.remove('sc-drop-zone--loading');
+    }
+
+    function renderNewFiles() {
+        if (noFiles) noFiles.style.display = newFiles.length ? 'none' : 'flex';
+        const existing = list.querySelectorAll('.sc-new-file');
+        existing.forEach(el => el.remove());
+        newFiles.forEach(f => {
+            const li = document.createElement('li');
+            li.className = 'sc-attached-item sc-new-file';
+            li.innerHTML = `<span class="material-symbols-outlined">attach_file</span>${f.name}`;
+            list.appendChild(li);
+        });
+        const baseCount = {{ existing_files.count|default:0 }};
+        countEl.innerHTML = `{% trans "Files Attached" %} <strong>${baseCount + newFiles.length}</strong>`;
+    }
+
+    // Show spinner the moment the label is clicked, before the dialog opens.
+    // It must stay through the dialog AND the browser's file-reading freeze
+    // (which blocks the main thread before `change` ever fires).
+    document.querySelector('label[for="sc-file-input"]').addEventListener('click', showSpinner);
+
+    // `change` is the definitive done signal — it fires AFTER the freeze.
+    input.addEventListener('change', function () {
+        newFiles = Array.from(input.files);
+        renderNewFiles();
+        hideSpinner();
+    });
+
+    // Cancel case: user opens dialog then presses Escape.
+    // window focus fires when dialog closes; if `change` hasn't fired after 3s, user cancelled.
+    window.addEventListener('focus', function () {
+        if (!dropZone.classList.contains('sc-drop-zone--loading')) return;
+        cancelTimer = setTimeout(hideSpinner, 3000);
+    });
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('sc-drop-zone--over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('sc-drop-zone--over'));
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('sc-drop-zone--over');
+        const dt = new DataTransfer();
+        Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+        input.files = dt.files;
+        newFiles = Array.from(dt.files);
+        renderNewFiles();
+    });
+})();
+</script>
+{% endblock %}

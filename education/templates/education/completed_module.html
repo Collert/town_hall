@@ -1,0 +1,144 @@
+{% extends "education/education_layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block education_css %}
+    <link rel="stylesheet" href="{% static 'education/completed_module.css' %}">
+{% endblock %}
+
+{% block education_content %}
+<div class="completed-page">
+    <div class="completed-grid">
+        <!-- Left Column -->
+        <div class="completed-left">
+            {% if first_time %}
+            <!-- First-time congratulations -->
+            <div class="congrats-icon-circle">
+                <span class="material-symbols-outlined congrats-icon" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+            </div>
+
+            <div class="congrats-text">
+                <h1 class="congrats-heading">
+                    {% blocktrans with name=user.first_name module=module.title %}
+                    Congratulations, {{ name }}! You've Completed the <span class="accent-text">{{ module }}.</span>
+                    {% endblocktrans %}
+                </h1>
+                <p class="congrats-subtitle">
+                    {% trans "You're now one step closer to making a huge impact." %}
+                </p>
+            </div>
+
+            <div class="action-cards">
+                <a href="{% url 'training_directory' %}" class="action-card">
+                    <div class="action-icon-box action-icon-training">
+                        <span class="material-symbols-outlined">school</span>
+                    </div>
+                    <h3 class="action-card-title">{% trans "Continue Training" %}</h3>
+                    <p class="action-card-desc">{% trans "Level up your skills with other available volunteer modules." %}</p>
+                    <span class="action-card-link">
+                        {% trans "Go to Dashboard" %} <span class="material-symbols-outlined action-arrow">arrow_forward</span>
+                    </span>
+                </a>
+            </div>
+            {% else %}
+            <!-- Generic verification view -->
+            <div class="congrats-icon-circle verification-icon-circle">
+                <span class="material-symbols-outlined congrats-icon" style="font-variation-settings: 'FILL' 1;">verified</span>
+            </div>
+
+            <div class="congrats-text">
+                <h1 class="congrats-heading verification-heading">
+                    {{ user.get_full_name }} {% trans "has completed" %} <span class="accent-text">{{ module.title }}</span>
+                </h1>
+            </div>
+
+            <!-- Module Info -->
+            <div class="module-info-section">
+                <div class="module-info-card">
+                    <h3 class="module-info-label">{% trans "About this Module" %}</h3>
+                    <div class="module-info-desc">
+                        {{ module.description|linebreaks }}
+                    </div>
+                    <div class="module-info-meta">
+                        <div class="meta-item">
+                            <span class="material-symbols-outlined meta-icon">calendar_today</span>
+                            <div>
+                                <p class="meta-label">{% trans "Completed On" %}</p>
+                                <p class="meta-value">{{ completion.completed_at|date:"N j, Y" }}</p>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="material-symbols-outlined meta-icon">schedule</span>
+                            <div>
+                                <p class="meta-label">{% trans "Duration" %}</p>
+                                <p class="meta-value">{{ module.get_total_length }} {% trans "mins" %}</p>
+                            </div>
+                        </div>
+                        {% if module.topic %}
+                        <div class="meta-item">
+                            <span class="material-symbols-outlined meta-icon">category</span>
+                            <div>
+                                <p class="meta-label">{% trans "Topic" %}</p>
+                                <p class="meta-value">{{ module.topic.name }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column - Certificate Preview -->
+        <div class="completed-right">
+            <div class="certificate-preview-wrapper">
+                <div class="certificate-preview-glow"></div>
+                <div class="certificate-preview-card">
+                    <div class="cert-preview-top">
+                        <div>
+                            <p class="cert-preview-label">{% trans "Certificate of Completion" %}</p>
+                            <h2 class="cert-preview-org">{{ company_name }}</h2>
+                        </div>
+                        <div class="cert-preview-badge">
+                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        </div>
+                    </div>
+
+                    <div class="cert-preview-center">
+                        <p class="cert-preview-certifies">{% trans "This certifies that" %}</p>
+                        <h3 class="cert-preview-name">{{ user.get_full_name }}</h3>
+                        <p class="cert-preview-certifies">{% trans "has successfully mastered" %}</p>
+                        <h4 class="cert-preview-module">{{ module.title }}</h4>
+                    </div>
+
+                    <div class="cert-preview-bottom">
+                        <div class="cert-preview-meta">
+                            <p class="cert-preview-meta-label">{% trans "Date Issued" %}</p>
+                            <p class="cert-preview-meta-value">{{ completion.completed_at|date:"N j, Y" }}</p>
+                        </div>
+                        <div class="cert-preview-meta cert-preview-meta-right">
+                            <p class="cert-preview-meta-label">{% trans "Status" %}</p>
+                            <div class="cert-preview-verified">
+                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                {% trans "Verified" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="certificate-actions">
+                    <a href="{% url 'printable_certificate' completion_id=completion.id %}" class="cert-action-btn cert-action-primary">
+                        <span class="material-symbols-outlined">download</span>
+                        <span>{% trans "Download Certificate (PDF)" %}</span>
+                    </a>
+                    <a href="{% url 'module_overview' module_id=module.id %}" class="cert-action-btn cert-action-secondary">
+                        <span class="material-symbols-outlined">visibility</span>
+                        <span>{% trans "Review Module" %}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'education/education_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block education_css %}
+<link rel="stylesheet" href="{% static 'education/verify_certificates.css' %}">
+{% endblock %}
+
+{% block mobile_submenu_training %}
+<a href="{% url 'training_directory' %}" class="mobile-nav-sublink">
+    <span class="material-symbols-outlined">explore</span>
+    {% trans "Explore Courses" %}
+</a>
+<a href="{% url 'verify_certificates' %}" class="mobile-nav-sublink active">
+    <span class="material-symbols-outlined">verified_user</span>
+    {% trans "Verify Certificate" %}
+</a>
+{% endblock %}
+
+{% block education_content %}
+<div class="edu-body">
+    <header class="edu-header">
+        <h1 class="edu-title">{% trans "Verify Certificates" %}</h1>
+        <p class="edu-subtitle">
+            {% trans "Expand your impact by submitting external credentials. Track your progress and review completed organisational standards." %}
+        </p>
+    </header>
+
+    {% if available_certs %}
+    <section class="edu-section vc-section">
+        <div class="edu-section-header">
+            <h2 class="edu-section-title">{% trans "Available Certifications" %}</h2>
+        </div>
+        <div class="vc-available-grid">
+            {% for cert in available_certs %}
+            <div class="vc-available-card" style="view-transition-name: cert-card-{{ cert.id }};">
+                <div class="vc-available-card-icon">
+                    <span class="material-symbols-outlined">{{ cert.icon|default:"workspace_premium" }}</span>
+                </div>
+                <div class="vc-available-card-body">
+                    <h3 class="vc-available-card-title">{{ cert.name }}</h3>
+                    <p class="vc-available-card-desc">{{ cert.description|truncatewords:10 }}</p>
+                </div>
+                <a href="{% url 'submit_certificate' cert.id %}" class="vc-verify-btn">
+                    {% trans "Verify Now" %}
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+            </div>
+            {% empty %}
+            <p>{% trans "No available certifications." %}</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if verified_certs %}
+    <section class="edu-section vc-section">
+        <div class="edu-section-header">
+            <h2 class="edu-section-title">{% trans "My Verified Certificates" %}</h2>
+        </div>
+        <div class="vc-verified-grid">
+            {% for uc in verified_certs %}
+            <div class="vc-verified-card" style="view-transition-name: cert-card-{{ uc.certificate.id }};">
+                <div class="vc-verified-badge">
+                    <span class="material-symbols-outlined">verified</span>
+                    <span class="vc-verified-label">{% trans "Verified" %}</span>
+                    <span class="vc-verified-date">
+                        {% trans "Earned:" %} {{ uc.issued_at|date:"M Y" }}
+                    </span>
+                </div>
+                <div class="vc-verified-card-body">
+                    <h3 class="vc-verified-card-title">{{ uc.certificate.name }}</h3>
+                    <p class="vc-verified-card-desc">{{ uc.certificate.description|truncatewords:10 }}</p>
+                </div>
+                <a href="{% url 'submit_certificate' uc.certificate.id %}" class="vc-review-btn">
+                    {% trans "Review Details" %}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if not available_certs and not verified_certs %}
+    <div class="vc-empty">
+        <span class="material-symbols-outlined vc-empty-icon">workspace_premium</span>
+        <p class="vc-empty-text">{% trans "No certificates are available yet." %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

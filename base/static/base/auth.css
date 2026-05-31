@@ -1,0 +1,389 @@
+/* Base plain CSS for Auth forms */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem 1rem;
+    background-color: var(--color-bg-primary);
+}
+
+.auth-container-wide {
+    display: flex;
+    gap: 4rem;
+    max-width: 1000px;
+    width: 100%;
+    align-items: center;
+}
+
+.auth-info {
+    flex: 1;
+    display: none;
+}
+
+@media (min-width: 900px) {
+    .auth-info {
+        display: block;
+    }
+}
+
+.auth-info .subtitle {
+    color: var(--color-accent);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.auth-info h1 {
+    font-size: 3rem;
+    color: var(--color-primary);
+    line-height: 1.2;
+    margin: 1rem 0;
+}
+
+.auth-info p {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Testimonial & Social Proof styles */
+.auth-testimonial-pill {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.auth-testimonial-pill .testimonial-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.auth-testimonial-pill .testimonial-header img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary-light);
+    object-fit: cover;
+}
+
+.auth-testimonial-pill .testimonial-header .name {
+    font-weight: bold;
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.auth-testimonial-pill .testimonial-header .role {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.auth-testimonial-pill .quote {
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+}
+
+.auth-testimonial-pill .bg-icon {
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    font-size: 8rem;
+    color: var(--color-primary);
+    opacity: 0.05;
+    z-index: 1;
+}
+
+.auth-social-proof {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auth-social-proof .avatar-stack {
+    display: flex;
+}
+
+.auth-social-proof .avatar-stack img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-bg-primary);
+    margin-left: -0.8rem;
+    object-fit: cover;
+}
+
+.auth-social-proof .avatar-stack img:first-child {
+    margin-left: 0;
+}
+
+.auth-social-proof span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.auth-testimonial-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.auth-testimonial-login img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-border);
+    object-fit: cover;
+}
+
+.auth-testimonial-login .quote {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    max-width: 200px;
+    line-height: 1.4;
+}
+
+.auth-card {
+    flex: 1;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-sm);
+}
+
+.auth-card h1,
+.auth-card h2 {
+    color: var(--color-text-primary);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.auth-card>p {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .auth-form-group {
+    flex: 1;
+}
+
+.auth-form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.auth-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary-dark);
+    font-size: 0.9rem;
+}
+
+.auth-form-group .label-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.auth-form-group label a {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.auth-form-group label a:hover {
+    text-decoration: underline;
+}
+
+.auth-form-group input:not([type="checkbox"]) {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.auth-form-group.has-icon input {
+    padding-left: 2.5rem;
+}
+
+.auth-form-group.has-icon .material-symbols-outlined {
+    position: absolute;
+    left: 0.8rem;
+    top: 2.8rem;
+    /* relative to input height */
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    pointer-events: none;
+}
+
+.auth-form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+}
+
+.auth-form-group small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.checkbox-group input {
+    margin-top: 0.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.checkbox-group label {
+    font-size: 0.9rem;
+    font-weight: normal;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+.checkbox-group a {
+    color: var(--color-primary);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.checkbox-group a:hover {
+    text-underline-offset: 4px;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+}
+
+.auth-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    border: none;
+    color: white;
+}
+
+.auth-submit-btn:hover {
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.auth-divider {
+    text-align: center;
+    position: relative;
+    margin: 2rem 0;
+}
+
+.auth-divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-divider);
+    z-index: 1;
+}
+
+.auth-divider span {
+    background-color: var(--color-bg-secondary);
+    padding: 0 1rem;
+    position: relative;
+    z-index: 2;
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.social-login-grid {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-btn {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-bg-secondary);
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.social-btn:hover {
+    background-color: var(--color-bg-secondary);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.auth-footer a {
+    color: var(--color-accent);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,90 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Certificate" %} — {{ user.get_full_name }} | {{ module.title }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="{% static 'education/printable_certificate.css' %}">
+</head>
+<body>
+    <div class="certificate-container">
+        <div class="certificate-border">
+            <!-- Corner accents -->
+            <div class="corner-accent corner-tl"></div>
+            <div class="corner-accent corner-tr"></div>
+            <div class="corner-accent corner-bl"></div>
+            <div class="corner-accent corner-br"></div>
+
+            <!-- Top: Organization -->
+            <div class="cert-header">
+                <div class="cert-org-row">
+                    <span class="material-symbols-outlined cert-org-icon" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+                    <h1 class="cert-org-name">{{ company_name }}</h1>
+                </div>
+
+                <p class="cert-type-label">{% trans "Certificate of Completion" %}</p>
+                <h2 class="cert-module-name">{{ module.title }}</h2>
+            </div>
+
+            <!-- Center: Content -->
+            <div class="cert-body">
+                <p class="cert-body-statement">{% trans "This certifies that the above-named individual has successfully completed the training module." %}</p>
+
+                <div class="cert-recipient">
+                    <p class="cert-recipient-label">{% trans "Awarded To" %}</p>
+                    <h3 class="cert-recipient-name">{{ user.get_full_name }}</h3>
+                </div>
+
+                <!-- Metrics -->
+                <div class="cert-metrics">
+                    <div class="cert-metric">
+                        <span class="material-symbols-outlined cert-metric-icon metric-icon-accent">workspace_premium</span>
+                        <div>
+                            <p class="cert-metric-label">{% trans "Status" %}</p>
+                            <p class="cert-metric-value">{% trans "Verified" %}</p>
+                        </div>
+                    </div>
+                    <div class="cert-metric">
+                        <span class="material-symbols-outlined cert-metric-icon metric-icon-primary">verified_user</span>
+                        <div>
+                            <p class="cert-metric-label">{% trans "Module" %}</p>
+                            <p class="cert-metric-value">{% trans "Completed" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom: QR + Date -->
+            <div class="cert-footer">
+                <div class="cert-qr-section">
+                    <div class="cert-qr-code">
+                        {{ qr_svg|safe }}
+                    </div>
+                    <div class="cert-qr-info">
+                        <p class="cert-footer-label">{% trans "ID Number" %}</p>
+                        <p class="cert-footer-value">#{{ completion.id|stringformat:"05d" }}</p>
+                        <p class="cert-footer-label cert-footer-label-gap">{% trans "Issued On" %}</p>
+                        <p class="cert-footer-value">{{ completion.completed_at|date:"N j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="print-actions no-print">
+        <button onclick="window.print()" class="print-btn">
+            <span class="material-symbols-outlined">print</span>
+            {% trans "Print Certificate" %}
+        </button>
+        <button onclick="history.back()" class="back-btn">
+            <span class="material-symbols-outlined">arrow_back</span>
+            {% trans "Go Back" %}
+        </button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+{% extends 'base/layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-inner">
+        <div class="hero-content">
+            <h1>{{ hero.title }}</h1>
+            <p>{{ hero.subtitle }}</p>
+            <div class="hero-actions">
+                <a href="{{ hero.button_1_url }}" class="btn btn-accent btn-lg btn-rounded">{{ hero.button_1_text }}</a>
+                <a href="{{ hero.button_2_url }}" class="hero-video-link">
+                    {{ hero.button_2_text }}
+                </a>
+            </div>
+        </div>
+        <div class="hero-image-wrap">
+            <div class="hero-image-frame">
+                {% if hero.image %}
+                <img src="{{ hero.image.url }}" alt="{{ hero.title }}" />
+                {% endif %}
+            </div>
+            <div class="hero-glow"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<section class="stats-bar">
+    <div class="stats-card">
+        <div class="stat">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">crowdsource</span>
+            </div>
+            <div class="stat-text">
+                <div class="stat-number">{{ active_users|intcomma }}</div>
+                <div class="stat-label">{% blocktranslate count counter=active_users %}Volunteer Active{% plural %}Volunteers Active{% endblocktranslate %}</div>
+            </div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-icon">
+                <span class="material-symbols-outlined">schedule</span>
+            </div>
+            <div class="stat-text">
+                <div class="stat-number">{{ hours_contributed|intcomma }}</div>
+                <div class="stat-label">{% blocktranslate count counter=hours_contributed %}Hour Contributed{% plural %}Hours Contributed{% endblocktranslate %}</div>
+            </div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <div class="stat-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+            </div>
+            <div class="stat-text">
+                <div class="stat-number">{{ projects_completed|intcomma }}</div>
+                <div class="stat-label">{% blocktranslate count counter=projects_completed %}Project Completed{% plural %}Projects Completed{% endblocktranslate %}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Opportunities -->
+<section class="featured-opportunities">
+    <div class="section-inner">
+        <div class="section-header">
+            <div>
+                <h2>{% trans "Featured Opportunities" %}</h2>
+                <p>{% trans "Join these high-impact projects happening right now in your neighborhood." %}</p>
+            </div>
+            <a href="{% url 'explore_opportunities' %}" class="view-all-link">{% trans "View all opportunities" %} &rarr;</a>
+        </div>
+        <div class="cards-grid">
+            {% for event in featured_events %}
+            <div class="opportunity-card">
+                <div class="card-image">
+                    {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.title }}" />
+                    {% else %}
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIpcHifwWWlr49TjU4Q2-gzxfz_TQiyGSwEqyFaS5V1wTA6oDUeiKPUKobwgyQw1H3qh_7lRlqI4emXA3M80sBpdLEAvjuO0VyJR7CqjIFatXXY679wYO-ldXe7lbCwZ2qtwJtpCv-G2hGvwgKU2MikGSI0RZjs_O8pwJ9YYYuqJNtqLinu9f--utcxfjtFiwzwkLU7PemrgmOi3GSVtca4p56WGF6MPAKnTkIns4MJkVEbFpOEuGcAC9zOudprnf1F65RepPWEgs" alt="{{ event.title }}" />
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h3>{{ event.title }}</h3>
+                    <p class="card-meta">
+                        <span class="material-symbols-outlined">event</span>
+                        {{ event.start_date|date:"l, M jS" }}
+                    </p>
+                    <a href="{% url 'opportunity_detail' event.pk %}" class="btn btn-accent btn-rounded btn-full">{% trans "Learn More" %}</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>{% trans "No featured opportunities at this time." %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Volunteer Journey -->
+<section class="volunteer-journey">
+    <div class="section-inner journey-grid">
+        <!-- Dashboard Mockup -->
+        <div class="journey-mockup">
+            <div class="mockup-frame">
+                <div class="mockup-screen">
+                    <div class="mockup-header">
+                        <div class="mockup-user">
+                            <div class="mockup-avatar"></div>
+                            <div class="mockup-user-info">
+                                <p class="mockup-name">Alex Rivera</p>
+                                <p class="mockup-level">{% trans "LEVEL 4 VOLUNTEER" %}</p>
+                            </div>
+                        </div>
+                        <div class="mockup-dots">
+                            <span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="mockup-body">
+                        <div class="mockup-stat-card">
+                            <p class="mockup-stat-label">{% trans "Total Hours" %}</p>
+                            <p class="mockup-stat-value">450 <span>hrs</span></p>
+                        </div>
+                        <div class="mockup-stat-card">
+                            <p class="mockup-stat-label">{% trans "Certificates" %}</p>
+                            <p class="mockup-stat-value">8 <span>{% trans "earned" %}</span></p>
+                        </div>
+                        <div class="mockup-progress-card">
+                            <p class="mockup-progress-title">{% trans "Recent Training Progress" %}</p>
+                            <div class="mockup-progress-bar">
+                                <div class="mockup-progress-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="mockup-progress-meta">
+                                <span>{% trans "Safety & Ethics" %}</span>
+                                <span class="mockup-progress-pct">75%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mockup-glow"></div>
+        </div>
+        <!-- Journey Content -->
+        <div class="journey-content">
+            <h2>
+                {% trans "Your Volunteer Journey," %} <br>
+                <span class="text-primary-italic">{% trans "Organized & Rewarded." %}</span>
+            </h2>
+            <div class="journey-features">
+                <div class="journey-feature">
+                    <div class="feature-check">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
+                    </div>
+                    <div>
+                        <h4>{% trans "Personalized Dashboard" %}</h4>
+                        <p>{% trans "Unlock a tailored experience to track your volunteer hours, schedule upcoming shifts, and manage your profile in one central hub." %}</p>
+                    </div>
+                </div>
+                <div class="journey-feature">
+                    <div class="feature-check">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
+                    </div>
+                    <div>
+                        <h4>{% trans "Skill Certifications" %}</h4>
+                        <p>{% trans "Complete exclusive training modules to level up your skills. Earn digital certificates that showcase your achievements to future employers." %}</p>
+                    </div>
+                </div>
+                <div class="journey-feature">
+                    <div class="feature-check">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
+                    </div>
+                    <div>
+                        <h4>{% trans "Impact Analytics" %}</h4>
+                        <p>{% trans "See the real-world difference you're making with detailed impact reports and community-wide contribution metrics." %}</p>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="btn btn-dark btn-lg btn-rounded">
+                {% trans "Start Your Journey" %}
+                <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"></path></svg>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

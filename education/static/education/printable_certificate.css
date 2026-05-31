@@ -1,0 +1,367 @@
+/* ===========================
+   Printable Certificate
+   =========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #e5f7f6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-family: 'Inter', sans-serif;
+    color: #0e1e1e;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}
+
+
+/* Certificate Container */
+.certificate-container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 1 / 1.414;
+    box-shadow: 0 20px 60px rgba(0, 67, 77, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.certificate-border {
+    position: absolute;
+    inset: 1rem;
+    border: 1px solid rgba(191, 200, 203, 0.3);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+/* Corner Accents */
+.corner-accent {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+}
+
+.corner-tl {
+    top: 0;
+    left: 0;
+    border-top: 2px solid #00434d;
+    border-left: 2px solid #00434d;
+}
+
+.corner-tr {
+    top: 0;
+    right: 0;
+    border-top: 2px solid #00434d;
+    border-right: 2px solid #00434d;
+}
+
+.corner-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 2px solid #00434d;
+    border-left: 2px solid #00434d;
+}
+
+.corner-br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid #00434d;
+    border-right: 2px solid #00434d;
+}
+
+
+/* Header */
+.cert-header {
+    text-align: center;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cert-org-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.cert-org-icon {
+    font-size: 2.25rem;
+    color: #00434d;
+}
+
+.cert-org-name {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    color: #00434d;
+}
+
+.cert-type-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #00434d;
+}
+
+.cert-module-name {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #00434d;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+@media (min-width: 600px) {
+    .cert-module-name {
+        font-size: 3rem;
+    }
+}
+
+
+/* Body */
+.cert-body {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex-grow: 1;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.cert-body-statement {
+    font-size: 1rem;
+    color: #3f484b;
+    max-width: 28rem;
+    line-height: 1.6;
+}
+
+.cert-recipient {
+    border-top: 1px solid #daeceb;
+    border-bottom: 1px solid #daeceb;
+    width: 75%;
+    padding: 1.5rem 0;
+}
+
+.cert-recipient-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #6f797b;
+    margin-bottom: 0.5rem;
+}
+
+.cert-recipient-name {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0e1e1e;
+}
+
+@media (min-width: 600px) {
+    .cert-recipient-name {
+        font-size: 3rem;
+    }
+}
+
+
+/* Metrics */
+.cert-metrics {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding-top: 1rem;
+}
+
+.cert-metric {
+    background-color: #dff1f0;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cert-metric-icon {
+    font-size: 1.5rem;
+}
+
+.metric-icon-accent {
+    color: #ac3509;
+}
+
+.metric-icon-primary {
+    color: #00434d;
+}
+
+.cert-metric-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6f797b;
+}
+
+.cert-metric-value {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #0e1e1e;
+}
+
+
+/* Footer */
+.cert-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.cert-qr-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cert-qr-code {
+    width: 6rem;
+    height: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cert-qr-code svg {
+    width: 100%;
+    height: 100%;
+}
+
+.cert-qr-info {
+    text-align: center;
+}
+
+.cert-footer-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #6f797b;
+}
+
+.cert-footer-label-gap {
+    margin-top: 0.5rem;
+}
+
+.cert-footer-value {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0e1e1e;
+}
+
+
+/* Print Actions */
+.print-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.print-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: linear-gradient(to right, #ac3509, #fe6f42);
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.print-btn:hover {
+    transform: scale(1.03);
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background-color: #ffffff;
+    color: #00434d;
+    border: 1px solid rgba(191, 200, 203, 0.3);
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: scale(1.03);
+}
+
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .certificate-container {
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        max-width: none;
+    }
+
+    .certificate-border {
+        border: 2px solid #00434d;
+        padding: 2rem;
+        margin: 1rem;
+        height: calc(100vh - 2rem);
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}

@@ -1,0 +1,350 @@
+{% extends "base/layout.html" %}
+{% load static %}
+{% load i18n %}
+{% load avatar_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="profile-page">
+
+  <!-- =======================================================
+       1. Profile Header
+       ======================================================= -->
+  <div class="profile-header">
+
+    <!-- Left: avatar + info -->
+    <div class="profile-header-identity">
+
+      <!-- Avatar -->
+      <div class="profile-avatar-block">
+        {% if profile.avatar %}
+          <img src="{{ profile.avatar.url }}"
+               alt="{{ viewed_user.get_full_name|default:viewed_user.username }}">
+        {% else %}
+          <div class="profile-avatar-fallback"
+               style="background: {{ viewed_user.get_full_name|default:viewed_user.username|avatar_color }};">
+            {{ viewed_user.get_full_name|default:viewed_user.username|initials }}
+          </div>
+        {% endif %}
+        {% if verified_skill_ids %}
+        <div class="profile-verified-pill">Verified</div>
+        {% endif %}
+      </div>
+
+      <!-- Name / Level / Location / Bio -->
+      <div class="profile-info">
+        <h1 class="profile-name">{{ viewed_user.get_full_name|default:viewed_user.username }}</h1>
+
+        <div class="profile-meta-row">
+          {% if level %}
+          <span class="profile-level-badge">{{ level.name }}</span>
+          {% endif %}
+          {% if profile.location %}
+          <span class="profile-location">
+            <span class="material-symbols-outlined">location_on</span>
+            {{ profile.location }}
+          </span>
+          {% endif %}
+        </div>
+
+        {% if profile.bio %}
+        <p class="profile-bio">{{ profile.bio }}</p>
+        {% endif %}
+      </div>
+
+    </div><!-- end .profile-header-identity -->
+
+    <!-- Right: action buttons -->
+    <div class="profile-actions">
+      {% if is_own_profile %}
+      <a href="{% url 'edit_profile' %}" class="profile-btn profile-btn-primary">
+        <span class="material-symbols-outlined">edit</span>
+        {% trans "Edit Profile" %}
+      </a>
+      {% endif %}
+      <button class="profile-btn profile-btn-ghost" type="button">
+        <span class="material-symbols-outlined">share</span>
+        {% trans "Public Profile" %}
+      </button>
+      <button class="profile-btn profile-btn-text" type="button">
+        <span class="material-symbols-outlined">download</span>
+        {% trans "Download Resume" %}
+      </button>
+    </div>
+
+  </div><!-- end .profile-header -->
+
+  <!-- =======================================================
+       2. Bento Grid: Impact Dashboard (8/12) + Core Skills (4/12)
+       ======================================================= -->
+  <div class="profile-bento">
+
+    <!-- Impact Dashboard -->
+    <div class="bento-impact">
+      <h3 class="bento-section-title">
+        <span class="material-symbols-outlined">analytics</span>
+        {% trans "Impact Dashboard" %}
+      </h3>
+
+      <div class="impact-stats-row">
+        <div class="impact-stat">
+          <span class="impact-stat-value accent">{{ total_hours }}</span>
+          <span class="impact-stat-label">{% trans "Verified Hours" %}</span>
+        </div>
+        <div class="impact-stat">
+          <span class="impact-stat-value">{{ profile.impact_points }}</span>
+          <span class="impact-stat-label">{% trans "Impact Points" %}</span>
+        </div>
+        <div class="impact-stat">
+          <span class="impact-stat-value">{{ projects_completed }}</span>
+          <span class="impact-stat-label">{% trans "Projects Completed" %}</span>
+        </div>
+      </div>
+
+      <div class="level-progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" style="width: {{ level_progress }}%;"></div>
+        </div>
+        <p class="progress-label">
+          {{ level_progress }}%
+          {% if next_level %}
+            {% blocktrans with name=next_level.name %}to {{ name }}{% endblocktrans %}
+          {% elif level %}
+            — {% trans "Max Level Reached" %}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Core Skills -->
+    <div class="bento-skills">
+      <h3 class="bento-section-title">
+        <span class="material-symbols-outlined">bolt</span>
+        {% trans "Core Skills" %}
+      </h3>
+
+      {% with skills=profile.skills.all %}
+      {% if skills %}
+      <div class="skills-chips">
+        {% for skill in skills %}
+        <span class="skill-chip">
+          {% if skill.id in verified_skill_ids %}
+          <span class="material-symbols-outlined">verified</span>
+          {% endif %}
+          {{ skill.name }}
+        </span>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="opacity:0.6; font-size:0.875rem; font-family:'Inter',sans-serif;">
+        {% trans "No skills listed." %}
+      </p>
+      {% endif %}
+      {% endwith %}
+
+      {% if recent_endorsers %}
+      <div class="recently-endorsed-block">
+        <p class="recently-endorsed-label">{% trans "Recently Endorsed By" %}</p>
+        <div class="endorser-avatars">
+          {% for endorser in recent_endorsers %}
+          <div class="endorser-avatar-item"
+               title="{{ endorser.get_full_name|default:endorser.username }}">
+            {% if endorser.profile.avatar %}
+              <img src="{{ endorser.profile.avatar.url }}"
+                   alt="{{ endorser.get_full_name|default:endorser.username }}">
+            {% else %}
+              <div class="endorser-avatar-fallback"
+                   style="background: {{ endorser.get_full_name|default:endorser.username|avatar_color }};">
+                {{ endorser.get_full_name|default:endorser.username|initials }}
+              </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          {% if extra_endorsers > 0 %}
+          <div class="endorser-overflow">+{{ extra_endorsers }}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+  </div><!-- end .profile-bento -->
+
+  <!-- =======================================================
+       3. Training & Certificates
+       ======================================================= -->
+  <section class="profile-section">
+    <div class="profile-section-header">
+      <div>
+        <h2>{% trans "Training & Certificates" %}</h2>
+        <p>{% trans "Validated training and compliance documents." %}</p>
+      </div>
+      <a href="{% url 'training_directory' %}" class="view-all-link">
+        {% trans "View All Education" %}
+      </a>
+    </div>
+
+    {% if completions %}
+    <div class="cert-grid">
+      {% for item in completions %}
+      <div class="cert-card">
+        <div class="cert-card-top">
+          <div class="cert-icon-wrap">
+            <span class="material-symbols-outlined">{{ item.module.icon }}</span>
+          </div>
+          <div>
+            <h4>{{ item.module.title }}</h4>
+            <p>
+              {% trans "Issued:" %} {{ item.completion.completed_at|date:"M Y" }}
+              &bull;
+              {% if item.expiry_date %}
+                {% trans "Expires:" %} {{ item.expiry_date|date:"M Y" }}
+              {% else %}
+                {% trans "No Expiration" %}
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        <div class="cert-card-bottom">
+          <span class="cert-status
+            {% if item.status == 'verified' %}status-verified
+            {% elif item.status == 'expiring_soon' %}status-expiring
+            {% else %}status-expired{% endif %}">
+            {% if item.status == 'verified' %}{% trans "Verified" %}
+            {% elif item.status == 'expiring_soon' %}{% trans "Expiring Soon" %}
+            {% else %}{% trans "Expired" %}{% endif %}
+          </span>
+          <button class="cert-download-btn" type="button" title="{% trans 'Download' %}">
+            <span class="material-symbols-outlined">download</span>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="color: var(--color-text-tertiary); font-family:'Inter',sans-serif; font-size:0.875rem;">
+      {% trans "No training completed yet." %}
+    </p>
+    {% endif %}
+  </section>
+
+  <!-- =======================================================
+       4. Recent Activity History
+       ======================================================= -->
+  <section class="profile-section">
+    <h2 style="font-family:'Manrope',sans-serif; font-size:1.875rem; font-weight:800;
+               letter-spacing:-0.03em; color:var(--color-text-primary); margin:0 0 2rem;">
+      {% trans "Recent Activity History" %}
+    </h2>
+
+    <div class="activity-table-wrap">
+      {% if activity_history %}
+      <table class="activity-table">
+        <thead>
+          <tr>
+            <th>{% trans "Event Name" %}</th>
+            <th>{% trans "Role" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th class="th-right">{% trans "Hours Logged" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in activity_history %}
+          <tr>
+            <td class="td-event">{{ item.event_title }}</td>
+            <td class="td-role">{{ item.role_name }}</td>
+            <td class="td-date">{{ item.date|date:"M d, Y" }}</td>
+            <td class="td-hours">{{ item.hours }} hrs</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="activity-empty">{% trans "No activity history yet." %}</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- =======================================================
+       5. Endorsements: Summary (4/12) + Feedback Feed (8/12)
+       ======================================================= -->
+  <div class="endorsements-section">
+
+    <!-- Endorsements Summary -->
+    <div class="endorsements-summary">
+      <h2>{% trans "Endorsements Summary" %}</h2>
+
+      {% if skill_endorsement_counts %}
+      <div class="endorsement-rows">
+        {% for item in skill_endorsement_counts %}
+        <div class="endorsement-row">
+          <span class="endorsement-row-name">{{ item.skill.name }}</span>
+          {% if item.count > 0 %}
+          <span class="endorsement-row-count">{{ item.count }}</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:var(--color-text-tertiary); font-family:'Inter',sans-serif; font-size:0.875rem;">
+        {% trans "No skills listed." %}
+      </p>
+      {% endif %}
+    </div>
+
+    <!-- Public Feedback Feed -->
+    <div class="feedback-feed">
+      <div class="feedback-feed-header">
+        <h2>{% trans "Public Feedback Feed" %}</h2>
+        <a href="#" class="feedback-view-all">{% trans "View All" %}</a>
+      </div>
+
+      {% if recent_endorsements %}
+      <div class="feedback-list">
+        {% for endorsement in recent_endorsements %}
+        <article class="feedback-item">
+          <div class="feedback-item-header">
+            <div class="feedback-avatar">
+              {% if endorsement.endorser.profile.avatar %}
+                <img src="{{ endorsement.endorser.profile.avatar.url }}"
+                     alt="{{ endorsement.endorser.get_full_name|default:endorsement.endorser.username }}">
+              {% else %}
+                <div class="feedback-avatar-fallback"
+                     style="background: {{ endorsement.endorser.get_full_name|default:endorsement.endorser.username|avatar_color }};">
+                  {{ endorsement.endorser.get_full_name|default:endorsement.endorser.username|initials }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="feedback-item-meta">
+              <strong>{{ endorsement.endorser.get_full_name|default:endorsement.endorser.username }}</strong>
+              <span>
+                {% with role=endorsement.endorser.profile.permanent_roles.first %}
+                  {% if role %}{{ role.name }} &bull; {% endif %}
+                {% endwith %}
+                {{ endorsement.timestamp|timesince }} {% trans "ago" %}
+              </span>
+            </div>
+          </div>
+
+          {% if endorsement.text %}
+          <p class="feedback-quote">{{ endorsement.text }}</p>
+          {% endif %}
+
+          <span class="feedback-skill-tag">{{ endorsement.skill.name }}</span>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:var(--color-text-tertiary); font-family:'Inter',sans-serif; font-size:0.875rem;">
+        {% trans "No public feedback yet." %}
+      </p>
+      {% endif %}
+    </div>
+
+  </div><!-- end .endorsements-section -->
+
+</main>
+{% endblock %}

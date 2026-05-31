@@ -1,0 +1,182 @@
+{% extends 'education/education_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block education_css %}
+<link rel="stylesheet" href="{% static 'education/training_directory.css' %}">
+{% endblock %}
+
+{% block education_content %}
+<div class="edu-body">
+    <header class="edu-header">
+        <h1 class="edu-title">{% trans "Training Directory" %}</h1>
+        <p class="edu-subtitle">
+            {% trans "Empower your community journey. Elevate your skills through our curated modules designed to help you build stronger, safer environments." %}
+        </p>
+    </header>
+
+    <section class="edu-section">
+        <div class="edu-section-header">
+            <h2 class="edu-section-title">{% trans "Current training" %}</h2>
+        </div>
+
+        <div class="edu-current-training-grid">
+            {% if last_viewed %}
+            <div class="edu-card edu-card-hero">
+                <div class="edu-card-hero-img-wrapper">
+                    {% if last_viewed.photo %}
+                    <img src="{{ last_viewed.photo.url }}" alt="{{ last_viewed.title }}" id="last-viewed-photo" class="edu-card-hero-img">
+                    {% else %}
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWMTT0FRD4NMGLTy3dz7vo_v8kwamtZoRLS8d0J4GufXH4DrggKsbv8bspB0Y85-YGmOQvnlntlpPklsIqafue-sfUxLuYV8MHbFxoWJ3rWNLOQ4NTaY54nhjuy1I1ObtkBiy3KjLwqE1Ulgq6cCyOET8Gl0UbKbMIsKyfXUhvkf4tQMuZ_HlnYpO4ZQkJU_gmxkrusEp9hcoy1dAsv2ZyzCFfCxCYWUUPFZuDlf3WCO-YpROdby4BBXUyyTYHKTTG66mhHENDQIU" alt="Training Venue" class="featured-img">
+                    {% endif %}
+                    <div class="edu-card-hero-gradient {% if not request.GET.topic and not request.GET.topic == "" %}animated{% endif %}"></div>
+                </div>
+                <div class="edu-card-hero-content">
+                    <span class="edu-badge">{% trans "Last Opened" %}</span>
+                    <h3 class="edu-hero-title">{{ last_viewed.title }}</h3>
+                    <p class="edu-hero-desc">{{ last_viewed.description|truncatewords:20 }}</p>
+                    <div class="edu-progress-container edu-progress-dark">
+                        <div class="edu-progress-header">
+                            <span class="edu-progress-label">{% trans "Current Progress" %}</span>
+                            <span class="edu-progress-value">{{ last_viewed.user_progress }}%</span>
+                        </div>
+                        <div class="edu-progress-bar-bg">
+                            <div class="edu-progress-bar-fill" style="width: {{ last_viewed.user_progress }}%;"></div>
+                        </div>
+                    </div>
+                    <a href="{% url 'module_overview' last_viewed.id %}" id="last-viewed-resume" class="btn btn-accent btn-rounded edu-btn-resume">{% trans "Resume course" %}</a>
+                </div>
+            </div>
+            
+            {% for module in current_training_modules %}
+            <div class="edu-card module-card">
+                <div class="edu-module-icon">
+                    <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
+                </div>
+                <h3 class="edu-module-title">{{ module.title }}</h3>
+                <p class="edu-module-desc">{{ module.description|truncatewords:15 }}</p>
+                <div class="edu-progress-container">
+                    <div class="edu-progress-header">
+                        <span class="edu-progress-label">{% trans "Current Progress" %}</span>
+                        <span class="edu-progress-value">{{ module.user_progress }}%</span>
+                    </div>
+                    <div class="edu-progress-bar-bg">
+                        <div class="edu-progress-bar-fill" style="width: {{ module.user_progress }}%;"></div>
+                    </div>
+                </div>
+                <div class="edu-module-actions">
+                    {% if module.role_count %}
+                    <div class="edu-module-req-badge">
+                        <span class="material-symbols-outlined edu-module-req-icon">stars</span>
+                        {% blocktrans count count=module.role_count %}Needed for {{ count }} Role{% plural %}Needed for {{ count }} Roles{% endblocktrans %}
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'module_overview' module.id %}" class="edu-btn-start">{% trans "Start Course" %}</a>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% else %}
+            
+            {% for module in current_training_modules %}
+            <div class="edu-card module-card">
+                <div class="edu-module-icon">
+                    <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
+                </div>
+                <h3 class="edu-module-title">{{ module.title }}</h3>
+                <p class="edu-module-desc">{{ module.description|truncatewords:15 }}</p>
+                <div class="edu-progress-container">
+                    <div class="edu-progress-header">
+                        <span class="edu-progress-label">{% trans "Current Progress" %}</span>
+                        <span class="edu-progress-value">{{ module.user_progress }}%</span>
+                    </div>
+                    <div class="edu-progress-bar-bg">
+                        <div class="edu-progress-bar-fill" style="width: {{ module.user_progress }}%;"></div>
+                    </div>
+                </div>
+                <div class="edu-module-actions">
+                    {% if module.role_count %}
+                    <div class="edu-module-req-badge">
+                        <span class="material-symbols-outlined edu-module-req-icon">stars</span>
+                        {% blocktrans count count=module.role_count %}Needed for {{ count }} Role{% plural %}Needed for {{ count }} Roles{% endblocktrans %}
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'education:module_detail' module.id %}" class="edu-btn-start">{% trans "Start Course" %}</a>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Available Training -->
+    <section class="edu-section">
+        <div id="topic-picker-form" class="edu-section-header edu-section-header-padded edu-topics-header">
+            <h2 class="edu-section-title">{% trans "Available Training" %}</h2>
+            <div class="edu-tabs" id="training-topic-tabs" role="tablist" aria-label="{% trans "Training topics" %}">
+                <button data-topic="" type="button" class="edu-tab {% if not request.GET.topic %}active{% endif %}" role="tab" aria-selected="{% if not request.GET.topic %}true{% else %}false{% endif %}" aria-controls="all-topics-panel" id="all-topics-tab">{% trans "All" %}</button>
+                {% for topic in topics %}
+                <button data-topic="{{ topic }}" type="button" class="edu-tab {% if request.GET.topic == topic %}active{% endif %}" role="tab" aria-selected="{% if request.GET.topic == topic %}true{% else %}false{% endif %}" aria-controls="{{ topic|slugify }}-panel" id="{{ topic|slugify }}-tab">{{ topic }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="edu-available-training-grid">
+            {% for module in available_modules %}
+            <div class="edu-card" style="view-transition-name: edu-card-{{ module.id }};">
+                <div class="edu-card-top-row">
+                    <div class="edu-module-icon edu-module-icon-small">
+                        <span class="material-symbols-outlined nav-icon">{{ module.icon|default:"inventory_2" }}</span>
+                    </div>
+                    {% if module.is_completed %}
+                    <span class="edu-badge-solid edu-badge-completed">{% trans "Completed" %}</span>
+                    {% elif module.role_count %}
+                    <span class="edu-badge-solid">
+                        {% blocktrans count count=module.role_count %}Needed for {{ count }} Role{% plural %}Needed for {{ count }} Roles{% endblocktrans %}
+                    </span>
+                    {% endif %}
+                </div>
+                <h4 class="edu-module-title edu-module-title-small">{{ module.title }}</h4>
+                <p class="edu-module-desc">{{ module.description|truncatewords:15 }}</p>
+                <div class="edu-module-meta">
+                    <div class="edu-duration-label">
+                        <span class="material-symbols-outlined edu-duration-icon">schedule</span>
+                        {{ module.get_total_length }} mins
+                    </div>
+                    <a href="{% url 'module_overview' module.id %}" class="edu-btn-start-small {% if module.is_completed %}edu-btn-review{% endif %}">{% if module.is_completed %}{% trans "Review" %}{% else %}{% trans "Start" %}{% endif %}</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>{% trans "No available training modules found matching your filter." %}</p>
+            {% endfor %}
+        </div>
+    </section>
+
+</div>
+
+<script>
+window.addEventListener('pagereveal', () => {
+    const sy = sessionStorage.getItem('scrollY');
+    if (sy !== null) {
+        window.scrollTo({ top: parseInt(sy, 10), behavior: 'instant' });
+        sessionStorage.removeItem('scrollY');
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector("#last-viewed-resume")?.addEventListener("click", () => {
+      document.querySelector("#last-viewed-photo")?.style.setProperty("view-transition-name", "card-image");
+    });
+    const tabs = document.querySelectorAll('#training-topic-tabs .edu-tab');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            sessionStorage.setItem('scrollY', window.scrollY);
+            const topic = this.getAttribute('data-topic');
+            window.location.href = `{% url 'training_directory' %}?topic=${topic}`;
+        });
+    });
+});
+</script>
+{% endblock %}
+

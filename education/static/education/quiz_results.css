@@ -1,0 +1,309 @@
+/* ===========================
+   Quiz Results Page Styles
+   =========================== */
+
+
+/* Results Header */
+.results-header-section {
+    margin-bottom: 2rem;
+}
+
+.results-module-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.results-page-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    letter-spacing: -0.025em;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .results-page-title {
+        font-size: 2.25rem;
+    }
+}
+
+
+/* Score Summary Card */
+.results-summary-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: var(--color-bg-primary);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+@media (min-width: 640px) {
+    .results-summary-card {
+        flex-direction: row;
+        text-align: left;
+        gap: 2.5rem;
+        padding: 2.5rem 3rem;
+    }
+}
+
+
+/* Score Circle (donut chart) */
+.score-circle {
+    width: 9rem;
+    height: 9rem;
+    min-width: 9rem;
+    border-radius: 50%;
+    background: conic-gradient(var(--color-primary) calc(var(--score) * 1%),
+            color-mix(in srgb, var(--color-primary) 12%, var(--color-bg-secondary)) calc(var(--score) * 1%));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.score-circle-inner {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    background-color: var(--color-bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-value {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    letter-spacing: -0.025em;
+}
+
+
+/* Results Info */
+.results-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.results-message {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0;
+    letter-spacing: -0.025em;
+}
+
+@media (min-width: 768px) {
+    .results-message {
+        font-size: 1.75rem;
+    }
+}
+
+.results-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.results-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    width: fit-content;
+}
+
+.results-badge .material-symbols-outlined {
+    font-size: 1.125rem;
+}
+
+.results-badge.passed {
+    background-color: color-mix(in srgb, var(--color-success, #2e7d6f) 12%, transparent);
+    color: var(--color-success, #2e7d6f);
+}
+
+.results-badge.failed {
+    background-color: color-mix(in srgb, var(--color-error, #d32f2f) 12%, transparent);
+    color: var(--color-error, #d32f2f);
+}
+
+
+/* Performance Breakdown */
+.performance-breakdown {
+    margin-bottom: 2rem;
+}
+
+.breakdown-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 1.25rem 0;
+}
+
+
+/* Individual Result Items */
+.result-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background-color: var(--color-bg-primary);
+    border-radius: 0.75rem;
+    margin-bottom: 0.625rem;
+}
+
+.result-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    min-width: 2.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.125rem;
+}
+
+.result-icon .material-symbols-outlined {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.result-item.correct .result-icon {
+    background-color: color-mix(in srgb, var(--color-success, #2e7d6f) 12%, transparent);
+    color: var(--color-success, #2e7d6f);
+}
+
+.result-item.incorrect .result-icon {
+    background-color: color-mix(in srgb, var(--color-error, #d32f2f) 12%, transparent);
+    color: var(--color-error, #d32f2f);
+}
+
+
+/* Result Details */
+.result-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.result-question {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.result-user-answer,
+.result-correct-answer {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.25rem 0;
+    line-height: 1.5;
+}
+
+.answer-label {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-right: 0.25rem;
+}
+
+.result-correct-answer {
+    color: var(--color-success, #2e7d6f);
+}
+
+.result-correct-answer .answer-label {
+    color: var(--color-success, #2e7d6f);
+}
+
+
+/* Action Buttons */
+.results-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 480px) {
+    .results-actions {
+        flex-direction: row;
+    }
+}
+
+.results-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    border-radius: 0.75rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+}
+
+.results-btn .material-symbols-outlined {
+    font-size: 1.125rem;
+}
+
+.results-btn.primary {
+    background: linear-gradient(135deg, var(--color-secondary, var(--color-primary)), var(--color-secondary-container, var(--color-primary-dark)));
+    color: var(--color-primary-contrast, #ffffff);
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.results-btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.results-btn.secondary {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border: 1.5px solid color-mix(in srgb, var(--color-outline-variant, var(--color-text-tertiary)) 15%, transparent);
+}
+
+.results-btn.secondary:hover {
+    background-color: var(--color-bg-secondary);
+}
+
+/* Form inside actions should be inline-flex */
+.results-actions form {
+    display: contents;
+}
+
+.results-actions form .results-btn {
+    width: 100%;
+}
+
+@media (min-width: 480px) {
+    .results-actions form .results-btn {
+        width: auto;
+    }
+}

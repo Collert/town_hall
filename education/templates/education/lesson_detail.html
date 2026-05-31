@@ -1,0 +1,205 @@
+{% extends "education/module_layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block module_css %}
+    <link rel="stylesheet" href="{% static 'education/lesson_detail.css' %}">
+{% endblock %}
+
+{% block module_content %}
+<!-- Video Section (conditional) -->
+{% if lesson.video_url %}
+<section class="video-section">
+    <div class="video-container">
+        <iframe
+            id="lesson-video"
+            src="https://www.youtube.com/embed/{{ lesson.youtube_video_id }}?enablejsapi=1"
+            title="{{ lesson.title }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+        ></iframe>
+        <div class="video-info-bar">
+            <div class="video-meta">
+                <h2 class="video-module-title">{{ module.title }}</h2>
+                <p class="video-lesson-subtitle">{% trans "Lesson" %} {{ lesson.order }}: {{ lesson.title }}</p>
+            </div>
+            {% if lesson.video_length_minutes %}
+            <span class="video-duration">{{ lesson.video_length_minutes }}:00</span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Reading Material Section -->
+<section class="reading-section">
+    <div class="reading-header">
+        <h3 class="reading-title">{% trans "Reading Material" %}</h3>
+    </div>
+    <div class="reading-body">
+        {{ lesson.content|safe }}
+    </div>
+</section>
+
+<div id="reading-end-sentinel"></div>
+
+<!-- Next Lesson / Next Quiz CTA -->
+<section class="next-unit-section">
+    {% if next_lesson %}
+    <a href="{% url 'lesson_detail' module_id=module.id lesson_id=next_lesson.id %}" class="next-unit-card">
+        <div class="next-unit-decoration"></div>
+        <div class="next-unit-content">
+            <div class="next-unit-label-row">
+                <span class="material-symbols-outlined next-unit-icon">arrow_forward</span>
+                <span class="next-unit-label">{% trans "Next Lesson" %}</span>
+            </div>
+            <h4 class="next-unit-title">{{ next_lesson.title }}</h4>
+            {% if next_lesson.get_overall_length %}
+            <p class="next-unit-meta">{{ next_lesson.get_overall_length }} {% trans "mins" %}</p>
+            {% endif %}
+        </div>
+    </a>
+    {% elif next_quiz %}
+    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=next_quiz.id %}" class="next-unit-card next-unit-quiz">
+        <div class="next-unit-decoration"></div>
+        <div class="next-unit-content">
+            <div class="next-unit-label-row">
+                <span class="material-symbols-outlined next-unit-icon">quiz</span>
+                <span class="next-unit-label">{% trans "Next: Quiz" %}</span>
+            </div>
+            <h4 class="next-unit-title">{{ next_quiz.title }}</h4>
+            <p class="next-unit-meta">{{ next_quiz.questions.count }} {% trans "questions" %}</p>
+        </div>
+    </a>
+    {% else %}
+    <form method="post" action="{% url 'complete_module' module_id=module.id %}">
+        {% csrf_token %}
+        <button type="submit" class="next-unit-card next-unit-complete">
+            <div class="next-unit-decoration"></div>
+            <div class="next-unit-content">
+                <div class="next-unit-label-row">
+                    <span class="material-symbols-outlined next-unit-icon">check_circle</span>
+                    <span class="next-unit-label">{% trans "Complete Module" %}</span>
+                </div>
+                <h4 class="next-unit-title">{% trans "Finish & Earn Your Certificate" %}</h4>
+            </div>
+        </button>
+    </form>
+    {% endif %}
+</section>
+{% if request.user.is_authenticated and not lesson_already_completed %}
+<script>
+(function() {
+    var completed = false;
+    var completeUrl = "{% url 'mark_lesson_complete' module_id=module.id lesson_id=lesson.id %}";
+    var csrfToken = "{{ csrf_token }}";
+    var hasVideo = {{ lesson.video_url|yesno:"true,false" }};
+
+    function markComplete() {
+        if (completed) return;
+        completed = true;
+        fetch(completeUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        }).then(function(response) {
+            if (!response.ok) return;
+            // Update the sidebar icon for the current lesson
+            var activeItem = document.querySelector('.unit-item.active .unit-indicator');
+            if (activeItem) {
+                activeItem.innerHTML = '<span class="material-symbols-outlined unit-check" style="font-variation-settings: \'FILL\' 1;">check_circle</span>';
+            }
+        });
+    }
+
+    if (hasVideo) {
+        // YouTube IFrame API
+        var tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(tag);
+
+        window.onYouTubeIframeAPIReady = function() {
+            new YT.Player('lesson-video', {
+                events: {
+                    'onStateChange': function(event) {
+                        if (event.data === YT.PlayerState.ENDED) {
+                            markComplete();
+                        }
+                    }
+                }
+            });
+        };
+    } else {
+        // No video — mark complete when user scrolls to end of reading material
+        var sentinel = document.getElementById('reading-end-sentinel');
+        if (sentinel) {
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        markComplete();
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(sentinel);
+        }
+    }
+})();
+</script>
+{% endif %}
+{% endblock %}
+
+{% block module_units %}
+    <!-- Introduction -->
+    <a href="{% url 'module_overview' module.id %}" class="unit-item link">
+        <div class="unit-indicator">
+            <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        </div>
+        <div class="unit-details">
+            <p class="unit-title completed-text">{% trans "Introduction" %}</p>
+        </div>
+    </a>
+
+    {% for l in lessons %}
+    <a href="{% url 'lesson_detail' module_id=module.id lesson_id=l.id %}" class="unit-item {% if l.id == lesson.id %}active{% else %}link{% endif %}">
+        <div class="unit-indicator">
+            {% if request.user in l.completed_by.all %}
+                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            {% elif l.id == lesson.id %}
+                <span class="material-symbols-outlined">play_circle</span>
+            {% else %}
+                <span class="unit-number">{{ forloop.counter|stringformat:"02d" }}</span>
+            {% endif %}
+        </div>
+        <div class="unit-details">
+            <p class="unit-title {% if request.user in l.completed_by.all and l.id != lesson.id %}completed-text{% endif %}">{{ l.title }}</p>
+            {% if l.id == lesson.id %}
+                <p class="unit-status">{% trans "In Progress" %}</p>
+            {% else %}
+                <p class="unit-meta">{{ l.get_overall_length }} {% trans "mins" %}</p>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+
+    {% for quiz in quizzes %}
+    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=quiz.id %}" class="unit-item link" style="text-decoration: none; color: inherit;">
+        <div class="unit-indicator">
+            {% if request.user in quiz.completed_by.all %}
+                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            {% else %}
+                <span class="material-symbols-outlined">quiz</span>
+            {% endif %}
+        </div>
+        <div class="unit-details">
+            <p class="unit-title {% if request.user in quiz.completed_by.all %}completed-text{% endif %}">{% if quiz.title %}{{ quiz.title }}{% else %}{% trans "Final Quiz" %}{% endif %}</p>
+            <p class="unit-meta">{{ quiz.get_total_length }} {% trans "mins" %}</p>
+        </div>
+    </a>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends "education/module_layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block module_css %}
+    <link rel="stylesheet" href="{% static 'education/quiz_results.css' %}">
+{% endblock %}
+
+{% block module_content %}
+<!-- Results Header -->
+<section class="results-header-section">
+    <p class="results-module-title">{{ module.title }}</p>
+    <h1 class="results-page-title">{% trans "Quiz Results" %}</h1>
+</section>
+
+<!-- Score Summary Card -->
+<div class="results-summary-card">
+    <div class="score-circle" style="--score: {{ score }}">
+        <div class="score-circle-inner">
+            <span class="score-value">{{ score }}%</span>
+        </div>
+    </div>
+
+    <div class="results-info">
+        <h2 class="results-message">
+            {% if passed %}
+                {% trans "Excellent Work!" %}
+            {% else %}
+                {% trans "Keep Practicing!" %}
+            {% endif %}
+        </h2>
+        <p class="results-subtitle">
+            {% blocktrans with correct=correct_count total=total %}
+                You answered {{ correct }} out of {{ total }} questions correctly.
+            {% endblocktrans %}
+        </p>
+        {% if passed %}
+        <div class="results-badge passed">
+            <span class="material-symbols-outlined">workspace_premium</span>
+            <span>{% trans "Quiz Passed" %}</span>
+        </div>
+        {% else %}
+        <div class="results-badge failed">
+            <span class="material-symbols-outlined">refresh</span>
+            <span>{% blocktrans with pct=quiz.percentage_to_pass %}{{ pct }}% required to pass{% endblocktrans %}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Performance Breakdown -->
+<section class="performance-breakdown">
+    <h3 class="breakdown-title">{% trans "Performance Breakdown" %}</h3>
+
+    {% for result in results %}
+    <div class="result-item {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+        <div class="result-icon">
+            {% if result.is_correct %}
+                <span class="material-symbols-outlined">check</span>
+            {% else %}
+                <span class="material-symbols-outlined">close</span>
+            {% endif %}
+        </div>
+        <div class="result-details">
+            <h4 class="result-question">{{ forloop.counter }}. {{ result.question_text }}</h4>
+            <p class="result-user-answer">
+                <span class="answer-label">{% trans "Your answer:" %}</span>
+                {{ result.user_answer|default_if_none:"—" }}
+            </p>
+            {% if not result.is_correct %}
+            <p class="result-correct-answer">
+                <span class="answer-label">{% trans "Correct answer:" %}</span>
+                {{ result.correct_answer }}
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- Action Buttons -->
+<div class="results-actions">
+    {% if passed and can_complete %}
+    <form method="post" action="{% url 'complete_module' module_id=module.id %}">
+        {% csrf_token %}
+        <button type="submit" class="results-btn primary">
+            <span>{% trans "Complete Module" %}</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+    </form>
+    {% elif next_quiz %}
+    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=next_quiz.id %}" class="results-btn primary">
+        <span>{% trans "Next Section" %}</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+    {% elif passed %}
+    <a href="{% url 'module_overview' module_id=module.id %}" class="results-btn primary">
+        <span>{% trans "Back to Module" %}</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+    {% endif %}
+    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=quiz.id %}" class="results-btn secondary">
+        <span>{% trans "Retake Quiz" %}</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block module_units %}
+    <!-- Introduction -->
+    <a href="{% url 'module_overview' module.id %}" class="unit-item link">
+        <div class="unit-indicator">
+            <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        </div>
+        <div class="unit-details">
+            <p class="unit-title completed-text">{% trans "Introduction" %}</p>
+        </div>
+    </a>
+
+    {% for l in lessons %}
+    <a href="{% url 'lesson_detail' module_id=module.id lesson_id=l.id %}" class="unit-item link" style="text-decoration: none; color: inherit;">
+        <div class="unit-indicator">
+            {% if request.user in l.completed_by.all %}
+                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            {% else %}
+                <span class="unit-number">{{ forloop.counter|stringformat:"02d" }}</span>
+            {% endif %}
+        </div>
+        <div class="unit-details">
+            <p class="unit-title {% if request.user in l.completed_by.all %}completed-text{% endif %}">{{ l.title }}</p>
+            <p class="unit-meta">{{ l.get_overall_length }} {% trans "mins" %}</p>
+        </div>
+    </a>
+    {% endfor %}
+
+    {% for q in quizzes %}
+    <a href="{% url 'quiz_detail' module_id=module.id quiz_id=q.id %}" class="unit-item {% if current_quiz and current_quiz.id == q.id %}active{% else %}link{% endif %}" style="text-decoration: none; color: inherit;">
+        <div class="unit-indicator">
+            {% if request.user in q.completed_by.all %}
+                <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            {% elif current_quiz and current_quiz.id == q.id %}
+                <span class="material-symbols-outlined">quiz</span>
+            {% else %}
+                <span class="material-symbols-outlined">quiz</span>
+            {% endif %}
+        </div>
+        <div class="unit-details">
+            <p class="unit-title {% if request.user in q.completed_by.all %}{% if not current_quiz or current_quiz.id != q.id %}completed-text{% endif %}{% endif %}">
+                {% if q.title %}{{ q.title }}{% else %}{% trans "Final Quiz" %}{% endif %}
+            </p>
+            {% if current_quiz and current_quiz.id == q.id %}
+                <p class="unit-status">{% trans "Current Quiz" %}</p>
+            {% else %}
+                <p class="unit-meta">{{ q.get_total_length }} {% trans "mins" %}</p>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+{% endblock %}

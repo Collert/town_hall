@@ -1,0 +1,99 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-container-wide">
+        <div class="auth-info">
+            <div class="subtitle">Join the Movement</div>
+            <h1>Architect a better community.</h1>
+            <p>VolunteerLink provides the blueprint for civic engagement. Connect with opportunities that matter and track your collective impact.</p>
+            
+            <div class="auth-testimonial-pill">
+                <div class="testimonial-header">
+                    <img alt="Sarah J." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK2KsK0Hp1ekD1XvBvjahDDg_jyDGCd1EwopPlE8MvYAMWqahbGUYS11TKvwhYBv4D8CMiaDfdaklLWeKrG76bSxoF6ceGq36ltOGfVVv_LDvhF5Ge_96eBQ9Ws9tIi_wdslk0U8UmooNJ548FexRw9HtHjarDwE0R14QOfGKx9EsM8v_kDn4exANEYpHryj0sDUJ0DxtnVI4SH5MUf3Jt1_Qo5e-f7Wj6vlPTwVa6t58Qp4Nx8RxFSWms7mtS5ymhytvYC_Bjbng">
+                    <div>
+                        <p class="name">Sarah Jenkins</p>
+                        <p class="role">Community Lead</p>
+                    </div>
+                </div>
+                <p class="quote">"Joining CivicSpark helped me find local environmental projects where my architectural skills actually moved the needle. It's more than volunteering; it's building."</p>
+                <span class="material-symbols-outlined bg-icon">architecture</span>
+            </div>
+
+            <div class="auth-social-proof">
+                <div class="avatar-stack">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuACR5kEcEjYT7OQ3O3I2MEAlmzNzoiY7UO0vNjKgKHBH3PX2irDr5o_lt7n5xE5NgA96dLuBmhICmbKvxNyjwnrGzLKkVjsDAuf-L1FYmF9WhSPMDZIF3kO7WxzJVlaMqNMxrkIUGvi61Pho48o0NqjMUT4V9Dm7IPpM-11Vc8kY5JthIJPDnmIhO46oQgWRmIw4sWbGRvUJLJMJmT6ZdNBMehIW3zHGHrVo1TkxlHQXCrUyonXTa8McqWJ8OTJdfuQx8T5sPUKTwA" alt="Avatar">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQimzVEO59MXdQnFNkI-nbXJibXDlLCC7xrWZNR3cv4JsIVpHmTEjT8Xq7MmTI5Ld4Od7fEuJujfazaLvXXC8Z3hqfTOYp9YRMM_25Zeyb8wTNnvfLgLGsnIM6p5Le_9tbdclVub6i0u70WHW_wKPg1_QtajUZI52OlYkXKb-VoKNZDpZVqpBIQSUjp7nshhqQf-KfWf4ehPVSqYwCZpuAIeynW7epphYxn-Kzewa61k4aBdh0MS38lXu6eqmWrTNLCqc3l6vPo8o" alt="Avatar">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhv-Zppx-Pca3YNLvjd0HuGzasPirN6dyaQIE6VreqCbc_E3s0b76PFnj8I1tZLYhxPfL8jL14h1c-QzdqOC1t6y85sgxmxS37YhCQv2Py6HNBQHOus9yfL4tKPtyIOJUAGah32w6KkZXcbT0TSWtcdy9divWFap0UAI65shAhs_8kdiqx0wdttkEjXWNSUbnOWGnoeCtv4-DA3O38CM-DaFpj6_atW_158_66-uBihkPbURgE8VBQEaW9gffUFMP5u67Xdf5FN7A" alt="Avatar">
+                </div>
+                <span>Joined by 2,400+ volunteers this month</span>
+            </div>
+        </div>
+        
+        <div class="auth-card">
+            <h2>Create Account</h2>
+            <p>Start your journey with VolunteerLink today.</p>
+
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="auth-form-group">
+                        <label for="first_name">First Name</label>
+                        <input type="text" id="first_name" name="first_name" placeholder="Jane" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="last_name">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div class="auth-form-group has-icon">
+                    <label for="email">Email Address</label>
+                    <span class="material-symbols-outlined">mail</span>
+                    <input type="email" id="email" name="email" placeholder="jane.doe@example.com" required>
+                </div>
+
+                <div class="auth-form-group has-icon">
+                    <label for="password">Password</label>
+                    <span class="material-symbols-outlined">lock</span>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <small>Min. 8 characters with one symbol</small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-accent btn-rounded auth-submit-btn">
+                    Create Account <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </form>
+
+            <div class="auth-divider">
+                <span>Or continue with</span>
+            </div>
+
+            <div class="social-login-grid">
+                <button type="button" class="social-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="18" height="18"> Google
+                </button>
+                <button type="button" class="social-btn">
+                    <span class="material-symbols-outlined" style="font-size: 1.2rem;">ios</span> Apple
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                Already have an account? <a href="{% url 'login' %}">Log In</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

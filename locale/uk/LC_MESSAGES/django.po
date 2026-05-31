@@ -1,0 +1,666 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-10 08:44-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: .\base\templates\base\home.html:45
+msgid "Volunteer Active"
+msgid_plural "Volunteers Active"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\base\templates\base\home.html:55
+msgid "Hour Contributed"
+msgid_plural "Hours Contributed"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\base\templates\base\home.html:67
+msgid "Project Completed"
+msgid_plural "Projects Completed"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\base\templates\base\home.html:78
+msgid "Featured Opportunities"
+msgstr ""
+
+#: .\base\templates\base\home.html:79
+msgid ""
+"Join these high-impact projects happening right now in your neighborhood."
+msgstr ""
+
+#: .\base\templates\base\home.html:81
+msgid "View all opportunities"
+msgstr ""
+
+#: .\base\templates\base\home.html:99
+msgid "Learn More"
+msgstr ""
+
+#: .\base\templates\base\home.html:103
+msgid "No featured opportunities at this time."
+msgstr ""
+
+#: .\base\templates\base\home.html:121
+msgid "LEVEL 4 VOLUNTEER"
+msgstr ""
+
+#: .\base\templates\base\home.html:130
+msgid "Total Hours"
+msgstr ""
+
+#: .\base\templates\base\home.html:134
+msgid "Certificates"
+msgstr ""
+
+#: .\base\templates\base\home.html:135
+msgid "earned"
+msgstr ""
+
+#: .\base\templates\base\home.html:138
+msgid "Recent Training Progress"
+msgstr ""
+
+#: .\base\templates\base\home.html:143
+msgid "Safety & Ethics"
+msgstr ""
+
+#: .\base\templates\base\home.html:155
+msgid "Your Volunteer Journey,"
+msgstr ""
+
+#: .\base\templates\base\home.html:156
+msgid "Organized & Rewarded."
+msgstr ""
+
+#: .\base\templates\base\home.html:164
+msgid "Personalized Dashboard"
+msgstr ""
+
+#: .\base\templates\base\home.html:165
+msgid ""
+"Unlock a tailored experience to track your volunteer hours, schedule "
+"upcoming shifts, and manage your profile in one central hub."
+msgstr ""
+
+#: .\base\templates\base\home.html:173
+msgid "Skill Certifications"
+msgstr ""
+
+#: .\base\templates\base\home.html:174
+msgid ""
+"Complete exclusive training modules to level up your skills. Earn digital "
+"certificates that showcase your achievements to future employers."
+msgstr ""
+
+#: .\base\templates\base\home.html:182
+msgid "Impact Analytics"
+msgstr ""
+
+#: .\base\templates\base\home.html:183
+msgid ""
+"See the real-world difference you're making with detailed impact reports and "
+"community-wide contribution metrics."
+msgstr ""
+
+#: .\base\templates\base\home.html:188
+msgid "Start Your Journey"
+msgstr ""
+
+#: .\base\templates\base\layout.html:10
+msgid "Power Your Community"
+msgstr ""
+
+#: .\base\templates\base\layout.html:109
+msgid "Powered by"
+msgstr ""
+
+#: .\base\templates\base\layout.html:109
+msgid "Town Hall"
+msgstr "Ратуша"
+
+#: .\base\templates\base\layout.html:112 .\base\templates\base\layout.html:212
+#: .\base\templates\base\layout.html:321
+#: .\events\templates\events\explore_events.html:17
+msgid "Opportunities"
+msgstr ""
+
+#: .\base\templates\base\layout.html:113 .\base\templates\base\layout.html:216
+#: .\base\templates\base\layout.html:298
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training"
+msgstr "Українська"
+
+#: .\base\templates\base\layout.html:114 .\base\templates\base\layout.html:220
+msgid "My Dashboard"
+msgstr ""
+
+#: .\base\templates\base\layout.html:115 .\base\templates\base\layout.html:224
+msgid "About Us"
+msgstr ""
+
+#: .\base\templates\base\layout.html:158 .\base\templates\base\layout.html:238
+msgid "Notifications"
+msgstr ""
+
+#: .\base\templates\base\layout.html:159 .\base\templates\base\layout.html:239
+msgid "Clear all"
+msgstr ""
+
+#: .\base\templates\base\layout.html:161 .\base\templates\base\layout.html:241
+msgid "New"
+msgstr ""
+
+#: .\base\templates\base\layout.html:169 .\base\templates\base\layout.html:249
+msgid "ago"
+msgstr ""
+
+#: .\base\templates\base\layout.html:175 .\base\templates\base\layout.html:255
+msgid "No new notifications"
+msgstr ""
+
+#: .\base\templates\base\layout.html:192 .\base\templates\base\layout.html:275
+msgid "Log In"
+msgstr ""
+
+#: .\base\templates\base\layout.html:201
+msgid "Close menu"
+msgstr ""
+
+#: .\base\templates\base\layout.html:208
+msgid "Home"
+msgstr ""
+
+#: .\base\templates\base\layout.html:268
+msgid "Member"
+msgstr ""
+
+#: .\base\templates\base\layout.html:290
+msgid "Dash"
+msgstr ""
+
+#: .\base\templates\base\layout.html:294
+msgid "Events"
+msgstr ""
+
+#: .\base\templates\base\layout.html:302
+msgid "Menu"
+msgstr ""
+
+#: .\base\templates\base\layout.html:314
+msgid ""
+"Connecting passionate individuals with local opportunities. Power your "
+"community."
+msgstr ""
+
+#: .\base\templates\base\layout.html:319
+msgid "Platform"
+msgstr ""
+
+#: .\base\templates\base\layout.html:322
+msgid "Training Portal"
+msgstr ""
+
+#: .\base\templates\base\layout.html:323
+msgid "Impact Reports"
+msgstr ""
+
+#: .\base\templates\base\layout.html:327
+msgid "Support"
+msgstr ""
+
+#: .\base\templates\base\layout.html:329
+msgid "Contact Us"
+msgstr ""
+
+#: .\base\templates\base\layout.html:330
+msgid "Help Center"
+msgstr ""
+
+#: .\base\templates\base\layout.html:331
+msgid "Terms of Service"
+msgstr ""
+
+#: .\base\templates\base\layout.html:335
+msgid "Newsletter"
+msgstr ""
+
+#: .\base\templates\base\layout.html:336
+msgid "Join our list for local updates."
+msgstr ""
+
+#: .\base\templates\base\layout.html:338
+msgid "Email address"
+msgstr ""
+
+#: .\base\templates\base\layout.html:339
+msgid "Subscribe"
+msgstr ""
+
+#: .\base\templates\base\layout.html:345
+msgid "All rights reserved."
+msgstr ""
+
+#: .\base\templates\base\layout.html:347
+msgid "Privacy Policy"
+msgstr ""
+
+#: .\base\templates\base\layout.html:348
+msgid "Cookies"
+msgstr ""
+
+#: .\base\templates\base\layout.html:349
+msgid "Careers"
+msgstr ""
+
+#: .\base\templates\base\layout.html:373
+msgid "Dismiss"
+msgstr ""
+
+#: .\base\templates\base\site_settings.html:8
+msgid "Theme Settings"
+msgstr ""
+
+#: .\base\templates\base\site_settings.html:9
+msgid "Customize the colors used throughout the site."
+msgstr ""
+
+#: .\base\templates\base\site_settings.html:48
+msgid "Save Changes"
+msgstr ""
+
+#: .\base\templates\base\site_settings.html:51
+#: .\events\templates\events\event_detail.html:372
+msgid "Cancel"
+msgstr ""
+
+#: .\base\views.py:36
+msgid "Theme colors updated successfully!"
+msgstr ""
+
+#: .\base\views.py:43
+msgid "Primary Colors"
+msgstr ""
+
+#: .\base\views.py:44
+msgid "Accent Colors"
+msgstr ""
+
+#: .\base\views.py:45
+msgid "Background Colors"
+msgstr ""
+
+#: .\base\views.py:46
+msgid "Text Colors"
+msgstr ""
+
+#: .\base\views.py:47
+msgid "Border & Divider"
+msgstr ""
+
+#: .\base\views.py:48
+msgid "Status Colors"
+msgstr ""
+
+#: .\base\views.py:49
+msgid "Dark Mode - Backgrounds"
+msgstr ""
+
+#: .\base\views.py:50
+msgid "Dark Mode - Text"
+msgstr ""
+
+#: .\base\views.py:51
+msgid "Dark Mode - Borders"
+msgstr ""
+
+#: .\base\views.py:94
+msgid "Successfully logged in."
+msgstr ""
+
+#: .\base\views.py:97
+msgid "Invalid email or password."
+msgstr ""
+
+#: .\base\views.py:112
+msgid "An account with that email already exists."
+msgstr ""
+
+#: .\base\views.py:114
+msgid "Email and password are required."
+msgstr ""
+
+#: .\base\views.py:129
+msgid "Account created successfully!"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:37
+msgid "Sign Up for a Role"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:42
+msgid "Add to Calendar"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:58
+msgid "Event Overview"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:68
+msgid "Staffing Progress"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:71
+msgid "Help us reach full capacity for this event."
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:78
+msgid "Community Impact"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:84
+msgid "Open role available"
+msgid_plural "Open roles available"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\events\templates\events\event_detail.html:92
+msgid "Open Volunteer Roles"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:94
+#, python-format
+msgid "%(counter)s Role Available"
+msgid_plural "%(counter)s Roles Available"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\events\templates\events\event_detail.html:113
+#: .\events\templates\events\event_detail.html:344
+msgid "Full"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:116
+#, python-format
+msgid "%(counter)s spot left"
+msgid_plural "%(counter)s spots left"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\events\templates\events\event_detail.html:120
+msgid "Multiple time slots available"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:130
+msgid "Select Role"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:137
+msgid "No volunteer roles have been posted for this event yet."
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:145
+msgid "Location & Check-in"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:147
+#, python-format
+msgid ""
+"Check in at <strong>%(location)s</strong> 30 minutes before your shift start "
+"time."
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:157
+msgid "Event Coordinator"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:174
+msgid "Volunteer Crew"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:178
+msgid "Volunteer avatar"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:195
+#, python-format
+msgid "Join %(counter)s other community member making an impact this %(day)s!"
+msgid_plural ""
+"Join %(counter)s other community members making an impact this %(day)s!"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\events\templates\events\event_detail.html:199
+msgid "Be the first to volunteer for this event!"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:207
+msgid "Post-Event Statement"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:221
+msgid "Select Your Role"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:242
+msgid "Role Description"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:258
+msgid "Training Status"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:262
+msgid "No required training."
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:267
+msgid "Mandatory training"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:275
+msgid "Mandatory module"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:287
+msgid "Required training"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:295
+msgid "Recommended module"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:307
+msgid "Completed training"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:315
+#: .\events\templates\events\event_detail.html:318
+msgid "Completed"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:332
+msgid "Available Time Slots"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:342
+msgid "Signed up"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:347
+msgid "spot left"
+msgid_plural "spots left"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\events\templates\events\event_detail.html:349
+msgid "Filling Fast"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:361
+msgid "You must complete required training to sign up."
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:368
+msgid "Confirm Selection"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:425
+msgid "Confirming..."
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:16
+msgid "Explore Volunteering"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:19
+msgid ""
+"Join a community of volunteers building a better tomorrow. Find roles that "
+"match your passion and skillset in your local neighborhood."
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:23
+msgid "Upcoming Events"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:28
+msgid "Open Roles"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:41
+msgid "Keywords (e.g. teaching, gardening)"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:53
+#: .\events\templates\events\explore_events.html:61
+msgid "Today"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:54
+#: .\events\templates\events\explore_events.html:62
+msgid "This Week"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:55
+#: .\events\templates\events\explore_events.html:63
+msgid "This Month"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:56
+#: .\events\templates\events\explore_events.html:60
+msgid "Date"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:60
+msgid "Any Date"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:73
+#: .\events\templates\events\explore_events.html:77
+msgid "Category"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:77
+msgid "All Categories"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:90
+msgid "Distance"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:95
+msgid "Within"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:103
+msgid "Search"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:235
+msgid "View Details"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:242
+msgid "No events match your criteria"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:243
+msgid ""
+"Try adjusting your filters or search keywords to find more opportunities."
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:245
+msgid "No upcoming events"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:246
+msgid "Check back soon for new volunteering opportunities!"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:257
+msgid "Trending Now"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:275
+msgid "Personalized for You"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:276
+msgid "Based on your skills and interests, we can find the best roles for you."
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:277
+msgid "View Recommendations"
+msgstr ""
+
+#: .\town_hall\settings.py:136
+msgid "English"
+msgstr "Англійська"
+
+#: .\town_hall\settings.py:137
+msgid "Spanish"
+msgstr "Іспанська"
+
+#: .\town_hall\settings.py:138
+msgid "French"
+msgstr "Французька"
+
+#: .\town_hall\settings.py:139
+msgid "Ukrainian"
+msgstr "Українська"

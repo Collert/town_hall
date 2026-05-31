@@ -1,0 +1,436 @@
+{% extends 'base/layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% load md_extras %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'events/event_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="event-hero">
+    <div class="event-hero-image">
+        {% if event.image %}
+        <img src="{{ event.image.url }}" alt="{{ event.title }}" />
+        {% endif %}
+        <div class="event-hero-overlay"></div>
+    </div>
+    <div class="event-hero-card">
+        <div class="event-hero-card-inner">
+            <div class="event-hero-info">
+                <h1>{{ event.title }}</h1>
+                <div class="event-hero-meta">
+                    <div class="meta-item">
+                        <span class="material-symbols-outlined">calendar_today</span>
+                        {{ event.start_date }} - {{ event.end_date }}
+                    </div>
+                    <div class="meta-item">
+                        <span class="material-symbols-outlined">location_on</span>
+                        {{ event.location }}
+                    </div>
+                </div>
+            </div>
+            <div class="event-hero-actions">
+                <a href="#roles" class="btn btn-accent btn-lg btn-rounded">
+                    {% trans "Sign Up for a Role" %}
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+                <a href="{% url 'event_download_ics' event.pk %}" class="btn btn-outline btn-lg btn-rounded">
+                    <span class="material-symbols-outlined">event</span>
+                    {% trans "Add to Calendar" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content Grid -->
+<section class="event-content">
+    <div class="event-content-grid">
+        <!-- Left Column -->
+        <div class="event-main-col">
+            <!-- Overview -->
+            <div class="event-section">
+                <h2 class="section-title">
+                    <span class="section-bar"></span>
+                    {% trans "Event Overview" %}
+                </h2>
+                <div class="event-overview-box">
+                    {{ event.description|render_markdown }}
+                </div>
+            </div>
+
+            <!-- Impact Bento -->
+            <div class="impact-bento">
+                <div class="impact-bento-primary">
+                    <p class="impact-bento-label">{% trans "Staffing Progress" %}</p>
+                    <h3 class="impact-bento-value">{{ event.staffing_progress }}%</h3>
+                    <p class="impact-bento-desc">
+                        {% trans "Help us reach full capacity for this event." %}
+                    </p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ event.staffing_progress }}%"></div>
+                    </div>
+                </div>
+                <div class="impact-bento-secondary">
+                    <p class="impact-bento-label">{% trans "Community Impact" %}</p>
+                    <div class="impact-bento-icon-row">
+                        <span class="material-symbols-outlined">family_restroom</span>
+                        <h3 class="impact-bento-value">{{ event.role_slots.count }}</h3>
+                    </div>
+                    <p class="impact-bento-desc">
+                        {% blocktranslate count counter=event.role_slots.count %}Open role available{% plural %}Open roles available{% endblocktranslate %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Open Volunteer Roles -->
+            <div class="event-section" id="roles">
+                <div class="section-header-row">
+                    <h2 class="section-title">{% trans "Open Volunteer Roles" %}</h2>
+                    <p class="section-subtitle">
+                        {% blocktranslate count counter=role_slots|length %}{{ counter }} Role Available{% plural %}{{ counter }} Roles Available{% endblocktranslate %}
+                    </p>
+                </div>
+                <div class="roles-list">
+                    {% for slot in role_slots %}
+                    <div class="role-row {% if slot.all_fully_staffed %}role-full{% endif %}">
+                        <div class="role-info">
+                            <div class="role-icon">
+                                <span class="material-symbols-outlined">{{ slot.role.icon }}</span>
+                            </div>
+                            <div class="role-details">
+                                <h4>
+                                    {{ slot.role.name }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="role-actions">
+                            <div class="role-availability">
+                                {% if slot.all_fully_staffed %}
+                                <p class="text-muted">{% trans "Full" %}</p>
+                                {% else %}
+                                <p class="text-accent">
+                                    {% blocktranslate count counter=slot.total_available_spots %}{{ counter }} spot left{% plural %}{{ counter }} spots left{% endblocktranslate %}
+                                </p>
+                                {% endif %}
+                                {% if slot.multiple_slots %}
+                                <p class="role-time">{% trans "Multiple time slots available" %}</p>
+                                {% else %}
+                                <p class="role-time">{{ slot.start_time|time:"TIME_FORMAT" }} - {{ slot.end_time|time:"TIME_FORMAT" }}</p>
+                                {% endif %}
+                            </div>
+                            {% if not slot.all_fully_staffed %}
+                            <button class="btn btn-accent btn-rounded role-select-btn"
+                                    data-slot-id="{{ slot.pk }}"
+                                    data-event-title="{{ event.title }}"
+                                    data-role-names="{{ slot.role.name }}">
+                                {% trans "Select Role" %}
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="roles-empty">
+                        <p>{% trans "No volunteer roles have been posted for this event yet." %}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="event-section">
+                <h2 class="section-title">{% trans "Location & Check-in" %}</h2>
+                <p class="location-note">
+                    {% blocktranslate with location=event.location %}Check in at <strong>{{ location }}</strong> 30 minutes before your shift start time.{% endblocktranslate %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="event-sidebar">
+            <!-- Coordinators -->
+            {% if event.coordinators.exists %}
+            <div class="sidebar-card">
+                <h3 class="sidebar-card-label">{% trans "Event Coordinator" %}</h3>
+                {% for coordinator in event.coordinators.all %}
+                <div class="coordinator-row">
+                    {% if coordinator.profile and coordinator.profile.avatar %}
+                    <div class="coordinator-avatar">
+                        <img src="{{ coordinator.profile.avatar.url }}" alt="{% trans 'Coordinator avatar' %}" class="coordinator-avatar-img" />
+                    </div>
+                    {% else %}
+                    <div class="coordinator-avatar">
+                        <span class="material-symbols-outlined">person</span>
+                    </div>
+                    {% endif %}
+                    <div class="coordinator-info">
+                        <p class="coordinator-name">{{ coordinator.get_full_name|default:coordinator.username }}</p>
+                    </div>
+                </div>
+                <a href="mailto:{{ coordinator.email }}?subject={{ event.title }}" class="btn btn-outline btn-rounded email-button"><span class="material-symbols-outlined">email</span> Message coordinator</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Volunteer Crew -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-card-label">{% trans "Volunteer Crew" %}</h3>
+                <div class="volunteer-crew-faces">
+                    {% for volunteer in event_volunteers|slice:":5" %}
+                    {% if volunteer.profile and volunteer.profile.avatar %}
+                    <img src="{{ volunteer.profile.avatar.url }}" alt="{% trans 'Volunteer avatar' %}" class="volunteer-avatar" />
+                    {% else %}
+                    <div class="volunteer-avatar-count">
+                        {{ volunteer.first_name|make_list|first|default:volunteer.username|make_list|first|upper }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if event_volunteers.count > 5 %}
+                    <div class="volunteer-avatar-count">
+                        +{{ event_volunteers.count|add:"-5" }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if event_volunteers.count > 0 %}
+                <p class="sidebar-card-text volunteer-crew-quote">
+                    {% blocktranslate count counter=event_volunteers.count %}Join {{ counter }} other community member making an impact!{% plural %}Join {{ counter }} other community members making an impact!{% endblocktranslate %}
+                </p>
+                {% else %}
+                <p class="sidebar-card-text volunteer-crew-quote">
+                    {% trans "Be the first to volunteer for this event!" %}
+                </p>
+                {% endif %}
+            </div>
+
+            <!-- Post-Event Statement -->
+            {% if event.post_event_statement %}
+            <div class="sidebar-card">
+                <h3 class="sidebar-card-label">{% trans "Post-Event Statement" %}</h3>
+                <p class="sidebar-card-text">{{ event.post_event_statement }}</p>
+            </div>
+            {% endif %}
+        </aside>
+    </div>
+</section>
+
+<!-- Role Selection Modals -->
+{% for parent_slot_id, data in role_slots_data.items %}
+<dialog class="modal-dialog" id="role-modal-{{ parent_slot_id }}">
+    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+        <header class="modal-header">
+            <div>
+                <h2 class="modal-title">{% trans "Select Your Role" %}: {{ data.role_names }}</h2>
+                <p class="modal-subtitle">{{ event.title }}</p>
+            </div>
+            <form method="dialog">
+                <button class="modal-close" type="submit">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </form>
+        </header>
+
+        <div class="modal-body" style="overflow-y:auto; flex:1;">
+            <div class="modal-section">
+                <div class="modal-info-box">
+                    <div class="modal-info-icon">
+                        {% for icon in data.role_icons %}
+                            <span class="material-symbols-outlined">{{ icon }}</span>
+                        {% empty %}
+                            <span class="material-symbols-outlined">emoji_people</span>
+                        {% endfor %}
+                    </div>
+                    <div style="flex: 1;">
+                        <h3>{% trans "Role Description" %}</h3>
+                        <div class="role-desc-content">
+                            {% if data.role_desc %}
+                                {{ data.role_desc|render_markdown }}
+                            {% else %}
+                                <p>Details about {{ data.role_names }}.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Requirements -->
+            <div class="modal-section">
+                <div class="modal-section-header">
+                    <span class="material-symbols-outlined">school</span>
+                    <h3>{% trans "Training Status" %}</h3>
+                </div>
+                <div class="modal-training-list">
+                    {% if data.training|length == 0 %}
+                        <p class="text-muted">{% trans "No required training." %}</p>
+                    {% else %}
+                        {# Group training by completion and requirement #}
+                        <!-- Mandatory -->
+                        <div class="training-group" style="display: none;" onload="this.style.display='block'">
+                            <h4 class="training-group-title">{% trans "Mandatory training" %}</h4>
+                            {% for tr in data.training %}
+                                {% if not tr.completed and tr.required %}
+                                    <a href="{% if tr.id %}{% url 'module_overview' tr.id %}{% else %}#{% endif %}" class="training-item mandatory">
+                                        <div class="training-item-content">
+                                            <div class="training-item-icon-container"><span class="material-symbols-outlined">{{ tr.icon }}</span></div>
+                                            <div class="training-item-info">
+                                                <span class="training-item-title">{{ tr.title }}</span>
+                                                <span class="training-item-desc">{% trans "Mandatory module" %}</span>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined training-item-arrow">arrow_forward_ios</span>
+                                    </a>
+                                    <style>.training-group:has(.mandatory) { display: block !important; }</style>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <!-- Recommended -->
+                        <div class="training-group" style="display: none;">
+                            <h4 class="training-group-title">{% trans "Required training" %}</h4>
+                            {% for tr in data.training %}
+                                {% if not tr.completed and not tr.required %}
+                                    <a href="{% if tr.id %}{% url 'module_overview' tr.id %}{% else %}#{% endif %}" class="training-item recommended">
+                                        <div class="training-item-content">
+                                            <div class="training-item-icon-container"><span class="material-symbols-outlined">{{ tr.icon }}</span></div>
+                                            <div class="training-item-info">
+                                                <span class="training-item-title">{{ tr.title }}</span>
+                                                <span class="training-item-desc">{% trans "Recommended module" %}</span>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined training-item-arrow">arrow_forward_ios</span>
+                                    </a>
+                                    <style>.training-group:has(.recommended) { display: block !important; }</style>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <!-- Completed -->
+                        <div class="training-group" style="display: none;">
+                            <h4 class="training-group-title">{% trans "Completed training" %}</h4>
+                            {% for tr in data.training %}
+                                {% if tr.completed %}
+                                    <a href="{% if tr.id %}{% url 'module_overview' tr.id %}{% else %}#{% endif %}" class="training-item completed">
+                                        <div class="training-item-content">
+                                            <div class="training-item-icon-container"><span class="material-symbols-outlined">{{ tr.icon }}</span></div>
+                                            <div class="training-item-info">
+                                                <span class="training-item-title">{{ tr.title }}</span>
+                                                <span class="training-item-desc">{% trans "Completed" %}</span>
+                                            </div>
+                                        </div>
+                                        <div class="training-badge"><span class="material-symbols-outlined" style="margin-right: 4px; font-size: 1.25rem; font-variation-settings: 'FILL' 1;">check_circle</span> {% trans "Completed" %}</div>
+                                    </a>
+                                    <style>.training-group:has(.completed) { display: block !important; }</style>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Time Slots -->
+            <form id="role-signup-form-{{ parent_slot_id }}" method="POST" action="{% url 'role_slot_signup' parent_slot_id %}">
+                {% csrf_token %}
+                <div class="modal-section">
+                    <h3>{% trans "Available Time Slots" %}</h3>
+                    <div class="timeslot-list">
+                        {% for ts in data.slots %}
+                            <label class="timeslot-item {% if ts.is_full and not ts.user_signed_up %}full{% endif %} {% if ts.is_selected %}selected{% endif %}"
+                                {% if ts.is_full and not ts.user_signed_up %}style="pointer-events:none;"{% endif %}>
+                                <input type="radio" name="slot_id" value="{{ ts.id }}" {% if ts.is_selected %}checked{% endif %} {% if ts.is_full and not ts.user_signed_up %}disabled{% endif %} style="display:none;">
+                                <div class="timeslot-content">
+                                    <div class="timeslot-time">{{ ts.start_time|time:"TIME_FORMAT" }} - {{ ts.end_time|time:"TIME_FORMAT" }}</div>
+                                    <div class="timeslot-info">
+                                        {% if ts.user_signed_up %}
+                                            <span style="color: var(--color-success); font-weight: 600;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size:1.25rem;">check_circle</span> {% trans "Signed up" %}</span>
+                                        {% elif ts.is_full %}
+                                            <span class="text-muted">{% trans "Full" %}</span> <span class="material-symbols-outlined text-muted" style="font-size:1.25rem;">block</span>
+                                        {% else %}
+                                            <span class="{% if ts.available <= 2 %}text-accent{% else %}text-primary{% endif %}" style="font-weight: 600;">
+                                                {{ ts.available }} {% blocktranslate count counter=ts.available %}spot left{% plural %}spots left{% endblocktranslate %}
+                                            </span>
+                                            {% if ts.available <= 2 %}<span class="badge-filling">{% trans "Filling Fast" %}</span>{% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if not ts.is_full or ts.user_signed_up %}
+                                    <div class="timeslot-radio-indicator"></div>
+                                {% endif %}
+                            </label>
+                        {% endfor %}
+                </div>
+
+                {% if not data.all_completed %}
+                    <p class="text-warning" style="color:red; margin: 0 2rem 1rem;">{% trans "You must complete required training to sign up." %}</p>
+                {% endif %}
+            </form>
+        </div>
+
+        <footer class="modal-footer">
+            <button type="submit" form="role-signup-form-{{ parent_slot_id }}" class="btn btn-accent btn-lg btn-rounded modal-confirm" {% if not data.user_can_signup %}disabled{% endif %}>
+                {% trans "Confirm Selection" %}
+            </button>
+            <form method="dialog" style="display:inline-block;">
+                <button type="submit" class="btn btn-outline btn-lg btn-rounded modal-cancel">
+                    {% trans "Cancel" %}
+                </button>
+            </form>
+        </footer>
+    </div>
+</dialog>
+{% endfor %}
+
+<script>
+(function() {
+    // Open Dialog
+    document.querySelectorAll('.role-select-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const slotId = btn.dataset.slotId;
+            const dialog = document.getElementById(`role-modal-${slotId}`);
+            if (dialog) {
+                dialog.showModal();
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    // Close Dialog overflow reset
+    document.querySelectorAll('dialog.modal-dialog').forEach(dialog => {
+        dialog.addEventListener('close', () => {
+            document.body.style.overflow = '';
+        });
+        
+        // Close when clicking directly on the backdrop (not inside the dialog form)
+        dialog.addEventListener('click', (e) => {
+            if (e.target === dialog) {
+                dialog.close();
+            }
+        });
+    });
+
+    // Radio button changes to update form action and styling
+    document.querySelectorAll('input[name="slot_id"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const form = e.target.closest('form');
+            form.action = `/events/slot/${e.target.value}/signup/`;
+            
+            // Visual feedback for selected
+            form.querySelectorAll('.timeslot-item').forEach(item => item.classList.remove('selected'));
+            e.target.closest('.timeslot-item').classList.add('selected');
+        });
+    });
+
+    // Form submit loading state
+    document.querySelectorAll('form[id^="role-signup-form-"]').forEach(form => {
+        form.addEventListener('submit', (e) => {
+            const btn = e.target.closest('.modal-dialog').querySelector('.modal-confirm');
+            btn.disabled = true;
+            btn.textContent = '{% trans "Confirming..." %}';
+        });
+    });
+})();
+</script>
+{% endblock %}

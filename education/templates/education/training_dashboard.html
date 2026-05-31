@@ -1,0 +1,253 @@
+{% extends 'education/education_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block education_css %}
+<link rel="stylesheet" href="{% static 'education/training_dashboard.css' %}">
+{% endblock %}
+
+{% block education_content %}
+<div class="td-body">
+
+    {# ─── Hero Header ───────────────────────────────────────────────────────── #}
+    <header class="td-hero {% if not has_started_training %}td-hero--empty{% endif %}">
+        <div class="td-hero-text">
+            {% if has_started_training %}
+            <h1 class="td-greeting">
+                {% blocktrans with name=request.user.first_name|default:request.user.username %}Welcome back, {{ name }}.{% endblocktrans %}
+            </h1>
+            <p class="td-subgreeting">{% trans "You're making a real spark in your community." %}</p>
+            {% else %}
+            <h1 class="td-greeting">{% trans "Welcome to the Training Portal." %}</h1>
+            <p class="td-subgreeting">{% trans "You're about to start your journey in community building. Our modules are designed to empower you with the tools needed to become an effective volunteer." %}</p>
+            {% endif %}
+        </div>
+
+        <div class="td-hero-chips">
+            {% if has_started_training %}
+            <div class="td-chip td-chip--primary">
+                <span class="material-symbols-outlined">bolt</span>
+                <span class="td-chip-value">{{ impact_points }}</span>
+                <span class="td-chip-label">{% trans "Impact Points" %}</span>
+            </div>
+            {% if level %}
+            <div class="td-chip td-chip--level">
+                <span class="material-symbols-outlined">military_tech</span>
+                <span class="td-chip-value">{% trans "Level" %} {{ level.numeric_name }}</span>
+                <span class="td-chip-label">{{ level.name }}</span>
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="td-chip td-chip--muted">
+                <span class="material-symbols-outlined">school</span>
+                <span class="td-chip-label">{% trans "Training Progress" %}</span>
+                <span class="td-chip-value">0%</span>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    {# ─── Stats Bar ─────────────────────────────────────────────────────────── #}
+    {% if has_started_training %}
+    <div class="td-stats-bar">
+        <div class="td-stat-card">
+            <span class="material-symbols-outlined td-stat-icon">school</span>
+            <div class="td-stat-info">
+                <span class="td-stat-value">{{ completed_count }}<span class="td-stat-denom">/{{ total_modules }}</span></span>
+                <span class="td-stat-label">{% trans "Modules Completed" %}</span>
+            </div>
+            <div class="td-stat-progress-bar">
+                <div class="td-stat-progress-fill" style="width: {{ progress_pct }}%;"></div>
+            </div>
+        </div>
+
+        <div class="td-stat-card">
+            <span class="material-symbols-outlined td-stat-icon">schedule</span>
+            <div class="td-stat-info">
+                <span class="td-stat-value">{{ time_hours }}<span class="td-stat-unit"> {% trans "hrs" %}</span></span>
+                <span class="td-stat-label">{% trans "Time Invested" %}</span>
+            </div>
+        </div>
+
+        <div class="td-stat-card">
+            <span class="material-symbols-outlined td-stat-icon">workspace_premium</span>
+            <div class="td-stat-info">
+                <span class="td-stat-value">{{ certifications.count }}</span>
+                <span class="td-stat-label">{% trans "Certificates" %}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# ─── Main Content Grid ─────────────────────────────────────────────────── #}
+    <div class="td-content-grid">
+
+        {# ── Training Track ── #}
+        <section class="td-section td-training-track">
+            <div class="td-section-header">
+                <div class="td-section-title-group">
+                    <h2 class="td-section-title">{% trans "Your Training Track" %}</h2>
+                </div>
+                <a href="{% url 'training_directory' %}" class="td-link-btn">
+                    {% trans "View All Modules" %}
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+            </div>
+
+            {% if has_started_training %}
+
+                {# In-Progress Modules #}
+                {% if in_progress_modules %}
+                <div class="td-track-group">
+                    <div class="td-track-group-label">
+                        <span class="material-symbols-outlined">emergency_home</span>
+                        {% trans "In Progress" %}
+                    </div>
+                    {% for module in in_progress_modules %}
+                    <div class="td-module-card td-module-card--inprogress">
+                        <div class="td-module-card-icon">
+                            <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
+                        </div>
+                        <div class="td-module-card-body">
+                            <h3 class="td-module-title">{{ module.title }}</h3>
+                            <p class="td-module-desc">{{ module.description|truncatewords:15 }}</p>
+                            <div class="td-module-progress-row">
+                                <div class="td-module-progress-bar">
+                                    <div class="td-module-progress-fill" style="width: {{ module.user_progress }}%;"></div>
+                                </div>
+                                <span class="td-module-progress-pct">{{ module.user_progress }}%</span>
+                            </div>
+                        </div>
+                        <a href="{% url 'module_overview' module.id %}" class="td-btn td-btn--resume">
+                            {% trans "Resume Training" %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {# Completed Modules #}
+                {% if completions %}
+                <div class="td-track-group">
+                    <div class="td-track-group-label">
+                        <span class="material-symbols-outlined">verified_user</span>
+                        {% trans "Completed" %}
+                    </div>
+                    {% for completion in completions %}
+                    <div class="td-module-card td-module-card--completed">
+                        <div class="td-module-card-icon td-module-card-icon--done">
+                            <span class="material-symbols-outlined">check_circle</span>
+                        </div>
+                        <div class="td-module-card-body">
+                            <h3 class="td-module-title">{{ completion.training_module.title }}</h3>
+                            <p class="td-module-desc">{{ completion.training_module.description|truncatewords:12 }}</p>
+                            <span class="td-completed-badge">
+                                <span class="material-symbols-outlined">verified</span>
+                                {% blocktrans with date=completion.completed_at|date:"M j" %}Completed on {{ date }}{% endblocktrans %}
+                            </span>
+                        </div>
+                        <a href="{% url 'module_overview' completion.training_module.id %}" class="td-btn td-btn--review">
+                            {% trans "Review Material" %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+            {% else %}
+                {# Empty State #}
+                <div class="td-empty-state">
+                    <div class="td-empty-icon">
+                        <span class="material-symbols-outlined">menu_book</span>
+                    </div>
+                    <h3 class="td-empty-title">{% trans "Your Training Track is Empty" %}</h3>
+                    <p class="td-empty-desc">{% trans "Ready to make an impact? Select your first specialized module to begin earning your community certifications." %}</p>
+                </div>
+
+                {% if suggested_modules %}
+                <div class="td-suggested-modules">
+                    {% for module in suggested_modules %}
+                    <div class="td-suggested-card">
+                        <div class="td-suggested-icon">
+                            <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
+                        </div>
+                        <div class="td-suggested-body">
+                            <h4 class="td-suggested-title">{{ module.title }}</h4>
+                            <p class="td-suggested-desc">{{ module.description|truncatewords:12 }}</p>
+                        </div>
+                        <a href="{% url 'module_overview' module.id %}" class="td-btn td-btn--start">
+                            {% trans "Start" %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <a href="{% url 'training_directory' %}" class="td-btn td-btn--cta">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                    {% trans "Get Started" %}
+                </a>
+                {% endif %}
+            {% endif %}
+        </section>
+
+        {# ── Certificates ── #}
+        <aside class="td-section td-certificates">
+            <div class="td-section-header">
+                <div class="td-section-title-group">
+                    <span class="material-symbols-outlined td-section-icon">workspace_premium</span>
+                    <h2 class="td-section-title">{% trans "Certificates" %}</h2>
+                </div>
+                {% if certifications %}
+                <a href="{% url 'verify_certificates' %}" class="td-link-btn">{% trans "View all" %}</a>
+                {% endif %}
+            </div>
+
+            {% if certifications %}
+            <div class="td-cert-list">
+                {% for cert in certifications|slice:":4" %}
+                <a href="{% url 'submit_certificate' cert.certificate.id %}" class="td-cert-item" style="view-transition-name: cert-card-{{ cert.certificate.id }};">
+                    <div class="td-cert-icon-wrap">
+                        <span class="material-symbols-outlined">{{ cert.certificate.icon|default:"workspace_premium" }}</span>
+                    </div>
+                    <div class="td-cert-info">
+                        <span class="td-cert-name">{{ cert.certificate.name }}</span>
+                        <span class="td-cert-date">
+                            {% if cert.verified %}
+                            <span class="material-symbols-outlined td-verified-icon">verified</span>
+                            {% blocktrans with date=cert.issued_at|date:"M Y" %}Verified {{ date }}{% endblocktrans %}
+                            {% else %}
+                            <span class="td-pending-badge">{% trans "Pending" %}</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </a>
+                {% endfor %}
+                {% if certifications.count > 4 %}
+                <div class="td-cert-overflow">
+                    +{{ certifications.count|add:"-4" }} {% trans "more certificates" %}
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="td-cert-empty">
+                <div class="td-cert-empty-icon">
+                    <span class="material-symbols-outlined">lock</span>
+                </div>
+                <h4 class="td-cert-empty-title">{% trans "No Certificates Yet" %}</h4>
+                <p class="td-cert-empty-desc">{% trans "Complete modules to earn certificates and unlock advanced training tracks." %}</p>
+            </div>
+
+            <div class="td-cert-info-box">
+                <span class="material-symbols-outlined td-info-icon">info</span>
+                <p class="td-info-text">{% trans "These are your external certificates earned outside of the platform during courses administered by other institutions. E.g. First Aid Certificate or Food Safe Certificate." %}</p>
+            </div>
+
+            <a href="{% url 'verify_certificates' %}" class="td-btn td-btn--outline td-btn--full">
+                {% trans "Submit a Certificate" %}
+            </a>
+            {% endif %}
+        </aside>
+
+    </div>{# /td-content-grid #}
+</div>{# /td-body #}
+{% endblock %}
