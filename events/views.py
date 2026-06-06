@@ -6,90 +6,26 @@ from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils import timezone
 from django.db.models import Sum, F, Q
-from .models import Event, EventRoleSlot, Shift
+from .models import *
 from education.models import TrainingModule, TrainingModuleCompletion
 from jobs.models import RoleTrainingRequirement
-import math
-
-
-def haversine_distance(lat1, lon1, lat2, lon2):
-    R = 6371  # Earth radius in kilometers
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    a = math.sin(dlat / 2) * math.sin(dlat / 2) + \
-        math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * \
-        math.sin(dlon / 2) * math.sin(dlon / 2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    return R * c
-
 
 def explore_events(request):
-    events = Event.objects.filter(end_date__gte=timezone.now()).order_by('start_date')
     
-    query = request.GET.get('q')
-    if query:
-        events = events.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query) |
-            Q(location__icontains=query) |
-            Q(category__name__icontains=query)
-        ).distinct()
-
-    date_filter = request.GET.get('date')
-    if date_filter == 'today':
-        now = timezone.now()
-        events = events.filter(start_date__date=now.date())
-    elif date_filter == 'this_week':
-        now = timezone.now()
-        end_of_week = now + timezone.timedelta(days=7 - now.weekday())
-        events = events.filter(start_date__gte=now, start_date__lte=end_of_week)
-    elif date_filter == 'this_month':
-        now = timezone.now()
-        events = events.filter(start_date__year=now.year, start_date__month=now.month)
-
-    category = request.GET.get('category')
-    if category:
-        events = events.filter(category__name__iexact=category)
-
-    user_lat = request.GET.get('lat')
-    user_lon = request.GET.get('lng')
-    distance = request.GET.get('distance')
-    
-    if user_lat and user_lon and distance:
-        try:
-            user_lat = float(user_lat)
-            user_lon = float(user_lon)
-            max_dist = float(distance)
-            
-            # Rough bounding box filter to speed up queries if large
-            lon_delta = max_dist / (111.32 * math.cos(math.radians(user_lat)))
-            lat_delta = max_dist / 111.32
-            
-            events = events.filter(
-                latitude__gte=user_lat - lat_delta,
-                latitude__lte=user_lat + lat_delta,
-                longitude__gte=user_lon - lon_delta,
-                longitude__lte=user_lon + lon_delta,
-            )
-            
-            # Exact haversine filter
-            valid_events_pks = []
-            for event in events:
-                if event.latitude is not None and event.longitude is not None:
-                    dist = haversine_distance(user_lat, user_lon, event.latitude, event.longitude)
-                    if dist <= max_dist:
-                        valid_events_pks.append(event.pk)
-            
-            events = events.filter(pk__in=valid_events_pks)
-        except ValueError:
-            pass
+    events = Event.search_events(
+        query=request.GET.get('q', ''),
+        date_filter=request.GET.get('date'),
+        category=request.GET.get('category'),
+        user_lat=request.GET.get('lat'),
+        user_lon=request.GET.get('lng'),
+        distance=request.GET.get('distance'),
+    )    
             
     total_open_roles = 0
-    for slot in EventRoleSlot.objects.filter(event__in=events, event__end_date__gte=timezone.now()):
+    for slot in EventRoleSlot.objects.filter(event__end_date__gte=timezone.now()):
         total_open_roles += slot.available_slots()
         
     # Get available categories for filter dropdown
-    from .models import EventCategory
     categories = EventCategory.objects.all()
 
     # Calculate trending events based on views
@@ -111,6 +47,19 @@ def explore_events(request):
         'trending_events': trending_events,
     })
 
+def search_events(request):
+    events = Event.search_events(
+        query=request.GET.get('q', ''),
+        date_filter=request.GET.get('date'),
+        category=request.GET.get('category'),
+        user_lat=request.GET.get('lat'),
+        user_lon=request.GET.get('lng'),
+        distance=request.GET.get('distance'),
+    )
+    
+    return render(request, 'events/partials/events_grid.html', {
+        'events': events
+    })
 
 def event_detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)

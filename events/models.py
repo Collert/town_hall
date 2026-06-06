@@ -3,6 +3,18 @@ from django.conf import settings
 import uuid
 
 from django.db import models
+from django.db.models import Q
+import math
+
+def haversine_distance(lat1, lon1, lat2, lon2):
+    R = 6371  # Earth radius in kilometers
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) * math.sin(dlat / 2) + \
+        math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * \
+        math.sin(dlon / 2) * math.sin(dlon / 2)
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    return R * c
 
 class Event(models.Model):
     title = models.CharField(max_length=100)
@@ -83,6 +95,63 @@ class Event(models.Model):
         if total_required == 0:
             return 100
         return int((total_signed_up / total_required) * 100)
+
+    @classmethod
+    def search_events(cls, query, date_filter=None, category=None, user_lat=None, user_lon=None, distance=None):
+        events = cls.objects.filter(end_date__gte=timezone.now()).order_by('start_date')
+    
+        if query:
+            events = events.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(location__icontains=query) |
+                Q(category__name__icontains=query)
+            ).distinct()
+
+        if date_filter == 'today':
+            now = timezone.now()
+            events = events.filter(start_date__date=now.date())
+        elif date_filter == 'this_week':
+            now = timezone.now()
+            end_of_week = now + timezone.timedelta(days=7 - now.weekday())
+            events = events.filter(start_date__gte=now, start_date__lte=end_of_week)
+        elif date_filter == 'this_month':
+            now = timezone.now()
+            events = events.filter(start_date__year=now.year, start_date__month=now.month)
+
+        if category:
+            events = events.filter(category__name__iexact=category)
+
+        if user_lat and user_lon and distance and distance != '101':  # '101' is the code for "Any distance"
+            try:
+                user_lat = float(user_lat)
+                user_lon = float(user_lon)
+                max_dist = float(distance)
+                
+                # Rough bounding box filter to speed up queries if large
+                lon_delta = max_dist / (111.32 * math.cos(math.radians(user_lat)))
+                lat_delta = max_dist / 111.32
+                
+                events = events.filter(
+                    latitude__gte=user_lat - lat_delta,
+                    latitude__lte=user_lat + lat_delta,
+                    longitude__gte=user_lon - lon_delta,
+                    longitude__lte=user_lon + lon_delta,
+                )
+                
+                # Exact haversine filter
+                valid_events_pks = []
+                for event in events:
+                    if event.latitude is not None and event.longitude is not None:
+                        dist = haversine_distance(user_lat, user_lon, event.latitude, event.longitude)
+                        if dist <= max_dist:
+                            valid_events_pks.append(event.pk)
+                
+                events = events.filter(pk__in=valid_events_pks)
+            except ValueError:
+                pass
+
+        return events
     
 class EventCategory(models.Model):
     name = models.CharField(max_length=50)

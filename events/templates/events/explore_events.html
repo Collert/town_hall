@@ -38,7 +38,17 @@
         <form method="GET" action="{% url 'explore_opportunities' %}" id="search-form" class="search-form" style="display: flex; gap: 1rem; width: 100%; align-items: center;">
             <div class="search-input-wrap">
                 <span class="material-symbols-outlined search-icon">search</span>
-                <input type="text" name="q" placeholder="{% trans 'Keywords (e.g. teaching, gardening)' %}" class="search-input" value="{{ request.GET.q|default:'' }}" />
+                <input 
+                    hx-get="{% url 'search_events' %}" 
+                    hx-target="#events-grid" 
+                    hx-trigger="keyup changed delay:500ms"
+                    hx-include="input[name='lat'], input[name='lng'], input[name='date'], input[name='category'], input[name='distance']"
+                    type="text" 
+                    name="q" 
+                    placeholder="{% trans 'Keywords (e.g. teaching, gardening)' %}" 
+                    class="search-input" 
+                    value="{{ request.GET.q|default:'' }}" 
+                />
             </div>
             
             <input type="hidden" name="lat" id="user-lat" value="{{ request.GET.lat|default:'' }}">
@@ -57,10 +67,35 @@
                         </span>
                     </button>
                     <div class="filter-dropdown" id="date-dropdown">
-                        <label><input type="radio" name="date" value="" {% if not request.GET.date %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'Date' %}')"> {% trans "Any Date" %}</label>
-                        <label><input type="radio" name="date" value="today" {% if request.GET.date == 'today' %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'Today' %}')"> {% trans "Today" %}</label>
-                        <label><input type="radio" name="date" value="this_week" {% if request.GET.date == 'this_week' %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'This Week' %}')"> {% trans "This Week" %}</label>
-                        <label><input type="radio" name="date" value="this_month" {% if request.GET.date == 'this_month' %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'This Month' %}')"> {% trans "This Month" %}</label>
+                        <label>
+                            <input 
+                                type="radio" 
+                                name="date" 
+                                value="" {% if not request.GET.date %}checked{% endif %} 
+                                onchange="updateFilterText(this, 'date-filter-text', '{% trans 'Date' %}')"
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='category'], input[name='distance']"
+                            /> {% trans "Any Date" %}</label>
+                        <label>
+                            <input type="radio" name="date" value="today" {% if request.GET.date == 'today' %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'Today' %}')"
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='category'], input[name='distance']"
+                            /> {% trans "Today" %}</label>
+                        <label>
+                            <input type="radio" name="date" value="this_week" {% if request.GET.date == 'this_week' %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'This Week' %}')"
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='category'], input[name='distance']"
+                            /> {% trans "This Week" %}</label>
+                        <label>
+                            <input type="radio" name="date" value="this_month" {% if request.GET.date == 'this_month' %}checked{% endif %} onchange="updateFilterText(this, 'date-filter-text', '{% trans 'This Month' %}')"
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='category'], input[name='distance']"
+                            /> {% trans "This Month" %}
+                        </label>
                     </div>
                 </div>
 
@@ -74,9 +109,26 @@
                         </span>
                     </button>
                     <div class="filter-dropdown" id="category-dropdown">
-                        <label><input type="radio" name="category" value="" {% if not request.GET.category %}checked{% endif %} onchange="updateFilterText(this, 'category-filter-text', '{% trans 'Category' %}')"> {% trans "All Categories" %}</label>
+                        <label><input 
+                                type="radio" 
+                                name="category" 
+                                value="" {% if not request.GET.category %}checked{% endif %} 
+                                onchange="updateFilterText(this, 'category-filter-text', '{% trans 'Category' %}')"
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='date'], input[name='distance']"
+                                /> {% trans "All Categories" %}</label>
                         {% for cat in categories %}
-                        <label><input type="radio" name="category" value="{{ cat.name }}" {% if request.GET.category == cat.name %}checked{% endif %} onchange="updateFilterText(this, 'category-filter-text', '{{ cat.name }}')"> {{ cat.name }}</label>
+                        <label><input 
+                                type="radio" 
+                                name="category" 
+                                value="{{ cat.name }}" 
+                                {% if request.GET.category == cat.name %}checked{% endif %} 
+                                onchange="updateFilterText(this, 'category-filter-text', '{{ cat.name }}')"
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='date'], input[name='distance']"
+                                /> {{ cat.name }}</label>
                         {% endfor %}
                     </div>
                 </div>
@@ -92,8 +144,26 @@
                     </button>
                     <div class="filter-dropdown distance-dropdown-content" id="distance-dropdown">
                         <div class="distance-selector">
-                            <label for="distance-range" style="font-family: 'Manrope', sans-serif;">{% trans "Within" %} <span id="distance-val">{{ request.GET.distance|default:"10" }}</span> km</label>
-                            <input type="range" id="distance-range" name="distance" min="1" max="100" value="{{ request.GET.distance|default:'10' }}" oninput="document.getElementById('distance-val').innerText = this.value; document.getElementById('distance-filter-text').innerText = this.value + ' km'; checkSubmitButton();">
+                            {% with selected_distance=request.GET.distance|default:"101" %}
+                                <label id="distance-label" for="distance-range" style="font-family: 'Manrope', sans-serif;">
+                                    {% if selected_distance == "101" %}
+                                        {% trans "Any distance" %}
+                                    {% else %}
+                                        {% blocktrans with distance=selected_distance %}Within {{ distance }} km{% endblocktrans %}
+                                    {% endif %}
+                                </label>
+                            {% endwith %}
+                            <input
+                                hx-get="{% url 'search_events' %}" 
+                                hx-target="#events-grid" 
+                                hx-include="input[name='lat'], input[name='lng'], input[name='q'], input[name='date'], input[name='category']"
+                                type="range" 
+                                id="distance-range" 
+                                name="distance" 
+                                min="1" max="101" 
+                                value="{{ request.GET.distance|default:'101' }}" 
+                                oninput="updateDistanceText(this)"
+                            />
                         </div>
                     </div>
                 </div>
@@ -133,70 +203,55 @@
 
     function updateFilterText(radioBtn, textElementId, text) {
         document.getElementById(textElementId).innerText = text;
-        checkSubmitButton();
         toggleDropdown(radioBtn.closest('.filter-dropdown').id);
     }
 
-    function checkSubmitButton() {
-        const form = document.getElementById('search-form');
-        const formData = new FormData(form);
-        let hasValue = false;
-        
-        for (let [key, value] of formData.entries()) {
-            if (value && key !== 'lat' && key !== 'lng') {
-                if (key === 'distance' && !document.getElementById('user-lat').value) {
-                    continue; // Skip distance if no location set
-                }
-                hasValue = true;
-                break;
-            }
-        }
-        
-        // Also check keywords
-        const qVal = form.querySelector('input[name="q"]').value.trim();
-        if (qVal) hasValue = true;
-
-        const btn = document.getElementById('search-submit-btn');
-        if (hasValue) {
-            btn.classList.add('show-btn');
+    function updateDistanceText(rangeInput) {
+        const val = rangeInput.value;
+        if (val == 101) {
+            document.getElementById('distance-label').innerText = "{% trans 'Any distance' %}";
+            document.getElementById('distance-filter-text').innerText = "{% trans 'Any' %}";
         } else {
-            btn.classList.remove('show-btn');
+            document.getElementById('distance-label').innerText = `{% trans 'Within' %} ${val} {% trans ' km' %}`;
+            document.getElementById('distance-filter-text').innerText = val + "{% trans ' km' %}";
         }
     }
 
     function requestLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    document.getElementById('user-lat').value = position.coords.latitude;
-                    document.getElementById('user-lng').value = position.coords.longitude;
-                    let distSpan = document.getElementById('distance-val').innerText;
-                    document.getElementById('distance-filter-text').innerText = distSpan + " km";
-                    checkSubmitButton();
-                },
-                function(error) {
-                    console.warn("Unable to retrieve location.", error);
-                }
-            );
+            if (sessionStorage.getItem('userLat') && sessionStorage.getItem('userLng')) {
+                document.getElementById('user-lat').value = sessionStorage.getItem('userLat');
+                document.getElementById('user-lng').value = sessionStorage.getItem('userLng');
+            } else {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        document.getElementById('user-lat').value = position.coords.latitude;
+                        document.getElementById('user-lng').value = position.coords.longitude;
+                        sessionStorage.setItem('userLat', position.coords.latitude);
+                        sessionStorage.setItem('userLng', position.coords.longitude);
+                    },
+                    error => {
+                        console.warn("Unable to retrieve location.", error);
+                    }
+                );
+            }
         }
     }
 
     // Initial check
     document.addEventListener('DOMContentLoaded', () => {
-        checkSubmitButton();
-        document.querySelector('.search-input').addEventListener('input', checkSubmitButton);
         
         // Auto-fetch location if distance filter is in URL but missing coordinates (user-agnostic link)
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('distance') && (!urlParams.get('lat') || !urlParams.get('lng'))) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    function(position) {
+                    position => {
                         urlParams.set('lat', position.coords.latitude);
                         urlParams.set('lng', position.coords.longitude);
                         window.location.replace(window.location.pathname + '?' + urlParams.toString());
                     },
-                    function(error) {
+                    error => {
                         console.warn("Unable to retrieve location for shared link.", error);
                     }
                 );
@@ -208,45 +263,8 @@
 <!-- Events Grid -->
 <section class="events-content">
     <div class="events-grid-container">
-        <div class="events-grid">
-            {% for event in events %}
-            <a href="{% url 'opportunity_detail' event.pk %}" class="event-card">
-                <div class="event-card-image">
-                    {% if event.image %}
-                    <img src="{{ event.image.url }}" alt="{{ event.title }}" />
-                    {% else %}
-                    <div class="event-card-placeholder">
-                        <span class="material-symbols-outlined">event</span>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="event-card-body">
-                    <h3>{{ event.title }}</h3>
-                    <div class="event-card-meta">
-                        <div class="meta-row">
-                            <span class="material-symbols-outlined">event</span>
-                            <span>{{ event.start_date }}</span>
-                        </div>
-                        <div class="meta-row">
-                            <span class="material-symbols-outlined">location_on</span>
-                            <span>{{ event.location }}</span>
-                        </div>
-                    </div>
-                    <span class="btn btn-accent btn-rounded btn-full">{% trans "View Details" %}</span>
-                </div>
-            </a>
-            {% empty %}
-            <div class="events-empty">
-                <span class="material-symbols-outlined">event_busy</span>
-                {% if request.GET.q or request.GET.date or request.GET.category or request.GET.distance %}
-                <h3>{% trans "No events match your criteria" %}</h3>
-                <p>{% trans "Try adjusting your filters or search keywords to find more opportunities." %}</p>
-                {% else %}
-                <h3>{% trans "No upcoming events" %}</h3>
-                <p>{% trans "Check back soon for new volunteering opportunities!" %}</p>
-                {% endif %}
-            </div>
-            {% endfor %}
+        <div id='events-grid' class="events-grid">
+            {% include "events/partials/events_grid.html" %}
         </div>
 
         <!-- Sidebar -->
