@@ -243,7 +243,8 @@ def profile_view(request, username):
     from django.utils import timezone
     from datetime import timedelta
     from education.models import TrainingModuleCompletion
-    from events.models import EventRoleSlot, Shift
+    from events.models import EventRoleSlot
+    from jobs.models import Shift
     from .models import Endorsement, Level
 
     viewed_user = get_object_or_404(User, username=username, is_active=True)

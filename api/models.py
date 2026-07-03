@@ -3,7 +3,7 @@ import uuid
 
 from django.db import models
 
-from events.models import Shift
+from jobs.models import Shift
 
 class APIKey(models.Model):
     key = models.CharField(max_length=40, unique=True, default=uuid.uuid4().hex)
@@ -15,7 +15,7 @@ class APIKey(models.Model):
         return self.name or self.key
 
 class ShiftHeartbeat(models.Model):
-    shift = models.ForeignKey('events.Shift', on_delete=models.CASCADE, related_name='heartbeats')
+    shift = models.ForeignKey('jobs.Shift', on_delete=models.CASCADE, related_name='heartbeats')
     latest_timestamp = models.DateTimeField(auto_now=True)
     role = models.ForeignKey('jobs.Role', on_delete=models.CASCADE, related_name='heartbeats')
 

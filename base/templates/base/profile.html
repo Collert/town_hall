@@ -171,7 +171,7 @@
       {% endif %}
     </div>
 
-  </div><!-- end .profile-bento -->
+  </div>
 
   <!-- =======================================================
        3. Training & Certificates
@@ -217,9 +217,9 @@
             {% elif item.status == 'expiring_soon' %}{% trans "Expiring Soon" %}
             {% else %}{% trans "Expired" %}{% endif %}
           </span>
-          <button class="cert-download-btn" type="button" title="{% trans 'Download' %}">
+          <a class="cert-download-btn" href="{% url 'printable_certificate' item.completion.id %}" title="{% trans 'Download' %}">
             <span class="material-symbols-outlined">download</span>
-          </button>
+          </a>
         </div>
       </div>
       {% endfor %}

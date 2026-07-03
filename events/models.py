@@ -203,31 +203,6 @@ class EventRoleSlot(models.Model):
             raise ValueError("No more slots available.")
         super().save(*args, **kwargs)
     
-class Shift(models.Model):
-    event_role_slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='shifts', blank=True, null=True)
-    role = models.ForeignKey('jobs.Role', on_delete=models.CASCADE, related_name='shifts', blank=True, null=True, help_text='Optional role reference for shifts that are not tied to a specific event role slot')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shifts')
-    start_time = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        if self.event_role_slot:
-            return f"{self.user.username} - {self.event_role_slot.role.name} for {self.event_role_slot.event.title} at {self.start_time.strftime('%Y-%m-%d %H:%M')}"
-        elif self.role:
-            return f"{self.user.username} - {self.role.name} at {self.start_time.strftime('%Y-%m-%d %H:%M')}"
-        else:
-            return f"{self.user.username} - Shift at {self.start_time.strftime('%Y-%m-%d %H:%M')}"
-    
-    def duration(self):
-        if self.end_time:
-            return (self.end_time - self.start_time).total_seconds() / 3600  # Return duration in hours
-        return 0
-    
-    def duration_minutes(self):
-        if self.end_time:
-            return (self.end_time - self.start_time).total_seconds() / 60  # Return duration in minutes
-        return 0
-    
 class EventSlotInvite(models.Model):
     event_role_slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='invites')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='event_invites')

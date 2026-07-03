@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.db.models import Sum, F, Q
 from .models import *
 from education.models import TrainingModule, TrainingModuleCompletion
-from jobs.models import RoleTrainingRequirement
+from jobs.models import RoleTrainingRequirement, Shift
 
 def explore_events(request):
     

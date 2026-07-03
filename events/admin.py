@@ -3,5 +3,4 @@ from .models import *
 
 admin.site.register(Event)
 admin.site.register(EventRoleSlot)
-admin.site.register(Shift)
 admin.site.register(EventSlotInvite)
