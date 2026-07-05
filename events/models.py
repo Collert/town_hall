@@ -30,6 +30,7 @@ class Event(models.Model):
     image = models.ImageField(upload_to='event_images/', blank=True, null=True)
     featured = models.BooleanField(default=False)
     category = models.ManyToManyField('EventCategory', related_name='events', blank=True)
+    attendees = models.IntegerField(default=0, help_text='Number of attendees (for calculating impact points)')
 
     def __str__(self):
         return self.title

@@ -101,7 +101,7 @@
                         {% blocktrans count count=module.role_count %}Needed for {{ count }} Role{% plural %}Needed for {{ count }} Roles{% endblocktrans %}
                     </div>
                     {% endif %}
-                    <a href="{% url 'education:module_detail' module.id %}" class="edu-btn-start">{% trans "Start Course" %}</a>
+                    <a href="{% url 'module_overview' module.id %}" class="edu-btn-start">{% trans "Start Course" %}</a>
                 </div>
             </div>
             {% endfor %}
@@ -142,7 +142,7 @@
                 <div class="edu-module-meta">
                     <div class="edu-duration-label">
                         <span class="material-symbols-outlined edu-duration-icon">schedule</span>
-                        {{ module.get_total_length }} mins
+                        {{ module.total_length  }} mins
                     </div>
                     <a href="{% url 'module_overview' module.id %}" class="edu-btn-start-small {% if module.is_completed %}edu-btn-review{% endif %}">{% if module.is_completed %}{% trans "Review" %}{% else %}{% trans "Start" %}{% endif %}</a>
                 </div>

@@ -2,6 +2,7 @@
 
 ## Code Style
 - **Python Framework:** Standard Django architecture (Models, Views, Templates). Use Django built-in methods (`get_object_or_404`, `messages`, translations `gettext_lazy`, etc.).
+- **HTMX** Use HTMX for frontend where possible instead of verbose JS functions.
 - **UI & Styling:** Follow the "Empowered Architect" design system (see `DESIGN.md`). Avoid clinical, flat aesthetics. Never use Tailwind, always use custom CSS. CSS files should be organized by feature (e.g., `training_directory.css`) and imported in the corresponding template. never do inline styles except for dynamic values that cannot be predefined in CSS.
 - **Tonal Layering:** Use background color shifts (`surface_container` tiers) instead of 1px solid borders for structural boundaries (the "No-Line" rule).
 - **Typography:** Use **Manrope** for display/headlines (editorial feel) and **Inter** for body/functional text.

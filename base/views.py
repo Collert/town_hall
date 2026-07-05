@@ -51,6 +51,7 @@ def theme_settings_edit(request):
         _('Dark Mode - Backgrounds'): ['dark_bg_primary', 'dark_bg_secondary', 'dark_bg_tertiary'],
         _('Dark Mode - Text'): ['dark_text_primary', 'dark_text_secondary', 'dark_text_tertiary'],
         _('Dark Mode - Borders'): ['dark_border', 'dark_divider'],
+        _('Kiosk Settings'): ['kiosk_idle_timeout_seconds'],
     }
     
     return render(request, 'base/site_settings.html', {

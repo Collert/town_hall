@@ -56,8 +56,8 @@
                 <span class="next-unit-label">{% trans "Next Lesson" %}</span>
             </div>
             <h4 class="next-unit-title">{{ next_lesson.title }}</h4>
-            {% if next_lesson.get_overall_length %}
-            <p class="next-unit-meta">{{ next_lesson.get_overall_length }} {% trans "mins" %}</p>
+            {% if next_lesson.overall_length %}
+            <p class="next-unit-meta">{{ next_lesson.overall_length }} {% trans "mins" %}</p>
             {% endif %}
         </div>
     </a>
@@ -181,7 +181,7 @@
             {% if l.id == lesson.id %}
                 <p class="unit-status">{% trans "In Progress" %}</p>
             {% else %}
-                <p class="unit-meta">{{ l.get_overall_length }} {% trans "mins" %}</p>
+                <p class="unit-meta">{{ l.overall_length }} {% trans "mins" %}</p>
             {% endif %}
         </div>
     </a>
@@ -198,7 +198,7 @@
         </div>
         <div class="unit-details">
             <p class="unit-title {% if request.user in quiz.completed_by.all %}completed-text{% endif %}">{% if quiz.title %}{{ quiz.title }}{% else %}{% trans "Final Quiz" %}{% endif %}</p>
-            <p class="unit-meta">{{ quiz.get_total_length }} {% trans "mins" %}</p>
+            <p class="unit-meta">{{ quiz.total_length  }} {% trans "mins" %}</p>
         </div>
     </a>
     {% endfor %}

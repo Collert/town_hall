@@ -28,6 +28,10 @@ def training_directory(request):
     last_viewed = None
     if user.is_authenticated and hasattr(user, 'profile'):
         last_viewed = user.profile.last_viewed_training_module
+        if last_viewed and not last_viewed.published:
+            last_viewed = None  # Ignore if the last viewed module is unpublished
+        if last_viewed.completion_percentage_for_user(user) >= 100:
+            last_viewed = None  # Ignore if the last viewed module is already completed
 
     # Order modules by number of roles they are required for
     impactful_modules = TrainingModule.objects.annotate(
@@ -72,7 +76,8 @@ def training_directory(request):
 def module_overview(request, module_id):
     module = get_object_or_404(TrainingModule, id=module_id)
     user = request.user
-    
+    print(module.complexity_level())
+
     # Calculate progress
     progress = module.completion_percentage_for_user(user) if user.is_authenticated else 0
     
@@ -395,7 +400,7 @@ def training_dashboard(request):
     # Time invested: sum lengths of completed lessons + completed quizzes
     time_minutes = 0
     for lesson in user.completed_lessons.all():
-        time_minutes += lesson.get_overall_length()
+        time_minutes += lesson.overall_length()
     for quiz in user.completed_quizzes.all():
         for question in quiz.questions.all():
             time_minutes += question.length_minutes or 1

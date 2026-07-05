@@ -22,17 +22,21 @@
                                 <label for="{{ field.id_for_label }}">
                                     {{ field.label }}
                                 </label>
-                                <div class="color-input-wrapper">
+                                {% if field.field.widget.input_type == 'color' %}
+                                    <div class="color-input-wrapper">
+                                        {{ field }}
+                                        <input 
+                                            type="text" 
+                                            class="color-hex-input"
+                                            value="{{ field.value }}"
+                                            data-color-for="{{ field.id_for_label }}"
+                                            maxlength="7"
+                                            pattern="^#[0-9A-Fa-f]{6}$"
+                                        >
+                                    </div>
+                                {% else %}
                                     {{ field }}
-                                    <input 
-                                        type="text" 
-                                        class="color-hex-input"
-                                        value="{{ field.value }}"
-                                        data-color-for="{{ field.id_for_label }}"
-                                        maxlength="7"
-                                        pattern="^#[0-9A-Fa-f]{6}$"
-                                    >
-                                </div>
+                                {% endif %}
                                 {% if field.help_text %}
                                     <small class="help-text">{{ field.help_text }}</small>
                                 {% endif %}
@@ -218,6 +222,10 @@
     document.querySelectorAll('.color-input-wrapper').forEach(wrapper => {
         const colorInput = wrapper.querySelector('input[type="color"]');
         const hexInput = wrapper.querySelector('.color-hex-input');
+
+        if (!colorInput || !hexInput) {
+            return;
+        }
         
         // Update hex input when color picker changes
         colorInput.addEventListener('input', (e) => {

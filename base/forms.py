@@ -50,4 +50,5 @@ class SiteSettingsForm(forms.ModelForm):
             # Dark Mode - Border & Divider Colors
             'dark_border': ColorInput(),
             'dark_divider': ColorInput(),
+            'kiosk_idle_timeout_seconds': forms.NumberInput(attrs={'min': 5, 'step': 1}),
         }

@@ -101,7 +101,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock %}">
     <!-- TopNavBar -->
     <nav class="site-nav">
         <div class="nav-inner">
@@ -433,6 +433,7 @@
                 dialog.removeEventListener('transitionend', onAnimationEnd);
             };
             dialog.addEventListener('transitionend', onAnimationEnd);
+        {% block extra_js %}{% endblock %}
         }
 
         document.querySelectorAll(".mobile-menu-toggle").forEach(button => {

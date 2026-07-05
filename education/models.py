@@ -4,6 +4,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from math import ceil
+from django.db.models import Sum
 
 class TrainingModule(models.Model):
     title = models.CharField(max_length=100)
@@ -15,6 +16,7 @@ class TrainingModule(models.Model):
     icon = models.CharField(max_length=50, help_text='Icon name from Google Material Icons')
     expires_after_days = models.PositiveIntegerField(blank=True, null=True, help_text='Number of days after which the training module expires for a user')
     started_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='started_training_modules', blank=True)
+    complexity_level = models.PositiveIntegerField(default=0, help_text='Complexity level of the training module (0-4)')
 
     def __str__(self):
         return self.title
@@ -23,9 +25,9 @@ class TrainingModule(models.Model):
         """Calculate total length of the training module based on its lessons and quizzes."""
         total_length = 0
         for lesson in self.lessons.all():
-            total_length += lesson.get_overall_length() 
+            total_length += lesson.overall_length
         for quiz in self.quizzes.all():
-            total_length += quiz.get_total_length()
+            total_length += quiz.total_length
         return total_length
     
     def completion_percentage_for_user(self, user):
@@ -143,7 +145,8 @@ class TrainingLesson(models.Model):
                 self.video_length_minutes = ceil(duration_seconds / 60)
                 self.save(update_fields=['video_length_minutes'])
     
-    def get_overall_length(self):
+    @property
+    def overall_length(self):
         """Calculate total length of the lesson based on its video and text content."""
         text_length_minutes = len(self.content.split()) / 200  # Assuming 200 words per minute reading speed
         video_length = self.video_length_minutes or 0
@@ -165,13 +168,12 @@ class Quiz(models.Model):
     def __str__(self):
         return f"{self.training_module.title} - {self.title}"
     
-    def get_total_length(self):
+    @property
+    def total_length(self):
         """Calculate total length of the quiz based on its questions."""
         total_length = 0
         for question in self.questions.all():
-            print(question.length_minutes)
             total_length += question.length_minutes or 1  # Default to 1 minute if not set
-        print(type(total_length))
         return total_length
     
 class QuizQuestion(models.Model):

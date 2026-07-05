@@ -59,7 +59,7 @@
                             {% if current_lesson and current_lesson.id == lesson.id %}
                                 <p class="unit-status">{% trans "Current Lesson" %}</p>
                             {% else %}
-                                <p class="unit-meta">{{ lesson.get_overall_length }} {% blocktranslate count counter=lesson.get_overall_length %}min{%plural%}mins{% endblocktranslate %}</p>
+                                <p class="unit-meta">{{ lesson.overall_length }} {% blocktranslate count counter=lesson.overall_length %}min{%plural%}mins{% endblocktranslate %}</p>
                             {% endif %}
                         </div>
                     </a>
@@ -81,7 +81,7 @@
                             {% if current_quiz and current_quiz.id == quiz.id %}
                                 <p class="unit-status">{% trans "Current Quiz" %}</p>
                             {% else %}
-                                <p class="unit-meta">{{ quiz.get_total_length }} {% blocktranslate count counter=quiz.get_total_length %}min{%plural%}mins{% endblocktranslate %}</p>
+                                <p class="unit-meta">{{ quiz.total_length  }} {% blocktranslate count counter=quiz.total_length  %}min{%plural%}mins{% endblocktranslate %}</p>
                             {% endif %}
                         </div>
                     </a>

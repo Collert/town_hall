@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+import secrets
+import string
+
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.CharField(max_length=255)
@@ -30,14 +33,40 @@ class Profile(models.Model):
     phone = models.CharField(max_length=30, blank=True, default='')
     location = models.CharField(max_length=100, blank=True, default='')
     skills = models.ManyToManyField('education.Skill', blank=True, related_name='user_profiles')
+    id_code = models.CharField(max_length=6, unique=True, editable=False, help_text='Unique identifier for the user (e.g., employee ID, volunteer ID)')
 
+    @property
     def level(self):
         """Determine the user's level based on impact points."""
         return Level.objects.filter(min_points__lte=self.impact_points).last()
 
     def __str__(self):
         return f"{self.user.username} Profile"
+    
+    @staticmethod
+    def generate_random_string(length=6):
+        # Generates a secure random alphanumeric string
+        alphabet = string.digits
+        return ''.join(secrets.choice(alphabet) for _ in range(length))
+    
+    def save(self, *args, **kwargs):
+        # Only generate a random string if the model instance hasn't been saved yet
+        if not self.id_code:
+            while True:
+                random_string = self.generate_random_string(length=6)
+                # Ensure the generated string is absolutely unique in the database
+                if not Profile.objects.filter(id_code=random_string).exists():
+                    self.id_code = random_string
+                    break
+        super().save(*args, **kwargs)
 
+class Venue(models.Model):
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    capacity = models.PositiveIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 class Endorsement(models.Model):
     endorser = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_endorsements')
     endorsed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='endorsements')
@@ -229,6 +258,11 @@ class SiteSettings(models.Model):
     dark_divider = models.CharField(
         max_length=7, default='#043f47',
         help_text='Subtle section dividers'
+    )
+
+    kiosk_idle_timeout_seconds = models.PositiveSmallIntegerField(
+        default=30,
+        help_text='Idle time in seconds before kiosk sessions are automatically logged out'
     )
 
     class Meta:

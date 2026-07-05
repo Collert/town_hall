@@ -127,7 +127,7 @@
         </div>
         <div class="unit-details">
             <p class="unit-title {% if request.user in l.completed_by.all %}completed-text{% endif %}">{{ l.title }}</p>
-            <p class="unit-meta">{{ l.get_overall_length }} {% trans "mins" %}</p>
+            <p class="unit-meta">{{ l.overall_length }} {% trans "mins" %}</p>
         </div>
     </a>
     {% endfor %}
@@ -150,7 +150,7 @@
             {% if current_quiz and current_quiz.id == q.id %}
                 <p class="unit-status">{% trans "Current Quiz" %}</p>
             {% else %}
-                <p class="unit-meta">{{ q.get_total_length }} {% trans "mins" %}</p>
+                <p class="unit-meta">{{ q.total_length  }} {% trans "mins" %}</p>
             {% endif %}
         </div>
     </a>
