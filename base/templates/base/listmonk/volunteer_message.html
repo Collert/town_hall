@@ -1,0 +1,6 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% translate "A message for you" as title %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with name=tx.name org=brand.org_name %}Hi {{ name }}, the team at {{ org }} sent you a message:{% endblocktranslate %}</p>
+{% include 'base/listmonk/_message.html' %}
+{{ tx_if.link }}{% translate "Open link" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}{{ go.end }}
+{% endblock %}

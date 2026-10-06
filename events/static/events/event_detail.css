@@ -334,7 +334,7 @@
 
 .role-icon .material-symbols-outlined {
     font-size: 1.75rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .role-details h4 {
@@ -517,7 +517,7 @@ dialog.modal-dialog::backdrop {
 
 .modal-close:hover {
     background: var(--color-bg-secondary);
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .modal-body {
@@ -555,7 +555,7 @@ dialog.modal-dialog::backdrop {
 }
 
 .modal-info-icon .material-symbols-outlined {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .modal-info-box p,
@@ -850,7 +850,7 @@ dialog.modal-dialog::backdrop {
 Since the background is already primary-light usually, let's keep it that way for all, so the icon isn't replaced, it's just --color-primary-light bg. */
 
 .training-item-icon-container .material-symbols-outlined {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     font-size: 1.25rem;
 }
 
@@ -879,7 +879,7 @@ Since the background is already primary-light usually, let's keep it that way fo
 }
 
 .training-item:hover .training-item-arrow {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .training-badge {
@@ -1011,4 +1011,106 @@ Since the background is already primary-light usually, let's keep it that way fo
 
 .volunteer-crew-faces>*+* {
     margin-left: -0.75rem !important;
+}
+/* Location */
+.meta-link {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(from var(--color-accent) r g b / 0.5);
+    text-underline-offset: 4px;
+}
+
+.meta-link:hover {
+    color: var(--color-text-primary);
+}
+
+.location-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.location-card-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.location-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    min-width: 12rem;
+}
+
+.location-card-body strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.15rem;
+    color: var(--color-text-primary);
+}
+
+.location-card-body small {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.location-card-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.location-card-features > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 9999px;
+    background: var(--color-surface);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.location-card-features .material-symbols-outlined {
+    font-size: 0.95rem;
+}
+
+.location-card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.location-card-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 1rem;
+    border-radius: 9999px;
+    background: var(--color-surface);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    transition: background-color 200ms ease;
+}
+
+.location-card-actions a:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.location-card-actions .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: var(--color-accent);
 }

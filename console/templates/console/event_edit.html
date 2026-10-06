@@ -1,0 +1,111 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if event %}{% trans "Edit Event" %}{% else %}{% trans "Create Event" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_events' %}">{% trans "Event Planner" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% if event %}{{ event.title }}{% else %}{% trans "New Event" %}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% if event %}{% trans "Edit Event Overview" %}{% else %}{% trans "Create New Event" %}{% endif %}</h1>
+        {% if not event %}<p class="page-lead">{% trans "Start with the essentials. You'll add roles and time slots on the next step." %}</p>{% endif %}
+    </div>
+    {% if event %}
+    <a href="{% url 'opportunity_detail' event.pk %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener">
+        <span class="material-symbols-outlined">visibility</span>{% trans "View public page" %}
+    </a>
+    {% endif %}
+</header>
+
+{% if event %}{% include 'console/partials/event_tabs.html' %}{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="c-split event-form" data-unsaved-warning>
+    {% csrf_token %}
+    <div class="c-stack">
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">info</span>{% trans "Event Details" %}</h2>
+            {% include 'console/partials/translated_fields.html' %}
+
+            <div class="c-grid-2 event-form-row">
+                {% include 'console/partials/field.html' with field=form.start_date label=_("Starts") %}
+                {% include 'console/partials/field.html' with field=form.end_date label=_("Ends") %}
+            </div>
+            <div class="event-where event-form-row">
+                <div class="c-grid-2">
+                    <div class="c-field{% if form.venue.errors %} has-error{% endif %}" id="field-venue">
+                        <label class="c-label" for="{{ form.venue.id_for_label }}">{% trans "Venue" %} *</label>
+                        <div class="c-input-icon">
+                            <span class="material-symbols-outlined">location_city</span>
+                            <select name="{{ form.venue.html_name }}" id="{{ form.venue.id_for_label }}" class="c-select"
+                                    hx-get="{% url 'console_venue_preview' %}" hx-trigger="change" hx-target="#venue-preview" hx-swap="outerHTML">
+                                {% for value, label in form.venue.field.choices %}
+                                <option value="{{ value }}" {% if value|stringformat:"s" == form.venue.value|stringformat:"s" or not value and not form.venue.value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% for error in form.venue.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                        <a href="{% url 'console_venue_create' %}" class="c-link event-venue-new" target="_blank" rel="noopener">{% trans "Add a new venue" %}</a>
+                    </div>
+                    {% include 'console/partials/field.html' with field=form.report_to_location %}
+                </div>
+                <div class="c-field event-address{% if form.location_en.errors %} has-error{% endif %}" id="field-location_en">
+                    <label class="c-label" for="{{ form.location_en.id_for_label }}">{% trans "Address" %} *</label>
+                    <div class="c-input-icon">
+                        <span class="material-symbols-outlined">location_on</span>
+                        {{ form.location_en }}
+                    </div>
+                    <span class="c-help">{% trans "For a one-off location. Places you use again are easier to manage as a venue." %}</span>
+                    {% for error in form.location_en.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                </div>
+                {% include 'console/partials/venue_preview.html' with venue=event.venue %}
+            </div>
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">image</span>{% trans "Media" %}</h2>
+            <span class="c-label">{% trans "Event header image" %}</span>
+            <label class="c-image-drop event-image-drop {% if event.image %}has-image{% endif %}" id="event-image-drop"
+                   {% if event.image %}style="background-image: url('{{ event.image.url }}')"{% endif %}>
+                <input type="file" name="image" accept="image/*" data-image-preview="event-image-drop">
+                <span class="c-image-drop-label">
+                    <span class="material-symbols-outlined">cloud_upload</span>
+                    <strong>{% if event.image %}{% trans "Click to change header image" %}{% else %}{% trans "Click to upload a header image" %}{% endif %}</strong>
+                    <small>{% trans "Recommended size: 1200 × 400px" %}</small>
+                </span>
+            </label>
+            {% for error in form.image.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+        </section>
+    </div>
+
+    <aside class="c-stack event-side">
+        <section class="c-card c-card-tonal">
+            <h2 class="c-card-title">{% trans "Settings" %}</h2>
+            <div class="c-stack event-settings">
+                {% trans "Visible to all community members" as published_hint %}
+                {% include 'console/partials/toggle.html' with field=form.published title=_("Published") hint=published_hint %}
+                {% trans "Highlight on the home page" as featured_hint %}
+                {% include 'console/partials/toggle.html' with field=form.featured title=_("Featured") hint=featured_hint %}
+                {% include 'console/partials/field.html' with field=form.attendees %}
+                {% if form.category.field.queryset.exists %}{% include 'console/partials/field.html' with field=form.category label=_("Categories") %}{% endif %}
+                {% include 'console/partials/field.html' with field=form.coordinators %}
+            </div>
+        </section>
+
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg c-btn-block">
+            <span class="material-symbols-outlined">save</span>{% if event %}{% trans "Save Changes" %}{% else %}{% trans "Create Event" %}{% endif %}
+        </button>
+        <a href="{% if event %}{% url 'console_event_edit' event.pk %}{% else %}{% url 'console_events' %}{% endif %}" class="c-btn c-btn-lg c-btn-block" data-discard>
+            <span class="material-symbols-outlined">close</span>{% trans "Discard" %}
+        </a>
+    </aside>
+</form>
+{% endblock %}

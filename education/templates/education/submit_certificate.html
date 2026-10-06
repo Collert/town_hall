@@ -22,10 +22,18 @@
 
     <!-- Left Panel: Certificate Info -->
     <div class="sc-left-panel">
-        <div class="sc-status-chip {% if status.code == 0 %}sc-status-not-submitted{% elif status.code == 1 %}sc-status-action-required{% elif status.code == 2 %}sc-status-approved{% endif %}">
-            <span class="material-symbols-outlined">{% if status.code == 0 %}pending_actions{% elif status.code == 1 %}hourglass_top{% elif status.code == 2 %}verified{% endif %}</span>
+        <div class="sc-status-chip {% if status.code == 0 %}sc-status-not-submitted{% elif status.code == 1 or status.code == 3 %}sc-status-action-required{% elif status.code == 2 %}sc-status-approved{% endif %}">
+            <span class="material-symbols-outlined">{% if status.code == 0 %}pending_actions{% elif status.code == 1 %}hourglass_top{% elif status.code == 2 %}verified{% else %}error{% endif %}</span>
             {% trans "Status:" %} <strong>{{ status.text }}</strong>
         </div>
+        {% if status.code == 3 %}
+        <div class="sc-rejection">
+            <strong>{% trans "Your documents need another look." %}</strong>
+            {% if user_cert.admin_notes %}<p>{{ user_cert.admin_notes }}</p>{% else %}<p>{% trans "Please upload a clearer or more complete copy and submit again." %}</p>{% endif %}
+        </div>
+        {% elif status.code == 2 and user_cert.expiration_date %}
+        <p class="sc-expiry">{% blocktrans with d=user_cert.expiration_date|date:"F j, Y" %}Valid until {{ d }}{% endblocktrans %}</p>
+        {% endif %}
 
         <div class="sc-cert-header">
             <div class="sc-cert-icon">
@@ -113,7 +121,7 @@
                     {% trans "Submit Verification" %}
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
-                {% elif status.code == 1 %}
+                {% elif status.code == 1 or status.code == 3 %}
                 <button type="submit" class="sc-submit-btn">
                     {% trans "Update Documents" %}
                     <span class="material-symbols-outlined">arrow_forward</span>

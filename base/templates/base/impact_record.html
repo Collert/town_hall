@@ -1,0 +1,85 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n humanize avatar_tags %}
+
+{% block title %}{% blocktrans with name=person|display_name %}Volunteer Impact Record - {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/impact_record.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="record-bar no-print">
+    <a href="{% url 'profile_view' person.username %}" class="record-bar-back"><span class="material-symbols-outlined">arrow_back</span>{% trans "Volunteer Impact Record" %}</a>
+    <div class="record-bar-actions">
+        <button type="button" class="record-btn" onclick="window.print()"><span class="material-symbols-outlined">print</span>{% trans "Print / Save PDF" %}</button>
+        <span class="material-symbols-outlined record-shield" title="{% trans 'Verified record' %}">verified_user</span>
+    </div>
+</header>
+
+<main class="record-sheet">
+    <div class="record-head">
+        <div>
+            <span class="record-org">
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<span class="material-symbols-outlined">account_balance</span>{% endif %}
+                {{ company_name }}
+            </span>
+            <h1>{% trans "Certified Volunteer Impact Record" %}</h1>
+            <span class="record-id">{% blocktrans %}Authentic verification #{{ record_id }}{% endblocktrans %}</span>
+        </div>
+        <div class="record-seal">
+            <span class="material-symbols-outlined">verified</span>
+            <small>{% trans "Certified Official" %}</small>
+        </div>
+    </div>
+
+    <p class="record-intro">{% trans "This record certifies the community contributions of" %}</p>
+    <h2 class="record-name">{{ person|display_name }}</h2>
+    {% if profile.level %}
+    <span class="record-level"><span class="material-symbols-outlined">military_tech</span>{% blocktrans with n=profile.level.numeric_name name=profile.level.name %}Level {{ n }} {{ name }}{% endblocktrans %}</span>
+    {% endif %}
+
+    <div class="record-stats">
+        <div><strong>{{ hours|floatformat:"-1"|intcomma }}</strong><span>{% trans "Verified Hours" %}</span></div>
+        <div class="featured"><strong>{{ profile.impact_points|intcomma }}</strong><span>{% trans "Impact Points" %}</span></div>
+        <div><strong>{{ projects }}</strong><span>{% trans "Projects Completed" %}</span></div>
+    </div>
+
+    <div class="record-detail">
+        <section>
+            <h3>{% trans "Top Verified Skills" %}</h3>
+            <ul class="record-skills">
+                {% for s in top_skills %}
+                <li><span>{{ s.skills__name }}</span><span class="record-verified">{% blocktrans count counter=s.n %}{{ counter }} endorsement{% plural %}{{ counter }} endorsements{% endblocktrans %}<span class="material-symbols-outlined">verified</span></span></li>
+                {% empty %}
+                <li class="record-empty">{% trans "No endorsed skills yet." %}</li>
+                {% endfor %}
+                {% if modules %}<li><span>{% trans "Training modules completed" %}</span><span class="record-verified">{{ modules }}<span class="material-symbols-outlined">school</span></span></li>{% endif %}
+            </ul>
+        </section>
+        {% if endorsement %}
+        <section class="record-quote">
+            <h3>{% trans "Community Endorsement" %}</h3>
+            <blockquote>&ldquo;{{ endorsement.text }}&rdquo;</blockquote>
+            <div class="record-quote-by">
+                {% avatar endorsement.endorser 'sm' %}
+                <span><strong>{{ endorsement.endorser|display_name }}</strong><small>{% for skill in endorsement.skills.all %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %} &bull; {{ endorsement.timestamp|date:"M Y" }}</small></span>
+            </div>
+            <span class="material-symbols-outlined record-quote-mark">format_quote</span>
+        </section>
+        {% endif %}
+    </div>
+
+    <footer class="record-foot">
+        <div class="record-signature">
+            <span>{{ company_name }}</span>
+            <small>{% blocktrans with d=issued|date:"F j, Y" %}Issued {{ d }}{% endblocktrans %}</small>
+        </div>
+        <div class="record-qr">
+            <div class="record-qr-code">{{ qr_svg|safe }}</div>
+            <span><strong>{% trans "Scan to verify" %}</strong><small>{{ record_id }}</small></span>
+        </div>
+    </footer>
+</main>
+
+<p class="record-legal no-print">{% blocktrans %}Certified Volunteer Impact Record &bull; Authentic verification #{{ record_id }}{% endblocktrans %}</p>
+{% endblock %}

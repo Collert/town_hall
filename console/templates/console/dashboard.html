@@ -1,0 +1,104 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n humanize avatar_tags %}
+
+{% block title %}{% trans "Admin Home" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/dashboard.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}<span class="crumb-current">{% trans "Admin Home" %}</span>{% endblock %}
+
+{% block content %}
+<section class="dash-hero">
+    <h1 class="dash-greeting">
+        {% if greeting == 'morning' %}{% trans "Good morning" %}{% elif greeting == 'afternoon' %}{% trans "Good afternoon" %}{% else %}{% trans "Good evening" %}{% endif %}, {{ user.first_name|default:user.username }}.
+        <span class="dash-greeting-accent">{% trans "Here's what's happening today" %}</span>
+        {% blocktrans with org=company_name %}at {{ org }}.{% endblocktrans %}
+    </h1>
+    <p class="page-lead">
+        {% blocktrans count counter=events_today %}You have {{ counter }} event staffing today{% plural %}You have {{ counter }} events staffing today{% endblocktrans %}
+        {% blocktrans count counter=pending_verifications %}and {{ counter }} certificate waiting for review.{% plural %}and {{ counter }} certificates waiting for review.{% endblocktrans %}
+    </p>
+</section>
+
+<section class="c-grid-4 dash-stats">
+    <a href="{% url 'console_volunteers' %}" class="c-stat">
+        <span class="c-stat-icon"><span class="material-symbols-outlined">volunteer_activism</span></span>
+        {% if new_volunteers %}<span class="c-stat-tag c-badge c-badge-mint">+{{ new_volunteers }} {% trans "this month" %}</span>{% endif %}
+        <div class="c-stat-label">{% trans "Active Volunteers" %}</div>
+        <div class="c-stat-value">{{ active_volunteers|intcomma }}</div>
+    </a>
+    <a href="{% url 'console_events' %}" class="c-stat">
+        <span class="c-stat-icon accent"><span class="material-symbols-outlined">event</span></span>
+        <div class="c-stat-label">{% trans "Upcoming Events" %}</div>
+        <div class="c-stat-value">{{ upcoming_count }}</div>
+    </a>
+    <a href="{% url 'console_events' %}" class="c-stat">
+        <span class="c-stat-icon accent"><span class="material-symbols-outlined">person_search</span></span>
+        {% if unfilled_roles %}<span class="c-stat-tag c-badge c-badge-danger">{% trans "Urgent" %}</span>{% endif %}
+        <div class="c-stat-label">{% trans "Unfilled Roles" %}</div>
+        <div class="c-stat-value">{{ unfilled_roles }}</div>
+    </a>
+    <div class="c-stat dark">
+        <span class="c-stat-icon"><span class="material-symbols-outlined">timer</span></span>
+        <div class="c-stat-label">{% trans "Hours Logged Weekly" %}</div>
+        <div class="c-stat-value">{{ weekly_hours|intcomma }}</div>
+    </div>
+</section>
+
+<div class="dash-body">
+    <div class="dash-main">
+        <div class="dash-quick-actions">
+            <a href="{% url 'console_event_create' %}" class="c-btn"><span class="material-symbols-outlined">add_circle</span>{% trans "Create New Event" %}</a>
+            <a href="{% url 'console_role_create' %}" class="c-btn"><span class="material-symbols-outlined">assignment_ind</span>{% trans "Add New Role" %}</a>
+            <a href="{% url 'console_module_create' %}" class="c-btn"><span class="material-symbols-outlined">school</span>{% trans "New Training Module" %}</a>
+        </div>
+
+        <div class="c-section-head">
+            <h2 class="c-section-title">{% trans "Upcoming Events" %}</h2>
+            <a href="{% url 'console_events' %}" class="c-link">{% trans "View All Events" %}</a>
+        </div>
+
+        <div class="c-stack">
+            {% for event in upcoming_events %}
+            {% with required=event.total_required signed=event.total_signed_up %}
+            <a href="{% url 'console_event_roles' event.pk %}" class="dash-event">
+                <div class="dash-event-image">
+                    {% if event.image %}<img src="{{ event.image.url }}" alt="">{% else %}<span class="material-symbols-outlined">event</span>{% endif %}
+                </div>
+                <div class="dash-event-info">
+                    <div class="dash-event-top">
+                        <h3>{{ event.title }}</h3>
+                        <span class="dash-event-date">{{ event.start_date|date:"M j, Y" }}</span>
+                    </div>
+                    <div class="dash-event-meta">
+                        <span><span class="material-symbols-outlined">location_on</span>{{ event.place_name }}</span>
+                        <span><span class="material-symbols-outlined">schedule</span>{{ event.start_date|time }}</span>
+                        {% if not event.published %}<span class="c-badge">{% trans "Draft" %}</span>{% endif %}
+                    </div>
+                    <div class="c-progress-head">
+                        <span>{% trans "Staffing Progress" %}</span>
+                        <span class="accent">{% blocktrans %}{{ signed }}/{{ required }} spots filled{% endblocktrans %}</span>
+                    </div>
+                    <div class="c-progress accent"><span style="width: {{ event.staffing_progress }}%"></span></div>
+                </div>
+            </a>
+            {% endwith %}
+            {% empty %}
+            <div class="c-empty">
+                <span class="material-symbols-outlined">event_available</span>
+                <h3>{% trans "No upcoming events" %}</h3>
+                <p>{% trans "Create an event, then add roles so volunteers can sign up." %}</p>
+                <a href="{% url 'console_event_create' %}" class="c-btn c-btn-primary"><span class="material-symbols-outlined">add</span>{% trans "Create New Event" %}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <aside class="c-card c-card-tonal dash-activity">
+        <h2 class="c-card-title">{% trans "Recent Activity" %}</h2>
+        {% include 'console/partials/activity_feed.html' %}
+    </aside>
+</div>
+{% endblock %}

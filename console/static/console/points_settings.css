@@ -1,0 +1,59 @@
+.points-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.points-intro {
+    margin: -0.5rem 0 1.25rem;
+}
+
+.points-formula-line {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-primary-contrast) r g b / 0.08);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.points-formula .c-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.7);
+}
+
+.points-example {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.points-example li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.85);
+}
+
+.points-example strong {
+    color: var(--color-primary-contrast);
+    font-variant-numeric: tabular-nums;
+}
+
+.points-example-total {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(from var(--color-primary-contrast) r g b / 0.15);
+}
+
+.points-example-total strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+}

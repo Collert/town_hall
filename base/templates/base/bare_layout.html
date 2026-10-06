@@ -1,0 +1,15 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    {% include 'base/partials/head.html' %}
+    <title>{% block title %}{{ company_name }}{% endblock %}</title>
+    {% block extra_css %}{% endblock %}
+</head>
+{% comment %}Full-screen pages without site navigation: certificates, records, shareable cards and the kiosk.{% endcomment %}
+<body class="bare {% block body_class %}{% endblock %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    {% block content %}{% endblock %}
+    {% include 'base/partials/toasts.html' %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

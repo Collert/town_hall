@@ -14,7 +14,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     margin: 0 0 0.5rem 0;
 }
 
@@ -45,7 +45,7 @@
 
 .quiz-instructions .material-symbols-outlined {
     font-size: 1.125rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 
@@ -78,7 +78,7 @@
     font-family: 'Manrope', sans-serif;
     font-size: 1rem;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .question-text {

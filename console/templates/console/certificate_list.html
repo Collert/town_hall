@@ -1,0 +1,43 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n console_tags %}
+
+{% block title %}{% trans "Certificate Directory" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/certificate_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Certificates" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Certificate Directory" %}</h1>
+        <p class="page-lead">{% trans "Manage the external certifications volunteers can upload proof of, such as first aid or food handling." %}</p>
+    </div>
+    <div class="page-actions">
+        {% pending_verification_count as pending_count %}
+        <a href="{% url 'console_verifications' %}" class="c-btn c-btn-dark"><span class="material-symbols-outlined">verified</span>{% trans "Review Submissions" %}{% if pending_count %}<span class="c-btn-badge" title="{% trans 'Submissions waiting for review' %}">{{ pending_count }}</span>{% endif %}</a>
+        <a href="{% url 'console_certificate_create' %}" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">add_circle</span>{% trans "Create New Certificate" %}</a>
+    </div>
+</header>
+
+<form class="cert-filters" hx-get="{% url 'console_certificates' %}" hx-target="#certificate-grid" hx-swap="outerHTML"
+      hx-trigger="change, input delay:300ms from:input[name=q]" hx-push-url="true">
+    <div class="c-tabs">
+        <label class="c-tab"><input type="radio" name="validity" value="" {% if not validity %}checked{% endif %} hidden><span class="material-symbols-outlined">check</span>{% trans "All Templates" %}</label>
+        <label class="c-tab"><input type="radio" name="validity" value="expiring" {% if validity == 'expiring' %}checked{% endif %} hidden><span class="material-symbols-outlined">check</span>{% trans "Expiring" %}</label>
+        <label class="c-tab"><input type="radio" name="validity" value="permanent" {% if validity == 'permanent' %}checked{% endif %} hidden><span class="material-symbols-outlined">check</span>{% trans "Never Expires" %}</label>
+    </div>
+    <div class="c-input-icon c-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="search" name="q" value="{{ query }}" class="c-input" placeholder="{% trans 'Search templates...' %}">
+    </div>
+</form>
+
+{% include 'console/partials/certificate_grid.html' %}
+{% endblock %}

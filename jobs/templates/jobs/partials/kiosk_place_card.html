@@ -1,0 +1,62 @@
+{% load i18n humanize %}
+{% if kind == 'event' %}
+<article class="place-card">
+    <div class="place-card-hero" {% if place.image %}style="background-image: url('{{ place.image.url }}')"{% endif %}>
+        <span class="place-chip">{% if place.is_live %}{% trans "Active event" %}{% elif place.is_past %}{% trans "Event ended" %}{% else %}{% trans "Upcoming event" %}{% endif %}</span>
+        <h1>{{ place.title }}</h1>
+    </div>
+    <div class="place-card-body">
+        <div class="place-facts">
+            <div>
+                <span class="place-label">{% trans "Shift timings" %}</span>
+                <span class="place-fact"><span class="material-symbols-outlined">schedule</span>{{ place.start_date|time }} &ndash; {{ place.end_date|time }}</span>
+            </div>
+            <div>
+                <span class="place-label">{% trans "Registered" %}</span>
+                <span class="place-fact"><span class="material-symbols-outlined">group</span>{% blocktrans count counter=registered %}{{ counter }} volunteer{% plural %}{{ counter }} volunteers{% endblocktrans %}</span>
+            </div>
+        </div>
+        <div class="place-impact">
+            <span class="place-impact-title">{% trans "Live Impact Tracking" %}</span>
+            <span class="place-impact-value"><strong>{{ hours_today|intcomma }}</strong> {% trans "Hours Logged Today" %}</span>
+            <div class="place-progress"><span style="width: {{ hours_percent }}%"></span></div>
+            {% if on_shift %}<small>{% blocktrans count counter=on_shift %}{{ counter }} volunteer on shift right now{% plural %}{{ counter }} volunteers on shift right now{% endblocktrans %}</small>{% endif %}
+        </div>
+        <p class="place-location"><span class="material-symbols-outlined">location_on</span>{{ place.report_to_location|default:place.place_name }}</p>
+    </div>
+</article>
+{% else %}
+<article class="place-card place-card-venue">
+    <div class="place-card-hero" {% if place.photo %}style="background-image: url('{{ place.photo.url }}')"{% endif %}>
+        <span class="place-brand"><span class="material-symbols-outlined">account_balance</span>{{ company_name }}</span>
+        <h1>{{ place.name }}</h1>
+        {% if place.address %}<p class="place-address"><span class="material-symbols-outlined">location_on</span>{{ place.address }}</p>{% endif %}
+    </div>
+    <div class="place-card-body">
+        <div class="place-panel">
+            <h2><span class="material-symbols-outlined">schedule</span>{% trans "Operating Hours" %}</h2>
+            {% if hours %}
+            <dl class="place-hours">
+                {% for h in hours %}
+                <div {% if h == todays_hours %}class="today"{% endif %}><dt>{{ h.get_day_of_week_display }}</dt><dd>{{ h.open_time|time }} &ndash; {{ h.close_time|time }}</dd></div>
+                {% endfor %}
+            </dl>
+            {% else %}
+            <p class="place-muted">{% trans "Hours haven't been set for this venue." %}</p>
+            {% endif %}
+        </div>
+        {% if notes %}
+        <div class="place-panel place-notices">
+            <h2><span class="material-symbols-outlined">campaign</span>{% trans "Notices" %}</h2>
+            <ul>
+                {% for note in notes %}<li>{{ note.text|linebreaksbr }}</li>{% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="place-panel place-assist">
+            <span class="material-symbols-outlined">support_agent</span>
+            <div><strong>{% trans "Need Assistance?" %}</strong><small>{% trans "Ask a staff member at the front desk." %}</small></div>
+        </div>
+    </div>
+</article>
+{% endif %}

@@ -1,0 +1,98 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n humanize avatar_tags %}
+
+{% block title %}{% trans "Shift Check-in" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css">
+<link rel="stylesheet" href="{% static 'jobs/kiosk_layout.css' %}">
+<link rel="stylesheet" href="{% static 'jobs/kiosk_logged_in.css' %}">
+{% endblock %}
+
+{% block body_class %}kiosk{% endblock %}
+
+{% block content %}
+<header class="shift-top">
+    <span class="shift-brand">{{ company_name }}</span>
+    <a href="{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}" class="shift-user" title="{% trans 'Done, keep my shift running' %}">
+        <span>{{ kiosk_user|display_name }}</span>
+        {% avatar kiosk_user 'md' %}
+    </a>
+</header>
+
+<main class="shift-page">
+    <span class="shift-active"><span class="shift-dot"></span>{% trans "Active Assignment" %}</span>
+    <h1 class="shift-title">{% if slot %}{{ place.title }}{% elif place %}{{ place.name }}{% else %}{{ shift.role.name }}{% endif %}</h1>
+
+    <section class="shift-timer-card">
+        <span class="shift-label">{% trans "Shift Duration" %}</span>
+        <time class="shift-timer" id="shift-timer" data-start="{{ shift.start_time|date:'c' }}">00:00:00</time>
+        <form method="post" action="{% url 'kiosk_check_out' %}">
+            {% csrf_token %}
+            <input type="hidden" name="kind" value="{{ kind }}">
+            <input type="hidden" name="place" value="{{ place.pk|default:'' }}">
+            <button type="submit" class="kiosk-cta shift-checkout"><span class="material-symbols-outlined">logout</span>{% trans "Check Out" %}</button>
+        </form>
+        <p class="shift-since">{% blocktrans with t=shift.start_time|time %}Checked in at {{ t }}{% endblocktrans %}</p>
+    </section>
+
+    <div class="shift-grid">
+        <section class="shift-tile shift-details">
+            <h2><span class="material-symbols-outlined">info</span>{% trans "Shift Details" %}</h2>
+            <strong>{{ shift.role.name }}{% if place.report_to_location %} &ndash; {{ place.report_to_location }}{% endif %}</strong>
+            {% if slot %}<p>{{ slot.start_time|date:"M j" }}, {{ slot.start_time|time }} &ndash; {{ slot.end_time|time }}</p>{% endif %}
+            <span class="shift-verified"><span class="material-symbols-outlined">{% if shift.clutched %}bolt{% else %}check_circle{% endif %}</span>{% if shift.clutched %}{% trans "Clutch cover &middot; bonus points" %}{% else %}{% trans "Verified Position" %}{% endif %}</span>
+        </section>
+        <div class="shift-side">
+            <section class="shift-tile shift-stat">
+                <span class="shift-label">{% trans "Estimated Impact" %}</span>
+                <strong>{% if estimated_impact %}{{ estimated_impact|intcomma }}+{% else %}&mdash;{% endif %}</strong>
+                <span class="material-symbols-outlined shift-stat-icon">volunteer_activism</span>
+            </section>
+            {% if slot %}
+            <section class="shift-tile shift-stat">
+                <span class="shift-label">{% trans "Team Arrived" %}</span>
+                <strong>{{ team_arrived|length }}/{{ team_size }}</strong>
+                <span class="shift-team">
+                    {% for member in team_arrived|slice:":2" %}{% avatar member 'sm' %}{% endfor %}
+                    {% if team_arrived|length > 2 %}<span class="shift-team-more">+{{ team_arrived|length|add:"-2" }}</span>{% endif %}
+                </span>
+            </section>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if supervisor %}
+    <section class="shift-supervisor">
+        {% avatar supervisor 'lg' %}
+        <span><strong>{{ supervisor|display_name }}</strong><small>{% trans "Event Supervisor" %}</small></span>
+        {% if supervisor.profile.phone %}<a href="tel:{{ supervisor.profile.phone }}" class="shift-call" aria-label="{% trans 'Call supervisor' %}"><span class="material-symbols-outlined">call</span></a>{% endif %}
+    </section>
+    {% endif %}
+</main>
+{% include 'jobs/partials/kiosk_language.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        const el = document.getElementById('shift-timer');
+        const start = new Date(el.dataset.start).getTime();
+        const pad = (n) => String(n).padStart(2, '0');
+        const tick = () => {
+            const s = Math.max(0, Math.floor((Date.now() - start) / 1000));
+            el.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+        };
+        tick();
+        setInterval(tick, 1000);
+
+        // Shared device: hand the kiosk back after inactivity. The shift keeps running.
+        const timeout = {{ idle_timeout|default:30 }} * 1000;
+        const signOutUrl = "{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk|default:'' }}";
+        let timer;
+        const reset = () => { clearTimeout(timer); timer = setTimeout(() => { location.href = signOutUrl; }, timeout); };
+        ['pointerdown', 'keydown', 'touchstart'].forEach((evt) => document.addEventListener(evt, reset, { passive: true }));
+        reset();
+    })();
+</script>
+{% endblock %}

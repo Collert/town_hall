@@ -1,0 +1,62 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/quiz_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_modules' %}">{% trans "Training Modules" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_module_edit' module.pk %}">{{ module.title }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{{ quiz.title }}</span>
+{% endblock %}
+
+{% block content %}
+<header class="quiz-hero">
+    <div>
+        <span class="page-eyebrow">{% trans "Course Construction" %}</span>
+        <h1 class="page-title">{{ module.title }}</h1>
+        <p class="page-lead">{{ module.description|striptags|truncatechars:180 }}</p>
+    </div>
+    <div class="quiz-hero-stat">
+        <span class="c-label">{% trans "Quiz size" %}</span>
+        <strong>{% blocktrans count counter=questions|length %}{{ counter }} question{% plural %}{{ counter }} questions{% endblocktrans %}</strong>
+    </div>
+</header>
+
+<div class="c-split">
+    <div class="c-stack">
+        <form method="post" class="c-card quiz-settings">
+            {% csrf_token %}
+            <h2 class="c-card-title"><span class="material-symbols-outlined">quiz</span>{% trans "Assessment Designer" %}</h2>
+            {% include 'console/partials/translated_fields.html' %}
+            <div class="quiz-settings-row">
+                {% include 'console/partials/field.html' with field=form.percentage_to_pass %}
+                <div class="c-form-actions">
+                    <a href="{% url 'quiz_detail' module.pk quiz.pk %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener"><span class="material-symbols-outlined">visibility</span>{% trans "Preview" %}</a>
+                    <button type="submit" class="c-btn c-btn-dark">{% trans "Save Settings" %}</button>
+                </div>
+            </div>
+        </form>
+
+        {% include 'console/partials/quiz_questions.html' %}
+
+        <div class="c-form-actions quiz-delete">
+            <form method="post" action="{% url 'console_quiz_delete' module.pk quiz.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="c-btn c-btn-danger" onclick="return confirm('{% trans "Delete this quiz and its questions?" %}')">
+                    <span class="material-symbols-outlined">delete</span>{% trans "Delete quiz" %}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <aside>
+        {% include 'console/partials/module_structure.html' %}
+    </aside>
+</div>
+{% endblock %}

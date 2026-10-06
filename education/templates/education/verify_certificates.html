@@ -33,19 +33,30 @@
         </div>
         <div class="vc-available-grid">
             {% for cert in available_certs %}
-            <div class="vc-available-card" style="view-transition-name: cert-card-{{ cert.id }};">
-                <div class="vc-available-card-icon">
-                    <span class="material-symbols-outlined">{{ cert.icon|default:"workspace_premium" }}</span>
+            <article class="vc-available-card" style="view-transition-name: cert-card-{{ cert.id }};">
+                <div class="vc-available-card-top">
+                    <div class="vc-available-card-icon">
+                        <span class="material-symbols-outlined">{{ cert.icon|default:"workspace_premium" }}</span>
+                    </div>
+                    {% if cert.user_status == 'pending' %}<span class="vc-status vc-status-pending"><span class="material-symbols-outlined">hourglass_top</span>{% trans "Under review" %}</span>
+                    {% elif cert.user_status == 'rejected' %}<span class="vc-status vc-status-rejected"><span class="material-symbols-outlined">error</span>{% trans "Needs re-upload" %}</span>{% endif %}
                 </div>
                 <div class="vc-available-card-body">
                     <h3 class="vc-available-card-title">{{ cert.name }}</h3>
-                    <p class="vc-available-card-desc">{{ cert.description|truncatewords:10 }}</p>
+                    {% if cert.issuer %}<p class="vc-available-card-issuer">{{ cert.issuer }}</p>{% endif %}
+                    {% if cert.description %}<p class="vc-available-card-desc">{{ cert.description|truncatewords:18 }}</p>{% endif %}
                 </div>
-                <a href="{% url 'submit_certificate' cert.id %}" class="vc-verify-btn">
-                    {% trans "Verify Now" %}
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
+                <div class="vc-available-card-foot">
+                    <span class="vc-available-card-validity">
+                        <span class="material-symbols-outlined">event_repeat</span>
+                        {% if cert.expires_after_days %}{% blocktrans count counter=cert.expires_after_days %}Valid {{ counter }} day{% plural %}Valid {{ counter }} days{% endblocktrans %}{% else %}{% trans "No expiration" %}{% endif %}
+                    </span>
+                    <a href="{% url 'submit_certificate' cert.id %}" class="vc-verify-btn">
+                        {% if cert.user_status %}{% trans "View Status" %}{% else %}{% trans "Verify Now" %}{% endif %}
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
+                </div>
+            </article>
             {% empty %}
             <p>{% trans "No available certifications." %}</p>
             {% endfor %}

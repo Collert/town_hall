@@ -1,0 +1,6 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% translate "You've been endorsed!" as title %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with from=tx.from_name skills=tx.skills %}{{ from }} endorsed you for <strong>{{ skills }}</strong>.{% endblocktranslate %}</p>
+{{ tx_if.message }}<div class="th-box th-quote">&ldquo;{{ tx.message }}&rdquo;</div>{{ go.end }}
+{% translate "View your profile" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+{% endblock %}

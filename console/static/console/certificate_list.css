@@ -1,0 +1,127 @@
+.cert-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.cert-filters .c-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.cert-filters .c-tab .material-symbols-outlined {
+    display: none;
+    font-size: 1rem;
+}
+
+.cert-filters .c-tab:has(input:checked) {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.cert-filters .c-tab:has(input:checked) .material-symbols-outlined {
+    display: inline;
+}
+
+.cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.75rem;
+}
+
+.cert-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 2rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+    transition: transform 200ms ease;
+}
+
+.cert-card:hover {
+    transform: translateY(-4px);
+}
+
+.cert-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.cert-icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+}
+
+.cert-icon .material-symbols-outlined {
+    font-size: 2rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+.cert-icon-a {
+    background: rgba(from var(--color-accent) r g b / 0.14);
+    color: var(--color-accent);
+}
+
+.cert-icon-b {
+    background: var(--color-primary);
+    color: var(--color-primary-light);
+}
+
+.cert-card h3 {
+    margin-top: 0.5rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.cert-card>p {
+    color: var(--color-text-secondary);
+}
+
+.cert-card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    color: var(--color-text-secondary);
+}
+
+.cert-card-foot span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.cert-card-foot .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.cert-card-foot strong {
+    color: var(--color-text-primary);
+}
+
+.cert-add {
+    min-height: 18rem;
+}
+
+.cert-add small {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 0.875rem;
+}

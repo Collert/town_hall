@@ -65,14 +65,18 @@
         {% trans "Edit Profile" %}
       </a>
       {% endif %}
-      <button class="profile-btn profile-btn-ghost" type="button">
+      <button class="profile-btn profile-btn-ghost" type="button" id="share-profile-btn"
+              data-url="{{ request.scheme }}://{{ request.get_host }}{% url 'profile_view' viewed_user.username %}"
+              data-title="{{ viewed_user.get_full_name|default:viewed_user.username }}"
+              data-copied="{% trans 'Profile link copied' %}"
+              data-failed="{% trans 'Could not copy the link' %}">
         <span class="material-symbols-outlined">share</span>
         {% trans "Public Profile" %}
       </button>
-      <button class="profile-btn profile-btn-text" type="button">
+      <a href="{% url 'volunteer_resume' viewed_user.username %}" class="profile-btn profile-btn-text">
         <span class="material-symbols-outlined">download</span>
         {% trans "Download Resume" %}
-      </button>
+      </a>
     </div>
 
   </div><!-- end .profile-header -->
@@ -172,6 +176,29 @@
     </div>
 
   </div>
+
+  {% if points_history %}
+  <section class="profile-section">
+    <div class="profile-section-header">
+      <div>
+        <h2>{% trans "How You Earned Your Points" %}</h2>
+        <p>{% trans "Shifts, training and endorsements all add to your impact. Only you can see this." %}</p>
+      </div>
+    </div>
+    <ol class="points-history">
+      {% for entry in points_history %}
+      <li class="points-history-item">
+        <span class="points-history-icon material-symbols-outlined">{% if entry.source == 'shift' %}schedule{% elif entry.source == 'training' %}school{% elif entry.source == 'endorsement' %}thumb_up{% else %}star{% endif %}</span>
+        <div class="points-history-main">
+          <strong>{{ entry.label }}</strong>
+          <span>{{ entry.created_at|date:"M j, Y" }}{% for factor in entry.factors %} &middot; {{ factor }}{% endfor %}</span>
+        </div>
+        <span class="points-history-amount {% if entry.amount < 0 %}negative{% endif %}">{% if entry.amount > 0 %}+{% endif %}{{ entry.amount }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
 
   <!-- =======================================================
        3. Training & Certificates
@@ -299,7 +326,7 @@
     <div class="feedback-feed">
       <div class="feedback-feed-header">
         <h2>{% trans "Public Feedback Feed" %}</h2>
-        <a href="#" class="feedback-view-all">{% trans "View All" %}</a>
+        <a href="{% url 'endorsements_feed' %}?q={{ viewed_user.get_full_name|default:viewed_user.username|urlencode }}" class="feedback-view-all">{% trans "View All" %}</a>
       </div>
 
       {% if recent_endorsements %}
@@ -333,7 +360,9 @@
           <p class="feedback-quote">{{ endorsement.text }}</p>
           {% endif %}
 
-          <span class="feedback-skill-tag">{{ endorsement.skill.name }}</span>
+          <div class="feedback-skill-tags">
+            {% for skill in endorsement.skills.all %}<span class="feedback-skill-tag">{{ skill.name }}</span>{% endfor %}
+          </div>
         </article>
         {% endfor %}
       </div>
@@ -347,4 +376,42 @@
   </div><!-- end .endorsements-section -->
 
 </main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const btn = document.getElementById('share-profile-btn');
+  if (!btn) return;
+  const url = btn.dataset.url;
+
+  function copyLink() {
+    const done = () => showToast(btn.dataset.copied, 'success', 'link');
+    const fail = () => showToast(btn.dataset.failed, 'error');
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(done, fail);
+      return;
+    }
+    // Older browsers and plain-http hosts have no async clipboard
+    const field = document.createElement('textarea');
+    field.value = url;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    try { document.execCommand('copy') ? done() : fail(); } catch (e) { fail(); }
+    field.remove();
+  }
+
+  btn.addEventListener('click', () => {
+    const data = { title: btn.dataset.title, url: url };
+    if (navigator.share && (!navigator.canShare || navigator.canShare(data))) {
+      navigator.share(data).catch((err) => { if (err.name !== 'AbortError') copyLink(); });
+    } else {
+      copyLink();
+    }
+  });
+})();
+</script>
 {% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Points Rules" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/points_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Points" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" id="points-form">
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Points Rules" %}</h1>
+            <p class="page-lead">{% trans "Decide how volunteers earn impact points. Each award is recorded when it's earned, so changes here apply to new points unless you recalculate." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Rules" %}</button>
+    </header>
+
+    {% include 'console/partials/settings_tabs.html' %}
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">schedule</span>{% trans "Shifts" %}</h2>
+                <div class="points-grid">
+                    {% include 'console/partials/field.html' with field=form.points_per_hour %}
+                    {% include 'console/partials/field.html' with field=form.max_role_weight %}
+                    {% include 'console/partials/field.html' with field=form.reach_cap_percent %}
+                </div>
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">bolt</span>{% trans "Clutch Bonuses" %}</h2>
+                <p class="c-muted points-intro">{% trans "Rewards for the shifts that are hardest to fill. Bonuses on the same shift add up." %}</p>
+                <div class="points-grid">
+                    {% include 'console/partials/field.html' with field=form.walk_in_bonus_percent %}
+                    {% include 'console/partials/field.html' with field=form.last_minute_bonus_percent %}
+                    {% include 'console/partials/field.html' with field=form.last_minute_window_hours %}
+                    {% include 'console/partials/field.html' with field=form.off_hours_bonus_percent %}
+                    {% include 'console/partials/field.html' with field=form.early_start_hour %}
+                    {% include 'console/partials/field.html' with field=form.late_end_hour %}
+                </div>
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">school</span>{% trans "Training" %}</h2>
+                <p class="c-muted points-intro">{% trans "A one-time award when a volunteer finishes a module, sized by the module's length." %}</p>
+                <div class="points-grid">
+                    {% include 'console/partials/field.html' with field=form.training_points_per_minute %}
+                    {% include 'console/partials/field.html' with field=form.training_points_min %}
+                    {% include 'console/partials/field.html' with field=form.training_points_cap %}
+                </div>
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">thumb_up</span>{% trans "Endorsements" %}</h2>
+                <p class="c-muted points-intro">{% trans "Only between people who worked the same event. Endorsing back someone who just endorsed you earns nothing." %}</p>
+                <div class="points-grid">
+                    {% include 'console/partials/field.html' with field=form.endorsement_points %}
+                    {% include 'console/partials/field.html' with field=form.endorsement_monthly_cap %}
+                </div>
+            </section>
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card c-card-dark points-formula">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">function</span>{% trans "How a Shift Scores" %}</h2>
+                <p class="points-formula-line">{% trans "points per hour × hours × role weight × (1 + reach) × (1 + clutch bonuses)" %}</p>
+                <h3 class="c-label">{% trans "Example" %}</h3>
+                <ul class="points-example">
+                    <li><span>{% trans "Hours" %}</span><strong>{{ example.hours }}</strong></li>
+                    <li><span>{% trans "Mid-level role" %}</span><strong>×{{ example.weight }}</strong></li>
+                    <li><span>{% trans "25 people per volunteer" %}</span><strong>+{{ example.reach }}%</strong></li>
+                    <li><span>{% trans "Starts at 6 am" %}</span><strong>+{{ example.clutch }}%</strong></li>
+                    <li class="points-example-total"><span>{% trans "Impact points" %}</span><strong>{{ example.total }}</strong></li>
+                </ul>
+            </section>
+
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">history</span>{% trans "Apply to Past Shifts" %}</h2>
+                <p class="c-muted points-intro">{% trans "Recalculate every finished shift with the saved rules and give training points for modules finished earlier. Manual adjustments and endorsement awards stay as they are." %}</p>
+                <button type="submit" form="recalculate-form" class="c-btn c-btn-outline c-btn-block"
+                        onclick="return confirm('{% trans "Recalculate every past shift? Volunteer totals and levels may change." %}')">
+                    <span class="material-symbols-outlined">calculate</span>{% trans "Recalculate Past Shifts" %}
+                </button>
+            </section>
+        </aside>
+    </div>
+</form>
+<form method="post" id="recalculate-form">{% csrf_token %}<input type="hidden" name="action" value="recalculate"></form>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% load i18n %}
+<section class="c-card c-card-tonal module-structure" id="module-structure">
+    <h2 class="c-card-title">
+        {% trans "Module Structure" %}
+        <span class="c-badge c-badge-mint c-card-title-aside">{% blocktrans count counter=structure|length %}{{ counter }} item{% plural %}{{ counter }} items{% endblocktrans %}</span>
+    </h2>
+    <ol class="structure-list">
+        <li class="structure-item {% if not current %}current{% endif %}">
+            <a href="{% url 'console_module_edit' module.pk %}" class="structure-link">
+                <span class="c-icon-tile round"><span class="material-symbols-outlined">info</span></span>
+                <span><strong>{% trans "Overview" %}</strong><small>{% trans "Title, description & settings" %}</small></span>
+            </a>
+        </li>
+        {% for item in structure %}
+        <li class="structure-item {% if item.current %}current{% endif %} {% if item.kind == 'quiz' %}is-quiz{% endif %}">
+            <a href="{% if item.kind == 'lesson' %}{% url 'console_lesson_edit' module.pk item.obj.pk %}{% else %}{% url 'console_quiz_edit' module.pk item.obj.pk %}{% endif %}" class="structure-link">
+                <span class="c-icon-tile round {% if item.kind == 'quiz' %}accent{% endif %}">
+                    <span class="material-symbols-outlined">{% if item.kind == 'quiz' %}quiz{% elif item.obj.video_url %}smart_display{% else %}article{% endif %}</span>
+                </span>
+                <span>
+                    {% if item.current %}<em class="structure-current-label">{% if item.kind == 'quiz' %}{% trans "Current quiz" %}{% else %}{% trans "Current lesson" %}{% endif %}</em>{% endif %}
+                    <strong>{{ item.obj.title }}</strong>
+                    <small>
+                        {% if item.kind == 'quiz' %}{% blocktrans count counter=item.obj.question_count %}Quiz &bull; {{ counter }} question{% plural %}Quiz &bull; {{ counter }} questions{% endblocktrans %}
+                        {% else %}{% blocktrans with m=item.obj.overall_length %}Lesson &bull; {{ m }} mins{% endblocktrans %}{% endif %}
+                    </small>
+                </span>
+            </a>
+            <span class="structure-move">
+                <button type="button" class="c-icon-btn" aria-label="{% trans 'Move up' %}" {% if item.first %}disabled{% endif %}
+                        hx-post="{% url 'console_move_item' module.pk item.kind item.obj.pk 'up' %}" hx-target="#module-structure" hx-swap="outerHTML"
+                        hx-vals='{"current_kind": "{{ current_kind }}", "current_id": "{{ current.pk|default:"" }}"}'>
+                    <span class="material-symbols-outlined">keyboard_arrow_up</span>
+                </button>
+                <button type="button" class="c-icon-btn" aria-label="{% trans 'Move down' %}" {% if item.last %}disabled{% endif %}
+                        hx-post="{% url 'console_move_item' module.pk item.kind item.obj.pk 'down' %}" hx-target="#module-structure" hx-swap="outerHTML"
+                        hx-vals='{"current_kind": "{{ current_kind }}", "current_id": "{{ current.pk|default:"" }}"}'>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
+                </button>
+            </span>
+        </li>
+        {% endfor %}
+    </ol>
+    {% if not structure %}<p class="c-muted structure-empty">{% trans "Add a lesson or quiz to start building the learning path." %}</p>{% endif %}
+    <div class="structure-add">
+        <a href="{% url 'console_lesson_create' module.pk %}" class="c-btn c-btn-surface c-btn-block"><span class="material-symbols-outlined">add</span>{% trans "Add Lesson" %}</a>
+        <button type="button" class="c-btn c-btn-block structure-add-quiz" hx-post="{% url 'console_quiz_create' module.pk %}" hx-include="this">
+            <span class="material-symbols-outlined">add</span>{% trans "Add Quiz" %}
+        </button>
+    </div>
+</section>

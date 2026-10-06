@@ -1,0 +1,172 @@
+.role-select {
+    width: 100%;
+    max-width: 52rem;
+}
+
+.role-select-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.role-select-head .kiosk-title,
+.role-select-head .kiosk-lead {
+    text-align: left;
+}
+
+.role-select-eyebrow {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.role-select-close {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 50%;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+
+.role-options-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.role-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.role-choice {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+    cursor: pointer;
+    transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+.role-choice:active {
+    transform: scale(0.99);
+}
+
+.role-choice input {
+    position: absolute;
+    opacity: 0;
+}
+
+.role-choice:has(input:checked) {
+    box-shadow: inset 0 0 0 3px var(--color-primary-vivid), var(--shadow-ambient);
+}
+
+.role-choice-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 4.25rem;
+    height: 4.25rem;
+    border-radius: 50%;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.role-choice-icon .material-symbols-outlined {
+    font-size: 1.85rem;
+}
+
+.role-choice:has(input:checked) .role-choice-icon {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.role-choice-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.role-choice-text strong {
+    display: block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.role-choice-text em {
+    display: block;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.role-choice-text small {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+}
+
+.role-choice-radio {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px rgba(from var(--color-text-tertiary) r g b / 0.5);
+}
+
+.role-choice:has(input:checked) .role-choice-radio {
+    box-shadow: inset 0 0 0 0.5rem var(--color-primary-vivid);
+}
+
+.role-select-cta {
+    align-self: flex-end;
+    width: auto;
+}
+
+.role-options-form:not(:has(input:checked)) .role-select-cta {
+    opacity: 0.5;
+}
+
+.role-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    text-align: center;
+}
+
+.role-empty > .material-symbols-outlined {
+    font-size: 3.5rem;
+    color: var(--color-text-tertiary);
+}
+
+.role-empty h3 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.75rem;
+    color: var(--color-text-primary);
+}
+
+.role-empty p {
+    max-width: 30rem;
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+}

@@ -1,0 +1,57 @@
+{% extends 'jobs/kiosk_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block kiosk_css %}<link rel="stylesheet" href="{% static 'jobs/kiosk_role_select.css' %}">{% endblock %}
+
+{% block kiosk_content %}
+<div class="role-select">
+    <div class="role-select-head">
+        <div>
+            <span class="role-select-eyebrow">{% blocktrans with name=kiosk_user.first_name|default:kiosk_user.username %}Welcome, {{ name }}{% endblocktrans %}</span>
+            <h2 class="kiosk-title">{% trans "Select Your Role" %}</h2>
+            <p class="kiosk-lead">
+                {% if clutch and choices %}{% trans "You aren't scheduled right now, but these roles could use a hand. Stepping in earns a clutch bonus!" %}
+                {% elif kind == 'venue' %}{% trans "Please select your primary assignment for today's shift." %}
+                {% else %}{% trans "You're signed up for more than one shift. Which are you starting?" %}{% endif %}
+            </p>
+        </div>
+        <a href="{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}" class="role-select-close" aria-label="{% trans 'Cancel and sign out' %}"><span class="material-symbols-outlined">close</span></a>
+    </div>
+
+    {% if choices %}
+    <form method="post" class="role-options-form">
+        {% csrf_token %}
+        <div class="role-choices">
+            {% for choice in choices %}
+            <label class="role-choice">
+                <input type="radio" name="choice" value="{{ choice.id }}" required {% if forloop.first and choices|length == 1 %}checked{% endif %}>
+                <span class="role-choice-icon"><span class="material-symbols-outlined">{{ choice.icon|default:"badge" }}</span></span>
+                <span class="role-choice-text">
+                    <strong>{{ choice.name }}</strong>
+                    {% if choice.detail %}<em>{{ choice.detail }}</em>{% endif %}
+                    {% if choice.description %}<small>{{ choice.description|truncatechars:140 }}</small>{% endif %}
+                </span>
+                <span class="role-choice-radio"></span>
+            </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="kiosk-cta role-select-cta">{% trans "Confirm & Start Shift" %}<span class="material-symbols-outlined">arrow_forward</span></button>
+    </form>
+    {% else %}
+    <div class="role-empty">
+        <span class="material-symbols-outlined">event_busy</span>
+        {% if kind == 'venue' %}
+        <h3>{% trans "No positions at this venue" %}</h3>
+        <p>{% trans "You don't have a permanent role here yet. Please check in with a staff member." %}</p>
+        {% elif upcoming %}
+        <h3>{% trans "You're early!" %}</h3>
+        <p>{% blocktrans with role=upcoming.role.name t=upcoming.start_time|time %}Your {{ role }} shift starts at {{ t }}. Check in up to an hour before it begins.{% endblocktrans %}</p>
+        {% else %}
+        <h3>{% trans "No open shifts right now" %}</h3>
+        <p>{% trans "You aren't scheduled for this event and every current role is either full or needs training you haven't completed. Please see a coordinator." %}</p>
+        {% endif %}
+        <a href="{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}" class="kiosk-cta">{% trans "Done" %}</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,196 @@
+.quiz-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    border-radius: 2rem;
+    background: var(--color-bg-secondary);
+}
+
+.quiz-hero .page-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.quiz-hero-stat {
+    text-align: right;
+}
+
+.quiz-hero-stat .c-label {
+    display: block;
+    padding: 0;
+}
+
+.quiz-hero-stat strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.6rem;
+    color: var(--color-text-primary);
+}
+
+.quiz-settings-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.quiz-settings-row .c-field {
+    max-width: 12rem;
+}
+
+.question-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.question-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+    background: var(--color-bg-secondary);
+}
+
+.question-card.editing {
+    box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
+.question-num {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--color-bg-tertiary);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    color: var(--color-text-primary);
+}
+
+.question-num.dark {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.question-num .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.question-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.question-body strong {
+    color: var(--color-text-primary);
+}
+
+.question-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+}
+
+.question-options li {
+    padding: 0.3rem 0.8rem;
+    border-radius: 9999px;
+    background: var(--color-surface);
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+.question-options li.correct {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-weight: 600;
+}
+
+.question-options li.correct::before {
+    content: '✓ ';
+}
+
+.question-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.composer-head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.composer-head .c-label {
+    padding: 0;
+}
+
+.composer-type {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.4rem 0.4rem 1rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.composer-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.composer-correct {
+    margin-top: 1.5rem;
+}
+
+.question-composer .tf-only {
+    display: none;
+}
+
+.question-composer:has(input[name=is_true_false]:checked) .tf-only {
+    display: block;
+}
+
+.question-composer:has(input[name=is_true_false]:checked) .composer-options {
+    display: none;
+}
+
+.question-composer:has(input[name=is_true_false]:checked) .composer-correct div[id] > div:nth-child(n+3) {
+    display: none;
+}
+
+.composer-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    box-shadow: inset 0 1px 0 rgba(from var(--color-text-tertiary) r g b / 0.12);
+}
+
+.quiz-empty-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.quiz-delete {
+    justify-content: flex-start;
+}
+
+@media (max-width: 640px) {
+    .composer-options {
+        grid-template-columns: 1fr;
+    }
+}

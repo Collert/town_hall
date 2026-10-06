@@ -1,0 +1,42 @@
+{% load i18n humanize console_tags %}
+<div id="event-history" class="c-table-wrap">
+    {% if page.object_list %}
+    <table class="c-table">
+        <thead>
+            <tr>
+                <th>{% trans "Event Name" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Total Volunteers" %}</th>
+                <th>{% trans "Total Hours" %}</th>
+                <th class="num">{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in page %}
+            <tr>
+                <td><a href="{% url 'console_event_edit' event.pk %}"><strong class="history-title">{{ event.title }}</strong></a></td>
+                <td>{{ event.end_date|date:"M d, Y" }}</td>
+                <td><strong>{{ event.volunteer_count }}</strong></td>
+                <td>{{ event.hours|intcomma }} {% trans "hrs" %}</td>
+                <td class="num"><a href="{% url 'console_event_report' event.pk %}" class="c-link">{% trans "Report" %}<span class="material-symbols-outlined">description</span></a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="c-table-footer">
+        <span>{% blocktrans with start=page.start_index end=page.end_index total=page.paginator.count %}Showing {{ start }}&ndash;{{ end }} of {{ total }} events{% endblocktrans %}</span>
+        {% url 'console_event_history' as history_url %}
+        {% include 'console/partials/pagination.html' with hx_url=history_url hx_target='#event-history' %}
+    </div>
+    {% else %}
+    <div class="c-empty">
+        <span class="material-symbols-outlined">history</span>
+        {% if query %}
+        <h3>{% trans "No past events match your search" %}</h3>
+        {% else %}
+        <h3>{% trans "No past events yet" %}</h3>
+        <p>{% trans "Once an event ends, its volunteer totals and impact report appear here." %}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

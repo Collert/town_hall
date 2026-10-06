@@ -5,8 +5,13 @@ from django.db import models
 
 from jobs.models import Shift
 
+
+def generate_key():
+    return uuid.uuid4().hex
+
+
 class APIKey(models.Model):
-    key = models.CharField(max_length=40, unique=True, default=uuid.uuid4().hex)
+    key = models.CharField(max_length=40, unique=True, default=generate_key)
     name = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(blank=True, null=True)
@@ -19,8 +24,18 @@ class ShiftHeartbeat(models.Model):
     latest_timestamp = models.DateTimeField(auto_now=True)
     role = models.ForeignKey('jobs.Role', on_delete=models.CASCADE, related_name='heartbeats')
 
-    def save(self, user, role, *args, **kwargs):
-        self.shift = Shift.objects.get_or_create(role=role, user=user, end_time=None)[0]  # Create a shift with the given user if it doesn't exist
+    def save(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        role = kwargs.pop('role', None)
+        if not self.shift_id:
+            if user is None or role is None:
+                raise ValueError('user and role are required to create a ShiftHeartbeat')
+            self.shift, _ = Shift.objects.get_or_create(
+                user=user,
+                role=role,
+                end_time__isnull=True,
+                defaults={'role': role},
+            )
         return super().save(*args, **kwargs)
     
     def die(self):

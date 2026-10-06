@@ -1,0 +1,146 @@
+{% extends 'base/layout.html' %}
+{% load i18n static %}
+
+{% block title %}{{ venue.name }} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/venue_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="venue-hero">
+    <div class="venue-hero-image" {% if venue.photo %}style="background-image: url('{{ venue.photo.url }}')"{% endif %}>
+        <div class="venue-hero-overlay"></div>
+    </div>
+    <div class="venue-hero-card">
+        <div class="venue-hero-info">
+            {% if is_open is not None %}
+            <span class="venue-status {% if is_open %}open{% endif %}">{% if is_open %}{% trans "Open now" %}{% else %}{% trans "Closed now" %}{% endif %}</span>
+            {% endif %}
+            <h1>{{ venue.name }}</h1>
+            <div class="venue-hero-meta">
+                {% if venue.address %}<span><span class="material-symbols-outlined">location_on</span>{{ venue.address }}</span>{% endif %}
+                {% if venue.capacity %}<span><span class="material-symbols-outlined">groups</span>{% blocktrans with n=venue.capacity %}Up to {{ n }} people{% endblocktrans %}</span>{% endif %}
+            </div>
+        </div>
+        <div class="venue-hero-actions">
+            {% if venue.map_url %}
+            <a href="{{ venue.map_url }}" class="btn btn-accent btn-lg btn-rounded" target="_blank" rel="noopener">
+                <span class="material-symbols-outlined">directions</span>{% trans "Get Directions" %}
+            </a>
+            {% endif %}
+            {% if venue.phone_number %}
+            <a href="tel:{{ venue.phone_number }}" class="btn btn-lg btn-rounded venue-btn-quiet">
+                <span class="material-symbols-outlined">call</span>{{ venue.phone_number }}
+            </a>
+            {% endif %}
+            {% if user.is_staff %}
+            <a href="{% url 'console_venue_edit' venue.pk %}" class="btn btn-lg btn-rounded venue-btn-quiet">
+                <span class="material-symbols-outlined">edit</span>{% trans "Edit" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="venue-content">
+    <div class="venue-main">
+        {% if notes %}
+        <div class="venue-notices">
+            {% for note in notes %}
+            <div class="venue-notice">
+                <span class="material-symbols-outlined">campaign</span>
+                <p>{{ note.text|linebreaksbr }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if venue.description %}
+        <div class="venue-section">
+            <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "About This Venue" %}</h2>
+            <div class="venue-about">{{ venue.description|linebreaks }}</div>
+        </div>
+        {% endif %}
+
+        <div class="venue-section">
+            <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "Features & Amenities" %}</h2>
+            {% for label, features in feature_groups %}
+            <div class="venue-feature-group">
+                <h3>{{ label }}</h3>
+                <ul class="venue-features">
+                    {% for f in features %}
+                    <li><span class="material-symbols-outlined">{{ f.icon }}</span>{{ f.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% empty %}
+            <p class="venue-muted">{% trans "No amenities have been listed for this venue yet." %}</p>
+            {% endfor %}
+        </div>
+
+        <div class="venue-section">
+            <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "Upcoming Events Here" %}</h2>
+            <div class="venue-events">
+                {% for event in events %}
+                <a href="{% url 'opportunity_detail' event.pk %}" class="venue-event">
+                    <span class="venue-event-date">
+                        <small>{{ event.start_date|date:"M" }}</small>
+                        <strong>{{ event.start_date|date:"j" }}</strong>
+                    </span>
+                    <span class="venue-event-body">
+                        <strong>{{ event.title }}</strong>
+                        <small>{{ event.start_date|date:"l" }}, {{ event.start_date|time }} &ndash; {{ event.end_date|time }}</small>
+                    </span>
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+                {% empty %}
+                <p class="venue-muted">{% trans "Nothing is scheduled here right now. Check back soon." %}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if roles %}
+        <div class="venue-section">
+            <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "Ongoing Positions" %}</h2>
+            <div class="venue-roles">
+                {% for role in roles %}
+                <div class="venue-role">
+                    <span class="venue-role-icon"><span class="material-symbols-outlined">{{ role.icon|default:"badge" }}</span></span>
+                    <div>
+                        <strong>{{ role.name }}</strong>
+                        {% if role.description %}<p>{{ role.description|truncatechars:140 }}</p>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <aside class="venue-sidebar">
+        <div class="venue-card">
+            <h3 class="venue-card-label">{% trans "Opening Hours" %}</h3>
+            {% if venue.operating_hours.all %}
+            <dl class="venue-hours">
+                {% for row in weekly_hours %}
+                <div class="{% if row.today %}today{% endif %}">
+                    <dt>{{ row.label }}</dt>
+                    <dd>{% if row.hours %}{{ row.hours.open_time|time }} &ndash; {{ row.hours.close_time|time }}{% else %}{% trans "Closed" %}{% endif %}</dd>
+                </div>
+                {% endfor %}
+            </dl>
+            {% else %}
+            <p class="venue-muted">{% trans "Hours haven't been set for this venue." %}</p>
+            {% endif %}
+        </div>
+
+        {% if venue.map_embed_url %}
+        <div class="venue-map">
+            <iframe src="{{ venue.map_embed_url }}" title="{% blocktrans with name=venue.name %}Map of {{ name }}{% endblocktrans %}" loading="lazy"></iframe>
+            <a href="{{ venue.map_url }}" target="_blank" rel="noopener">{% trans "View larger map" %} <span class="material-symbols-outlined">open_in_new</span></a>
+        </div>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

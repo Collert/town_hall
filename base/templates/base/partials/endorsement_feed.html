@@ -1,0 +1,46 @@
+{% load i18n avatar_tags %}
+<div id="endorsement-feed" class="endorse-feed">
+    {% for e in page %}
+    <article class="endorse-card">
+        <header class="endorse-card-head">
+            <span class="endorse-avatars">{% avatar e.endorser 'md' %}{% avatar e.endorsed 'md' %}</span>
+            <div class="endorse-card-title">
+                <span class="endorse-kind">{% for skill in e.skills.all %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if e.event %} &middot; {{ e.event.title }}{% endif %}</span>
+                <h3>{% blocktrans with a=e.endorser|display_name b=e.endorsed|display_name %}{{ a }} endorsed {{ b }}{% endblocktrans %}</h3>
+            </div>
+            <time datetime="{{ e.timestamp|date:'c' }}">{% blocktrans with t=e.timestamp|timesince %}{{ t }} ago{% endblocktrans %}</time>
+        </header>
+        {% if e.text %}<blockquote>&ldquo;{{ e.text }}&rdquo;</blockquote>{% endif %}
+        <footer class="endorse-card-foot">
+            <span class="endorse-chips">{% for skill in e.skills.all %}<span class="endorse-chip">{{ skill.name }}</span>{% endfor %}</span>
+            <a href="{% url 'profile_view' e.endorsed.username %}" class="btn btn-dark btn-rounded endorse-profile-btn">
+                {% blocktrans with name=e.endorsed.first_name|default:e.endorsed.username %}View {{ name }}'s Profile{% endblocktrans %}
+            </a>
+        </footer>
+    </article>
+    {% empty %}
+    <div class="endorse-empty">
+        <span class="material-symbols-outlined">diversity_3</span>
+        {% if query or skill_id %}
+        <h3>{% trans "No endorsements match" %}</h3>
+        <p>{% trans "Try a different name or category." %}</p>
+        {% else %}
+        <h3>{% trans "No endorsements yet" %}</h3>
+        <p>{% trans "When volunteers recognize each other's work, the stories show up here." %}</p>
+        {% if user.is_authenticated %}<a href="{% url 'give_endorsement' %}" class="btn btn-accent btn-rounded">{% trans "Write the first one" %}</a>{% endif %}
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    {% if page.paginator.num_pages > 1 %}
+    <nav class="endorse-pagination" aria-label="{% trans 'Pagination' %}">
+        {% if page.has_previous %}<a href="{% querystring page=page.previous_page_number %}" hx-get="{% url 'endorsements_feed' %}{% querystring page=page.previous_page_number %}" hx-target="#endorsement-feed" hx-swap="outerHTML" aria-label="{% trans 'Previous page' %}"><span class="material-symbols-outlined">chevron_left</span></a>{% endif %}
+        {% for n in page.paginator.page_range %}
+            {% if n == page.number %}<span class="current" aria-current="page">{{ n }}</span>
+            {% elif n == 1 or n == page.paginator.num_pages or n >= page.number|add:-2 and n <= page.number|add:2 %}<a href="{% querystring page=n %}" hx-get="{% url 'endorsements_feed' %}{% querystring page=n %}" hx-target="#endorsement-feed" hx-swap="outerHTML">{{ n }}</a>
+            {% elif n == page.number|add:-3 or n == page.number|add:3 %}<span>&hellip;</span>{% endif %}
+        {% endfor %}
+        {% if page.has_next %}<a href="{% querystring page=page.next_page_number %}" hx-get="{% url 'endorsements_feed' %}{% querystring page=page.next_page_number %}" hx-target="#endorsement-feed" hx-swap="outerHTML" aria-label="{% trans 'Next page' %}"><span class="material-symbols-outlined">chevron_right</span></a>{% endif %}
+    </nav>
+    {% endif %}
+</div>

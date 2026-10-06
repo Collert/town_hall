@@ -1,0 +1,7 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% translate "Certificate verified" as title %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with name=tx.name certificate=tx.certificate %}Hi {{ name }}, your <strong>{{ certificate }}</strong> certificate was verified.{% endblocktranslate %}</p>
+{{ tx_if.notes }}<p class="th-label">{% translate "Notes from the reviewer" %}</p>
+<p class="th-text">{{ tx.notes }}</p>{{ go.end }}
+{% translate "View certificate" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+{% endblock %}

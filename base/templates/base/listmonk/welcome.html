@@ -1,0 +1,6 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% blocktranslate asvar title with name=tx.name %}Welcome, {{ name }}!{% endblocktranslate %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with org=brand.org_name %}Your {{ org }} account is ready. Browse open opportunities and sign up for the roles that suit you.{% endblocktranslate %}</p>
+{% translate "Find an opportunity" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+<p class="th-note">{% blocktranslate with code=tx.id_code %}Your kiosk ID for checking in at events is <strong>{{ code }}</strong>.{% endblocktranslate %}</p>
+{% endblock %}

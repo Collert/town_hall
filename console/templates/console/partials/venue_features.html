@@ -1,0 +1,31 @@
+{% load i18n %}
+<div class="venue-features" id="venue-features">
+    {% for key, label, features in feature_groups %}
+    {% if features %}
+    <div class="venue-feature-group">
+        <span class="c-label">{{ label }}</span>
+        <div class="venue-feature-options">
+            {% for f in features %}
+            <label class="venue-feature-option">
+                <input type="checkbox" name="features" value="{{ f.pk }}" {% if f.pk in selected_features %}checked{% endif %}>
+                <span class="material-symbols-outlined">{{ f.icon }}</span>{{ f.name }}
+            </label>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    <div class="venue-feature-add">
+        <span class="c-label">{% trans "Missing something? Add a feature" %}</span>
+        <div class="venue-feature-add-row">
+            {{ feature_form.name }}
+            {{ feature_form.category }}
+            <button type="button" class="c-btn c-btn-surface" data-marks-dirty
+                    hx-post="{% url 'console_venue_feature_add' %}" hx-include="#venue-features" hx-target="#venue-features" hx-swap="outerHTML">
+                <span class="material-symbols-outlined">add</span>{% trans "Add" %}
+            </button>
+        </div>
+        {% for error in feature_form.name.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+    </div>
+</div>

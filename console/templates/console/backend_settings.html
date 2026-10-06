@@ -1,0 +1,144 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n console_tags %}
+
+{% block title %}{% trans "Backend Settings" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/backend_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Backend" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" autocomplete="off">
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Backend Settings" %}</h1>
+            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation and email. Values saved here take priority over server environment variables." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
+    </header>
+
+    {% include 'console/partials/settings_tabs.html' %}
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">translate</span>{% trans "Auto-translate" %}</h2>
+                <p class="c-muted backend-intro">{% trans "Used by the Auto-translate button in every editor. Configure any of these; the first one that's set and working is used." %}</p>
+
+                <h3 class="backend-subhead">{% trans "Self-hosted LibreTranslate" %} <span class="c-badge c-badge-mint">{% trans "Recommended" %}</span></h3>
+                <div class="c-grid-2">
+                    {% include 'console/partials/field.html' with field=form.libretranslate_url %}
+                    {% include 'console/partials/secret_field.html' with field=form.libretranslate_api_key saved=secrets.libretranslate_api_key %}
+                </div>
+                {% if env_overrides.libretranslate_url and not form.libretranslate_url.value %}<p class="c-help">{% trans "LIBRETRANSLATE_URL is set on the server and is used while this is empty." %}</p>{% endif %}
+                <details class="backend-howto">
+                    <summary>{% trans "How to run LibreTranslate" %}</summary>
+                    <p>{% trans "On any machine with Docker (about 2 GB of RAM for four languages):" %}</p>
+                    <pre>docker run -d --name libretranslate --restart unless-stopped -p 5000:5000 \
+  libretranslate/libretranslate --load-only en,es,fr,uk</pre>
+                    <p>{% trans "Then enter its address above, e.g. http://your-server:5000. Keep it on a private network." %}</p>
+                </details>
+
+                <h3 class="backend-subhead">{% trans "API keys" %}</h3>
+                <div class="c-grid-2">
+                    {% include 'console/partials/secret_field.html' with field=form.google_translate_api_key saved=secrets.google_translate_api_key env=env_overrides.google_translate_api_key %}
+                    {% include 'console/partials/secret_field.html' with field=form.deepl_api_key saved=secrets.deepl_api_key env=env_overrides.deepl_api_key %}
+                </div>
+
+                <h3 class="backend-subhead">{% trans "Free fallback" %}</h3>
+                {% include 'console/partials/field.html' with field=form.mymemory_email %}
+
+                <div class="backend-test">
+                    <div class="backend-test-controls">
+                        <select name="target" id="test-target" class="c-select" aria-label="{% trans 'Test language' %}">
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                            <option value="uk">Українська</option>
+                        </select>
+                        <button type="button" class="c-btn c-btn-dark" hx-post="{% url 'console_settings_test_translation' %}"
+                                hx-include="#test-target" hx-target="#translation-test" hx-indicator="this">
+                            <span class="material-symbols-outlined">science</span>{% trans "Test translation" %}
+                        </button>
+                    </div>
+                    <span class="c-help">{% trans "Uses the saved settings. Save first if you changed something." %}</span>
+                    <div id="translation-test" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">mail</span>{% trans "Email server (listmonk)" %}</h2>
+                <p class="c-muted backend-intro">{% blocktrans %}Point Town Hall at your listmonk server. Which emails are sent, and with which templates, is set in Communication &gt; Email. Without a server, emails are printed in the server console instead (useful for testing).{% endblocktrans %}</p>
+                <div class="c-grid-2">
+                    {% include 'console/partials/field.html' with field=form.listmonk_url field_class='backend-span-2' %}
+                    {% include 'console/partials/field.html' with field=form.listmonk_api_user %}
+                    {% include 'console/partials/secret_field.html' with field=form.listmonk_api_token saved=secrets.listmonk_api_token env=env_overrides.listmonk_api_token %}
+                    {% include 'console/partials/field.html' with field=form.default_from_email field_class='backend-span-2' %}
+                </div>
+                {% if env_overrides.listmonk_url and not form.listmonk_url.value %}<p class="c-help">{% trans "LISTMONK_URL is set on the server and is used while this is empty." %}</p>{% endif %}
+                <details class="backend-howto">
+                    <summary>{% trans "How to connect listmonk" %}</summary>
+                    <p>{% trans "In listmonk, open Admin > Users, create an API user with a role that can manage subscribers, lists, templates and campaigns and send transactional messages, and paste its name and token above." %}</p>
+                    <p>{% trans "Delivery (SMTP, Amazon SES, Postmark...) is configured in listmonk under Settings > SMTP." %}</p>
+                </details>
+
+                <div class="backend-test">
+                    <button type="button" class="c-btn c-btn-dark" hx-post="{% url 'console_settings_test_email' %}" hx-swap="none" hx-indicator="this">
+                        <span class="material-symbols-outlined">send</span>{% trans "Send test email" %}
+                    </button>
+                    <span class="c-help">{% blocktrans with email=user.email|default:_("your account email") %}Sends to {{ email }} using the saved settings.{% endblocktrans %}</span>
+                </div>
+            </section>
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title">{% trans "Translation status" %}</h2>
+                <ol class="provider-list">
+                    {% for name, ready, hint, off_label in providers %}
+                    <li class="provider {% if name == active_provider %}active{% elif not ready %}off{% endif %}">
+                        <span class="provider-dot"></span>
+                        <span>
+                            <strong>{{ name }}</strong>
+                            <small>{{ hint }}</small>
+                        </span>
+                        {% if name == active_provider %}<span class="c-badge c-badge-mint">{% trans "First choice" %}</span>{% elif not ready %}<span class="c-badge">{{ off_label }}</span>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+                <p class="c-help provider-note">{% trans "Tried top to bottom; if one fails, the next is used. Test translation shows which one answered." %}</p>
+                {% if google_blocked_minutes %}<p class="c-help">{% blocktrans with m=google_blocked_minutes %}Google's free endpoint showed a CAPTCHA; it's skipped for another {{ m }} min.{% endblocktrans %}</p>{% endif %}
+            </section>
+
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title">{% trans "Email status" %}</h2>
+                {% if listmonk_error %}
+                <p class="backend-status error"><span class="material-symbols-outlined">error</span>{{ listmonk_error }}</p>
+                {% elif listmonk_configured %}
+                <p class="backend-status ok"><span class="material-symbols-outlined">check_circle</span>{% trans "Connected to listmonk" %}</p>
+                {% if listmonk_task %}<p class="c-help backend-task"><span class="material-symbols-outlined">progress_activity</span>{% blocktrans with task=listmonk_task %}{{ task }}… in the background.{% endblocktrans %}</p>
+                {% elif listmonk_task_error %}<p class="c-error">{% blocktrans with error=listmonk_task_error %}The last setup step failed: {{ error }}{% endblocktrans %}</p>{% endif %}
+                <div class="backend-status-actions">
+                    <a href="{% url 'console_communication_email' %}" class="c-btn c-btn-surface c-btn-sm">
+                        <span class="material-symbols-outlined">forum</span>{% trans "Set up emails" %}
+                    </a>
+                    <a href="{{ listmonk_admin_url }}" class="c-btn c-btn-ghost c-btn-sm" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">open_in_new</span>{% trans "Open listmonk" %}
+                    </a>
+                </div>
+                {% else %}
+                <p class="backend-status"><span class="material-symbols-outlined">terminal</span>{% trans "Console only: emails are printed in the server log, not delivered." %}</p>
+                {% endif %}
+            </section>
+
+            <p class="c-help backend-security"><span class="material-symbols-outlined">shield</span>{% trans "Keys and passwords are stored in the database and are never shown again after saving. Only staff can open this page." %}</p>
+        </aside>
+    </div>
+</form>
+{% endblock %}

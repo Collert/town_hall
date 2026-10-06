@@ -1,0 +1,103 @@
+{% load static i18n avatar_tags console_tags %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    {% include 'base/partials/head.html' %}
+    <title>{% block title %}{% trans "Admin" %}{% endblock %} | {{ company_name }}</title>
+    <link rel="stylesheet" href="{% static 'console/console_layout.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+{% with url_name=request.resolver_match.url_name %}
+<body class="console {% block body_class %}{% endblock %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <aside class="console-sidebar" id="console-sidebar">
+        <a href="{% url 'console_dashboard' %}" class="console-brand">
+            <span class="console-brand-mark">
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<span class="material-symbols-outlined">architecture</span>{% endif %}
+            </span>
+            <span class="console-brand-text">
+                <strong>{{ company_name }}</strong>
+                <small>{% trans "Admin Portal" %}</small>
+            </span>
+        </a>
+
+        <nav class="console-nav">
+            <a href="{% url 'console_dashboard' %}" class="console-nav-link {% if url_name == 'console_dashboard' %}active{% endif %}">
+                <span class="material-symbols-outlined">dashboard</span>{% trans "Admin Home" %}
+            </a>
+            <a href="{% url 'console_events' %}" class="console-nav-link {% if 'console_event' in url_name or 'slot' in url_name or 'monitor' in url_name or 'invite' in url_name or 'shift_log' in url_name or 'check_in' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">calendar_month</span>{% trans "Event Planner" %}
+            </a>
+            <a href="{% url 'console_volunteers' %}" class="console-nav-link {% if 'volunteer' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">group</span>{% trans "Volunteer Pool" %}
+            </a>
+            <a href="{% url 'console_roles' %}" class="console-nav-link {% if 'console_role' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">work</span>{% trans "Role Directory" %}
+            </a>
+            <a href="{% url 'console_venues' %}" class="console-nav-link {% if 'console_venue' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">location_city</span>{% trans "Venues" %}
+            </a>
+            <a href="{% url 'console_modules' %}" class="console-nav-link {% if 'module' in url_name or 'lesson' in url_name or 'quiz' in url_name or 'question' in url_name or 'move_item' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">school</span>{% trans "Training Modules" %}
+            </a>
+            <a href="{% url 'console_certificates' %}" class="console-nav-link {% if 'certificate' in url_name or 'verification' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">workspace_premium</span>{% trans "Certificates" %}
+                {% pending_verification_count as pending_count %}
+                {% if pending_count %}<span class="console-nav-badge" title="{% trans 'Submissions waiting for review' %}">{{ pending_count }}</span>{% endif %}
+            </a>
+            <a href="{% url 'console_communication_email' %}" class="console-nav-link {% if 'communication' in url_name or 'listmonk' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">forum</span>{% trans "Communication" %}
+            </a>
+            <a href="{% url 'console_settings' %}" class="console-nav-link {% if 'console_settings' in url_name %}active{% endif %}">
+                <span class="material-symbols-outlined">palette</span>{% trans "Organization" %}
+            </a>
+        </nav>
+
+        <div class="console-sidebar-footer">
+            <a href="{% url 'console_event_create' %}" class="c-btn c-btn-primary c-btn-block">
+                <span class="material-symbols-outlined">add</span>{% trans "Create New Event" %}
+            </a>
+            <a href="{% url 'kiosk_home' %}" class="console-nav-link console-nav-link-quiet">
+                <span class="material-symbols-outlined">tablet_mac</span>{% trans "Kiosk Mode" %}
+            </a>
+            <a href="{% url 'home' %}" class="console-nav-link console-nav-link-quiet">
+                <span class="material-symbols-outlined">public</span>{% trans "View Public Site" %}
+            </a>
+            <a href="{% url 'logout' %}" class="console-nav-link console-nav-link-quiet">
+                <span class="material-symbols-outlined">logout</span>{% trans "Log Out" %}
+            </a>
+        </div>
+    </aside>
+
+    <div class="console-main">
+        <header class="console-topbar">
+            <button type="button" class="console-menu-toggle" aria-controls="console-sidebar" aria-expanded="false"
+                    onclick="document.body.classList.toggle('sidebar-open'); this.setAttribute('aria-expanded', document.body.classList.contains('sidebar-open'))">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <nav class="console-breadcrumbs" aria-label="{% trans 'Breadcrumb' %}">
+                {% block breadcrumbs %}{% endblock %}
+            </nav>
+            <div class="console-topbar-actions">
+                <a href="{% url 'my_profile' %}" class="console-user">
+                    <span class="console-user-text">
+                        <strong>{{ user|display_name }}</strong>
+                        <small>{% if user.is_superuser %}{% trans "Super Admin" %}{% else %}{% trans "Staff" %}{% endif %}</small>
+                    </span>
+                    {% avatar user 'sm' %}
+                </a>
+            </div>
+        </header>
+
+        <main class="console-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <div class="console-scrim" onclick="document.body.classList.remove('sidebar-open')"></div>
+
+    {% include 'base/partials/toasts.html' %}
+    <script src="{% static 'console/console.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+{% endwith %}
+</html>

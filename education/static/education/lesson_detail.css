@@ -105,7 +105,7 @@
 .reading-body h2 {
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     margin: 2rem 0 0.75rem 0;
 }
 
@@ -298,7 +298,7 @@ a.unit-item:hover {
     font-family: 'Manrope', sans-serif;
     font-size: 1.75rem;
     font-weight: 800;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -322,7 +322,7 @@ a.unit-item:hover {
     gap: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .progress-detail .material-symbols-outlined {

@@ -42,6 +42,32 @@
         <!-- Main Column -->
         <main class="my-events-main">
 
+            {% if pending_invites %}
+            <!-- Invitations -->
+            <section class="my-events-section">
+                <div class="section-title-row">
+                    <h2 class="section-heading">
+                        <span class="section-bar"></span>
+                        {% trans "Invitations" %}
+                    </h2>
+                </div>
+                <div class="invite-list">
+                    {% for invite in pending_invites %}
+                    {% with slot=invite.event_role_slot %}
+                    <a href="{% url 'respond_to_invite' invite.token %}" class="invite-row">
+                        <span class="material-symbols-outlined">mail</span>
+                        <span class="invite-row-text">
+                            <strong>{{ slot.event.title }}</strong>
+                            <small>{{ slot.role.name }} &middot; {{ slot.start_time|date:"M j" }}, {{ slot.start_time|time }}</small>
+                        </span>
+                        <span class="invite-row-cta">{% trans "Respond" %}<span class="material-symbols-outlined">arrow_forward</span></span>
+                    </a>
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
             <!-- Upcoming Events -->
             <section class="my-events-section">
                 <div class="section-title-row">
@@ -93,12 +119,12 @@
                                         {% else %}
                                             {{ slot.start_time|date:"M j" }},
                                         {% endif %}
-                                        {{ slot.start_time|date:"g:i A" }} – {{ slot.end_time|date:"g:i A" }}
+                                        {{ slot.start_time|time }} – {{ slot.end_time|time }}
                                     </span>
                                 </div>
                                 <div class="event-meta-item">
                                     <span class="material-symbols-outlined">location_on</span>
-                                    <span>{{ event.location }}</span>
+                                    <span>{{ event.place_name }}</span>
                                 </div>
                             </div>
 
@@ -162,7 +188,7 @@
                             <span class="past-event-title">{{ event.title }}</span>
                             <span class="past-event-location">
                                 <span class="material-symbols-outlined">location_on</span>
-                                {{ event.location }}
+                                {{ event.place_name }}
                             </span>
                         </div>
 
@@ -184,7 +210,7 @@
                         </div>
 
                         <div class="past-event-action">
-                            <a href="{% url 'opportunity_detail' event.pk %}" class="btn-report">
+                            <a href="{% url 'event_thank_you' event.pk %}" class="btn-report">
                                 <span class="material-symbols-outlined">analytics</span>
                                 {% trans "View Report" %}
                             </a>
@@ -221,7 +247,7 @@
         <p class="checkin-dialog-event">{{ event.title }}</p>
         <div class="checkin-dialog-location">
             <span class="material-symbols-outlined">location_on</span>
-            <span>{% if event.report_to_location %}{{ event.report_to_location }}{% else %}{{ event.location }}{% endif %}</span>
+            <span>{% if event.report_to_location %}{{ event.report_to_location }}<small>{{ event.full_location }}</small>{% else %}{{ event.full_location }}{% endif %}</span>
         </div>
         <a href="{% url 'opportunity_detail' event.pk %}" class="checkin-dialog-details-link">
             {% trans "View full event details" %}

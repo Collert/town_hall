@@ -1,0 +1,12 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% translate "You're on the team!" as title %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with name=tx.name role=tx.role event=tx.event %}Hi {{ name }}, you're signed up as <strong>{{ role }}</strong> at <strong>{{ event }}</strong>.{% endblocktranslate %}</p>
+<table role="presentation" class="th-details" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr><td class="th-details-label">{% translate "When" %}</td></tr>
+<tr><td class="th-details-value">{{ tx.date }}</td></tr>
+<tr><td class="th-details-label">{% translate "Where" %}</td></tr>
+<tr><td class="th-details-value">{{ tx.location }}</td></tr>
+</table>
+{% translate "See event details" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+<p class="th-note">{% translate "Can't make it anymore? Please let the organizers know from the event page." %}</p>
+{% endblock %}

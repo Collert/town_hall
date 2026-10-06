@@ -1,0 +1,65 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Set Up Kiosk" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'jobs/kiosk_layout.css' %}">
+<link rel="stylesheet" href="{% static 'jobs/kiosk_home.css' %}">
+{% endblock %}
+
+{% block body_class %}kiosk{% endblock %}
+
+{% block content %}
+<main class="kiosk-setup">
+    <a href="{% url 'console_dashboard' %}" class="kiosk-link kiosk-setup-back"><span class="material-symbols-outlined">arrow_back</span>{% trans "Back to admin" %}</a>
+    <h1 class="kiosk-title">{% trans "Set Up This Kiosk" %}</h1>
+    <p class="kiosk-lead">{% trans "Choose what this device checks volunteers in to. Bookmark the screen it opens so the device can go straight there next time." %}</p>
+
+    <section class="kiosk-setup-group">
+        <h2>{% trans "Events today" %}</h2>
+        <div class="kiosk-setup-grid">
+            {% for event in events %}
+            <a href="{% url 'kiosk_login_id_code' 'event' event.pk %}" class="kiosk-setup-card">
+                <span class="material-symbols-outlined">event</span>
+                <strong>{{ event.title }}</strong>
+                <small>{{ event.start_date|date:"M j" }} &middot; {{ event.start_date|time }}&ndash;{{ event.end_date|time }}</small>
+                {% if event.is_live %}<span class="place-chip">{% trans "Live" %}</span>{% endif %}
+            </a>
+            {% empty %}
+            <p class="kiosk-setup-empty">{% trans "No events are running today." %}</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if later_events %}
+    <section class="kiosk-setup-group">
+        <h2>{% trans "Coming up" %}</h2>
+        <div class="kiosk-setup-grid">
+            {% for event in later_events %}
+            <a href="{% url 'kiosk_login_id_code' 'event' event.pk %}" class="kiosk-setup-card muted">
+                <span class="material-symbols-outlined">event_upcoming</span>
+                <strong>{{ event.title }}</strong>
+                <small>{{ event.start_date|date:"M j" }}, {{ event.start_date|time }}</small>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="kiosk-setup-group">
+        <h2>{% trans "Venues (permanent positions)" %}</h2>
+        <div class="kiosk-setup-grid">
+            {% for venue in venues %}
+            <a href="{% url 'kiosk_login_id_code' 'venue' venue.pk %}" class="kiosk-setup-card">
+                <span class="material-symbols-outlined">storefront</span>
+                <strong>{{ venue.name }}</strong>
+                <small>{% blocktrans count counter=venue.role_count %}{{ counter }} role{% plural %}{{ counter }} roles{% endblocktrans %}{% if venue.address %} &middot; {{ venue.address }}{% endif %}</small>
+            </a>
+            {% empty %}
+            <p class="kiosk-setup-empty">{% url 'console_venues' as venues_url %}{% blocktrans %}No venues yet. <a href="{{ venues_url }}">Add them in the console</a>, then attach permanent roles.{% endblocktrans %}</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}

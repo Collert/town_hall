@@ -1,0 +1,87 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% trans "Verification Request" %} &middot; {{ certificate.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/verification_review.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_verifications' %}">{% trans "Verifications" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{{ user_cert.user|display_name }}</span>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'console_verifications' %}" class="c-link review-back"><span class="material-symbols-outlined">arrow_back</span>{% trans "Back to Verifications" %}</a>
+
+<form method="post" class="review-sheet">
+    {% csrf_token %}
+    <div class="review-body">
+        <span class="review-eyebrow"><span class="material-symbols-outlined">verified</span>{% trans "Verification Request" %}</span>
+        <h1 class="page-title">{{ certificate.name }}</h1>
+        <div class="review-person">
+            <a href="{% url 'console_volunteer_detail' user_cert.user.pk %}" class="review-person-chip">
+                {% avatar user_cert.user 'sm' %}
+                <span>{{ user_cert.user|display_name }}</span>
+                <span class="c-badge">{% trans "Volunteer" %}</span>
+            </a>
+            {% if user_cert.verified %}<span class="c-badge c-badge-success">{% trans "Verified" %}</span>
+            {% elif user_cert.rejected %}<span class="c-badge c-badge-danger">{% trans "Rejected" %}</span>
+            {% else %}<span class="c-badge c-badge-warning">{% trans "Pending review" %}</span>{% endif %}
+        </div>
+
+        {% if certificate.required_docs %}
+        <div class="review-required">
+            <span class="c-label">{% trans "Required documents" %}</span>
+            <div class="c-chips">{% for doc in certificate.required_docs %}<span class="c-chip">{{ doc }}</span>{% endfor %}</div>
+        </div>
+        {% endif %}
+
+        <h2 class="c-section-title review-subtitle">{% trans "Submitted Documents" %}</h2>
+        <div class="review-docs">
+            {% for f in files %}
+            <a href="{{ f.obj.file.url }}" target="_blank" rel="noopener" class="review-doc">
+                {% if f.is_image %}<img src="{{ f.obj.file.url }}" alt="" class="review-doc-thumb">{% else %}<span class="c-icon-tile round"><span class="material-symbols-outlined">{{ f.icon }}</span></span>{% endif %}
+                <span class="review-doc-info">
+                    <strong>{{ f.name }}</strong>
+                    <small>{% if f.size %}{{ f.size|filesizeformat }} &bull; {% endif %}{% blocktrans with t=f.obj.uploaded_at|date:"M j, Y" %}Uploaded {{ t }}{% endblocktrans %}</small>
+                </span>
+                <span class="material-symbols-outlined">download</span>
+            </a>
+            {% empty %}
+            <div class="c-empty"><span class="material-symbols-outlined">folder_off</span><p>{% trans "No files were uploaded." %}</p></div>
+            {% endfor %}
+        </div>
+
+        <section class="review-notes">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">edit_note</span>{% trans "Admin Notes" %}</h2>
+            <div class="c-grid-2">
+                <div class="c-field">
+                    <label class="c-label" for="issue-date">{% trans "Issue Date" %}</label>
+                    <input type="date" id="issue-date" name="issue_date" value="{{ issue_default|date:'Y-m-d' }}">
+                </div>
+                <div class="c-field">
+                    <label class="c-label" for="expiry-date">{% trans "Expiry Date" %}</label>
+                    <input type="date" id="expiry-date" name="expiration_date" value="{{ expiry_default|date:'Y-m-d' }}">
+                    {% if certificate.expires_after_days %}<span class="c-help">{% blocktrans with d=certificate.expires_after_days %}Defaults to {{ d }} days after issue if left blank.{% endblocktrans %}</span>{% else %}<span class="c-help">{% trans "Leave blank if it never expires." %}</span>{% endif %}
+                </div>
+            </div>
+            <div class="c-field review-notes-field">
+                <label class="c-label" for="admin-notes">{% trans "Private Notes" %}</label>
+                <textarea id="admin-notes" name="admin_notes" placeholder="{% trans 'Add any private notes regarding this verification here... When rejecting, explain what needs to change.' %}">{{ user_cert.admin_notes }}</textarea>
+            </div>
+            {% if user_cert.reviewed_by %}<p class="c-muted">{% blocktrans with who=user_cert.reviewed_by|display_name when=user_cert.reviewed_at|date:"M j, Y" %}Last reviewed by {{ who }} on {{ when }}.{% endblocktrans %}</p>{% endif %}
+        </section>
+    </div>
+
+    <footer class="review-bar">
+        <a href="{% url 'console_verifications' %}" class="c-btn c-btn-ghost"><span class="material-symbols-outlined">arrow_back</span>{% trans "Back to List" %}</a>
+        <button type="submit" name="action" value="notes" class="c-btn c-btn-ghost">{% trans "Save notes" %}</button>
+        {% if has_next %}<label class="review-continue"><input type="checkbox" name="continue" value="1" checked>{% trans "Open next submission" %}</label>{% endif %}
+        <button type="submit" name="action" value="reject" class="c-btn c-btn-outline c-btn-lg">{% trans "Reject" %}</button>
+        <button type="submit" name="action" value="approve" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">check_circle</span>{% trans "Approve" %}</button>
+    </footer>
+</form>
+{% endblock %}

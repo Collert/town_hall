@@ -1,0 +1,3 @@
+{% load i18n %}{% if endorsed %}<span class="teammate-skill endorsed"><span class="material-symbols-outlined">check</span>{{ skill.name }}</span>{% else %}<button type="button" class="teammate-skill"
+        hx-post="{% url 'quick_endorse' %}" hx-vals='{"user_id": "{{ teammate.pk }}", "skill_id": "{{ skill.pk }}", "event_id": "{{ event.pk|default:"" }}"}'
+        hx-swap="outerHTML" title="{% blocktrans with name=teammate.first_name|default:teammate.username s=skill.name %}Endorse {{ name }} for {{ s }}{% endblocktrans %}"><span class="material-symbols-outlined">thumb_up</span>{{ skill.name }}</button>{% endif %}

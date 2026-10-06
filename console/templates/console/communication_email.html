@@ -1,0 +1,173 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Email" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/communication_email.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<span>{% trans "Communication" %}</span>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Email" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" data-unsaved-warning>
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Communication" %}</h1>
+            <p class="page-lead">{% trans "Choose which app events send an email. Each event has its own listmonk template in every language, styled with your organization's branding; edit them in listmonk." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
+    </header>
+
+    {% include 'console/partials/communication_tabs.html' %}
+
+    {% if task %}
+    {% include 'console/partials/listmonk_task.html' %}
+    {% elif not configured %}
+    <div class="comm-notice">
+        <span class="material-symbols-outlined">link_off</span>
+        <p>{% trans "listmonk isn't connected yet, so emails are only printed in the server console. Add your listmonk URL and API token in Organization > Backend; the templates are created for you." %}</p>
+        <a href="{% url 'console_settings_backend' %}" class="c-btn c-btn-dark c-btn-sm">{% trans "Connect listmonk" %}</a>
+    </div>
+    {% elif error %}
+    <div class="comm-notice is-error">
+        <span class="material-symbols-outlined">error</span>
+        <p>{% blocktrans %}listmonk can't be reached, so templates show as raw IDs: {{ error }}{% endblocktrans %}</p>
+        <a href="{% url 'console_settings_backend' %}" class="c-btn c-btn-surface c-btn-sm">{% trans "Check connection" %}</a>
+    </div>
+    {% elif missing %}
+    <div class="comm-notice">
+        <span class="material-symbols-outlined">build</span>
+        <p>{% blocktrans count counter=missing %}{{ counter }} event template is missing in listmonk.{% plural %}{{ counter }} event templates are missing in listmonk.{% endblocktrans %}</p>
+        <button type="button" class="c-btn c-btn-dark c-btn-sm" hx-post="{% url 'console_listmonk_seed' %}" hx-swap="none">{% trans "Re-create missing templates" %}</button>
+    </div>
+    {% endif %}
+    {% if task_error and not task %}
+    <div class="comm-notice is-error">
+        <span class="material-symbols-outlined">error</span>
+        <p>{% blocktrans %}The last listmonk job failed: {{ task_error }}{% endblocktrans %}</p>
+    </div>
+    {% endif %}
+
+    <div class="c-split">
+        <div class="c-stack">
+            {% for group, rows in form.groups %}
+            <section class="c-card">
+                <h2 class="c-card-title">{{ group }}</h2>
+                <ul class="trigger-list">
+                    {% for row in rows %}{% with t=row.trigger %}
+                    <li class="trigger">
+                        <span class="trigger-icon material-symbols-outlined" aria-hidden="true">{{ t.icon }}</span>
+                        <div class="trigger-main">
+                            <strong>
+                                {{ t.label }}
+                                {% if t.campaign %}<span class="c-badge">{% trans "Visual campaign" %}</span>{% endif %}
+                                {% if t.required %}<span class="c-badge c-badge-mint">{% trans "Always on" %}</span>{% endif %}
+                            </strong>
+                            <small>{{ t.description }}</small>
+                            <small class="trigger-audience"><span class="material-symbols-outlined">group</span>{{ t.audience }}</small>
+                        </div>
+                        <label class="c-toggle trigger-switch">{{ row.enabled }}<span></span></label>
+
+                        <div class="trigger-settings">
+                            <div class="trigger-templates">
+                                {% for tpl in row.templates %}
+                                <div class="trigger-template">
+                                    <label class="trigger-lang" for="{{ tpl.field.id_for_label }}">{{ tpl.field.label }}</label>
+                                    {{ tpl.field }}
+                                    {% if connected %}
+                                    <a href="{{ listmonk_url }}/admin/campaigns/templates" class="c-icon-btn" target="_blank" rel="noopener"
+                                       title="{% if tpl.name %}{% blocktrans with name=tpl.name %}Edit &quot;{{ name }}&quot; in listmonk{% endblocktrans %}{% else %}{% trans 'Open listmonk templates' %}{% endif %}">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                {% if tpl.missing %}<span class="c-error">{% trans "No template in listmonk for this language." %}</span>{% endif %}
+                                {% for error in tpl.field.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                                {% endfor %}
+                            </div>
+
+                            {% if t.campaign %}
+                            <label class="trigger-option" for="{{ row.auto_send.id_for_label }}">
+                                <span class="c-toggle">{{ row.auto_send }}<span></span></span>
+                                <span>{% trans "Send immediately" %}<small>{% trans "Off: the campaign waits as a draft in listmonk, where you can edit it visually before sending. It uses the template in the publishing admin's language." %}</small></span>
+                            </label>
+                            {% if row.lists %}
+                            <fieldset class="trigger-lists">
+                                <legend>{% blocktrans with name=users_list|default:_("Town Hall users") %}Also send to (besides “{{ name }}”){% endblocktrans %}</legend>
+                                {% if row.lists.field.choices %}{{ row.lists }}{% else %}<p class="c-help">{% trans "No other lists in listmonk yet." %}</p>{% endif %}
+                                <p class="c-help">{% trans "People on several of these lists still get one email." %}</p>
+                            </fieldset>
+                            {% endif %}
+                            {% endif %}
+
+                            <div class="trigger-footer">
+                                <details class="trigger-fields">
+                                    <summary>{% trans "Template data" %}</summary>
+                                    {% if t.campaign %}
+                                    <p>{% trans "Town Hall fills these placeholders in the visual template with the event's details. Keep them when you redesign it:" %}</p>
+                                    <p class="trigger-tags"><code>[event_title]</code><code>[event_date]</code><code>[event_location]</code><code>[event_description]</code></p>
+                                    <p>{% trans "The sign-up button links to https://town-hall.invalid/event-link and the event photo to https://town-hall.invalid/event-image.png; both are swapped for the real ones." %}</p>
+                                    {% else %}
+                                    <p>{% trans "Available in the template, next to the brand variables at its top ($org_name, $color_primary, …):" %}</p>
+                                    <p class="trigger-tags">{% for field in t.fields %}<code>{% templatetag openvariable %} .Tx.Data.{{ field }} {% templatetag closevariable %}</code>{% endfor %}<code>{% templatetag openvariable %} .Tx.Data.name {% templatetag closevariable %}</code><code>{% templatetag openvariable %} .Tx.Data.org {% templatetag closevariable %}</code></p>
+                                    {% endif %}
+                                </details>
+                                {% if connected %}
+                                <button type="button" class="c-btn c-btn-ghost c-btn-sm trigger-reset"
+                                        hx-post="{% url 'console_listmonk_reset' t.key %}" hx-swap="none"
+                                        hx-confirm="{% blocktrans with label=t.label %}Reset every language of “{{ label }}” to the Town Hall default? Edits made in listmonk will be lost.{% endblocktrans %}">
+                                    <span class="material-symbols-outlined">restart_alt</span>{% trans "Reset to default" %}
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                    {% endwith %}{% endfor %}
+                </ul>
+            </section>
+            {% endfor %}
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">mark_email_read</span>{% trans "listmonk" %}</h2>
+                {% if connected %}
+                <p class="comm-status ok"><span class="material-symbols-outlined">check_circle</span>{% trans "Connected" %}</p>
+                <dl class="comm-facts">
+                    <dt>{% trans "Users list" %}</dt>
+                    <dd>{{ users_list|default:_("Not created yet") }}</dd>
+                </dl>
+                <div class="comm-actions">
+                    <button type="button" class="c-btn c-btn-surface c-btn-block" hx-post="{% url 'console_listmonk_sync' %}" hx-swap="none" hx-indicator="this">
+                        <span class="material-symbols-outlined">sync</span>{% trans "Sync users now" %}
+                    </button>
+                    <a href="{{ listmonk_url }}/admin/campaigns/templates" class="c-btn c-btn-ghost c-btn-block" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">open_in_new</span>{% trans "Open listmonk templates" %}
+                    </a>
+                </div>
+                {% elif configured %}
+                <p class="comm-status error"><span class="material-symbols-outlined">error</span>{% trans "Can't reach listmonk" %}</p>
+                {% else %}
+                <p class="comm-status"><span class="material-symbols-outlined">terminal</span>{% trans "Not connected: emails are printed in the server log." %}</p>
+                {% endif %}
+            </section>
+
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">info</span>{% trans "How it works" %}</h2>
+                <ul class="comm-howto">
+                    <li>{% trans "Each email goes out in the language the person last used the site in, falling back to the default language." %}</li>
+                    <li>{% trans "Changing your name, logo or colours in Organization > Identity updates every template automatically. Keep the brand variables at the top of each template." %}</li>
+                    <li>{% trans "Reset to default restores Town Hall's version of an event's templates." %}</li>
+                    <li>{% trans "Everyone with an account is on the private “Town Hall users” list, with attributes such as language, level and impact_points for segmenting campaigns." %}</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+</form>
+{% endblock %}

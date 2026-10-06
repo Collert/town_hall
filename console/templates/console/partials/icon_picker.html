@@ -1,0 +1,20 @@
+{% load i18n %}
+{% comment %}Radio grid of Material Symbols plus a free-text override (posted as icon_custom).{% endcomment %}
+<div class="c-field">
+    <span class="c-label">{{ label|default:_("Icon") }}</span>
+    <div class="c-icon-picker" role="radiogroup">
+        {% for icon in icons %}
+        <label class="c-icon-option" title="{{ icon }}">
+            <input type="radio" name="icon" value="{{ icon }}" {% if icon == current %}checked{% endif %}>
+            <span class="material-symbols-outlined">{{ icon }}</span>
+        </label>
+        {% endfor %}
+    </div>
+    <div class="c-icon-custom">
+        <span class="c-icon-tile mint"><span class="material-symbols-outlined" id="icon-custom-preview">{% if current and current not in icons %}{{ current }}{% else %}add{% endif %}</span></span>
+        <input type="text" name="icon_custom" class="c-input" placeholder="{% trans 'Or type any icon name' %}"
+               value="{% if current and current not in icons %}{{ current }}{% endif %}" data-icon-preview="icon-custom-preview">
+        <a href="https://fonts.google.com/icons" target="_blank" rel="noopener" class="c-link">{% trans "Browse all" %}</a>
+    </div>
+    {% if errors %}{% for error in errors %}<span class="c-error">{{ error }}</span>{% endfor %}{% endif %}
+</div>

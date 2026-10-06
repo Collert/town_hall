@@ -1,0 +1,8 @@
+{% load console_tags %}{% comment %}Boolean form field as a labelled switch row. Pass `title` and `hint`.{% endcomment %}
+<label class="c-setting" for="{{ field.id_for_label }}">
+    <span>
+        <strong>{{ title|default:field.label|strip_lang }}</strong>
+        {% if hint %}<small>{{ hint }}</small>{% elif field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+    </span>
+    <span class="c-toggle">{{ field }}<span></span></span>
+</label>

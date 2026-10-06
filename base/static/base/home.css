@@ -290,7 +290,7 @@ main {
     left: 1rem;
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(8px);
-    color: var(--color-primary-dark);
+    color: var(--color-text-primary);
     padding: 0.375rem 1rem;
     border-radius: 9999px;
     font-size: 0.75rem;
@@ -494,7 +494,7 @@ main {
 
 .mockup-progress-pct {
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .mockup-glow {

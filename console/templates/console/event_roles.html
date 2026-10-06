@@ -1,0 +1,114 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{{ event.title }} &middot; {% trans "Roles & Staffing" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_edit.css' %}">
+<link rel="stylesheet" href="{% static 'console/event_roles.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_events' %}">{% trans "Event Planner" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{{ event.title }}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <div class="page-eyebrow"><span class="material-symbols-outlined">auto_awesome</span>{% if event.is_live %}{% trans "Live Event Management" %}{% elif event.is_past %}{% trans "Completed Event" %}{% else %}{% trans "Event Management" %}{% endif %}</div>
+        <h1 class="page-title">{{ event.title }}</h1>
+        <div class="page-meta">
+            <span><span class="material-symbols-outlined">calendar_today</span>{{ event.start_date|date:"M j" }}{% if event.end_date.date != event.start_date.date %}&ndash;{{ event.end_date|date:"M j" }}{% endif %}</span>
+            <span><span class="material-symbols-outlined">location_on</span>{% if event.venue %}<a href="{% url 'console_venue_edit' event.venue.pk %}">{{ event.place_name }}</a>{% else %}{{ event.place_name }}{% endif %}</span>
+            <span><span class="material-symbols-outlined">groups</span>{% blocktrans count counter=volunteer_count %}{{ counter }} Volunteer Registered{% plural %}{{ counter }} Volunteers Registered{% endblocktrans %}</span>
+        </div>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'console_event_edit' event.pk %}" class="c-btn c-btn-outline c-btn-lg">{% trans "Edit Event" %}</a>
+        <a href="{% url 'console_event_invite' event.pk %}" class="c-btn c-btn-dark c-btn-lg"><span class="material-symbols-outlined">share</span>{% trans "Invite" %}</a>
+    </div>
+</header>
+
+{% include 'console/partials/event_tabs.html' %}
+
+<div class="c-split">
+    <div>
+        {% include 'console/partials/event_role_cards.html' %}
+    </div>
+
+    <aside class="c-stack">
+        <section class="c-card c-card-tonal">
+            <h2 class="c-label roles-side-label">{% trans "Quick Actions" %}</h2>
+            <div class="c-stack quick-actions">
+                <form method="post" action="{% url 'console_event_publish' event.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="quick-action">
+                        <span class="material-symbols-outlined">{% if event.published %}visibility_off{% else %}publish{% endif %}</span>
+                        <span>{% if event.published %}{% trans "Unpublish Event" %}{% else %}{% trans "Publish Event" %}{% endif %}</span>
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </form>
+                <button type="button" class="quick-action" data-dialog-open="message-dialog" {% if not volunteer_count %}disabled{% endif %}>
+                    <span class="material-symbols-outlined">chat</span>
+                    <span>{% trans "Message All Volunteers" %}</span>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <a class="quick-action" target="_blank" rel="noopener"
+                   href="{{ event.map_url }}">
+                    <span class="material-symbols-outlined">map</span>
+                    <span>{% trans "View Map" %}</span>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+            </div>
+
+            <div class="staffing-health">
+                <div class="c-progress-head">
+                    <span class="c-label">{% trans "Staffing Health" %}</span>
+                    <span>{% blocktrans %}{{ overall_percent }}% Overall{% endblocktrans %}</span>
+                </div>
+                <div class="c-progress"><span style="width: {{ overall_percent }}%"></span></div>
+                {% if shortfall %}
+                <p class="staffing-warning">
+                    {% blocktrans count counter=shortfall %}You are still short {{ counter }} volunteer.{% plural %}You are still short {{ counter }} volunteers.{% endblocktrans %}
+                    {% for entry in critical|slice:":1" %}{% blocktrans with role=entry.role.name %}{{ role }} needs the most help.{% endblocktrans %}{% endfor %}
+                </p>
+                {% elif staffing %}
+                <p class="staffing-warning">{% trans "Every role is fully staffed." %}</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <a class="location-hub" target="_blank" rel="noopener" href="{{ event.map_url }}">
+            <span class="material-symbols-outlined location-hub-icon">pin_drop</span>
+            <span class="c-label">{% trans "Location Hub" %}</span>
+            <strong>{{ event.report_to_location|default:event.place_name }}</strong>
+            {% if event.report_to_location or event.venue %}<small>{{ event.full_location }}</small>{% endif %}
+        </a>
+    </aside>
+</div>
+
+<div id="dialog-slot"></div>
+
+<dialog class="c-dialog" id="message-dialog">
+    <form method="post" action="{% url 'console_event_message' event.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Message All Volunteers" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body">
+            <div class="c-field">
+                <label class="c-label" for="message-text">{% trans "Message" %}</label>
+                <textarea id="message-text" name="message" maxlength="200" required placeholder="{% trans 'e.g. Parking is on the north lot this year.' %}"></textarea>
+                <span class="c-help">{% blocktrans count counter=volunteer_count %}Delivered as a notification to {{ counter }} volunteer.{% plural %}Delivered as a notification to {{ counter }} volunteers.{% endblocktrans %}</span>
+            </div>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">send</span>{% trans "Send Message" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endblock %}

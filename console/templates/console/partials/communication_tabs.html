@@ -1,0 +1,6 @@
+{% load i18n %}
+{% with url_name=request.resolver_match.url_name %}
+<nav class="c-tabs c-tabs-lg settings-tabs" aria-label="{% trans 'Communication channels' %}">
+    <a href="{% url 'console_communication_email' %}" class="c-tab {% if url_name == 'console_communication_email' %}active{% endif %}">{% trans "Email" %}</a>
+</nav>
+{% endwith %}

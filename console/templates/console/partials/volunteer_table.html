@@ -1,0 +1,56 @@
+{% load i18n avatar_tags console_tags %}
+<div id="volunteer-table" class="c-table-wrap">
+    {% if page.object_list %}
+    <table class="c-table">
+        <thead>
+            <tr>
+                <th>{% trans "Volunteer Name" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Primary Skills" %}</th>
+                <th>{% trans "Total Hours" %}</th>
+                <th class="num">{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in page %}
+            <tr>
+                <td>
+                    <a href="{% url 'console_volunteer_detail' v.pk %}" class="c-table-person">
+                        {% avatar v 'md' %}
+                        <span><strong>{{ v|display_name }}</strong><small>{{ v.email|default:v.username }}</small></span>
+                    </a>
+                </td>
+                <td>
+                    {% if v.status == 'active' %}<span class="c-badge c-badge-success">{% trans "Active" %}</span>
+                    {% elif v.status == 'inactive' %}<span class="c-badge">{% trans "Inactive" %}</span>
+                    {% else %}<span class="c-badge c-badge-danger">{% trans "Deactivated" %}</span>{% endif %}
+                </td>
+                <td>
+                    <div class="c-chips">{% for skill in v.profile.skills.all|slice:":2" %}<span class="c-chip">{{ skill.name }}</span>{% empty %}<span class="c-muted">&mdash;</span>{% endfor %}</div>
+                </td>
+                <td>
+                    <strong>{{ v.total_hours|hours }} {% trans "hrs" %}</strong>
+                    <small class="pool-hours-note {% if v.week_hours %}up{% endif %}">
+                        {% if v.week_hours %}+{{ v.week_hours|hours }} {% trans "this week" %}{% elif not v.shift_count %}{% trans "No shifts yet" %}{% else %}{% blocktrans with n=v.shift_count %}{{ n }} shifts{% endblocktrans %}{% endif %}
+                    </small>
+                </td>
+                <td class="num">
+                    <a href="{% url 'console_volunteer_detail' v.pk %}" class="c-btn c-btn-sm c-btn-ghost">{% if v.status == 'inactive' %}{% trans "Re-engage" %}{% else %}{% trans "Manage" %}{% endif %}</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="c-table-footer">
+        <span>{% blocktrans with start=page.start_index end=page.end_index total=page.paginator.count %}Showing {{ start }}&ndash;{{ end }} of {{ total }} results{% endblocktrans %}</span>
+        {% url 'console_volunteers' as list_url %}
+        {% include 'console/partials/pagination.html' with hx_url=list_url hx_target='#volunteer-table' %}
+    </div>
+    {% else %}
+    <div class="c-empty">
+        <span class="material-symbols-outlined">person_search</span>
+        <h3>{% if query or status %}{% trans "No volunteers match" %}{% else %}{% trans "No volunteers yet" %}{% endif %}</h3>
+        <p>{% trans "Volunteers appear here once they sign up or you add them." %}</p>
+    </div>
+    {% endif %}
+</div>

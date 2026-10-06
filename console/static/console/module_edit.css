@@ -1,0 +1,62 @@
+.module-row {
+    margin-top: 1.75rem;
+}
+
+.module-row .c-input {
+    margin-top: 0.5rem;
+}
+
+.module-photo {
+    min-height: 7.5rem;
+}
+
+.module-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    box-shadow: inset 0 1px 0 rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.module-facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.875rem;
+}
+
+.module-facts dt {
+    color: var(--color-text-secondary);
+}
+
+.module-facts dd {
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.module-tip {
+    position: relative;
+    overflow: hidden;
+}
+
+.module-tip p {
+    max-width: 36rem;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.85);
+    position: relative;
+    z-index: 1;
+}
+
+.module-tip-art {
+    position: absolute;
+    right: 1.5rem;
+    bottom: -1rem;
+    font-size: 7rem;
+    opacity: 0.15;
+}
+
+/* The structure panel is sticky in the lesson and quiz editors, where it is alone in its
+   column. Here the settings card sits below it and would scroll underneath, so it stays put. */
+#module-form .module-structure {
+    position: static;
+}

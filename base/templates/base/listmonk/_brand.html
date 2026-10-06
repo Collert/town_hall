@@ -1,0 +1,8 @@
+{% comment %}
+Email header like the admin portal's brand mark: the logo in a rounded square tile, the
+organization name beside it. The logo is scaled to fit the tile, never cropped.
+{% endcomment %}<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+{{ go.if_logo }}<td class="th-logo-tile" width="48" height="48" align="center" valign="middle"><img class="th-logo" src="{{ brand.logo_url }}" alt="" width="40"></td>
+<td class="th-logo-gap" width="12">&nbsp;</td>{{ go.end }}
+<td class="th-org" valign="middle">{{ brand.org_name }}</td>
+</tr></table>

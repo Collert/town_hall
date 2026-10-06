@@ -1,0 +1,7 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% translate "Please upload your documents again" as title %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with name=tx.name certificate=tx.certificate %}Hi {{ name }}, we couldn't verify your <strong>{{ certificate }}</strong> documents. Please upload them again.{% endblocktranslate %}</p>
+{{ tx_if.notes }}<p class="th-label">{% translate "Notes from the reviewer" %}</p>
+<p class="th-text">{{ tx.notes }}</p>{{ go.end }}
+{% translate "Upload documents" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+{% endblock %}

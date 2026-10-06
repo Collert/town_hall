@@ -1,0 +1,28 @@
+{% load i18n %}
+<div class="cert-grid" id="certificate-grid">
+    {% for cert in certificates %}
+    <a href="{% url 'console_certificate_edit' cert.pk %}" class="cert-card">
+        <div class="cert-card-top">
+            <span class="cert-icon cert-icon-{{ forloop.counter0|divisibleby:2|yesno:'a,b' }}"><span class="material-symbols-outlined">{{ cert.icon|default:"workspace_premium" }}</span></span>
+            {% if cert.pending_count %}<span class="c-badge c-badge-accent">{% blocktrans count counter=cert.pending_count %}{{ counter }} pending{% plural %}{{ counter }} pending{% endblocktrans %}</span>{% endif %}
+        </div>
+        <span class="c-badge">{% blocktrans count counter=cert.required_docs|length %}{{ counter }} document{% plural %}{{ counter }} documents{% endblocktrans %}</span>
+        <h3>{{ cert.name }}</h3>
+        <p>{{ cert.issuer|default:_("Any recognized issuer") }}</p>
+        <div class="cert-card-foot">
+            <span><span class="material-symbols-outlined">event</span>
+                {% if cert.expires_after_days %}
+                    {% if cert.expires_after_days >= 365 %}{% widthratio cert.expires_after_days 365 1 as years %}{% blocktrans count counter=years|add:0 %}Valid {{ counter }} Year{% plural %}Valid {{ counter }} Years{% endblocktrans %}
+                    {% else %}{% blocktrans with d=cert.expires_after_days %}Valid {{ d }} days{% endblocktrans %}{% endif %}
+                {% else %}{% trans "Never Expires" %}{% endif %}
+            </span>
+            <strong>{% blocktrans with n=cert.active_count %}{{ n }} Active{% endblocktrans %}</strong>
+        </div>
+    </a>
+    {% endfor %}
+    <a href="{% url 'console_certificate_create' %}" class="c-add-tile cert-add">
+        <span class="material-symbols-outlined">add</span>
+        {% trans "New Certificate Template" %}
+        <small>{% trans "Define the documents volunteers must upload." %}</small>
+    </a>
+</div>

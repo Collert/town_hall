@@ -57,6 +57,8 @@
                     <span class="material-symbols-outlined security-link-arrow">chevron_right</span>
                 </button>
             </div>
+
+            {% include 'base/partials/kiosk_code_card.html' %}
         </aside>
 
         <!-- Main content -->
@@ -100,41 +102,7 @@
                 <div class="account-section-card">
                     <h2 class="account-section-title">{% trans "Skills" %}</h2>
 
-                    <div class="skills-list" id="skills-list">
-                        {% for skill in user_skills %}
-                        <span class="skill-tag" data-skill-id="{{ skill.id }}">
-                            {{ skill.name }}
-                            <button type="button" class="skill-tag-remove" data-skill-id="{{ skill.id }}" title="{% trans 'Remove' %}">
-                                <span class="material-symbols-outlined">close</span>
-                            </button>
-                        </span>
-                        {% endfor %}
-                    </div>
-
-                    <p class="skills-count" id="skills-count">
-                        {{ user_skills|length }} / {{ max_skills }} {% trans "skills" %}
-                    </p>
-
-                    <div class="skills-add-row">
-                        <button type="button" class="btn-skills-new" id="skills-new-btn">
-                            <span class="material-symbols-outlined">add</span>
-                            {% trans "New" %}
-                        </button>
-                        <div class="skills-dropdown" id="skills-dropdown" role="listbox">
-                            {% for skill in all_skills %}
-                            <div class="skills-dropdown-item{% if skill.id in user_skill_ids %} already-added{% endif %}"
-                                 data-skill-id="{{ skill.id }}"
-                                 data-skill-name="{{ skill.name }}"
-                                 role="option">
-                                {{ skill.name }}
-                            </div>
-                            {% empty %}
-                            <div style="padding:0.75rem 1rem; color:var(--color-text-tertiary); font-family:'Inter',sans-serif; font-size:0.85rem;">
-                                {% trans "No skills available." %}
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                    {% include 'base/partials/profile_skills.html' %}
                 </div>
 
                 <!-- Action bar -->
@@ -259,125 +227,6 @@
             document.getElementById('profile-form').appendChild(avatarInput);
         }
     });
-
-    // ---- Skills ----
-    const maxSkills = {{ max_skills }};
-    const addedIds = new Set({{ user_skill_ids|safe }});
-
-    const skillsList = document.getElementById('skills-list');
-    const skillsCount = document.getElementById('skills-count');
-    const newBtn = document.getElementById('skills-new-btn');
-    const dropdown = document.getElementById('skills-dropdown');
-
-    function updateCount() {
-        skillsCount.textContent = addedIds.size + ' / ' + maxSkills + ' {% trans "skills" %}';
-    }
-
-    function refreshNewButton() {
-        const anyVisible = dropdown.querySelector('.skills-dropdown-item:not([style*="display: none"])');
-        newBtn.style.display = anyVisible ? '' : 'none';
-    }
-
-    function hideDropdownItem(skillId) {
-        const dropItem = dropdown.querySelector(`[data-skill-id="${skillId}"]`);
-        if (dropItem) dropItem.style.display = 'none';
-        refreshNewButton();
-    }
-
-    function showDropdownItem(skillId) {
-        const dropItem = dropdown.querySelector(`[data-skill-id="${skillId}"]`);
-        if (dropItem) dropItem.style.display = '';
-        refreshNewButton();
-    }
-
-    // Hide already-added skills on load
-    addedIds.forEach(id => hideDropdownItem(String(id)));
-
-    // Toggle dropdown
-    newBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('open');
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target) && e.target !== newBtn) {
-            dropdown.classList.remove('open');
-        }
-    });
-
-    // Select skill from dropdown
-    dropdown.addEventListener('click', (e) => {
-        const item = e.target.closest('.skills-dropdown-item');
-        if (!item) return;
-
-        const skillId = item.dataset.skillId;
-        const skillName = item.dataset.skillName;
-
-        if (addedIds.size >= maxSkills) {
-            window.showToast(
-                `{% trans "You can only add up to" %} ${maxSkills} {% trans "skills." %}`,
-                'warning'
-            );
-            dropdown.classList.remove('open');
-            return;
-        }
-
-        // AJAX call
-        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const body = new URLSearchParams({ action: 'add_skill', skill_id: skillId, csrfmiddlewaretoken: csrf });
-
-        fetch('{% url "edit_profile" %}', { method: 'POST', body })
-            .then(r => r.json())
-            .then(data => {
-                if (data.ok) {
-                    addedIds.add(parseInt(skillId));
-                    hideDropdownItem(skillId);
-                    addSkillTag(skillId, skillName);
-                    updateCount();
-                    dropdown.classList.remove('open');
-                } else if (data.error === 'limit') {
-                    window.showToast(
-                        `{% trans "You can only add up to" %} ${data.max} {% trans "skills." %}`,
-                        'warning'
-                    );
-                    dropdown.classList.remove('open');
-                }
-            })
-            .catch(() => {
-                window.showToast('{% trans "Something went wrong. Please try again." %}', 'error');
-            });
-    });
-
-    function addSkillTag(skillId, skillName) {
-        const tag = document.createElement('span');
-        tag.className = 'skill-tag';
-        tag.dataset.skillId = skillId;
-        tag.innerHTML = `${skillName}<button type="button" class="skill-tag-remove" data-skill-id="${skillId}" title="{% trans 'Remove' %}"><span class="material-symbols-outlined">close</span></button>`;
-        skillsList.appendChild(tag);
-        tag.querySelector('.skill-tag-remove').addEventListener('click', handleRemove);
-    }
-
-    function handleRemove(e) {
-        const btn = e.currentTarget;
-        const skillId = btn.dataset.skillId;
-        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const body = new URLSearchParams({ action: 'remove_skill', skill_id: skillId, csrfmiddlewaretoken: csrf });
-
-        fetch('{% url "edit_profile" %}', { method: 'POST', body })
-            .then(r => r.json())
-            .then(data => {
-                if (data.ok) {
-                    const tag = skillsList.querySelector(`[data-skill-id="${skillId}"]`);
-                    if (tag) tag.remove();
-                    addedIds.delete(parseInt(skillId));
-                    updateCount();
-                    showDropdownItem(skillId);
-                }
-            });
-    }
-
-    // Bind remove on existing tags
-    skillsList.querySelectorAll('.skill-tag-remove').forEach(btn => btn.addEventListener('click', handleRemove));
 
     // ---- Animated dialog close helper ----
     function closeDialog(dialog) {

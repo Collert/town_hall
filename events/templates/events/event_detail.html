@@ -28,7 +28,7 @@
                     </div>
                     <div class="meta-item">
                         <span class="material-symbols-outlined">location_on</span>
-                        {{ event.location }}
+                        {% if event.venue %}<a href="{% url 'venue_detail' event.venue.pk %}" class="meta-link">{{ event.place_name }}</a>{% else %}{{ event.place_name }}{% endif %}
                     </div>
                 </div>
             </div>
@@ -144,8 +144,24 @@
             <div class="event-section">
                 <h2 class="section-title">{% trans "Location & Check-in" %}</h2>
                 <p class="location-note">
-                    {% blocktranslate with location=event.location %}Check in at <strong>{{ location }}</strong> 30 minutes before your shift start time.{% endblocktranslate %}
+                    {% blocktranslate with location=event.report_to_location|default:event.place_name %}Check in at <strong>{{ location }}</strong> 30 minutes before your shift start time.{% endblocktranslate %}
                 </p>
+                <div class="location-card">
+                    <span class="location-card-icon"><span class="material-symbols-outlined">{% if event.venue %}location_city{% else %}location_on{% endif %}</span></span>
+                    <div class="location-card-body">
+                        <strong>{{ event.place_name }}</strong>
+                        {% if event.venue and event.address %}<small>{{ event.address }}</small>{% endif %}
+                        {% if event.venue %}
+                        <div class="location-card-features">
+                            {% for f in event.venue.features.all|slice:":6" %}<span title="{{ f.name }}"><span class="material-symbols-outlined">{{ f.icon }}</span>{{ f.name }}</span>{% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="location-card-actions">
+                        {% if event.map_url %}<a href="{{ event.map_url }}" target="_blank" rel="noopener"><span class="material-symbols-outlined">directions</span>{% trans "Directions" %}</a>{% endif %}
+                        {% if event.venue %}<a href="{% url 'venue_detail' event.venue.pk %}"><span class="material-symbols-outlined">info</span>{% trans "Venue info" %}</a>{% endif %}
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -411,13 +427,10 @@
         });
     });
 
-    // Radio button changes to update form action and styling
+    // Selected time slot styling (the chosen slot_id is posted with the form)
     document.querySelectorAll('input[name="slot_id"]').forEach(radio => {
         radio.addEventListener('change', (e) => {
             const form = e.target.closest('form');
-            form.action = `/events/slot/${e.target.value}/signup/`;
-            
-            // Visual feedback for selected
             form.querySelectorAll('.timeslot-item').forEach(item => item.classList.remove('selected'));
             e.target.closest('.timeslot-item').classList.add('selected');
         });

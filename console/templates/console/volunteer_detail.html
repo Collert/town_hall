@@ -1,0 +1,362 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n humanize avatar_tags console_tags %}
+
+{% block title %}{{ volunteer|display_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/volunteer_detail.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_volunteers' %}">{% trans "Volunteers" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{{ volunteer|display_name }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="vd-top">
+    <section class="c-card vd-header">
+        <div class="vd-avatar">
+            {% avatar volunteer 'xl' %}
+            {% if volunteer.is_active %}<span class="c-badge c-badge-success">{% trans "Active" %}</span>{% else %}<span class="c-badge c-badge-danger">{% trans "Deactivated" %}</span>{% endif %}
+        </div>
+        <div class="vd-identity">
+            <h1>{{ volunteer|display_name }}</h1>
+            <p class="vd-sub">
+                {% if profile.location %}<span class="material-symbols-outlined">location_on</span>{{ profile.location }} &bull; {% endif %}
+                {% blocktrans with d=volunteer.date_joined|date:"M Y" %}Member since {{ d }}{% endblocktrans %}
+                &bull; {% trans "Kiosk ID" %} <code>{{ profile.id_code }}</code>
+            </p>
+            <div class="vd-contacts">
+                {% if volunteer.email %}<a href="mailto:{{ volunteer.email }}" class="c-chip"><span class="material-symbols-outlined">mail</span>{{ volunteer.email }}</a>{% endif %}
+                {% if profile.phone %}<a href="tel:{{ profile.phone }}" class="c-chip"><span class="material-symbols-outlined">call</span>{{ profile.phone }}</a>{% endif %}
+                {% if profile.level %}<span class="c-chip c-chip-dark"><span class="material-symbols-outlined">military_tech</span>{{ profile.level.name }}</span>{% endif %}
+                {% if volunteer.is_superuser %}<span class="c-chip c-chip-dark"><span class="material-symbols-outlined">shield_person</span>{% trans "Superuser" %}</span>
+                {% elif volunteer.is_staff %}<span class="c-chip c-chip-dark"><span class="material-symbols-outlined">admin_panel_settings</span>{% trans "Staff" %}</span>{% endif %}
+                {% for group in volunteer.groups.all %}<span class="c-chip"><span class="material-symbols-outlined">group</span>{{ group.name }}</span>{% endfor %}
+            </div>
+            <div class="vd-actions">
+                <a href="{% url 'console_volunteer_edit' volunteer.pk %}" class="c-btn c-btn-primary c-btn-sm"><span class="material-symbols-outlined">edit</span>{% trans "Edit Profile" %}</a>
+                <button type="button" class="c-btn c-btn-dark c-btn-sm" data-dialog-open="message-dialog"><span class="material-symbols-outlined">chat</span>{% trans "Message" %}</button>
+                {% if can_manage_access %}
+                <button type="button" class="c-btn c-btn-sm" data-dialog-open="access-dialog"><span class="material-symbols-outlined">admin_panel_settings</span>{% trans "Staff access" %}</button>
+                {% endif %}
+                <a href="{% url 'profile_view' volunteer.username %}" class="c-btn c-btn-sm" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span>{% trans "Public profile" %}</a>
+                {% if volunteer != user %}
+                <form method="post" action="{% url 'console_volunteer_status' volunteer.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="c-btn c-btn-sm c-btn-danger" onclick="return confirm('{% if volunteer.is_active %}{% trans "Deactivate this account?" %}{% else %}{% trans "Reactivate this account?" %}{% endif %}')">
+                        {% if volunteer.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Reactivate" %}{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="c-card c-card-tonal vd-insights">
+        <h2 class="vd-insights-title">{% trans "Admin Insights" %}</h2>
+        <span class="c-label">{% trans "Internal rating" %}</span>
+        {% if average_rating %}
+        <div class="vd-rating">
+            <span class="c-star-display">{% for i in "12345" %}<span class="material-symbols-outlined {% if forloop.counter > average_rating|floatformat:0|add:0 %}empty{% endif %}">star</span>{% endfor %}</span>
+            <strong>{{ average_rating|floatformat:1 }}</strong>
+        </div>
+        {% else %}
+        <p class="c-muted">{% trans "Not rated yet." %}</p>
+        {% endif %}
+        <span class="c-label">{% trans "Admin notes" %}</span>
+        {% if profile.admin_notes %}<p class="vd-note">&ldquo;{{ profile.admin_notes|truncatechars:220 }}&rdquo;</p>{% else %}<p class="c-muted">{% trans "No notes yet." %}</p>{% endif %}
+        <button type="button" class="c-link vd-feedback-link" data-dialog-open="feedback-dialog"><span class="material-symbols-outlined">add</span>{% trans "Add private feedback" %}</button>
+    </section>
+</div>
+
+<section class="c-grid-3 vd-stats vd-stats-4">
+    <div class="vd-stat"><span class="c-label">{% trans "Impact Points" %}</span><strong>{{ profile.impact_points|intcomma }}</strong><span class="material-symbols-outlined">military_tech</span></div>
+    <div class="vd-stat"><span class="c-label">{% trans "Total Hours" %}</span><strong>{{ total_hours|hours }}</strong><span class="material-symbols-outlined">schedule</span></div>
+    <div class="vd-stat accent"><span class="c-label">{% trans "Training Modules" %}</span><strong>{{ completed_modules }}/{{ tracked_modules }}</strong><span class="material-symbols-outlined">verified</span></div>
+    <div class="vd-stat"><span class="c-label">{% trans "Events Attended" %}</span><strong>{{ events_attended }}</strong><span class="material-symbols-outlined">event_available</span></div>
+</section>
+
+<div class="vd-row">
+    <section class="c-card">
+        <h2 class="c-card-title">{% trans "Skills & Certs" %}<a href="{% url 'console_volunteer_edit' volunteer.pk %}" class="c-icon-btn c-card-title-aside" aria-label="{% trans 'Edit skills' %}"><span class="material-symbols-outlined">add_circle</span></a></h2>
+        <div class="c-chips">
+            {% for skill in profile.skills.all %}<span class="c-chip">{{ skill.name }}</span>{% empty %}<p class="c-muted">{% trans "No skills listed." %}</p>{% endfor %}
+        </div>
+        {% if certifications %}
+        <div class="c-list vd-certs">
+            {% for cert in certifications %}
+            <a href="{% url 'console_verification_review' cert.pk %}" class="c-list-item">
+                <span class="c-icon-tile round {% if cert.status == 'verified' %}mint{% else %}accent{% endif %}"><span class="material-symbols-outlined">{{ cert.certificate.icon|default:"workspace_premium" }}</span></span>
+                <div class="c-list-item-main"><strong>{{ cert.certificate.name }}</strong><small>{% include 'console/partials/cert_status.html' with status=cert.status %}</small></div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="c-card">
+        <h2 class="c-card-title">{% trans "Training Modules" %}</h2>
+        {% if training %}
+        <table class="c-table vd-training">
+            <thead><tr><th>{% trans "Module" %}</th><th>{% trans "Status" %}</th><th>{% trans "Completed" %}</th><th class="num">{% trans "Progress" %}</th></tr></thead>
+            <tbody>
+                {% for t in training %}
+                <tr>
+                    <td>{{ t.module.title }}</td>
+                    <td>{% if t.completion %}<span class="c-badge c-badge-mint">{% trans "Completed" %}</span>{% else %}<span class="c-badge c-badge-accent">{% trans "In progress" %}</span>{% endif %}</td>
+                    <td>{% if t.completion %}{{ t.completion.completed_at|date:"M d, Y" }}{% else %}&mdash;{% endif %}</td>
+                    <td class="num">{{ t.progress }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="c-muted">{% trans "Hasn't started any training yet." %}</p>
+        {% endif %}
+    </section>
+</div>
+
+<section class="c-card vd-history">
+    <div class="c-section-head">
+        <div>
+            <h2 class="c-card-title">{% trans "Service History" %}</h2>
+            <p class="c-muted">{% trans "Chronological log of verified contributions" %}</p>
+        </div>
+        <a href="{% url 'impact_record' volunteer.username %}" class="c-link" target="_blank" rel="noopener">{% trans "Impact Record" %}<span class="material-symbols-outlined">download</span></a>
+    </div>
+    {% if upcoming %}
+    <div class="vd-upcoming">
+        {% for slot in upcoming %}<span class="c-chip"><span class="material-symbols-outlined">event_upcoming</span>{{ slot.event.title }} &middot; {{ slot.start_time|date:"M j" }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if history %}
+    <ol class="vd-timeline">
+        {% for shift in history %}
+        <li class="vd-timeline-item {% if forloop.first %}latest{% endif %}">
+            <div>
+                <span class="vd-timeline-date">{{ shift.start_time|date:"M d, Y" }}</span>
+                <strong>{% if shift.event_role_slot %}{{ shift.event_role_slot.event.title }}{% else %}{{ shift.role.name|default:_("Shift") }}{% endif %}</strong>
+                <small>{{ shift.role.name }}{% if shift.clutched %} &bull; {% trans "Clutch cover" %}{% endif %}{% if shift.end_impact_points %} &bull; {{ shift.end_impact_points|intcomma }} {% trans "impact points" %}{% endif %}</small>
+            </div>
+            <div class="vd-timeline-hours">
+                <span class="c-label">{% trans "Verified Hours" %}</span>
+                <strong>{{ shift.duration|hours }} {% trans "hrs" %}</strong>
+            </div>
+            <span class="material-symbols-outlined vd-verified">verified</span>
+        </li>
+        {% endfor %}
+    </ol>
+    {% if history_more %}<div class="vd-more"><a href="?history=all" class="c-btn">{% blocktrans count counter=history_more %}View {{ counter }} More Activity{% plural %}View {{ counter }} More Activities{% endblocktrans %}</a></div>{% endif %}
+    {% else %}
+    <p class="c-muted">{% trans "No completed shifts yet." %}</p>
+    {% endif %}
+</section>
+
+<section class="c-card vd-points" id="points">
+    <div class="c-section-head">
+        <div>
+            <h2 class="c-card-title">{% trans "Points Ledger" %}</h2>
+            <p class="c-muted">{% trans "Every award that makes up this volunteer's impact points" %}</p>
+        </div>
+        <button type="button" class="c-btn c-btn-sm" data-dialog-open="points-dialog"><span class="material-symbols-outlined">tune</span>{% trans "Adjust points" %}</button>
+    </div>
+    {% if points_entries %}
+    <ol class="vd-ledger">
+        {% for entry in points_entries %}
+        <li class="vd-ledger-item">
+            <span class="c-icon-tile round {% if entry.source == 'adjustment' %}accent{% else %}mint{% endif %}">
+                <span class="material-symbols-outlined">{% if entry.source == 'shift' %}schedule{% elif entry.source == 'training' %}school{% elif entry.source == 'endorsement' %}thumb_up{% else %}tune{% endif %}</span>
+            </span>
+            <div class="vd-ledger-main">
+                <strong>{{ entry.label }}</strong>
+                <small>
+                    {{ entry.created_at|date:"M j, Y" }} &bull; {{ entry.get_source_display }}{% if entry.created_by %} &bull; {% blocktrans with name=entry.created_by|display_name %}by {{ name }}{% endblocktrans %}{% endif %}
+                </small>
+                {% if entry.factors %}<div class="vd-ledger-factors">{% for factor in entry.factors %}<span class="c-badge">{{ factor }}</span>{% endfor %}</div>{% endif %}
+            </div>
+            <span class="vd-ledger-amount {% if entry.amount < 0 %}negative{% endif %}">{% if entry.amount > 0 %}+{% endif %}{{ entry.amount|intcomma }}</span>
+        </li>
+        {% endfor %}
+    </ol>
+    {% if points_entry_total > points_entries|length %}<div class="vd-more"><a href="?points=all#points" class="c-btn">{% blocktrans count counter=points_entry_total %}View all {{ counter }} entry{% plural %}View all {{ counter }} entries{% endblocktrans %}</a></div>{% endif %}
+    {% else %}
+    <p class="c-muted">{% trans "No points earned yet." %}</p>
+    {% endif %}
+</section>
+
+<div class="vd-row vd-row-endorse">
+    <section class="c-card">
+        <h2 class="c-card-title">{% trans "Endorsements Summary" %}</h2>
+        <div class="c-list">
+            {% for row in skill_counts %}
+            <div class="c-list-item vd-endorse-row"><span class="material-symbols-outlined">thumb_up</span><span class="c-list-item-main">{{ row.skills__name }}</span><span class="c-badge c-badge-dark">{{ row.n }}</span></div>
+            {% empty %}
+            <p class="c-muted">{% trans "No endorsements yet." %}</p>
+            {% endfor %}
+        </div>
+    </section>
+    <section class="c-card">
+        <div class="c-section-head">
+            <h2 class="c-card-title">{% trans "Public Feedback Feed" %}</h2>
+            <a href="{% url 'give_endorsement' %}?user={{ volunteer.username }}" class="c-link">{% trans "Endorse" %}</a>
+        </div>
+        <div class="c-stack">
+            {% for e in endorsements %}
+            <article class="vd-feedback">
+                <div class="vd-feedback-head">
+                    {% avatar e.endorser 'sm' %}
+                    <span><strong>{{ e.endorser|display_name }}</strong><small>{% blocktrans with t=e.timestamp|timesince %}{{ t }} ago{% endblocktrans %}{% if e.event %} &bull; {{ e.event.title }}{% endif %}</small></span>
+                </div>
+                {% if e.text %}<p>&ldquo;{{ e.text }}&rdquo;</p>{% endif %}
+                <div class="c-chips">{% for skill in e.skills.all %}<span class="c-badge c-badge-accent">{{ skill.name }}</span>{% endfor %}</div>
+            </article>
+            {% empty %}
+            <p class="c-muted">{% trans "Nobody has endorsed this volunteer yet." %}</p>
+            {% endfor %}
+        </div>
+        {% if feedback %}
+        <h3 class="c-label vd-private-title">{% trans "Private staff feedback" %}</h3>
+        <div class="c-stack">
+            {% for f in feedback %}
+            <div class="vd-private">
+                <span class="c-star-display">{% for i in "12345" %}<span class="material-symbols-outlined {% if forloop.counter > f.rating %}empty{% endif %}">star</span>{% endfor %}</span>
+                {% if f.note %}<p>{{ f.note }}</p>{% endif %}
+                <small class="c-muted">{{ f.author|display_name }} &bull; {{ f.timestamp|date:"M j, Y" }}</small>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<dialog class="c-dialog" id="message-dialog">
+    <form method="post" action="{% url 'console_message_volunteer' volunteer.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% blocktrans with name=volunteer|display_name %}Message {{ name }}{% endblocktrans %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-form">
+            <div class="c-field">
+                <label class="c-label" for="msg">{% trans "Message" %}</label>
+                <textarea id="msg" name="message" maxlength="255" required></textarea>
+                <span class="c-help">{% trans "Delivered as an in-app notification." %}</span>
+            </div>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">send</span>{% trans "Send" %}</button>
+        </div>
+    </form>
+</dialog>
+
+{% if can_manage_access %}
+<dialog class="c-dialog" id="access-dialog">
+    <form method="post" action="{% url 'console_volunteer_access' volunteer.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% blocktrans with name=volunteer|display_name %}Access for {{ name }}{% endblocktrans %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-form">
+            <label class="c-setting" for="access-staff">
+                <span>
+                    <strong>{% trans "Staff status" %}</strong>
+                    <small>{% trans "Can open this admin console and sign in to the Django admin." %}</small>
+                </span>
+                <span class="c-toggle"><input type="checkbox" name="is_staff" id="access-staff" {% if volunteer.is_staff %}checked{% endif %}><span></span></span>
+            </label>
+            {% if user.is_superuser %}
+            <label class="c-setting" for="access-superuser">
+                <span>
+                    <strong>{% trans "Superuser" %}</strong>
+                    <small>{% trans "Has every permission without being assigned it. Give this sparingly." %}</small>
+                </span>
+                <span class="c-toggle"><input type="checkbox" name="is_superuser" id="access-superuser" {% if volunteer.is_superuser %}checked{% endif %}><span></span></span>
+            </label>
+            {% endif %}
+            <div class="c-field">
+                <span class="c-label">{% trans "Permission groups" %}</span>
+                {% if groups %}
+                <div class="vd-groups">
+                    {% for group in groups %}
+                    <label class="vd-group">
+                        <input type="checkbox" name="group_ids" value="{{ group.pk }}" {% if group.pk in volunteer_group_ids %}checked{% endif %}>
+                        <span><span class="material-symbols-outlined">check</span>{{ group.name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="c-muted">{% trans "No permission groups exist yet." %}</p>
+                {% endif %}
+                <span class="c-help">{% trans "Groups bundle Django permissions. Create them and choose what each can do in the Django admin." %}
+                    <a href="{% url 'admin:auth_group_changelist' %}" class="c-link" target="_blank" rel="noopener">{% trans "Manage groups" %}<span class="material-symbols-outlined">arrow_outward</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">save</span>{% trans "Save Access" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endif %}
+
+<dialog class="c-dialog" id="points-dialog">
+    <form method="post" action="{% url 'console_adjust_points' volunteer.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Adjust Impact Points" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-form">
+            <div class="c-field">
+                <label class="c-label" for="points-amount">{% trans "Points" %}</label>
+                <input type="number" id="points-amount" name="amount" step="1" required placeholder="{% trans 'e.g. 50 or -20' %}">
+                <span class="c-help">{% blocktrans with pts=profile.impact_points|intcomma %}Use a negative number to take points away. Current total: {{ pts }}.{% endblocktrans %}</span>
+            </div>
+            <div class="c-field">
+                <label class="c-label" for="points-reason">{% trans "Reason" %}</label>
+                <input type="text" id="points-reason" name="reason" maxlength="200" required placeholder="{% trans 'e.g. Led the volunteer orientation' %}">
+                <span class="c-help">{% trans "The volunteer sees this in their points history." %}</span>
+            </div>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">save</span>{% trans "Record Adjustment" %}</button>
+        </div>
+    </form>
+</dialog>
+
+<dialog class="c-dialog" id="feedback-dialog">
+    <form method="post">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Private Feedback" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-form">
+            <div class="c-field">
+                <span class="c-label">{% trans "Rating" %}</span>
+                <div class="c-stars">
+                    {% for n in "54321" %}
+                    <input type="radio" name="rating" value="{{ n }}" id="rating-{{ n }}" required>
+                    <label for="rating-{{ n }}" aria-label="{% blocktrans %}{{ n }} stars{% endblocktrans %}"><span class="material-symbols-outlined">star</span></label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="c-field">
+                <label class="c-label" for="note">{% trans "Internal performance notes" %}</label>
+                <textarea id="note" name="note"></textarea>
+                <span class="c-help">{% trans "Only staff can see this." %}</span>
+            </div>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% trans "Save Feedback" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% load i18n %}
+{% if ok %}
+<div class="backend-test-result ok">
+    <span class="material-symbols-outlined">check_circle</span>
+    <div>
+        <strong>{% blocktrans %}Translated by {{ provider }}{% endblocktrans %}</strong>
+        <p class="backend-test-sample">{{ sample }}</p>
+        <p>&rarr; {{ result }}</p>
+    </div>
+</div>
+{% else %}
+<div class="backend-test-result error">
+    <span class="material-symbols-outlined">error</span>
+    <div>
+        <strong>{% trans "Every provider failed" %}</strong>
+        <p>{{ error }}</p>
+        <p class="c-help">{% trans "Details are printed in the server console, tagged [auto-translate]." %}</p>
+    </div>
+</div>
+{% endif %}

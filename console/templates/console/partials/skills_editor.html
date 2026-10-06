@@ -1,0 +1,28 @@
+{% load i18n %}
+{% comment %}
+Chip editor posting repeated `skill_ids`. Needs `selected_skills`, optional `suggestions`.
+Only one per page (fixed ids).
+{% endcomment %}
+<div class="skills-editor" id="skills-editor">
+    <div class="c-chips" id="skill-chips">
+        {% for skill in selected_skills %}{% include 'console/partials/skill_chip.html' %}{% endfor %}
+    </div>
+    <div class="c-input-icon skills-editor-input">
+        <span class="material-symbols-outlined">add</span>
+        <input type="search" name="skill_q" class="c-input" placeholder="{{ placeholder|default:_('Add a skill (e.g. First Aid)') }}" autocomplete="off"
+               hx-get="{% url 'console_skill_search' %}" hx-trigger="input changed delay:250ms, focus once"
+               hx-include="#skill-chips" hx-target="#skill-suggestions"
+               onkeydown="if (event.key === 'Enter') { event.preventDefault(); const first = document.querySelector('#skill-suggestions button'); if (first) first.click(); }">
+    </div>
+    <div id="skill-suggestions" class="skill-suggestions" aria-live="polite">
+        {% if suggestions %}
+        <span class="c-label">{% trans "Suggestions" %}</span>
+        <div class="c-chips">
+            {% for skill in suggestions %}
+            <button type="button" class="c-chip c-chip-ghost" hx-get="{% url 'console_skill_chip' %}?skill_id={{ skill.pk }}"
+                    hx-target="#skill-chips" hx-swap="beforeend" hx-on::after-request="this.remove()">{{ skill.name }}</button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>

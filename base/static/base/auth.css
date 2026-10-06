@@ -37,7 +37,7 @@
 
 .auth-info h1 {
     font-size: 3rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     line-height: 1.2;
     margin: 1rem 0;
 }
@@ -79,7 +79,7 @@
 
 .auth-testimonial-pill .testimonial-header .name {
     font-weight: bold;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -104,7 +104,7 @@
     right: -1rem;
     bottom: -1rem;
     font-size: 8rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     opacity: 0.05;
     z-index: 1;
 }
@@ -206,7 +206,7 @@
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--color-primary-dark);
+    color: var(--color-text-primary);
     font-size: 0.9rem;
 }
 
@@ -286,7 +286,7 @@
 }
 
 .checkbox-group a {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     font-weight: bold;
     text-decoration: none;
 }
@@ -361,7 +361,7 @@
     border: 1px solid var(--color-border);
     border-radius: 8px;
     background-color: var(--color-bg-secondary);
-    color: var(--color-primary-dark);
+    color: var(--color-text-primary);
     font-weight: 600;
     cursor: pointer;
     font-size: 0.9rem;
@@ -386,4 +386,61 @@
 
 .auth-footer a:hover {
     text-decoration: underline;
+}
+
+/* ---- Password reset ---- */
+.auth-card-narrow {
+    flex: none;
+    max-width: 460px;
+}
+
+.auth-card-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.auth-card-centered .auth-submit-btn {
+    width: 100%;
+}
+
+.auth-status-icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1.25rem;
+    border-radius: 50%;
+    background: rgba(from var(--color-success) r g b / 0.15);
+    color: var(--color-success);
+}
+
+.auth-status-icon.warning {
+    background: rgba(from var(--color-accent) r g b / 0.12);
+    color: var(--color-accent);
+}
+
+.auth-status-icon .material-symbols-outlined {
+    font-size: 2rem;
+}
+
+.auth-card > p.auth-note {
+    margin-top: -1rem;
+    font-size: 0.85rem;
+    color: var(--color-text-tertiary);
+}
+
+.auth-error {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--color-error);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.auth-inline-icon {
+    font-size: 1rem;
+    vertical-align: -0.15em;
+    margin-right: 0.25rem;
 }

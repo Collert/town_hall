@@ -32,6 +32,8 @@ urlpatterns += i18n_patterns(
     path('', include('base.urls')),
     path('opportunities/', include('events.urls')),
     path('training/', include('education.urls')),
+    path('jobs/', include('jobs.urls')),
+    path('console/', include('console.urls')),
     prefix_default_language=True,
 )
 

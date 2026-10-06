@@ -1,0 +1,43 @@
+{% load i18n %}
+<div class="venue-grid" id="venue-grid">
+    {% for venue in venues %}
+    <a href="{% url 'console_venue_edit' venue.pk %}" class="venue-tile">
+        <div class="venue-tile-photo" {% if venue.photo %}style="background-image: url('{{ venue.photo.url }}')"{% endif %}>
+            {% if not venue.photo %}<span class="material-symbols-outlined">location_city</span>{% endif %}
+            {% with open=venue.is_open_now %}
+            {% if open is not None %}
+            <span class="c-badge {% if open %}c-badge-success{% else %}c-badge-dark{% endif %} venue-tile-status">{% if open %}{% trans "Open now" %}{% else %}{% trans "Closed" %}{% endif %}</span>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <div class="venue-tile-body">
+            <h3>{{ venue.name }}</h3>
+            {% if venue.address %}<p class="venue-tile-address"><span class="material-symbols-outlined">location_on</span>{{ venue.address }}</p>{% endif %}
+            {% with features=venue.features.all %}
+            {% if features %}
+            <div class="venue-tile-features">
+                {% for f in features|slice:":6" %}<span class="venue-tile-feature" title="{{ f.name }}"><span class="material-symbols-outlined">{{ f.icon }}</span></span>{% endfor %}
+                {% if features|length > 6 %}<span class="venue-tile-more">+{{ features|length|add:"-6" }}</span>{% endif %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <div class="venue-tile-foot">
+                <span><span class="material-symbols-outlined">event</span>{% blocktrans count counter=venue.upcoming_count %}{{ counter }} upcoming event{% plural %}{{ counter }} upcoming events{% endblocktrans %}</span>
+                {% if venue.capacity %}<span><span class="material-symbols-outlined">groups</span>{{ venue.capacity }}</span>{% endif %}
+                {% if venue.role_count %}<span><span class="material-symbols-outlined">badge</span>{{ venue.role_count }}</span>{% endif %}
+            </div>
+        </div>
+    </a>
+    {% empty %}
+    <div class="c-empty venue-grid-empty">
+        <span class="material-symbols-outlined">location_off</span>
+        {% if query or feature %}
+        <h3>{% trans "No venues match these filters" %}</h3>
+        {% else %}
+        <h3>{% trans "No venues yet" %}</h3>
+        <p>{% trans "Add the places you run events and staff permanent positions from. Each one gets a public info page and a kiosk." %}</p>
+        <a href="{% url 'console_venue_create' %}" class="c-btn c-btn-primary"><span class="material-symbols-outlined">add</span>{% trans "Add Venue" %}</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,1 @@
+{% load avatar_tags %}<span class="avatar avatar-{{ size }}" title="{{ name }}">{% if image %}<img src="{{ image }}" alt="{{ name }}">{% else %}<span class="avatar-initials" style="background-color: {{ name|avatar_color }}" aria-label="{{ name }}">{{ name|initials }}</span>{% endif %}</span>

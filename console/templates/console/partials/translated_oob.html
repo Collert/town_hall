@@ -1,0 +1,4 @@
+{% load console_tags %}{% comment %}Out-of-band replacements for auto-translated fields.{% endcomment %}
+{% for field in fields %}
+    {% if md_fields and field.name|base_field in md_fields %}{% include 'console/partials/md_editor.html' with oob=True %}{% else %}{% include 'console/partials/field.html' with oob=True %}{% endif %}
+{% endfor %}

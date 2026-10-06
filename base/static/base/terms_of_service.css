@@ -1,0 +1,67 @@
+.terms-page {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.terms-header {
+    margin-bottom: 2.5rem;
+}
+
+.terms-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.terms-header h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+}
+
+.terms-body {
+    padding: 2.5rem;
+    border-radius: 2rem;
+    background: var(--color-bg-secondary);
+    line-height: 1.75;
+    color: var(--color-text-primary);
+}
+
+.terms-body h2,
+.terms-body h3 {
+    font-family: 'Manrope', sans-serif;
+    color: var(--color-text-primary);
+    margin: 1.5rem 0 0.5rem;
+}
+
+.terms-body p + p {
+    margin-top: 1rem;
+}
+
+.terms-body ul,
+.terms-body ol {
+    list-style: revert;
+    padding-left: 1.5rem;
+    margin: 0.75rem 0;
+}
+
+.terms-body a,
+.terms-contact a {
+    color: var(--color-accent);
+    text-decoration: underline;
+}
+
+.terms-empty {
+    color: var(--color-text-tertiary);
+}
+
+.terms-contact {
+    margin-top: 1.5rem;
+    color: var(--color-text-secondary);
+}

@@ -1,0 +1,14 @@
+{% load i18n %}
+<div class="c-list-item module-row">
+    <input type="hidden" name="module_ids" value="{{ req.module.pk }}">
+    <span class="c-icon-tile dark"><span class="material-symbols-outlined">{{ req.module.icon|default:"school" }}</span></span>
+    <div class="c-list-item-main">
+        <strong>{{ req.module.title }}</strong>
+        <small>{% blocktrans with m=req.module.get_total_length %}Estimated time: {{ m }} mins{% endblocktrans %}{% if not req.module.published %} &middot; {% trans "Unpublished" %}{% endif %}</small>
+    </div>
+    <label class="module-row-toggle">
+        <span>{% trans "Mandatory" %}</span>
+        <span class="c-toggle"><input type="checkbox" name="mandatory_{{ req.module.pk }}" {% if req.mandatory %}checked{% endif %}><span></span></span>
+    </label>
+    <button type="button" class="c-icon-btn danger" data-remove-closest=".module-row" aria-label="{% trans 'Remove module' %}"><span class="material-symbols-outlined">delete</span></button>
+</div>

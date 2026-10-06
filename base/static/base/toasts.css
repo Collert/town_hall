@@ -146,7 +146,7 @@
 
 .toast-icon .material-symbols-outlined {
     font-size: 24px;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 /* Mobile Adjustments */
@@ -324,7 +324,7 @@
 }
 
 .toast-info .toast-icon .material-symbols-outlined {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .toast-info .toast-dismiss:hover {

@@ -1,0 +1,50 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n humanize %}
+
+{% block title %}{% blocktrans with title=event.title %}{{ title }} Impact{% endblocktrans %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<meta property="og:title" content="{{ event.title }} &middot; {{ company_name }}">
+<meta property="og:description" content="{% blocktrans with v=totals.volunteers h=totals.hours %}{{ v }} volunteers, {{ h }} hours of service.{% endblocktrans %}">
+{% if event.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ event.image.url }}">{% endif %}
+<link rel="stylesheet" href="{% static 'events/event_impact_card.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="card-stage">
+    <article class="impact-card" id="impact-card">
+        <div class="impact-card-tint"></div>
+        <header class="impact-card-head">
+            <div>
+                <span class="impact-card-kicker">{% trans "Impact Report" %}</span>
+                <h1>{{ event.title }}</h1>
+            </div>
+            <span class="impact-card-brand">
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% endif %}
+                {{ company_name }}
+            </span>
+        </header>
+        <div class="impact-card-stats">
+            {% if efficiency is not None %}
+            <div class="light"><strong>{{ efficiency }}%</strong><span>{% trans "Event Efficiency" %}</span></div>
+            {% endif %}
+            <div class="dark"><strong>{{ totals.volunteers|intcomma }}</strong><span>{% trans "Volunteers" %}</span></div>
+            <div class="tonal"><strong>{{ totals.hours|intcomma }}</strong><span>{% trans "Hours Logged" %}</span></div>
+        </div>
+        <footer class="impact-card-foot">
+            <span class="impact-card-icons">
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="material-symbols-outlined">groups</span>
+            </span>
+            <span class="impact-card-place"><span class="material-symbols-outlined">location_on</span>{{ event.place_name }}</span>
+        </footer>
+    </article>
+
+    <div class="card-share no-print">
+        <button type="button" class="card-share-btn" onclick="navigator.share ? navigator.share({title: document.title, url: location.href}) : navigator.clipboard.writeText(location.href).then(() => showToast('{% trans "Link copied" %}', 'success'))">
+            <span class="material-symbols-outlined">share</span>{% trans "Share" %}
+        </button>
+        <a class="card-share-btn ghost" href="{% url 'opportunity_detail' event.pk %}">{% trans "View event" %}</a>
+    </div>
+</main>
+{% endblock %}

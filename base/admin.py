@@ -2,11 +2,20 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
-from .models import HeroSection, Level, Notification, SiteSettings, Profile
+from .models import HeroSection, Level, Notification, OperatingHour, PointsEntry, PointsRules, SiteSettings, Profile, Venue, VenueFeature, VenueNote
 
 admin.site.register(Notification)
 admin.site.register(Profile)
 admin.site.register(Level)
+admin.site.register(PointsRules)
+
+
+@admin.register(PointsEntry)
+class PointsEntryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'amount', 'source', 'reason', 'created_at')
+    list_filter = ('source',)
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'reason')
+    raw_id_fields = ('user', 'shift', 'endorsement', 'event', 'created_by')
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -85,3 +94,27 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         # Prevent deletion
         return False
+
+
+class OperatingHourInline(admin.TabularInline):
+    model = OperatingHour
+    extra = 0
+
+
+class VenueNoteInline(admin.TabularInline):
+    model = VenueNote
+    extra = 0
+
+
+@admin.register(Venue)
+class VenueAdmin(TabbedTranslationAdmin):
+    list_display = ('name', 'address', 'capacity')
+    search_fields = ('name', 'address')
+    filter_horizontal = ('features',)
+    inlines = (OperatingHourInline, VenueNoteInline)
+
+
+@admin.register(VenueFeature)
+class VenueFeatureAdmin(TabbedTranslationAdmin):
+    list_display = ('name', 'icon', 'category', 'order')
+    list_filter = ('category',)

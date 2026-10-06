@@ -1,0 +1,103 @@
+from django.urls import path
+
+from .views import (
+    certificates, communication, dashboard, events, roles, settings as settings_views, training, translate, venues,
+    volunteers,
+)
+
+urlpatterns = [
+    path('', dashboard.dashboard, name='console_dashboard'),
+
+    # Events
+    path('events/', events.event_list, name='console_events'),
+    path('events/search/', events.event_history, name='console_event_history'),
+    path('events/new/', events.event_edit, name='console_event_create'),
+    path('events/<int:event_id>/', events.event_edit, name='console_event_edit'),
+    path('events/<int:event_id>/roles/', events.event_roles, name='console_event_roles'),
+    path('events/<int:event_id>/roles/add/', events.add_role_slots, name='console_add_role_slots'),
+    path('events/<int:event_id>/roles/slot-row/', events.slot_row, name='console_slot_row'),
+    path('events/<int:event_id>/slots/<int:slot_id>/delete/', events.delete_slot, name='console_delete_slot'),
+    path('events/<int:event_id>/publish/', events.toggle_publish, name='console_event_publish'),
+    path('events/<int:event_id>/message/', events.message_volunteers, name='console_event_message'),
+    path('events/<int:event_id>/invite/', events.invite_volunteers, name='console_event_invite'),
+    path('events/<int:event_id>/invite/recipients/', events.invite_recipients, name='console_invite_recipients'),
+    path('events/<int:event_id>/monitor/', events.event_monitor, name='console_event_monitor'),
+    path('events/<int:event_id>/monitor/activity/', events.monitor_activity, name='console_monitor_activity'),
+    path('events/<int:event_id>/monitor/check-in/', events.manual_check_in, name='console_manual_check_in'),
+    path('events/<int:event_id>/monitor/export/', events.export_shift_log, name='console_export_shift_log'),
+    path('events/<int:event_id>/report/', events.event_report, name='console_event_report'),
+
+    # Roles
+    path('roles/', roles.role_list, name='console_roles'),
+    path('roles/new/', roles.role_edit, name='console_role_create'),
+    path('roles/<int:role_id>/', roles.role_edit, name='console_role_edit'),
+    path('roles/<int:role_id>/delete/', roles.role_delete, name='console_role_delete'),
+    path('roles/module-search/', roles.module_search, name='console_role_module_search'),
+    path('roles/module-row/', roles.module_row, name='console_role_module_row'),
+
+    # Venues
+    path('venues/', venues.venue_list, name='console_venues'),
+    path('venues/new/', venues.venue_edit, name='console_venue_create'),
+    path('venues/preview/', venues.venue_preview, name='console_venue_preview'),
+    path('venues/features/', venues.venue_feature_add, name='console_venue_feature_add'),
+    path('venues/<int:venue_id>/', venues.venue_edit, name='console_venue_edit'),
+    path('venues/<int:venue_id>/delete/', venues.venue_delete, name='console_venue_delete'),
+    path('venues/<int:venue_id>/notes/', venues.venue_note_add, name='console_venue_note_add'),
+    path('venues/<int:venue_id>/notes/<int:note_id>/delete/', venues.venue_note_delete, name='console_venue_note_delete'),
+
+    # Volunteers
+    path('volunteers/', volunteers.volunteer_list, name='console_volunteers'),
+    path('volunteers/export/', volunteers.export_volunteers, name='console_export_volunteers'),
+    path('volunteers/new/', volunteers.volunteer_create, name='console_volunteer_create'),
+    path('volunteers/<int:user_id>/', volunteers.volunteer_detail, name='console_volunteer_detail'),
+    path('volunteers/<int:user_id>/edit/', volunteers.volunteer_edit, name='console_volunteer_edit'),
+    path('volunteers/<int:user_id>/message/', volunteers.message_volunteer, name='console_message_volunteer'),
+    path('volunteers/<int:user_id>/status/', volunteers.toggle_active, name='console_volunteer_status'),
+    path('volunteers/<int:user_id>/access/', volunteers.volunteer_access, name='console_volunteer_access'),
+    path('volunteers/<int:user_id>/points/', volunteers.adjust_points, name='console_adjust_points'),
+
+    # Shared HTMX helpers
+    path('skills/search/', volunteers.skill_search, name='console_skill_search'),
+    path('skills/chip/', volunteers.skill_chip, name='console_skill_chip'),
+
+    # Training
+    path('training/', training.module_list, name='console_modules'),
+    path('training/new/', training.module_edit, name='console_module_create'),
+    path('training/<int:module_id>/', training.module_edit, name='console_module_edit'),
+    path('training/<int:module_id>/delete/', training.module_delete, name='console_module_delete'),
+    path('training/<int:module_id>/lessons/new/', training.lesson_edit, name='console_lesson_create'),
+    path('training/<int:module_id>/lessons/<int:lesson_id>/', training.lesson_edit, name='console_lesson_edit'),
+    path('training/<int:module_id>/lessons/<int:lesson_id>/delete/', training.lesson_delete, name='console_lesson_delete'),
+    path('training/<int:module_id>/quizzes/new/', training.quiz_create, name='console_quiz_create'),
+    path('training/<int:module_id>/quizzes/<int:quiz_id>/', training.quiz_edit, name='console_quiz_edit'),
+    path('training/<int:module_id>/quizzes/<int:quiz_id>/delete/', training.quiz_delete, name='console_quiz_delete'),
+    path('training/<int:module_id>/quizzes/<int:quiz_id>/questions/', training.question_save, name='console_question_create'),
+    path('training/<int:module_id>/quizzes/<int:quiz_id>/questions/<int:question_id>/', training.question_save, name='console_question_edit'),
+    path('training/<int:module_id>/quizzes/<int:quiz_id>/questions/<int:question_id>/delete/', training.question_delete, name='console_question_delete'),
+    path('training/preview/', training.markdown_preview, name='console_markdown_preview'),
+    path('training/<int:module_id>/move/<str:kind>/<int:item_id>/<str:direction>/', training.move_item, name='console_move_item'),
+
+    # Certificates
+    path('certificates/', certificates.certificate_list, name='console_certificates'),
+    path('certificates/new/', certificates.certificate_edit, name='console_certificate_create'),
+    path('certificates/doc-row/', certificates.doc_row, name='console_doc_row'),
+    path('certificates/<int:cert_id>/', certificates.certificate_edit, name='console_certificate_edit'),
+    path('certificates/<int:cert_id>/delete/', certificates.certificate_delete, name='console_certificate_delete'),
+    path('verifications/', certificates.verification_list, name='console_verifications'),
+    path('verifications/<int:user_cert_id>/', certificates.verification_review, name='console_verification_review'),
+
+    path('translate/', translate.auto_translate, name='console_auto_translate'),
+
+    # Organization
+    path('settings/', settings_views.organization_settings, name='console_settings'),
+    path('settings/backend/', settings_views.backend_settings, name='console_settings_backend'),
+    path('settings/levels/', settings_views.level_settings, name='console_settings_levels'),
+    path('settings/points/', settings_views.points_settings, name='console_settings_points'),
+    path('settings/backend/test-translation/', settings_views.test_translation, name='console_settings_test_translation'),
+    path('settings/backend/test-email/', settings_views.test_email, name='console_settings_test_email'),
+    path('communication/email/', communication.email_settings, name='console_communication_email'),
+    path('communication/email/status/', communication.task_status, name='console_listmonk_status'),
+    path('communication/email/seed/', communication.seed_missing, name='console_listmonk_seed'),
+    path('communication/email/reset/<str:key>/', communication.reset_template, name='console_listmonk_reset'),
+    path('communication/email/sync/', communication.sync_users, name='console_listmonk_sync'),
+]

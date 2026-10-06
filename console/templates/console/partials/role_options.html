@@ -1,0 +1,21 @@
+{% load i18n %}
+<div class="role-options" id="role-options" role="radiogroup">
+    {% for role in roles %}
+    <label class="role-option">
+        <input type="radio" name="role" value="{{ role.pk }}" required {% if preselected == role.pk|stringformat:"s" %}checked{% endif %}>
+        <span class="role-option-card">
+            <span class="role-option-top">
+                <span class="c-icon-tile"><span class="material-symbols-outlined">{{ role.icon|default:"badge" }}</span></span>
+                <span class="c-badge role-option-modules">{% blocktrans count counter=role.module_count %}{{ counter }} module{% plural %}{{ counter }} modules{% endblocktrans %}</span>
+            </span>
+            <strong>{{ role.name }}{% if role.permanent %} <small class="c-muted">({% trans "permanent" %})</small>{% endif %}</strong>
+            <small>{{ role.description|truncatechars:90 }}</small>
+        </span>
+    </label>
+    {% empty %}
+    <div class="c-empty role-options-empty">
+        <span class="material-symbols-outlined">work_off</span>
+        <p>{% trans "No roles match. Create a role template first." %}</p>
+    </div>
+    {% endfor %}
+</div>

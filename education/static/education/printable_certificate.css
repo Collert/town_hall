@@ -1,99 +1,104 @@
 /* ===========================
-   Printable Certificate
+   Printable training certificate
    =========================== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background-color: #e5f7f6;
+body.bare.print-cert {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem;
+    padding: 1.5rem 1rem 3rem;
+    background: var(--color-bg-secondary);
     font-family: 'Inter', sans-serif;
-    color: #0e1e1e;
+    color: var(--color-text-primary);
 }
 
-.material-symbols-outlined {
-    font-variation-settings:
-        'FILL' 0,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24;
-}
-
-
-/* Certificate Container */
-.certificate-container {
-    background-color: #ffffff;
+/* Toolbar */
+.print-actions {
     width: 100%;
-    max-width: 800px;
-    aspect-ratio: 1 / 1.414;
-    box-shadow: 0 20px 60px rgba(0, 67, 77, 0.12);
+    max-width: 50rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.print-btn,
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.75rem;
+    border: none;
+    border-radius: 9999px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.print-btn {
+    background: linear-gradient(to right, var(--color-accent), var(--color-accent-light));
+    color: var(--color-accent-contrast);
+}
+
+.back-btn {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+}
+
+.print-btn:hover,
+.back-btn:hover {
+    transform: scale(1.03);
+}
+
+/* Sheet: A-series proportions on screen, page-sized in print */
+.certificate-container {
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    max-width: 50rem;
+    aspect-ratio: 1 / 1.414;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: var(--color-surface);
+    box-shadow: 0 20px 60px rgba(from var(--color-primary) r g b / 0.12);
 }
 
 .certificate-border {
-    position: absolute;
-    inset: 1rem;
-    border: 1px solid rgba(191, 200, 203, 0.3);
-    padding: 3rem;
+    position: relative;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: space-between;
+    gap: 1.5rem;
+    padding: 3.5rem 3rem 2.5rem;
+    text-align: center;
+    box-shadow: inset 0 0 0 1px rgba(from var(--color-text-tertiary) r g b / 0.15);
 }
 
-
-/* Corner Accents */
 .corner-accent {
     position: absolute;
     width: 2rem;
     height: 2rem;
+    border-color: var(--color-primary-vivid);
+    border-style: solid;
+    border-width: 0;
 }
 
-.corner-tl {
-    top: 0;
-    left: 0;
-    border-top: 2px solid #00434d;
-    border-left: 2px solid #00434d;
-}
-
-.corner-tr {
-    top: 0;
-    right: 0;
-    border-top: 2px solid #00434d;
-    border-right: 2px solid #00434d;
-}
-
-.corner-bl {
-    bottom: 0;
-    left: 0;
-    border-bottom: 2px solid #00434d;
-    border-left: 2px solid #00434d;
-}
-
-.corner-br {
-    bottom: 0;
-    right: 0;
-    border-bottom: 2px solid #00434d;
-    border-right: 2px solid #00434d;
-}
-
+.corner-tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; }
+.corner-tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; }
+.corner-bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; }
+.corner-br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; }
 
 /* Header */
 .cert-header {
-    text-align: center;
-    padding-top: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 1.25rem;
 }
 
 .cert-org-row {
@@ -101,12 +106,18 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
+}
+
+.cert-org-logo {
+    height: 2.25rem;
+    width: auto;
 }
 
 .cert-org-icon {
     font-size: 2.25rem;
-    color: #00434d;
+    color: var(--color-text-primary);
+    font-variation-settings: 'FILL' 1;
 }
 
 .cert-org-name {
@@ -115,7 +126,7 @@ body {
     font-size: 1.5rem;
     letter-spacing: -0.025em;
     text-transform: uppercase;
-    color: #00434d;
+    color: var(--color-text-primary);
 }
 
 .cert-type-label {
@@ -124,128 +135,101 @@ body {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-weight: 700;
-    color: #00434d;
+    color: var(--color-text-secondary);
 }
 
 .cert-module-name {
     font-family: 'Manrope', sans-serif;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     font-weight: 800;
-    color: #00434d;
     letter-spacing: -0.03em;
     line-height: 1.1;
+    color: var(--color-text-primary);
 }
-
-@media (min-width: 600px) {
-    .cert-module-name {
-        font-size: 3rem;
-    }
-}
-
 
 /* Body */
 .cert-body {
-    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2rem;
-    flex-grow: 1;
-    justify-content: center;
-    padding: 2rem 0;
+    width: 100%;
 }
 
 .cert-body-statement {
-    font-size: 1rem;
-    color: #3f484b;
     max-width: 28rem;
+    font-size: 1rem;
     line-height: 1.6;
+    color: var(--color-text-secondary);
 }
 
 .cert-recipient {
-    border-top: 1px solid #daeceb;
-    border-bottom: 1px solid #daeceb;
     width: 75%;
     padding: 1.5rem 0;
+    border-top: 1px solid rgba(from var(--color-text-tertiary) r g b / 0.2);
+    border-bottom: 1px solid rgba(from var(--color-text-tertiary) r g b / 0.2);
 }
 
 .cert-recipient-label {
+    margin-bottom: 0.5rem;
     font-family: 'Manrope', sans-serif;
     font-size: 0.75rem;
-    text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: #6f797b;
-    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
 }
 
 .cert-recipient-name {
     font-family: 'Manrope', sans-serif;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     font-weight: 700;
-    color: #0e1e1e;
+    line-height: 1.15;
+    color: var(--color-text-primary);
 }
 
-@media (min-width: 600px) {
-    .cert-recipient-name {
-        font-size: 3rem;
-    }
-}
-
-
-/* Metrics */
 .cert-metrics {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    padding-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1.25rem;
 }
 
 .cert-metric {
-    background-color: #dff1f0;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--color-bg-secondary);
+    text-align: left;
 }
 
 .cert-metric-icon {
     font-size: 1.5rem;
+    color: var(--color-text-primary);
 }
 
 .metric-icon-accent {
-    color: #ac3509;
-}
-
-.metric-icon-primary {
-    color: #00434d;
+    color: var(--color-accent);
 }
 
 .cert-metric-label {
     font-size: 0.6875rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #6f797b;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
 }
 
 .cert-metric-value {
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
     font-size: 1rem;
-    color: #0e1e1e;
+    color: var(--color-text-primary);
 }
-
 
 /* Footer */
 .cert-footer {
-    margin-top: auto;
-    display: flex;
-    justify-content: center;
-    padding-top: 2rem;
-}
-
-.cert-qr-section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -253,11 +237,9 @@ body {
 }
 
 .cert-qr-code {
+    color: var(--color-text-primary); /* the QR code is drawn in currentColor */
     width: 6rem;
     height: 6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .cert-qr-code svg {
@@ -265,16 +247,12 @@ body {
     height: 100%;
 }
 
-.cert-qr-info {
-    text-align: center;
-}
-
 .cert-footer-label {
     font-size: 0.6875rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: #6f797b;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
 }
 
 .cert-footer-label-gap {
@@ -284,84 +262,63 @@ body {
 .cert-footer-value {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: #0e1e1e;
+    color: var(--color-text-primary);
 }
 
-
-/* Print Actions */
-.print-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.print-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.875rem 2rem;
-    background: linear-gradient(to right, #ac3509, #fe6f42);
-    color: #ffffff;
-    border: none;
-    border-radius: 9999px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.print-btn:hover {
-    transform: scale(1.03);
-}
-
-.back-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.875rem 2rem;
-    background-color: #ffffff;
-    color: #00434d;
-    border: 1px solid rgba(191, 200, 203, 0.3);
-    border-radius: 9999px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.back-btn:hover {
-    transform: scale(1.03);
-}
-
-
-/* Print Styles */
-@media print {
-    body {
-        background: white;
-        margin: 0;
-        padding: 0;
-    }
-
+@media (max-width: 600px) {
     .certificate-container {
-        box-shadow: none;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: none;
+        aspect-ratio: auto;
     }
 
     .certificate-border {
-        border: 2px solid #00434d;
-        padding: 2rem;
-        margin: 1rem;
-        height: calc(100vh - 2rem);
+        padding: 2.5rem 1.25rem 2rem;
+    }
+
+    .cert-recipient {
+        width: 100%;
+    }
+}
+
+/* Print: one portrait page, A4 or Letter. The sheet is sized to the area both
+   papers share inside 10mm margins (190mm x 257mm), so nothing needs scaling. */
+@page {
+    size: portrait;
+    margin: 10mm;
+}
+
+@media print {
+    body.bare.print-cert {
+        display: block;
+        min-height: 0;
+        padding: 0;
+        background: var(--color-surface);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 
     .no-print {
         display: none !important;
+    }
+
+    .certificate-container {
+        width: 190mm;
+        max-width: none;
+        height: 257mm;
+        aspect-ratio: auto;
+        margin: 0 auto;
+        padding: 4mm;
+        border-radius: 0;
+        box-shadow: none;
+        break-inside: avoid;
+        overflow: hidden;
+    }
+
+    .certificate-border {
+        padding: 16mm 12mm 10mm;
+    }
+
+    .cert-module-name,
+    .cert-recipient-name {
+        font-size: 30pt;
     }
 }

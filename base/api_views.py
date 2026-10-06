@@ -5,7 +5,7 @@ def get_user_level_api(request):
         return JsonResponse({'error': 'Unauthorized'}, status=401)
     
     profile = request.user.profile
-    level = profile.level()
+    level = profile.level
     
     if level:
         return JsonResponse({

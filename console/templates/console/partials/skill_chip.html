@@ -1,0 +1,1 @@
+{% load i18n %}<span class="c-chip c-chip-dark skill-chip"><input type="hidden" name="skill_ids" value="{{ skill.pk }}">{{ skill.name }}<button type="button" class="c-chip-remove" data-remove-closest=".skill-chip" aria-label="{% blocktrans with name=skill.name %}Remove {{ name }}{% endblocktrans %}"><span class="material-symbols-outlined">close</span></button></span>

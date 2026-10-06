@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 08:44-0700\n"
+"POT-Creation-Date: 2026-10-05 12:16-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,307 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\base\email_templates.py:166
+msgid "New opportunity"
+msgstr "Nouvelle opportunité"
+
+#: .\base\email_templates.py:174
+msgid "See roles and sign up"
+msgstr "Voir les rôles et s'inscrire"
+
+#: .\base\email_templates.py:180
+#, python-format
+msgid ""
+"You're receiving this because you have an account with %(org)s. [Unsubscribe]"
+"({{UnsubscribeURL}})"
+msgstr "Vous recevez ce message parce que vous avez un compte chez %(org)s. [Se désabonner]({{UnsubscribeURL}})"
+
+#: .\base\templates\base\edit_profile.html:13
+msgid "Edit Your Profile"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:14
+msgid "Manage your public identity and account preferences."
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:36
+#: .\console\templates\console\volunteer_edit.html:33
+msgid "Change photo"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:48
+msgid "Security & Login"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:51
+#: .\base\templates\base\edit_profile.html:119
+msgid "Change Password"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:56
+#: .\base\templates\base\edit_profile.html:170
+msgid "Deactivate Account"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:70
+msgid "Basic Information"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:73
+msgid "First Name"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:77
+msgid "Last Name"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:81
+#: .\base\templates\base\login.html:19
+#: .\base\templates\base\password_reset_form.html:19
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:14
+msgid "Email Address"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:85
+msgid "Phone Number"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:89 .\console\forms.py:69
+#: .\console\templates\console\event_edit.html:44
+msgid "Location"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:93
+msgid "Bio / About Me"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:94
+msgid "Tell us about yourself..."
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:101
+msgid "Skills"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:108
+#: .\base\templates\base\edit_profile.html:162
+#: .\base\templates\base\edit_profile.html:196
+#: .\console\templates\console\certificate_edit.html:26
+#: .\console\templates\console\event_invite.html:93
+#: .\console\templates\console\event_monitor.html:143
+#: .\console\templates\console\event_roles.html:108
+#: .\console\templates\console\partials\add_role_dialog.html:44
+#: .\console\templates\console\partials\quiz_questions.html:90
+#: .\console\templates\console\role_edit.html:22
+#: .\console\templates\console\volunteer_detail.html:210
+#: .\console\templates\console\volunteer_detail.html:240
+#: .\console\templates\console\volunteer_edit.html:24
+#: .\console\templates\console\volunteer_edit.html:83
+#: .\console\templates\console\volunteer_list.html:91
+#: .\events\templates\events\event_detail.html:378
+msgid "Cancel"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:109
+#: .\console\templates\console\backend_settings.html:24
+#: .\console\templates\console\certificate_edit.html:27
+#: .\console\templates\console\communication_email.html:24
+#: .\console\templates\console\event_edit.html:86
+#: .\console\templates\console\organization_settings.html:24
+#: .\console\templates\console\volunteer_edit.html:25
+msgid "Save Changes"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:127
+msgid "Update your password to keep your account secure."
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:130
+msgid "Current Password"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:140
+#: .\base\templates\base\password_reset_confirm.html:21
+msgid "New Password"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:147
+msgid "Must be at least 8 characters long and include a number and symbol."
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:151
+#: .\base\templates\base\password_reset_confirm.html:27
+msgid "Confirm New Password"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:161
+#: .\base\templates\base\password_reset_confirm.html:33
+msgid "Update Password"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:180
+msgid ""
+"This action is permanent and cannot be easily undone. Deactivating your "
+"account will immediately disable your profile, remove you from all active "
+"event rosters, and permanently hide your training history from public view."
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:182
+msgid "Are you absolutely sure you want to proceed?"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:185
+msgid "Type your password to confirm deactivation"
+msgstr ""
+
+#: .\base\templates\base\edit_profile.html:195
+msgid "Deactivate My Account"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:4
+#: .\base\templates\base\endorsements.html:14
+msgid "Endorsements"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:15
+msgid ""
+"Celebrating the people behind community change. Read the stories behind the "
+"impact."
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:18
+msgid "New Endorsement"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:28
+msgid "Filter by name"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:33
+msgid "Impact Categories"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:37
+msgid "All endorsements"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:54
+msgid "Top Endorser"
+msgstr ""
+
+#: .\base\templates\base\endorsements.html:59
+#, python-format
+msgid "%(counter)s endorsement given"
+msgid_plural "%(counter)s endorsements given"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\base\templates\base\endorsements.html:62
+msgid "“Recognizing others is how we build a resilient, empowered network.”"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:4
+#: .\base\templates\base\give_endorsement.html:20
+msgid "Give an Endorsement"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:13
+#: .\console\templates\console\event_report.html:88
+msgid "Volunteer Feedback & Endorsements"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:14
+msgid "Recognize excellence and celebrate the people you volunteer with."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:20
+msgid "Endorse Someone Else"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:23
+#: .\console\templates\console\event_invite.html:47
+msgid "Search volunteers by name or skill..."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:25
+msgid "Search volunteers"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:45
+#, python-format
+msgid "%(h)s Hours Contributed"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:52
+msgid "Select Skills to Endorse"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:60
+msgid "No skills are set up yet. Ask an administrator to add some."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:63
+msgid ""
+"You've endorsed some of these skills before. Submitting again updates your "
+"note."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:67
+msgid "Public Appreciation Note"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:68
+msgid "Write a message of gratitude that will be visible to the community..."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:74
+msgid "Admin Feedback (Private)"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:78
+#: .\console\templates\console\volunteer_detail.html:229
+#: .\events\templates\events\event_thank_you.html:75
+#, python-format
+msgid "%(n)s stars"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:82
+msgid "Internal performance notes..."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:86
+msgid "Submit Endorsement"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:91
+msgid "Pick someone you've volunteered with to recognize their work."
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:98
+msgid "Community Feed"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:99
+#: .\education\templates\education\training_dashboard.html:201
+msgid "View all"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:106
+msgid "endorsed"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:107
+#: .\base\templates\base\partials\endorsement_feed.html:11
+#: .\console\templates\console\verification_list.html:41
+#: .\console\templates\console\volunteer_detail.html:171
+#, python-format
+msgid "%(t)s ago"
+msgstr ""
+
+#: .\base\templates\base\give_endorsement.html:114
+msgid "No endorsements yet. Be the first!"
+msgstr ""
 
 #: .\base\templates\base\home.html:45
 msgid "Volunteer Active"
@@ -62,10 +363,21 @@ msgid "LEVEL 4 VOLUNTEER"
 msgstr ""
 
 #: .\base\templates\base\home.html:130
+#: .\console\templates\console\partials\event_history.html:10
+#: .\console\templates\console\partials\volunteer_table.html:10
+#: .\console\templates\console\volunteer_detail.html:69
+#: .\console\templates\console\volunteer_edit.html:93
+#: .\events\templates\events\event_certificate.html:46
 msgid "Total Hours"
 msgstr ""
 
 #: .\base\templates\base\home.html:134
+#: .\console\templates\console\certificate_edit.html:11
+#: .\console\templates\console\certificate_list.html:13
+#: .\console\templates\console\console_layout.html:40
+#: .\console\templates\console\verification_list.html:11
+#: .\education\templates\education\training_dashboard.html:76
+#: .\education\templates\education\training_dashboard.html:198
 msgid "Certificates"
 msgstr ""
 
@@ -123,232 +435,5507 @@ msgstr ""
 msgid "Start Your Journey"
 msgstr ""
 
+#: .\base\templates\base\impact_record.html:4
+#, python-format
+msgid "Volunteer Impact Record - %(name)s"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:12
+msgid "Volunteer Impact Record"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:14
+msgid "Print / Save PDF"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:15
+msgid "Verified record"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:26
+msgid "Certified Volunteer Impact Record"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:27
+#, python-format
+msgid "Authentic verification #%(record_id)s"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:31
+msgid "Certified Official"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:35
+msgid "This record certifies the community contributions of"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:38
+#, python-format
+msgid "Level %(n)s %(name)s"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:42
+#: .\base\templates\base\profile.html:95
+#: .\console\templates\console\volunteer_detail.html:137
+msgid "Verified Hours"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:43
+#: .\base\templates\base\profile.html:99
+#: .\education\templates\education\training_dashboard.html:31
+msgid "Impact Points"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:44
+#: .\base\templates\base\profile.html:103
+msgid "Projects Completed"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:49
+msgid "Top Verified Skills"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:52
+#, python-format
+msgid "%(counter)s endorsement"
+msgid_plural "%(counter)s endorsements"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\base\templates\base\impact_record.html:54
+msgid "No endorsed skills yet."
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:56
+msgid "Training modules completed"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:61
+msgid "Community Endorsement"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:75
+#, python-format
+msgid "Issued %(d)s"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:79
+msgid "Scan to verify"
+msgstr ""
+
+#: .\base\templates\base\impact_record.html:84
+#, python-format
+msgid ""
+"Certified Volunteer Impact Record &bull; Authentic verification #"
+"%(record_id)s"
+msgstr ""
+
 #: .\base\templates\base\layout.html:10
 msgid "Power Your Community"
 msgstr ""
 
-#: .\base\templates\base\layout.html:109
+#: .\base\templates\base\layout.html:23
 msgid "Powered by"
 msgstr ""
 
-#: .\base\templates\base\layout.html:109
+#: .\base\templates\base\layout.html:23
 msgid "Town Hall"
 msgstr "Hôtel de Ville"
 
-#: .\base\templates\base\layout.html:112 .\base\templates\base\layout.html:212
-#: .\base\templates\base\layout.html:321
+#: .\base\templates\base\layout.html:26 .\base\templates\base\layout.html:134
+#: .\base\templates\base\layout.html:283
 #: .\events\templates\events\explore_events.html:17
 msgid "Opportunities"
 msgstr ""
 
-#: .\base\templates\base\layout.html:113 .\base\templates\base\layout.html:216
-#: .\base\templates\base\layout.html:298
+#: .\base\templates\base\layout.html:27 .\base\templates\base\layout.html:139
+#: .\base\templates\base\layout.html:260 .\base\triggers.py:34
 #, fuzzy
 #| msgid "Ukrainian"
 msgid "Training"
 msgstr "Ukrainien"
 
-#: .\base\templates\base\layout.html:114 .\base\templates\base\layout.html:220
-msgid "My Dashboard"
+#: .\base\templates\base\layout.html:28 .\base\templates\base\layout.html:161
+#: .\events\templates\events\my_events.html:17
+msgid "My Events"
 msgstr ""
 
-#: .\base\templates\base\layout.html:115 .\base\templates\base\layout.html:224
-msgid "About Us"
+#: .\base\templates\base\layout.html:29 .\base\templates\base\layout.html:178
+msgid "Community"
 msgstr ""
 
-#: .\base\templates\base\layout.html:158 .\base\templates\base\layout.html:238
+#: .\base\templates\base\layout.html:31 .\base\templates\base\layout.html:183
+#: .\console\templates\console\certificate_list.html:11
+#: .\console\templates\console\console_layout.html:6
+#: .\console\templates\console\event_list.html:11
+#: .\console\templates\console\module_list.html:12
+#: .\console\templates\console\organization_settings.html:11
+#: .\console\templates\console\role_list.html:11
+#: .\console\templates\console\volunteer_list.html:11
+msgid "Admin"
+msgstr ""
+
+#: .\base\templates\base\layout.html:75 .\base\templates\base\layout.html:198
 msgid "Notifications"
 msgstr ""
 
-#: .\base\templates\base\layout.html:159 .\base\templates\base\layout.html:239
+#: .\base\templates\base\layout.html:76 .\base\templates\base\layout.html:199
 msgid "Clear all"
 msgstr ""
 
-#: .\base\templates\base\layout.html:161 .\base\templates\base\layout.html:241
+#: .\base\templates\base\layout.html:78 .\base\templates\base\layout.html:201
+#: .\base\templates\base\partials\profile_skills.html:22
 msgid "New"
 msgstr ""
 
-#: .\base\templates\base\layout.html:169 .\base\templates\base\layout.html:249
+#: .\base\templates\base\layout.html:86 .\base\templates\base\layout.html:209
+#: .\base\templates\base\profile.html:327
 msgid "ago"
 msgstr ""
 
-#: .\base\templates\base\layout.html:175 .\base\templates\base\layout.html:255
+#: .\base\templates\base\layout.html:92 .\base\templates\base\layout.html:215
 msgid "No new notifications"
 msgstr ""
 
-#: .\base\templates\base\layout.html:192 .\base\templates\base\layout.html:275
+#: .\base\templates\base\layout.html:97 .\base\templates\base\layout.html:233
+msgid "Account settings"
+msgstr ""
+
+#: .\base\templates\base\layout.html:100
+msgid "Log out"
+msgstr ""
+
+#: .\base\templates\base\layout.html:114 .\base\templates\base\layout.html:237
 msgid "Log In"
 msgstr ""
 
-#: .\base\templates\base\layout.html:201
+#: .\base\templates\base\layout.html:123
 msgid "Close menu"
 msgstr ""
 
-#: .\base\templates\base\layout.html:208
+#: .\base\templates\base\layout.html:130
 msgid "Home"
 msgstr ""
 
-#: .\base\templates\base\layout.html:268
+#: .\base\templates\base\layout.html:146
+#: .\education\templates\education\education_layout.html:13
+#: .\education\templates\education\submit_certificate.html:12
+#: .\education\templates\education\verify_certificates.html:12
+msgid "Explore Courses"
+msgstr ""
+
+#: .\base\templates\base\layout.html:154
+msgid "My Dashboard"
+msgstr ""
+
+#: .\base\templates\base\layout.html:165
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "My Training"
+msgstr "Ukrainien"
+
+#: .\base\templates\base\layout.html:170
+#: .\console\templates\console\volunteer_detail.html:120
+msgid "Impact Record"
+msgstr ""
+
+#: .\base\templates\base\layout.html:230
 msgid "Member"
 msgstr ""
 
-#: .\base\templates\base\layout.html:290
+#: .\base\templates\base\layout.html:252
 msgid "Dash"
 msgstr ""
 
-#: .\base\templates\base\layout.html:294
+#: .\base\templates\base\layout.html:256 .\base\triggers.py:34
+#: .\console\templates\console\event_list.html:13
+#: .\console\templates\console\event_monitor.html:12
+#: .\console\templates\console\event_report.html:12
 msgid "Events"
 msgstr ""
 
-#: .\base\templates\base\layout.html:302
+#: .\base\templates\base\layout.html:264
 msgid "Menu"
 msgstr ""
 
-#: .\base\templates\base\layout.html:314
+#: .\base\templates\base\layout.html:276
 msgid ""
 "Connecting passionate individuals with local opportunities. Power your "
 "community."
 msgstr ""
 
-#: .\base\templates\base\layout.html:319
+#: .\base\templates\base\layout.html:281
 msgid "Platform"
 msgstr ""
 
-#: .\base\templates\base\layout.html:322
+#: .\base\templates\base\layout.html:284
 msgid "Training Portal"
 msgstr ""
 
-#: .\base\templates\base\layout.html:323
-msgid "Impact Reports"
+#: .\base\templates\base\layout.html:285
+msgid "Community Endorsements"
 msgstr ""
 
-#: .\base\templates\base\layout.html:327
+#: .\base\templates\base\layout.html:289
 msgid "Support"
 msgstr ""
 
-#: .\base\templates\base\layout.html:329
+#: .\base\templates\base\layout.html:291
 msgid "Contact Us"
 msgstr ""
 
-#: .\base\templates\base\layout.html:330
-msgid "Help Center"
-msgstr ""
-
-#: .\base\templates\base\layout.html:331
+#: .\base\templates\base\layout.html:292 .\base\templates\base\layout.html:309
+#: .\base\templates\base\terms_of_service.html:4
+#: .\base\templates\base\terms_of_service.html:14
+#: .\console\templates\console\organization_settings.html:98
 msgid "Terms of Service"
 msgstr ""
 
-#: .\base\templates\base\layout.html:335
+#: .\base\templates\base\layout.html:293
+#: .\console\templates\console\console_layout.html:66
+msgid "Log Out"
+msgstr ""
+
+#: .\base\templates\base\layout.html:297
 msgid "Newsletter"
 msgstr ""
 
-#: .\base\templates\base\layout.html:336
+#: .\base\templates\base\layout.html:298
 msgid "Join our list for local updates."
 msgstr ""
 
-#: .\base\templates\base\layout.html:338
+#: .\base\templates\base\layout.html:300 .\console\forms.py:241
 msgid "Email address"
 msgstr ""
 
-#: .\base\templates\base\layout.html:339
+#: .\base\templates\base\layout.html:301
 msgid "Subscribe"
 msgstr ""
 
-#: .\base\templates\base\layout.html:345
+#: .\base\templates\base\layout.html:307
 msgid "All rights reserved."
 msgstr ""
 
-#: .\base\templates\base\layout.html:347
-msgid "Privacy Policy"
-msgstr ""
-
-#: .\base\templates\base\layout.html:348
-msgid "Cookies"
-msgstr ""
-
-#: .\base\templates\base\layout.html:349
+#: .\base\templates\base\layout.html:310
 msgid "Careers"
 msgstr ""
 
-#: .\base\templates\base\layout.html:373
+#: .\base\templates\base\listmonk\_layout.html:24
+#, python-format
+msgid "You're getting this email because you have an account with %(org)s."
+msgstr "Vous recevez cet e-mail parce que vous avez un compte chez %(org)s."
+
+#: .\base\templates\base\listmonk\certificate_approved.html:2
+msgid "Certificate verified"
+msgstr "Certificat vérifié"
+
+#: .\base\templates\base\listmonk\certificate_approved.html:3
+#, python-format
+msgid ""
+"Hi %(name)s, your <strong>%(certificate)s</strong> certificate was verified."
+msgstr "Bonjour %(name)s, votre certificat <strong>%(certificate)s</strong> a été vérifié."
+
+#: .\base\templates\base\listmonk\certificate_approved.html:4
+#: .\base\templates\base\listmonk\certificate_rejected.html:4
+msgid "Notes from the reviewer"
+msgstr "Remarques de la vérification"
+
+#: .\base\templates\base\listmonk\certificate_approved.html:6
+msgid "View certificate"
+msgstr "Voir le certificat"
+
+#: .\base\templates\base\listmonk\certificate_rejected.html:2
+msgid "Please upload your documents again"
+msgstr "Veuillez téléverser à nouveau vos documents"
+
+#: .\base\templates\base\listmonk\certificate_rejected.html:3
+#, python-format
+msgid ""
+"Hi %(name)s, we couldn't verify your <strong>%(certificate)s</strong> "
+"documents. Please upload them again."
+msgstr "Bonjour %(name)s, nous n'avons pas pu vérifier vos documents pour <strong>%(certificate)s</strong>. Veuillez les téléverser à nouveau."
+
+#: .\base\templates\base\listmonk\certificate_rejected.html:6
+msgid "Upload documents"
+msgstr "Téléverser les documents"
+
+#: .\base\templates\base\listmonk\endorsement_received.html:2
+msgid "You've been endorsed!"
+msgstr "Vous avez reçu une recommandation !"
+
+#: .\base\templates\base\listmonk\endorsement_received.html:3
+#, python-format
+msgid "%(from)s endorsed you for <strong>%(skills)s</strong>."
+msgstr "%(from)s vous recommande pour <strong>%(skills)s</strong>."
+
+#: .\base\templates\base\listmonk\endorsement_received.html:5
+msgid "View your profile"
+msgstr "Voir votre profil"
+
+#: .\base\templates\base\listmonk\event_message.html:2
+msgid "Event update"
+msgstr "Mise à jour de l'événement"
+
+#: .\base\templates\base\listmonk\event_message.html:3
+#, python-format
+msgid "Hi %(name)s, the organizers sent an update:"
+msgstr "Bonjour %(name)s, les organisateurs ont envoyé une mise à jour :"
+
+#: .\base\templates\base\listmonk\event_message.html:5
+#: .\events\templates\events\event_impact_card.html:47
+#: .\events\templates\events\respond_to_invite.html:47
+msgid "View event"
+msgstr "Voir l'événement"
+
+#: .\base\templates\base\listmonk\invitation.html:2
+msgid "You're invited"
+msgstr "Invitation"
+
+#: .\base\templates\base\listmonk\invitation.html:5
+msgid "View invitation"
+msgstr "Voir l'invitation"
+
+#: .\base\templates\base\listmonk\password_reset.html:2
+#: .\base\templates\base\password_reset_form.html:4
+msgid "Reset your password"
+msgstr "Réinitialisez votre mot de passe"
+
+#: .\base\templates\base\listmonk\password_reset.html:3
+#, python-format
+msgid "Hi %(name)s,"
+msgstr "Bonjour %(name)s,"
+
+#: .\base\templates\base\listmonk\password_reset.html:4
+#, python-format
+msgid ""
+"Someone asked to reset the password for your %(org)s account. If that was "
+"you, choose a new password below."
+msgstr "Quelqu'un a demandé la réinitialisation du mot de passe de votre compte %(org)s. Si c'était vous, choisissez un nouveau mot de passe ci-dessous."
+
+#: .\base\templates\base\listmonk\password_reset.html:5
+#: .\base\templates\base\password_reset_confirm.html:4
+#: .\base\templates\base\password_reset_confirm.html:14
+msgid "Choose a new password"
+msgstr "Choisir un nouveau mot de passe"
+
+#: .\base\templates\base\listmonk\password_reset.html:6
+msgid ""
+"If you didn't ask for this, you can ignore this email. Your password won't "
+"change."
+msgstr "Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail. Votre mot de passe ne changera pas."
+
+#: .\base\templates\base\listmonk\signup_confirmed.html:2
+msgid "You're on the team!"
+msgstr "Vous faites partie de l'équipe !"
+
+#: .\base\templates\base\listmonk\signup_confirmed.html:3
+#, python-format
+msgid ""
+"Hi %(name)s, you're signed up as <strong>%(role)s</strong> at <strong>"
+"%(event)s</strong>."
+msgstr "Bonjour %(name)s, votre inscription comme <strong>%(role)s</strong> à <strong>%(event)s</strong> est confirmée."
+
+#: .\base\templates\base\listmonk\signup_confirmed.html:5
+#: .\console\templates\console\event_invite.html:83
+#: .\events\templates\events\respond_to_invite.html:21
+msgid "When"
+msgstr "Quand"
+
+#: .\base\templates\base\listmonk\signup_confirmed.html:7
+#: .\console\templates\console\event_invite.html:84
+#: .\events\templates\events\respond_to_invite.html:22
+msgid "Where"
+msgstr "Où"
+
+#: .\base\templates\base\listmonk\signup_confirmed.html:10
+msgid "See event details"
+msgstr "Voir les détails de l'événement"
+
+#: .\base\templates\base\listmonk\signup_confirmed.html:11
+msgid ""
+"Can't make it anymore? Please let the organizers know from the event page."
+msgstr "Vous ne pouvez plus venir ? Prévenez les organisateurs depuis la page de l'événement."
+
+#: .\base\templates\base\listmonk\training_completed.html:2
+#, python-format
+msgid "Well done, %(name)s!"
+msgstr "Bravo, %(name)s !"
+
+#: .\base\templates\base\listmonk\training_completed.html:3
+#, python-format
+msgid ""
+"You completed <strong>%(module)s</strong>. Any roles that need it are now "
+"open to you."
+msgstr "Vous avez terminé <strong>%(module)s</strong>. Les rôles qui l'exigent vous sont désormais ouverts."
+
+#: .\base\templates\base\listmonk\training_completed.html:4
+msgid "View your certificate"
+msgstr "Voir votre certificat"
+
+#: .\base\templates\base\listmonk\volunteer_message.html:2
+msgid "A message for you"
+msgstr "Un message pour vous"
+
+#: .\base\templates\base\listmonk\volunteer_message.html:3
+#, python-format
+msgid "Hi %(name)s, the team at %(org)s sent you a message:"
+msgstr "Bonjour %(name)s, l'équipe de %(org)s vous a envoyé un message :"
+
+#: .\base\templates\base\listmonk\volunteer_message.html:5
+msgid "Open link"
+msgstr "Ouvrir le lien"
+
+#: .\base\templates\base\listmonk\welcome.html:2
+#, python-format
+msgid "Welcome, %(name)s!"
+msgstr "Bienvenue, %(name)s !"
+
+#: .\base\templates\base\listmonk\welcome.html:3
+#, python-format
+msgid ""
+"Your %(org)s account is ready. Browse open opportunities and sign up for the "
+"roles that suit you."
+msgstr "Votre compte %(org)s est prêt. Parcourez les opportunités disponibles et inscrivez-vous aux rôles qui vous correspondent."
+
+#: .\base\templates\base\listmonk\welcome.html:4
+msgid "Find an opportunity"
+msgstr "Trouver une opportunité"
+
+#: .\base\templates\base\listmonk\welcome.html:5
+#, python-format
+msgid "Your kiosk ID for checking in at events is <strong>%(code)s</strong>."
+msgstr "Votre identifiant de borne pour vous enregistrer aux événements est <strong>%(code)s</strong>."
+
+#: .\base\templates\base\login.html:12
+msgid "Welcome Back"
+msgstr ""
+
+#: .\base\templates\base\login.html:13
+msgid "Sign in to continue building your community."
+msgstr ""
+
+#: .\base\templates\base\login.html:26
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:18
+msgid "Password"
+msgstr ""
+
+#: .\base\templates\base\login.html:27
+msgid "Forgot Password?"
+msgstr ""
+
+#: .\base\templates\base\login.html:34
+#: .\base\templates\base\password_reset_complete.html:16
+msgid "Sign In"
+msgstr ""
+
+#: .\base\templates\base\login.html:39
+msgid "secure connection established"
+msgstr ""
+
+#: .\base\templates\base\login.html:43
+msgid "Don't have an account?"
+msgstr ""
+
+#: .\base\templates\base\login.html:43
+#: .\console\templates\console\event_invite.html:86
+msgid "Sign Up"
+msgstr ""
+
+#: .\base\templates\base\login.html:48
+msgid "Volunteer Advocate"
+msgstr ""
+
+#: .\base\templates\base\login.html:50
+msgid "\"Volunteering here changed my life. Join thousands making an impact.\""
+msgstr ""
+
+#: .\base\templates\base\partials\endorse_people.html:3
+#: .\console\templates\console\partials\skill_suggestions.html:3
+msgid "Matches"
+msgstr ""
+
+#: .\base\templates\base\partials\endorse_people.html:3
+msgid "Recently Worked With"
+msgstr ""
+
+#: .\base\templates\base\partials\endorse_people.html:13
+#, python-format
+msgid "Nobody matches \"%(query)s\"."
+msgstr ""
+
+#: .\base\templates\base\partials\endorse_people.html:15
+msgid ""
+"Search for a volunteer above. People you've shared events with will show up "
+"here."
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:9
+#, python-format
+msgid "%(a)s endorsed %(b)s"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:17
+#, python-format
+msgid "View %(name)s's Profile"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:25
+msgid "No endorsements match"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:26
+msgid "Try a different name or category."
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:28
+msgid "No endorsements yet"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:29
+msgid "When volunteers recognize each other's work, the stories show up here."
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:30
+msgid "Write the first one"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:36
+#: .\console\templates\console\partials\pagination.html:7
+msgid "Pagination"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:37
+#: .\console\templates\console\partials\pagination.html:9
+msgid "Previous page"
+msgstr ""
+
+#: .\base\templates\base\partials\endorsement_feed.html:43
+#: .\console\templates\console\partials\pagination.html:23
+msgid "Next page"
+msgstr ""
+
+#: .\base\templates\base\partials\profile_skills.html:7
+msgid "Remove"
+msgstr ""
+
+#: .\base\templates\base\partials\profile_skills.html:16
+msgid "skills"
+msgstr ""
+
+#: .\base\templates\base\partials\profile_skills.html:33
+msgid "You've reached the skill limit. Remove one to add another."
+msgstr ""
+
+#: .\base\templates\base\partials\quick_endorse_chip.html:3
+#, python-format
+msgid "Endorse %(name)s for %(s)s"
+msgstr ""
+
+#: .\base\templates\base\partials\toasts.html:3
+#: .\base\templates\base\partials\toasts.html:12
 msgid "Dismiss"
 msgstr ""
 
-#: .\base\templates\base\site_settings.html:8
-msgid "Theme Settings"
+#: .\base\templates\base\password_reset_complete.html:4
+#: .\base\templates\base\password_reset_complete.html:14
+msgid "Password updated"
 msgstr ""
 
-#: .\base\templates\base\site_settings.html:9
-msgid "Customize the colors used throughout the site."
+#: .\base\templates\base\password_reset_complete.html:15
+msgid "Your new password is set. You can sign in with it now."
 msgstr ""
 
-#: .\base\templates\base\site_settings.html:48
-msgid "Save Changes"
+#: .\base\templates\base\password_reset_confirm.html:15
+msgid "Use at least 8 characters. Avoid passwords you use on other sites."
 msgstr ""
 
-#: .\base\templates\base\site_settings.html:51
-#: .\events\templates\events\event_detail.html:372
-msgid "Cancel"
+#: .\base\templates\base\password_reset_confirm.html:40
+msgid "This link has expired"
 msgstr ""
 
-#: .\base\views.py:36
-msgid "Theme colors updated successfully!"
+#: .\base\templates\base\password_reset_confirm.html:41
+msgid ""
+"Password reset links can only be used once and expire after a few days. "
+"Request a new one below."
 msgstr ""
 
-#: .\base\views.py:43
-msgid "Primary Colors"
+#: .\base\templates\base\password_reset_confirm.html:42
+msgid "Send a New Link"
 msgstr ""
 
-#: .\base\views.py:44
-msgid "Accent Colors"
+#: .\base\templates\base\password_reset_done.html:4
+#: .\base\templates\base\password_reset_done.html:14
+msgid "Check your email"
 msgstr ""
 
-#: .\base\views.py:45
-msgid "Background Colors"
+#: .\base\templates\base\password_reset_done.html:15
+msgid ""
+"If an account exists for that address, we've sent a link to reset your "
+"password. It expires in a few days."
 msgstr ""
 
-#: .\base\views.py:46
-msgid "Text Colors"
+#: .\base\templates\base\password_reset_done.html:16
+msgid ""
+"Didn't get it? Check your spam folder, or try again with the email you "
+"signed up with."
 msgstr ""
 
-#: .\base\views.py:47
-msgid "Border & Divider"
+#: .\base\templates\base\password_reset_done.html:18
+msgid "Try a different email"
 msgstr ""
 
-#: .\base\views.py:48
-msgid "Status Colors"
+#: .\base\templates\base\password_reset_done.html:20
+#: .\base\templates\base\password_reset_form.html:30
+msgid "Back to sign in"
 msgstr ""
 
-#: .\base\views.py:49
-msgid "Dark Mode - Backgrounds"
+#: .\base\templates\base\password_reset_form.html:13
+msgid "Forgot your password?"
 msgstr ""
 
-#: .\base\views.py:50
-msgid "Dark Mode - Text"
+#: .\base\templates\base\password_reset_form.html:14
+msgid ""
+"Enter the email address on your account and we'll send you a link to choose "
+"a new password."
 msgstr ""
 
-#: .\base\views.py:51
-msgid "Dark Mode - Borders"
+#: .\base\templates\base\password_reset_form.html:25
+msgid "Send Reset Link"
 msgstr ""
 
-#: .\base\views.py:94
+#: .\base\templates\base\profile.html:65
+#: .\console\templates\console\volunteer_detail.html:36
+#: .\console\templates\console\volunteer_edit.html:15
+msgid "Edit Profile"
+msgstr ""
+
+#: .\base\templates\base\profile.html:70
+msgid "Public Profile"
+msgstr ""
+
+#: .\base\templates\base\profile.html:74
+msgid "Download Resume"
+msgstr ""
+
+#: .\base\templates\base\profile.html:89
+msgid "Impact Dashboard"
+msgstr ""
+
+#: .\base\templates\base\profile.html:114
+#, python-format
+msgid "to %(name)s"
+msgstr ""
+
+#: .\base\templates\base\profile.html:116
+msgid "Max Level Reached"
+msgstr ""
+
+#: .\base\templates\base\profile.html:126
+msgid "Core Skills"
+msgstr ""
+
+#: .\base\templates\base\profile.html:143
+#: .\base\templates\base\profile.html:293
+#: .\console\templates\console\volunteer_detail.html:78
+msgid "No skills listed."
+msgstr ""
+
+#: .\base\templates\base\profile.html:150
+msgid "Recently Endorsed By"
+msgstr ""
+
+#: .\base\templates\base\profile.html:182
+msgid "Training & Certificates"
+msgstr ""
+
+#: .\base\templates\base\profile.html:183
+msgid "Validated training and compliance documents."
+msgstr ""
+
+#: .\base\templates\base\profile.html:186
+msgid "View All Education"
+msgstr ""
+
+#: .\base\templates\base\profile.html:201
+msgid "Issued:"
+msgstr ""
+
+#: .\base\templates\base\profile.html:204
+msgid "Expires:"
+msgstr ""
+
+#: .\base\templates\base\profile.html:206
+msgid "No Expiration"
+msgstr ""
+
+#: .\base\templates\base\profile.html:216
+#: .\console\templates\console\partials\cert_status.html:1
+#: .\console\templates\console\verification_list.html:24
+#: .\console\templates\console\verification_review.html:30
+#: .\education\templates\education\completed_module.html:123
+#: .\education\templates\education\printable_certificate.html:49
+#: .\education\templates\education\verify_certificates.html:68
+#: .\education\views.py:457
+msgid "Verified"
+msgstr ""
+
+#: .\base\templates\base\profile.html:217
+msgid "Expiring Soon"
+msgstr ""
+
+#: .\base\templates\base\profile.html:218
+#: .\console\templates\console\partials\cert_status.html:1
+msgid "Expired"
+msgstr ""
+
+#: .\base\templates\base\profile.html:220
+msgid "Download"
+msgstr ""
+
+#: .\base\templates\base\profile.html:229
+msgid "No training completed yet."
+msgstr ""
+
+#: .\base\templates\base\profile.html:240
+msgid "Recent Activity History"
+msgstr ""
+
+#: .\base\templates\base\profile.html:248
+#: .\console\templates\console\partials\event_history.html:7
+msgid "Event Name"
+msgstr ""
+
+#: .\base\templates\base\profile.html:249
+#: .\console\templates\console\partials\monitor_activity.html:10
+#: .\events\templates\events\respond_to_invite.html:23
+msgid "Role"
+msgstr ""
+
+#: .\base\templates\base\profile.html:250
+#: .\console\templates\console\partials\event_history.html:8
+#: .\console\templates\console\partials\slot_row.html:5
+#: .\events\templates\events\explore_events.html:66
+#: .\events\templates\events\explore_events.html:75
+msgid "Date"
+msgstr ""
+
+#: .\base\templates\base\profile.html:251
+#: .\console\templates\console\event_report.html:44
+#: .\events\templates\events\event_impact_card.html:32
+msgid "Hours Logged"
+msgstr ""
+
+#: .\base\templates\base\profile.html:266
+msgid "No activity history yet."
+msgstr ""
+
+#: .\base\templates\base\profile.html:278
+#: .\console\templates\console\volunteer_detail.html:152
+msgid "Endorsements Summary"
+msgstr ""
+
+#: .\base\templates\base\profile.html:301
+#: .\console\templates\console\volunteer_detail.html:163
+msgid "Public Feedback Feed"
+msgstr ""
+
+#: .\base\templates\base\profile.html:302
+msgid "View All"
+msgstr ""
+
+#: .\base\templates\base\profile.html:342
+msgid "No public feedback yet."
+msgstr ""
+
+#: .\base\templates\base\terms_of_service.html:20
+msgid "This organization hasn't published its terms of service yet."
+msgstr ""
+
+#: .\base\templates\base\terms_of_service.html:24
+#, python-format
+msgid "Questions? Contact us at <a href=\"mailto:%(email)s\">%(email)s</a>."
+msgstr ""
+
+#: .\base\triggers.py:34
+msgid "Accounts"
+msgstr ""
+
+#: .\base\triggers.py:34
+msgid "People"
+msgstr ""
+
+#: .\base\triggers.py:34
+msgid "System"
+msgstr ""
+
+#: .\base\triggers.py:37
+msgid "Account created"
+msgstr ""
+
+#: .\base\triggers.py:38
+msgid "Someone signs up, or staff add a volunteer from the console."
+msgstr ""
+
+#: .\base\triggers.py:38
+msgid "The new volunteer"
+msgstr ""
+
+#: .\base\triggers.py:39
+#, python-format
+msgid "Welcome to %(org)s"
+msgstr "Bienvenue chez %(org)s"
+
+#: .\base\triggers.py:40
+msgid "Password reset requested"
+msgstr ""
+
+#: .\base\triggers.py:41
+msgid "Someone asks for a password reset link."
+msgstr ""
+
+#: .\base\triggers.py:41
+msgid "The account holder"
+msgstr ""
+
+#: .\base\triggers.py:42
+#, python-format
+msgid "Reset your %(org)s password"
+msgstr "Réinitialisez votre mot de passe %(org)s"
+
+#: .\base\triggers.py:43
+msgid "New event published"
+msgstr ""
+
+#: .\base\triggers.py:44
+msgid "An event becomes visible to volunteers."
+msgstr ""
+
+#: .\base\triggers.py:44
+msgid "Everyone on \"Town Hall users\", plus any lists you add"
+msgstr ""
+
+#: .\base\triggers.py:45
+#, python-format
+msgid "New opportunity: %(event)s"
+msgstr "Nouvelle opportunité : %(event)s"
+
+#: .\base\triggers.py:46
+msgid "Invitation received"
+msgstr ""
+
+#: .\base\triggers.py:47
+msgid "Staff invite a volunteer to a role from the console."
+msgstr ""
+
+#: .\base\triggers.py:47
+msgid "The invited volunteer"
+msgstr ""
+
+#: .\base\triggers.py:49
+msgid "Sign-up confirmed"
+msgstr ""
+
+#: .\base\triggers.py:50
+msgid "A volunteer signs up for a role or accepts an invitation."
+msgstr ""
+
+#: .\base\triggers.py:50 .\base\triggers.py:62 .\base\triggers.py:65
+#: .\base\triggers.py:68
+msgid "The volunteer"
+msgstr ""
+
+#: .\base\triggers.py:51
+#, python-format
+msgid "You're signed up: %(event)s"
+msgstr "Inscription confirmée : %(event)s"
+
+#: .\base\triggers.py:52
+msgid "Message to event volunteers"
+msgstr ""
+
+#: .\base\triggers.py:53
+msgid "Staff use \"Message All Volunteers\" on an event."
+msgstr ""
+
+#: .\base\triggers.py:53
+msgid "The event's volunteers"
+msgstr ""
+
+#: .\base\triggers.py:54
+#, python-format
+msgid "News about %(event)s"
+msgstr "Des nouvelles de %(event)s"
+
+#: .\base\triggers.py:55
+msgid "Message to a volunteer"
+msgstr ""
+
+#: .\base\triggers.py:56
+msgid "Staff send a message from a volunteer's profile."
+msgstr ""
+
+#: .\base\triggers.py:56
+msgid "That volunteer"
+msgstr ""
+
+#: .\base\triggers.py:57
+#, python-format
+msgid "A message from %(org)s"
+msgstr "Un message de %(org)s"
+
+#: .\base\triggers.py:58
+msgid "Endorsement received"
+msgstr ""
+
+#: .\base\triggers.py:59
+msgid "Someone endorses a volunteer for a skill."
+msgstr ""
+
+#: .\base\triggers.py:59
+msgid "The endorsed volunteer"
+msgstr ""
+
+#: .\base\triggers.py:60
+#, python-format
+msgid "%(from_name)s endorsed you"
+msgstr "%(from_name)s vous recommande"
+
+#: .\base\triggers.py:61
+msgid "Training module completed"
+msgstr ""
+
+#: .\base\triggers.py:62
+msgid "A volunteer finishes a training module."
+msgstr ""
+
+#: .\base\triggers.py:63
+#, python-format
+msgid "You completed %(module)s"
+msgstr "Vous avez terminé %(module)s"
+
+#: .\base\triggers.py:64
+msgid "Certificate approved"
+msgstr ""
+
+#: .\base\triggers.py:65
+msgid "Staff verify an uploaded certificate."
+msgstr ""
+
+#: .\base\triggers.py:66
+#, python-format
+msgid "Your %(certificate)s certificate was verified"
+msgstr "Votre certificat %(certificate)s a été vérifié"
+
+#: .\base\triggers.py:67
+msgid "Certificate rejected"
+msgstr ""
+
+#: .\base\triggers.py:68
+msgid "Staff send a certificate back for another upload."
+msgstr ""
+
+#: .\base\triggers.py:69
+#, python-format
+msgid "Your %(certificate)s documents need another look"
+msgstr "Vos documents pour %(certificate)s doivent être revus"
+
+#: .\base\triggers.py:70
+msgid "Test and system emails"
+msgstr ""
+
+#: .\base\triggers.py:71
+msgid "\"Send test email\" and any other message without an event of its own."
+msgstr ""
+
+#: .\base\triggers.py:71
+msgid "Varies"
+msgstr ""
+
+#: .\base\triggers.py:79
+msgid "Recipient's first name (or username)"
+msgstr ""
+
+#: .\base\triggers.py:80 .\base\triggers.py:101
+msgid "Organization name"
+msgstr ""
+
+#: .\base\triggers.py:81
+msgid ""
+"Main link of the email: the event page, invitation, profile or certificate"
+msgstr ""
+
+#: .\base\triggers.py:82
+msgid "The volunteer's 6-digit kiosk ID"
+msgstr ""
+
+#: .\base\triggers.py:83
+msgid "Subject line"
+msgstr ""
+
+#: .\base\triggers.py:84
+msgid "Event title"
+msgstr ""
+
+#: .\base\triggers.py:85
+msgid "Role name"
+msgstr ""
+
+#: .\base\triggers.py:86
+msgid "Date and time of the shift"
+msgstr ""
+
+#: .\base\triggers.py:87
+msgid "Event location, with the check-in point if there is one"
+msgstr ""
+
+#: .\base\triggers.py:88
+msgid "Text written by staff, as plain text"
+msgstr ""
+
+#: .\base\triggers.py:89
+msgid "The same text as HTML (print it with | Safe)"
+msgstr ""
+
+#: .\base\triggers.py:90
+msgid "Name of the person who gave the endorsement"
+msgstr ""
+
+#: .\base\triggers.py:91
+msgid "Endorsed skills, separated by commas"
+msgstr ""
+
+#: .\base\triggers.py:92
+msgid "Training module title"
+msgstr ""
+
+#: .\base\triggers.py:93
+msgid "Certificate name"
+msgstr ""
+
+#: .\base\triggers.py:94
+msgid "Reviewer's notes; may be empty"
+msgstr ""
+
+#: .\base\triggers.py:95
+msgid "The message as plain text"
+msgstr ""
+
+#: .\base\triggers.py:96
+msgid "The message as HTML (print it with | Safe)"
+msgstr ""
+
+#: .\base\triggers.py:102
+msgid "Logo, uploaded to listmonk media; empty when there is no logo"
+msgstr ""
+
+#: .\base\triggers.py:103
+msgid "Primary brand colour (headings)"
+msgstr ""
+
+#: .\base\triggers.py:104
+msgid "Text colour on primary-coloured backgrounds"
+msgstr ""
+
+#: .\base\triggers.py:105
+msgid "Accent colour (buttons, highlights)"
+msgstr ""
+
+#: .\base\triggers.py:106
+msgid "Text colour on accent-coloured buttons"
+msgstr ""
+
+#: .\base\triggers.py:107
+msgid "Page background around the email card"
+msgstr ""
+
+#: .\base\triggers.py:108
+msgid "Background of the email card"
+msgstr ""
+
+#: .\base\triggers.py:109
+msgid "Body text colour"
+msgstr ""
+
+#: .\base\triggers.py:110
+msgid "Secondary text colour (footers, notes)"
+msgstr ""
+
+#: .\base\triggers.py:111
+msgid "Divider and border colour"
+msgstr ""
+
+#: .\base\views.py:87
 msgid "Successfully logged in."
 msgstr ""
 
-#: .\base\views.py:97
+#: .\base\views.py:89 .\jobs\views.py:106
 msgid "Invalid email or password."
 msgstr ""
 
 #: .\base\views.py:112
-msgid "An account with that email already exists."
-msgstr ""
-
-#: .\base\views.py:114
 msgid "Email and password are required."
 msgstr ""
 
-#: .\base\views.py:129
+#: .\base\views.py:114 .\console\forms.py:247
+msgid "An account with that email already exists."
+msgstr ""
+
+#: .\base\views.py:130
 msgid "Account created successfully!"
+msgstr ""
+
+#: .\base\views.py:184 .\console\forms.py:219
+msgid "That email address is already in use."
+msgstr ""
+
+#: .\base\views.py:198
+msgid "Profile updated successfully!"
+msgstr ""
+
+#: .\base\views.py:213
+#, python-format
+msgid "You can only add up to %(max)d skills."
+msgstr ""
+
+#: .\base\views.py:229
+msgid "Current password is incorrect."
+msgstr ""
+
+#: .\base\views.py:231
+msgid "New password must be at least 8 characters."
+msgstr ""
+
+#: .\base\views.py:233
+msgid "Passwords do not match."
+msgstr ""
+
+#: .\base\views.py:238
+msgid "Password updated successfully."
+msgstr ""
+
+#: .\base\views.py:251
+msgid "Your account has been deactivated."
+msgstr ""
+
+#: .\base\views.py:254
+msgid "Incorrect password. Account not deactivated."
+msgstr ""
+
+#: .\base\views.py:432
+msgid "Choose at least one skill to endorse."
+msgstr ""
+
+#: .\base\views.py:446
+#, python-format
+msgid "%(name)s endorsed you!"
+msgstr ""
+
+#: .\base\views.py:450
+#, python-format
+msgid "Endorsement sent to %(name)s."
+msgstr ""
+
+#: .\base\views.py:489
+#, python-format
+msgid "%(name)s endorsed you for %(skill)s!"
+msgstr ""
+
+#: .\console\forms.py:70
+msgid "Check-in point"
+msgstr ""
+
+#: .\console\forms.py:71
+msgid "Expected attendees"
+msgstr ""
+
+#: .\console\forms.py:89
+msgid "The event must end after it starts."
+msgstr ""
+
+#: .\console\forms.py:104
+msgid "Beneficiaries served per hour"
+msgstr ""
+
+#: .\console\forms.py:105
+msgid "Venues"
+msgstr ""
+
+#: .\console\forms.py:122
+msgid "Certificate valid for (days)"
+msgstr ""
+
+#: .\console\forms.py:123
+msgid "Complexity (0-4)"
+msgstr ""
+
+#: .\console\forms.py:129
+msgid "Complexity must be between 0 and 4."
+msgstr ""
+
+#: .\console\forms.py:140
+msgid "Video length (minutes)"
+msgstr ""
+
+#: .\console\forms.py:141
+msgid ""
+"Video length in minutes. Leave blank to detect it automatically from YouTube."
+msgstr ""
+
+#: .\console\forms.py:144
+msgid "Minutes"
+msgstr ""
+
+#: .\console\forms.py:156
+msgid "Passing score (%)"
+msgstr ""
+
+#: .\console\forms.py:186
+msgid "Choose True or False as the correct answer."
+msgstr ""
+
+#: .\console\forms.py:190
+msgid "Multiple choice questions need at least two options."
+msgstr ""
+
+#: .\console\forms.py:193
+msgid "The correct answer must be one of the filled-in options."
+msgstr ""
+
+#: .\console\forms.py:202
+msgid "Certificate title"
+msgstr ""
+
+#: .\console\forms.py:203
+msgid "Issuing authority"
+msgstr ""
+
+#: .\console\forms.py:204
+msgid "Public description"
+msgstr ""
+
+#: .\console\forms.py:205
+msgid "Valid for (days)"
+msgstr ""
+
+#: .\console\forms.py:207
+msgid "Leave blank if the certificate never expires."
+msgstr ""
+
+#: .\console\forms.py:214 .\console\templates\console\volunteer_edit.html:47
+msgid "Account active"
+msgstr ""
+
+#: .\console\forms.py:239
+msgid "First name"
+msgstr ""
+
+#: .\console\forms.py:240
+msgid "Last name"
+msgstr ""
+
+#: .\console\forms.py:242
+msgid "Temporary password"
+msgstr ""
+
+#: .\console\forms.py:298
+msgid "Enter a hex color like #00434d."
+msgstr ""
+
+#: .\console\forms.py:313
+msgid "LibreTranslate URL"
+msgstr ""
+
+#: .\console\forms.py:314
+msgid "LibreTranslate API key"
+msgstr ""
+
+#: .\console\forms.py:315
+msgid "Google Cloud Translation key"
+msgstr ""
+
+#: .\console\forms.py:316
+msgid "DeepL API key"
+msgstr ""
+
+#: .\console\forms.py:317
+msgid "MyMemory contact email"
+msgstr ""
+
+#: .\console\forms.py:318
+msgid "listmonk URL"
+msgstr ""
+
+#: .\console\forms.py:319
+msgid "API user"
+msgstr ""
+
+#: .\console\forms.py:320
+msgid "API token"
+msgstr ""
+
+#: .\console\forms.py:321
+msgid "From address"
+msgstr ""
+
+#: .\console\forms.py:333
+#, python-format
+msgid "Saved (ends in %(tail)s). Leave blank to keep."
+msgstr ""
+
+#: .\console\forms.py:333 .\console\forms.py:393
+#: .\console\views\settings.py:114
+msgid "Not set"
+msgstr ""
+
+#: .\console\forms.py:376
+#, python-format
+msgid "Send \"%(label)s\" emails"
+msgstr ""
+
+#: .\console\forms.py:392
+msgid "listmonk template ID"
+msgstr ""
+
+#: .\console\forms.py:395
+#, python-format
+msgid "#%(id)s (missing in listmonk)"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:4
+#: .\console\templates\console\backend_settings.html:21
+msgid "Backend Settings"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:11
+#: .\console\templates\console\console_layout.html:51
+msgid "Organization"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:13
+#: .\console\templates\console\partials\settings_tabs.html:5
+msgid "Backend"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:22
+msgid ""
+"Connect the services Town Hall relies on: machine translation and email. "
+"Values saved here take priority over server environment variables."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:32
+#: .\console\templates\console\partials\quiz_questions.html:62
+#: .\console\templates\console\partials\translated_fields.html:19
+msgid "Auto-translate"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:33
+msgid ""
+"Used by the Auto-translate button in every editor. Configure any of these; "
+"the first one that's set and working is used."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:35
+msgid "Self-hosted LibreTranslate"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:35
+msgid "Recommended"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:40
+msgid ""
+"LIBRETRANSLATE_URL is set on the server and is used while this is empty."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:42
+msgid "How to run LibreTranslate"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:43
+msgid "On any machine with Docker (about 2 GB of RAM for four languages):"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:46
+msgid ""
+"Then enter its address above, e.g. http://your-server:5000. Keep it on a "
+"private network."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:49
+msgid "API keys"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:55
+msgid "Free fallback"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:60
+msgid "Test language"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:67
+msgid "Test translation"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:70
+msgid "Uses the saved settings. Save first if you changed something."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:76
+msgid "Email server (listmonk)"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:77
+msgid ""
+"Point Town Hall at your listmonk server. Which emails are sent, and with "
+"which templates, is set in Communication &gt; Email. Without a server, "
+"emails are printed in the server console instead (useful for testing)."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:84
+msgid "LISTMONK_URL is set on the server and is used while this is empty."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:86
+msgid "How to connect listmonk"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:87
+msgid ""
+"In listmonk, open Admin > Users, create an API user with a role that can "
+"manage subscribers, lists, templates and campaigns and send transactional "
+"messages, and paste its name and token above."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:88
+msgid ""
+"Delivery (SMTP, Amazon SES, Postmark...) is configured in listmonk under "
+"Settings > SMTP."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:93
+msgid "Send test email"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:95
+msgid "your account email"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:95
+#, python-format
+msgid "Sends to %(email)s using the saved settings."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:102
+msgid "Translation status"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:111
+msgid "First choice"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:115
+msgid ""
+"Tried top to bottom; if one fails, the next is used. Test translation shows "
+"which one answered."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:116
+#, python-format
+msgid ""
+"Google's free endpoint showed a CAPTCHA; it's skipped for another %(m)s min."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:120
+msgid "Email status"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:124
+msgid "Connected to listmonk"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:125
+#, python-format
+msgid "%(task)s… in the background."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:126
+#, python-format
+msgid "The last setup step failed: %(error)s"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:129
+msgid "Set up emails"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:132
+msgid "Open listmonk"
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:136
+msgid "Console only: emails are printed in the server log, not delivered."
+msgstr ""
+
+#: .\console\templates\console\backend_settings.html:140
+msgid ""
+"Keys and passwords are stored in the database and are never shown again "
+"after saving. Only staff can open this page."
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:4
+#: .\console\templates\console\certificate_edit.html:22
+#: .\console\templates\console\certificate_list.html:24
+msgid "Create New Certificate"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:13
+msgid "New Certificate"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:21
+msgid "Back to Certificates"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:22
+msgid "Edit Certificate"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:23
+msgid ""
+"Describe a standard credential so volunteers know exactly what proof to "
+"upload."
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:27
+msgid "Publish"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:43
+msgid ""
+"Visible to volunteers browsing available certificates. Explain its value and "
+"purpose."
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:48
+msgid "Visual Identity"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:48
+msgid "Badge Icon"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:55
+msgid "Required Supporting Documents"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:56
+msgid "Build the checklist of items applicants must submit."
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:59
+msgid "Add Requirement"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:70
+#, python-format
+msgid "%(counter)s volunteer holds this certificate."
+msgid_plural "%(counter)s volunteers hold this certificate."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\certificate_edit.html:71
+msgid "Delete this certificate template?"
+msgstr ""
+
+#: .\console\templates\console\certificate_edit.html:72
+msgid "Delete"
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:4
+#: .\console\templates\console\certificate_list.html:19
+msgid "Certificate Directory"
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:20
+msgid ""
+"Manage the external certifications volunteers can upload proof of, such as "
+"first aid or food handling."
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:23
+msgid "Review Submissions"
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:31
+msgid "All Templates"
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:32
+msgid "Expiring"
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:33
+#: .\console\templates\console\partials\certificate_grid.html:17
+msgid "Never Expires"
+msgstr ""
+
+#: .\console\templates\console\certificate_list.html:37
+msgid "Search templates..."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:4
+#: .\console\templates\console\communication_email.html:13
+#: .\console\templates\console\partials\communication_tabs.html:4
+msgid "Email"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:11
+#: .\console\templates\console\communication_email.html:21
+#: .\console\templates\console\console_layout.html:48
+msgid "Communication"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:22
+msgid ""
+"Choose which app events send an email. Each event has its own listmonk "
+"template in every language, styled with your organization's branding; edit "
+"them in listmonk."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:34
+msgid ""
+"listmonk isn't connected yet, so emails are only printed in the server "
+"console. Add your listmonk URL and API token in Organization > Backend; the "
+"templates are created for you."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:35
+msgid "Connect listmonk"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:40
+#, python-format
+msgid "listmonk can't be reached, so templates show as raw IDs: %(error)s"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:41
+msgid "Check connection"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:46
+#, python-format
+msgid "%(counter)s event template is missing in listmonk."
+msgid_plural "%(counter)s event templates are missing in listmonk."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\communication_email.html:47
+msgid "Re-create missing templates"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:53
+#, python-format
+msgid "The last listmonk job failed: %(task_error)s"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:69
+msgid "Visual campaign"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:70
+msgid "Always on"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:85
+#, python-format
+msgid "Edit &quot;%(name)s&quot; in listmonk"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:85
+#: .\console\templates\console\communication_email.html:151
+msgid "Open listmonk templates"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:90
+msgid "No template in listmonk for this language."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:98
+msgid "Send immediately"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:98
+msgid ""
+"Off: the campaign waits as a draft in listmonk, where you can edit it "
+"visually before sending. It uses the template in the publishing admin's "
+"language."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:102
+#, fuzzy
+#| msgid "Town Hall"
+msgid "Town Hall users"
+msgstr "Hôtel de Ville"
+
+#: .\console\templates\console\communication_email.html:102
+#, python-format
+msgid "Also send to (besides “%(name)s”)"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:103
+msgid "No other lists in listmonk yet."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:104
+msgid "People on several of these lists still get one email."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:111
+msgid "Template data"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:113
+msgid ""
+"Town Hall fills these placeholders in the visual template with the event's "
+"details. Keep them when you redesign it:"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:115
+msgid ""
+"The sign-up button links to https://town-hall.invalid/event-link and the "
+"event photo to https://town-hall.invalid/event-image.png; both are swapped "
+"for the real ones."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:117
+msgid ""
+"Available in the template, next to the brand variables at its top "
+"($org_name, $color_primary, …):"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:124
+#, python-format
+msgid ""
+"Reset every language of “%(label)s” to the Town Hall default? Edits made in "
+"listmonk will be lost."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:125
+msgid "Reset to default"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:139
+msgid "listmonk"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:141
+msgid "Connected"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:143
+msgid "Users list"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:144
+msgid "Not created yet"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:148
+msgid "Sync users now"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:155
+msgid "Can't reach listmonk"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:157
+msgid "Not connected: emails are printed in the server log."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:162
+msgid "How it works"
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:164
+msgid ""
+"Each email goes out in the language the person last used the site in, "
+"falling back to the default language."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:165
+msgid ""
+"Changing your name, logo or colours in Organization > Identity updates every "
+"template automatically. Keep the brand variables at the top of each template."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:166
+msgid "Reset to default restores Town Hall's version of an event's templates."
+msgstr ""
+
+#: .\console\templates\console\communication_email.html:167
+msgid ""
+"Everyone with an account is on the private “Town Hall users” list, with "
+"attributes such as language, level and impact_points for segmenting "
+"campaigns."
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:19
+msgid "Admin Portal"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:25
+#: .\console\templates\console\dashboard.html:4
+#: .\console\templates\console\dashboard.html:10
+msgid "Admin Home"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:28
+#: .\console\templates\console\event_edit.html:11
+#: .\console\templates\console\event_invite.html:11
+#: .\console\templates\console\event_roles.html:12
+msgid "Event Planner"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:31
+#: .\console\templates\console\volunteer_list.html:4
+#: .\console\templates\console\volunteer_list.html:13
+#: .\console\templates\console\volunteer_list.html:19 .\console\utils.py:157
+msgid "Volunteer Pool"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:34
+#: .\console\templates\console\role_edit.html:11
+#: .\console\templates\console\role_list.html:13
+msgid "Role Directory"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:37
+#: .\console\templates\console\lesson_edit.html:11
+#: .\console\templates\console\module_edit.html:11
+#: .\console\templates\console\module_list.html:4
+#: .\console\templates\console\module_list.html:14
+#: .\console\templates\console\module_list.html:20
+#: .\console\templates\console\quiz_edit.html:11
+#: .\console\templates\console\volunteer_detail.html:70
+#: .\console\templates\console\volunteer_detail.html:93
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training Modules"
+msgstr "Ukrainien"
+
+#: .\console\templates\console\console_layout.html:43
+#: .\console\templates\console\verification_review.html:11
+msgid "Verifications"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:57
+#: .\console\templates\console\dashboard.html:53
+#: .\console\templates\console\dashboard.html:93
+#: .\console\templates\console\event_edit.html:19
+#: .\console\templates\console\event_list.html:20
+msgid "Create New Event"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:60
+msgid "Kiosk Mode"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:63
+msgid "View Public Site"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:77
+msgid "Breadcrumb"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:84
+msgid "Super Admin"
+msgstr ""
+
+#: .\console\templates\console\console_layout.html:84
+msgid "Staff"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:15
+msgid "Good morning"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:15
+msgid "Good afternoon"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:15
+msgid "Good evening"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:16
+msgid "Here's what's happening today"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:17
+#, python-format
+msgid "at %(org)s."
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:20
+#, python-format
+msgid "You have %(counter)s event staffing today"
+msgid_plural "You have %(counter)s events staffing today"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\dashboard.html:21
+#, python-format
+msgid "and %(counter)s certificate waiting for review."
+msgid_plural "and %(counter)s certificates waiting for review."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\dashboard.html:28
+msgid "this month"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:29
+msgid "Active Volunteers"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:34
+#: .\console\templates\console\dashboard.html:59
+#: .\console\templates\console\event_list.html:67
+#: .\events\templates\events\explore_events.html:23
+#: .\events\templates\events\my_events.html:76
+msgid "Upcoming Events"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:39
+#: .\console\templates\console\verification_list.html:35
+msgid "Urgent"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:40
+msgid "Unfilled Roles"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:45
+msgid "Hours Logged Weekly"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:54
+msgid "Add New Role"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:55
+#: .\console\templates\console\module_edit.html:4
+msgid "New Training Module"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:60
+msgid "View All Events"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:78
+#: .\console\templates\console\event_list.html:76
+#: .\console\templates\console\partials\module_grid.html:7
+msgid "Draft"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:81
+#: .\events\templates\events\event_detail.html:68
+msgid "Staffing Progress"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:82
+#, python-format
+msgid "%(signed)s/%(required)s spots filled"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:91
+#: .\events\templates\events\partials\events_grid.html:36
+msgid "No upcoming events"
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:92
+msgid "Create an event, then add roles so volunteers can sign up."
+msgstr ""
+
+#: .\console\templates\console\dashboard.html:100
+#: .\console\templates\console\event_monitor.html:63
+msgid "Recent Activity"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:4
+#: .\console\templates\console\event_roles.html:29
+msgid "Edit Event"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:4
+#: .\console\templates\console\event_edit.html:86
+msgid "Create Event"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:13
+msgid "New Event"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:19
+msgid "Edit Event Overview"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:20
+msgid ""
+"Start with the essentials. You'll add roles and time slots on the next step."
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:24
+#: .\console\templates\console\organization_settings.html:99
+msgid "View public page"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:35
+msgid "Event Details"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:39
+msgid "Starts"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:40
+msgid "Ends"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:56
+msgid "Media"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:57
+msgid "Event header image"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:63
+msgid "Click to change header image"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:63
+msgid "Click to upload a header image"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:64
+msgid "Recommended size: 1200 × 400px"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:73
+msgid "Settings"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:75
+msgid "Visible to all community members"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:76
+#: .\console\templates\console\module_edit.html:79
+#: .\console\templates\console\module_list.html:34
+#: .\console\templates\console\partials\module_grid.html:7
+msgid "Published"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:77
+msgid "Highlight on the home page"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:78
+msgid "Featured"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:80
+msgid "Categories"
+msgstr ""
+
+#: .\console\templates\console\event_edit.html:89
+#: .\console\templates\console\partials\quiz_questions.html:93
+msgid "Discard"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:4
+#: .\console\templates\console\event_invite.html:21
+msgid "Craft Invitations"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:15
+msgid "Outreach"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:22
+#, python-format
+msgid ""
+"Personalize your message for <strong class=\"invite-event-name\">%(title)s</"
+"strong>. Volunteers are more likely to respond to tailored messages."
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:30
+msgid "Inviting For"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:32
+msgid "Role & time slot"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:44
+msgid "Recipient Selection"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:55
+msgid "Message Customization"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:58
+msgid "Subject Line"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:62
+msgid "Message Body"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:64
+msgid ""
+"[Name] is replaced with each volunteer's first name. A sign-up link is added "
+"automatically."
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:72
+#: .\console\templates\console\lesson_edit.html:30
+#: .\console\templates\console\module_edit.html:25
+#: .\console\templates\console\partials\md_editor.html:16
+#: .\console\templates\console\quiz_edit.html:40
+msgid "Preview"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:75
+msgid "Preview mode"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:76
+msgid "Subject:"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:92
+msgid "volunteers selected to invite"
+msgstr ""
+
+#: .\console\templates\console\event_invite.html:94
+msgid "Send Invitations"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:4
+#: .\console\templates\console\event_list.html:18
+msgid "Events Management"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:27
+msgid "Currently Happening"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:28
+msgid "Live now"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:35
+#: .\console\templates\console\partials\volunteer_table.html:24
+#: .\console\templates\console\volunteer_detail.html:21
+#: .\console\templates\console\volunteer_list.html:65
+msgid "Active"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:44
+msgid "Staffing Status"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:45
+#, python-format
+msgid "%(pct)s%% Staffed"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:48
+#, python-format
+msgid "%(signed)s of %(required)s volunteer slots filled"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:50
+msgid "Go to Live Feed"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:51
+msgid "Manage event"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:59
+msgid "Nothing live right now"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:60
+msgid ""
+"Events show up here while they are running, with a shortcut to the live "
+"check-in feed."
+msgstr ""
+
+#: .\console\templates\console\event_list.html:68
+#, python-format
+msgid "%(n)s scheduled"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:75
+#, python-format
+msgid "in %(t)s"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:81
+msgid "Staffing"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:83
+#: .\console\templates\console\partials\volunteer_table.html:38
+msgid "Manage"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:89
+msgid "Schedule your next event"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:98
+msgid "Past Events History"
+msgstr ""
+
+#: .\console\templates\console\event_list.html:101
+msgid "Search events..."
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:4
+#: .\console\templates\console\partials\event_tabs.html:6
+msgid "Check-in Monitor"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:16
+msgid "Active Monitoring"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:25
+msgid "Live Monitoring"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:26
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:5
+msgid "Event ended"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:27
+#, python-format
+msgid "Starts in %(t)s"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:31
+msgid "Open Kiosk"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:32
+msgid "Export Log"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:33
+#: .\console\templates\console\event_monitor.html:119
+msgid "Manual Check-in"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:41
+#: .\console\templates\console\partials\monitor_activity.html:29
+msgid "Checked In"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:43
+#, python-format
+msgid "%(checked_in_percent)s%% of %(signed_up)s expected volunteers"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:47
+msgid "Expected Next 1hr"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:49
+#, python-format
+msgid "Next shift starts at %(t)s"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:49
+msgid "No shifts starting soon"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:53
+msgid "Active Roles"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:55
+#, python-format
+msgid "Check-in level at %(overall_percent)s%%"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:68
+msgid "All Activities"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:69
+msgid "Check-ins"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:70
+msgid "Check-outs"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:75
+msgid "Volunteer name"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:83
+msgid "Staffing Overview"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:86
+msgid "Current allocation"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:87
+#, python-format
+msgid "%(overall_percent)s%% total"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:99
+msgid "No roles have been added to this event yet."
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:106
+msgid "Critical Shortage"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:107
+#, python-format
+msgid "%(role)s only has %(a)s/%(b)s volunteers checked in."
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:108
+msgid "Call in backup"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:120
+#: .\console\templates\console\event_roles.html:98
+#: .\console\templates\console\partials\add_role_dialog.html:7
+#: .\console\templates\console\volunteer_detail.html:200
+#: .\console\templates\console\volunteer_detail.html:221
+#: .\console\templates\console\volunteer_list.html:79
+#: .\events\templates\events\my_events.html:240
+msgid "Close"
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:124
+msgid ""
+"Select a registered volunteer who hasn't checked in yet. Their shift starts "
+"now."
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:138
+msgid "Every registered volunteer is already checked in."
+msgstr ""
+
+#: .\console\templates\console\event_monitor.html:144
+msgid "Check In"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:4
+#: .\console\templates\console\event_report.html:16
+#: .\console\templates\console\partials\event_tabs.html:7
+#: .\events\templates\events\event_impact_card.html:19
+msgid "Impact Report"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:25
+msgid "Post-Event Report"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:27
+msgid ""
+"Overview of event efficiency, role execution, and volunteer recognition."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:30
+#: .\events\templates\events\event_impact_card.html:45
+msgid "Share"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:31
+msgid "Export"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:36
+msgid "Volunteer Turnout"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:40
+#: .\console\templates\console\partials\event_history.html:9
+#: .\console\templates\console\volunteer_list.html:30
+msgid "Total Volunteers"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:49
+msgid "This event hasn't finished yet, so these numbers are still moving."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:54
+#: .\events\templates\events\event_detail.html:213
+msgid "Post-Event Statement"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:55
+msgid "Shown to volunteers on their thank-you page and certificates."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:58
+msgid "Event Summary & Impact"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:59
+msgid ""
+"Summarize the overall impact, key successes, and lessons learned from this "
+"event..."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:62
+msgid "Save Statement"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:68
+msgid "Role-Specific Breakdown"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:69
+msgid ""
+"Efficiency compares hours actually logged with hours scheduled for signed-up "
+"volunteers."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:79
+msgid "hrs, unscheduled"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:79
+msgid "Efficiency"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:82
+msgid "No roles were staffed for this event."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:89
+msgid "Recognize the individuals who made the event a success."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:92
+msgid "Top Performers"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:99
+#: .\console\templates\console\event_report.html:119
+#: .\console\templates\console\partials\event_history.html:20
+#: .\console\templates\console\partials\volunteer_table.html:32
+#: .\console\templates\console\volunteer_detail.html:138
+#: .\education\templates\education\training_dashboard.html:67
+#: .\events\templates\events\event_thank_you.html:29
+msgid "hrs"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:102
+#: .\console\templates\console\event_report.html:122
+msgid "Endorsed"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:104
+#: .\console\templates\console\event_report.html:124
+#: .\console\templates\console\volunteer_detail.html:164
+msgid "Endorse"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:112
+msgid "Team Endorsements"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:126
+msgid "Give Feedback"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:136
+msgid "What Volunteers Said"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:137
+#, python-format
+msgid "%(avg)s average from %(n)s responses"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:147
+msgid "Enjoyed"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:148
+#: .\console\templates\console\partials\skill_suggestions.html:3
+#: .\console\templates\console\partials\skills_editor.html:19
+msgid "Suggestions"
+msgstr ""
+
+#: .\console\templates\console\event_report.html:151
+msgid ""
+"No volunteer feedback yet. Volunteers can rate the event from their thank-"
+"you page."
+msgstr ""
+
+#: .\console\templates\console\event_report.html:151
+msgid "Volunteers can rate the event from their thank-you page once it ends."
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:4
+#: .\console\templates\console\partials\event_tabs.html:5
+msgid "Roles & Staffing"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:20
+msgid "Live Event Management"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:20
+msgid "Completed Event"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:20
+msgid "Event Management"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:25
+#, python-format
+msgid "%(counter)s Volunteer Registered"
+msgid_plural "%(counter)s Volunteers Registered"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\event_roles.html:30
+#: .\console\templates\console\partials\event_role_cards.html:44
+msgid "Invite"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:43
+msgid "Quick Actions"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:49
+msgid "Unpublish Event"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:49
+msgid "Publish Event"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:55
+#: .\console\templates\console\event_roles.html:97
+msgid "Message All Volunteers"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:61
+msgid "View Map"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:68
+msgid "Staffing Health"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:69
+#, python-format
+msgid "%(overall_percent)s%% Overall"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:74
+#, python-format
+msgid "You are still short %(counter)s volunteer."
+msgid_plural "You are still short %(counter)s volunteers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\event_roles.html:75
+#, python-format
+msgid "%(role)s needs the most help."
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:78
+msgid "Every role is fully staffed."
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:85
+msgid "Location Hub"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:102
+#: .\console\templates\console\volunteer_detail.html:37
+#: .\console\templates\console\volunteer_detail.html:204
+msgid "Message"
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:103
+msgid "e.g. Parking is on the north lot this year."
+msgstr ""
+
+#: .\console\templates\console\event_roles.html:104
+#, python-format
+msgid "Delivered as a notification to %(counter)s volunteer."
+msgid_plural "Delivered as a notification to %(counter)s volunteers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\event_roles.html:109
+msgid "Send Message"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:4
+#: .\console\templates\console\lesson_edit.html:15
+#: .\console\templates\console\lesson_edit.html:21
+msgid "New Lesson"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:24
+msgid "Video Lesson"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:24
+msgid "Reading"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:25
+#, python-format
+msgid "%(m)s min estimated time"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:31
+msgid "Save & Add Another"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:32
+msgid "Save Lesson"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:46
+msgid "Add Lesson Video"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:47
+msgid ""
+"Paste a YouTube link to embed a video in this lesson. Leave blank for a "
+"reading-only lesson."
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:66
+msgid "Delete this lesson?"
+msgstr ""
+
+#: .\console\templates\console\lesson_edit.html:67
+msgid "Delete lesson"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:13
+#: .\console\templates\console\module_list.html:23
+#: .\console\templates\console\partials\module_grid.html:26
+msgid "New Module"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:21
+msgid "Edit Training Module"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:21
+msgid "Create Training Module"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:22
+msgid ""
+"Define the core objectives and content of your volunteer training. Use the "
+"structure panel to build the learning path."
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:26
+msgid "Save Module"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:33
+#: .\education\templates\education\module_overview.html:80
+msgid "Module Overview"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:38
+msgid "Presentation"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:42
+#: .\education\templates\education\completed_module.html:81
+msgid "Topic"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:44
+msgid "Or create a new topic"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:47
+msgid "Cover photo"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:51
+msgid "Upload"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:56
+msgid "Skills taught"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:63
+msgid "Next step"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:64
+msgid ""
+"Save the overview first. Then add lessons and quizzes from the Module "
+"Structure panel, and attach the module to roles in the Role Directory."
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:76
+msgid "Module Settings"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:78
+msgid "Visible in the training directory"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:85
+msgid "Estimated duration"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:85
+#, python-format
+msgid "%(m)s mins"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:86
+msgid "Passing score"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:87
+msgid "Learners started"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:88
+msgid "Certificates issued"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:89
+msgid "Required by roles"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:95
+msgid "Delete this module and all of its lessons and quizzes?"
+msgstr ""
+
+#: .\console\templates\console\module_edit.html:96
+msgid "Delete module"
+msgstr ""
+
+#: .\console\templates\console\module_list.html:21
+msgid ""
+"Build the lessons and quizzes volunteers complete before taking on a role. "
+"Published modules appear in the training directory."
+msgstr ""
+
+#: .\console\templates\console\module_list.html:30
+msgid "Search modules or topics..."
+msgstr ""
+
+#: .\console\templates\console\module_list.html:33
+#: .\education\templates\education\training_directory.html:118
+msgid "All"
+msgstr ""
+
+#: .\console\templates\console\module_list.html:35
+msgid "Drafts"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:4
+#: .\console\templates\console\organization_settings.html:13
+#: .\console\templates\console\organization_settings.html:21
+msgid "Organization Identity"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:22
+msgid ""
+"Define how your community sees you. These details are reflected across "
+"volunteer portals and public pages. Color changes preview live on this page."
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:31
+msgid "General Identity"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:34
+msgid "Organization Name"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:41
+msgid "Logo"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:44
+msgid "Upload New"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:46
+msgid "PNG or SVG, square works best."
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:53
+msgid "Brand Colors & System"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:56
+msgid "Primary Color"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:58
+msgid "Primary color"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:59
+msgid "Base primary"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:60
+msgid "Text on primary"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:60
+#: .\console\templates\console\organization_settings.html:70
+msgid "Text on it"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:62
+#: .\console\templates\console\organization_settings.html:72
+msgid "Light variation offset"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:63
+#: .\console\templates\console\organization_settings.html:73
+msgid "Dark variation offset"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:66
+msgid "Accent Color"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:68
+msgid "Accent color"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:69
+msgid "Base accent"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:70
+msgid "Text on accent"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:81
+msgid "Light Mode"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:85
+msgid "Dark Mode"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:91
+msgid "Status Colors"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:97
+msgid "Legal & Compliance"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:104
+msgid "Volunteer Experience"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:111
+msgid "Setup Progress"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:112
+#, python-format
+msgid "%(setup_percent)s%% Complete"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:114
+msgid ""
+"Add a logo, contact email and terms of service so volunteers know who "
+"they're working with."
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:120
+msgid "Discard Changes"
+msgstr ""
+
+#: .\console\templates\console\organization_settings.html:121
+msgid "Save Profile"
+msgstr ""
+
+#: .\console\templates\console\partials\activity_feed.html:6
+#, python-format
+msgid "%(ago)s ago"
+msgstr ""
+
+#: .\console\templates\console\partials\activity_feed.html:18
+msgid ""
+"Activity will appear here as volunteers check in, train and endorse each "
+"other."
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:6
+#: .\console\templates\console\partials\add_role_dialog.html:46
+msgid "Add Role to Event"
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:11
+#: .\events\templates\events\event_detail.html:130
+msgid "Select Role"
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:14
+msgid "Search role templates..."
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:20
+msgid "Create a new role template"
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:24
+msgid "Define Time Slots"
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:27
+msgid "Add Another Slot"
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:36
+msgid "Open sign-up"
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:37
+msgid "Turn off to make these slots invite-only."
+msgstr ""
+
+#: .\console\templates\console\partials\add_role_dialog.html:45
+msgid "Add & Invite Volunteers"
+msgstr ""
+
+#: .\console\templates\console\partials\cert_status.html:1
+#: .\console\templates\console\verification_review.html:31
+msgid "Rejected"
+msgstr ""
+
+#: .\console\templates\console\partials\cert_status.html:1
+#: .\console\templates\console\verification_review.html:32
+msgid "Pending review"
+msgstr ""
+
+#: .\console\templates\console\partials\certificate_grid.html:7
+#, python-format
+msgid "%(counter)s pending"
+msgid_plural "%(counter)s pending"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\certificate_grid.html:9
+#, python-format
+msgid "%(counter)s document"
+msgid_plural "%(counter)s documents"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\certificate_grid.html:11
+msgid "Any recognized issuer"
+msgstr ""
+
+#: .\console\templates\console\partials\certificate_grid.html:15
+#, python-format
+msgid "Valid %(counter)s Year"
+msgid_plural "Valid %(counter)s Years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\certificate_grid.html:16
+#, python-format
+msgid "Valid %(d)s days"
+msgstr ""
+
+#: .\console\templates\console\partials\certificate_grid.html:19
+#, python-format
+msgid "%(n)s Active"
+msgstr ""
+
+#: .\console\templates\console\partials\certificate_grid.html:25
+msgid "New Certificate Template"
+msgstr ""
+
+#: .\console\templates\console\partials\certificate_grid.html:26
+msgid "Define the documents volunteers must upload."
+msgstr ""
+
+#: .\console\templates\console\partials\communication_tabs.html:3
+msgid "Communication channels"
+msgstr ""
+
+#: .\console\templates\console\partials\doc_row.html:4
+msgid "e.g. Government ID or Passport"
+msgstr ""
+
+#: .\console\templates\console\partials\doc_row.html:5
+msgid "Remove requirement"
+msgstr ""
+
+#: .\console\templates\console\partials\event_history.html:11
+#: .\console\templates\console\partials\volunteer_table.html:11
+msgid "Actions"
+msgstr ""
+
+#: .\console\templates\console\partials\event_history.html:21
+msgid "Report"
+msgstr ""
+
+#: .\console\templates\console\partials\event_history.html:27
+#, python-format
+msgid "Showing %(start)s&ndash;%(end)s of %(total)s events"
+msgstr ""
+
+#: .\console\templates\console\partials\event_history.html:35
+msgid "No past events match your search"
+msgstr ""
+
+#: .\console\templates\console\partials\event_history.html:37
+msgid "No past events yet"
+msgstr ""
+
+#: .\console\templates\console\partials\event_history.html:38
+msgid "Once an event ends, its volunteer totals and impact report appear here."
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:7
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training required"
+msgstr "Ukrainien"
+
+#: .\console\templates\console\partials\event_role_cards.html:7
+msgid "Open role"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:18
+msgid "Invite only"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:19
+msgid "Remove time slot"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:21
+#, python-format
+msgid "%(n)s volunteer(s) are signed up for this slot. Remove it anyway?"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:21
+msgid "Remove this time slot?"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:31
+#, python-format
+msgid "%(f)s/%(r)s filled"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:33
+msgid "Filled"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:33
+msgid "Critical"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:33
+msgid "Understaffed"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:39
+msgid "Add another time slot"
+msgstr ""
+
+#: .\console\templates\console\partials\event_role_cards.html:53
+msgid "Add Role"
+msgstr ""
+
+#: .\console\templates\console\partials\event_tabs.html:3
+msgid "Event sections"
+msgstr ""
+
+#: .\console\templates\console\partials\event_tabs.html:4
+#: .\console\templates\console\partials\module_structure.html:11
+#: .\education\templates\education\module_layout.html:35
+msgid "Overview"
+msgstr ""
+
+#: .\console\templates\console\partials\event_tabs.html:6
+#: .\jobs\templates\jobs\kiosk_home.html:27
+msgid "Live"
+msgstr ""
+
+#: .\console\templates\console\partials\icon_picker.html:5
+msgid "Icon"
+msgstr ""
+
+#: .\console\templates\console\partials\icon_picker.html:16
+msgid "Or type any icon name"
+msgstr ""
+
+#: .\console\templates\console\partials\icon_picker.html:18
+msgid "Browse all"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:4
+msgid "Recommended Volunteers"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:4
+msgid "Other Volunteers"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:11
+msgid "Busy: has a conflicting commitment"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:12
+msgid "Already invited, awaiting reply"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:13
+msgid "Matched for:"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:17
+#, python-format
+msgid "%(s)s%% match"
+msgstr ""
+
+#: .\console\templates\console\partials\invite_recipients.html:22
+msgid "No volunteers found. Everyone may already be signed up for this slot."
+msgstr ""
+
+#: .\console\templates\console\partials\listmonk_task.html:5
+#, python-format
+msgid "%(task)s… This page refreshes when it's done."
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:6
+msgid "Bold"
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:7
+msgid "Italic"
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:8
+msgid "Heading"
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:9
+msgid "Bulleted list"
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:11
+msgid "Link"
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:13
+msgid "Write"
+msgstr ""
+
+#: .\console\templates\console\partials\md_editor.html:22
+msgid ""
+"Markdown supported: **bold**, _italic_, ## headings, - lists, [links]"
+"(https://...)."
+msgstr ""
+
+#: .\console\templates\console\partials\module_grid.html:13
+#, python-format
+msgid "%(counter)s lesson"
+msgid_plural "%(counter)s lessons"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\module_grid.html:14
+#, python-format
+msgid "%(counter)s quiz"
+msgid_plural "%(counter)s quizzes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\module_grid.html:15
+#, python-format
+msgid "%(counter)s completion"
+msgid_plural "%(counter)s completions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\module_grid.html:22
+msgid "No modules match"
+msgstr ""
+
+#: .\console\templates\console\partials\module_grid.html:24
+msgid "No training modules yet"
+msgstr ""
+
+#: .\console\templates\console\partials\module_grid.html:25
+msgid ""
+"Create a module, add lessons and a quiz, then attach it to the roles that "
+"need it."
+msgstr ""
+
+#: .\console\templates\console\partials\module_requirement_row.html:7
+#, python-format
+msgid "Estimated time: %(m)s mins"
+msgstr ""
+
+#: .\console\templates\console\partials\module_requirement_row.html:7
+msgid "Unpublished"
+msgstr ""
+
+#: .\console\templates\console\partials\module_requirement_row.html:10
+msgid "Mandatory"
+msgstr ""
+
+#: .\console\templates\console\partials\module_requirement_row.html:13
+msgid "Remove module"
+msgstr ""
+
+#: .\console\templates\console\partials\module_search_results.html:10
+#, python-format
+msgid "No modules match \"%(query)s\"."
+msgstr ""
+
+#: .\console\templates\console\partials\module_search_results.html:10
+msgid "Create one"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:4
+#: .\education\templates\education\module_layout.html:21
+msgid "Module Structure"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:5
+#, python-format
+msgid "%(counter)s item"
+msgid_plural "%(counter)s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\module_structure.html:11
+msgid "Title, description & settings"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:21
+msgid "Current quiz"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:21
+msgid "Current lesson"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:24
+#, python-format
+msgid "Quiz &bull; %(counter)s question"
+msgid_plural "Quiz &bull; %(counter)s questions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\module_structure.html:25
+#, python-format
+msgid "Lesson &bull; %(m)s mins"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:30
+msgid "Move up"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:35
+msgid "Move down"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:44
+msgid "Add a lesson or quiz to start building the learning path."
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:46
+msgid "Add Lesson"
+msgstr ""
+
+#: .\console\templates\console\partials\module_structure.html:48
+msgid "Add Quiz"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:9
+#: .\console\templates\console\verification_review.html:28
+msgid "Volunteer"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:11
+msgid "Action"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:12
+msgid "Time"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:13
+#: .\console\templates\console\partials\volunteer_table.html:8
+#: .\console\templates\console\volunteer_detail.html:96
+#: .\education\templates\education\completed_module.html:120
+#: .\education\templates\education\printable_certificate.html:48
+#: .\events\templates\events\event_certificate.html:26
+msgid "Status"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:29
+msgid "Clutch"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:31
+msgid "Checked Out"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:40
+msgid "On shift"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:41
+msgid "Check out"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:44
+msgid "Off shift"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:53
+#, python-format
+msgid "Showing the latest %(shown)s of %(log_total)s activities."
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:53
+msgid "Download full log"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:58
+msgid "No matching activity"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:58
+msgid "No check-ins yet"
+msgstr ""
+
+#: .\console\templates\console\partials\monitor_activity.html:59
+msgid ""
+"Volunteers appear here as they check in at the kiosk or are checked in "
+"manually. This list refreshes automatically."
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:5
+msgid "Questions"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:20
+msgid "Edit question"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:24
+msgid "Delete question"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:26
+msgid "Delete this question?"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:42
+msgid "Editing question"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:42
+msgid "Draft question"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:44
+msgid "True / False"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:61
+#: .\console\templates\console\partials\translated_fields.html:18
+msgid "Fill empty languages from the first one with Google Translate"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:69
+#: .\education\templates\education\quiz_detail.html:27
+msgid "Question"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:81
+msgid "Correct answer"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:83
+msgid "For True / False questions, Option A is True and Option B is False."
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:91
+msgid "Save Question"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:94
+msgid "Add to Quiz"
+msgstr ""
+
+#: .\console\templates\console\partials\quiz_questions.html:101
+msgid ""
+"Volunteers need to answer at least one question. Add your first one above."
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:6
+msgid "Permanent"
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:6
+msgid "Event role"
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:10
+msgid "No description yet."
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:17
+#, python-format
+msgid "%(counter)s Training Module Required"
+msgid_plural "%(counter)s Training Modules Required"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\role_grid.html:25
+msgid "No roles match these filters"
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:27
+msgid "No role templates yet"
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:28
+msgid ""
+"Role templates describe a job volunteers can do, and which training they "
+"need first."
+msgstr ""
+
+#: .\console\templates\console\partials\role_grid.html:29
+msgid "Create New Role"
+msgstr ""
+
+#: .\console\templates\console\partials\role_options.html:9
+#, python-format
+msgid "%(counter)s module"
+msgid_plural "%(counter)s modules"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\partials\role_options.html:11
+msgid "permanent"
+msgstr ""
+
+#: .\console\templates\console\partials\role_options.html:18
+msgid "No roles match. Create a role template first."
+msgstr ""
+
+#: .\console\templates\console\partials\secret_field.html:6
+msgid "Saved"
+msgstr ""
+
+#: .\console\templates\console\partials\secret_field.html:10
+msgid "Remove saved value"
+msgstr ""
+
+#: .\console\templates\console\partials\secret_field.html:12
+msgid "An environment variable is also set and is used while this is empty."
+msgstr ""
+
+#: .\console\templates\console\partials\settings_tabs.html:3
+msgid "Settings sections"
+msgstr ""
+
+#: .\console\templates\console\partials\settings_tabs.html:4
+msgid "Identity"
+msgstr ""
+
+#: .\console\templates\console\partials\skill_chip.html:1
+#, python-format
+msgid "Remove %(name)s"
+msgstr ""
+
+#: .\console\templates\console\partials\skill_suggestions.html:14
+#, python-format
+msgid "Create \"%(query)s\""
+msgstr ""
+
+#: .\console\templates\console\partials\skills_editor.html:12
+msgid "Add a skill (e.g. First Aid)"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:9
+msgid "Time Range"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:11
+msgid "Start time"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:13
+msgid "End time"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:18
+msgid "Volunteers Needed"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:19
+msgid "Volunteers needed"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:20
+msgid "Extra allowed"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:21
+msgid "Extra volunteers allowed"
+msgstr ""
+
+#: .\console\templates\console\partials\slot_row.html:23
+msgid "Remove slot"
+msgstr ""
+
+#: .\console\templates\console\partials\translated_fields.html:11
+msgid "has errors"
+msgstr ""
+
+#: .\console\templates\console\partials\translated_fields.html:22
+msgid ""
+"Only the first language is required. Missing translations fall back to it."
+msgstr ""
+
+#: .\console\templates\console\partials\translation_test_result.html:6
+#, python-format
+msgid "Translated by %(provider)s"
+msgstr ""
+
+#: .\console\templates\console\partials\translation_test_result.html:15
+msgid "Every provider failed"
+msgstr ""
+
+#: .\console\templates\console\partials\translation_test_result.html:17
+msgid "Details are printed in the server console, tagged [auto-translate]."
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:7
+msgid "Volunteer Name"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:9
+msgid "Primary Skills"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:25
+#: .\console\templates\console\volunteer_list.html:66
+msgid "Inactive"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:26
+#: .\console\templates\console\volunteer_detail.html:21
+#: .\console\templates\console\volunteer_list.html:67
+msgid "Deactivated"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:34
+msgid "this week"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:34
+msgid "No shifts yet"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:34
+#, python-format
+msgid "%(n)s shifts"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:38
+msgid "Re-engage"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:45
+#, python-format
+msgid "Showing %(start)s&ndash;%(end)s of %(total)s results"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:52
+msgid "No volunteers match"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:52
+msgid "No volunteers yet"
+msgstr ""
+
+#: .\console\templates\console\partials\volunteer_table.html:53
+msgid "Volunteers appear here once they sign up or you add them."
+msgstr ""
+
+#: .\console\templates\console\quiz_edit.html:21
+msgid "Course Construction"
+msgstr ""
+
+#: .\console\templates\console\quiz_edit.html:26
+msgid "Quiz size"
+msgstr ""
+
+#: .\console\templates\console\quiz_edit.html:27
+#, python-format
+msgid "%(counter)s question"
+msgid_plural "%(counter)s questions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\quiz_edit.html:35
+msgid "Assessment Designer"
+msgstr ""
+
+#: .\console\templates\console\quiz_edit.html:41
+msgid "Save Settings"
+msgstr ""
+
+#: .\console\templates\console\quiz_edit.html:51
+msgid "Delete this quiz and its questions?"
+msgstr ""
+
+#: .\console\templates\console\quiz_edit.html:52
+msgid "Delete quiz"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:4
+#: .\console\templates\console\role_edit.html:20
+msgid "Edit Role Template"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:4
+#: .\console\templates\console\role_list.html:22
+msgid "Create New Role Template"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:13
+msgid "New Template"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:20
+msgid "Template Builder"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:23
+msgid "Save Template"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:30
+msgid "General Information"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:33
+msgid "Role Icon"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:39
+msgid "Required Training Modules"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:42
+msgid "Search modules..."
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:51
+msgid ""
+"Mandatory modules must be completed before a volunteer can sign up. Optional "
+"modules are recommended."
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:57
+msgid "Preferred Skills"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:58
+msgid ""
+"Non-mandatory skills that improve volunteer matching when you send "
+"invitations."
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:63
+msgid "Template Settings"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:65
+msgid "Ongoing position not tied to events (kiosk check-in at venues)"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:66
+msgid "Permanent position"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:74
+msgid "Active Templates"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:78
+msgid "View Full Directory"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:83
+msgid "Delete this role template?"
+msgstr ""
+
+#: .\console\templates\console\role_edit.html:84
+msgid "Delete template"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:4
+#: .\console\templates\console\role_list.html:19
+msgid "Global Role Directory"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:20
+msgid ""
+"Manage reusable role templates for all organization events. Centralize your "
+"requirements and keep standards consistent across your volunteer network."
+msgstr ""
+
+#: .\console\templates\console\role_list.html:29
+msgid "Search roles by name or skills..."
+msgstr ""
+
+#: .\console\templates\console\role_list.html:31
+msgid "Role type"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:32
+msgid "All Role Types"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:33
+msgid "Event roles"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:34
+msgid "Permanent positions"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:36
+msgid "Difficulty"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:37
+msgid "Any Difficulty"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:49
+msgid "Roles Without Training"
+msgstr ""
+
+#: .\console\templates\console\role_list.html:50
+#, python-format
+msgid ""
+"%(counter)s role template has no training modules attached. Volunteers can "
+"sign up for it without any preparation."
+msgid_plural ""
+"%(counter)s role templates have no training modules attached. Volunteers can "
+"sign up for them without any preparation."
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\verification_list.html:4
+#: .\console\templates\console\verification_list.html:19
+msgid "Certificate Verification"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:13
+msgid "Verification"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:20
+msgid ""
+"Review and validate volunteer credentials to maintain compliance and safety "
+"standards."
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:23
+#: .\education\templates\education\training_dashboard.html:219
+msgid "Pending"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:29
+msgid "Available for Verification"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:38
+#, python-format
+msgid "Submitted by %(name)s"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:42
+#, python-format
+msgid "%(counter)s doc"
+msgid_plural "%(counter)s docs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\verification_list.html:44
+msgid "Verify Credential"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:49
+msgid "All caught up"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:50
+msgid "New submissions appear here as soon as a volunteer uploads documents."
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:59
+msgid "Recently Reviewed"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:68
+#, python-format
+msgid "Verified for %(name)s"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:68
+#, python-format
+msgid "Rejected for %(name)s"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:69
+#, python-format
+msgid "Expires in %(t)s"
+msgstr ""
+
+#: .\console\templates\console\verification_list.html:76
+#: .\education\templates\education\training_directory.html:147
+msgid "Review"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:4
+#: .\console\templates\console\verification_review.html:22
+msgid "Verification Request"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:17
+msgid "Back to Verifications"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:37
+#: .\education\templates\education\submit_certificate.html:54
+msgid "Required documents"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:42
+msgid "Submitted Documents"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:49
+#, python-format
+msgid "Uploaded %(t)s"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:54
+msgid "No files were uploaded."
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:59
+#: .\console\templates\console\volunteer_edit.html:78
+msgid "Admin Notes"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:62
+msgid "Issue Date"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:66
+msgid "Expiry Date"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:68
+#, python-format
+msgid "Defaults to %(d)s days after issue if left blank."
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:68
+msgid "Leave blank if it never expires."
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:72
+msgid "Private Notes"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:73
+msgid ""
+"Add any private notes regarding this verification here... When rejecting, "
+"explain what needs to change."
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:75
+#, python-format
+msgid "Last reviewed by %(who)s on %(when)s."
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:80
+msgid "Back to List"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:81
+msgid "Save notes"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:82
+msgid "Open next submission"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:83
+msgid "Reject"
+msgstr ""
+
+#: .\console\templates\console\verification_review.html:84
+msgid "Approve"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:11
+#: .\console\templates\console\volunteer_edit.html:11
+#: .\events\templates\events\event_impact_card.html:31
+msgid "Volunteers"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:27
+#: .\console\templates\console\volunteer_edit.html:43
+#, python-format
+msgid "Member since %(d)s"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:28
+#: .\console\templates\console\volunteer_edit.html:57
+msgid "Kiosk ID"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:38
+msgid "Public profile"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:42
+msgid "Deactivate this account?"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:42
+msgid "Reactivate this account?"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:43
+msgid "Deactivate"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:43
+msgid "Reactivate"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:52
+msgid "Admin Insights"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:53
+msgid "Internal rating"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:60
+msgid "Not rated yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:62
+msgid "Admin notes"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:63
+msgid "No notes yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:64
+msgid "Add private feedback"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:71
+msgid "Events Attended"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:76
+msgid "Skills & Certs"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:76
+msgid "Edit skills"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:96
+#: .\education\templates\education\module_overview.html:14
+#: .\education\templates\education\printable_certificate.html:55
+msgid "Module"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:96
+#: .\console\templates\console\volunteer_detail.html:101
+#: .\education\templates\education\printable_certificate.html:56
+#: .\education\templates\education\training_dashboard.html:134
+#: .\education\templates\education\training_directory.html:133
+#: .\events\templates\events\event_detail.html:321
+#: .\events\templates\events\event_detail.html:324
+msgid "Completed"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:96
+msgid "Progress"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:101
+msgid "In progress"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:109
+msgid "Hasn't started any training yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:117
+msgid "Service History"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:118
+msgid "Chronological log of verified contributions"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:133
+msgid "Shift"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:134
+msgid "Clutch cover"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:134
+msgid "impact points"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:144
+#, python-format
+msgid "View %(counter)s More Activity"
+msgid_plural "View %(counter)s More Activities"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\console\templates\console\volunteer_detail.html:146
+msgid "No completed shifts yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:157
+msgid "No endorsements yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:177
+msgid "Nobody has endorsed this volunteer yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:181
+msgid "Private staff feedback"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:199
+#, python-format
+msgid "Message %(name)s"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:206
+msgid "Delivered as an in-app notification."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:211
+msgid "Send"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:220
+msgid "Private Feedback"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:225
+msgid "Rating"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:234
+msgid "Internal performance notes"
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:236
+msgid "Only staff can see this."
+msgstr ""
+
+#: .\console\templates\console\volunteer_detail.html:241
+msgid "Save Feedback"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:4
+#: .\console\templates\console\volunteer_edit.html:22
+msgid "Edit Volunteer Profile"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:46
+msgid "Can sign in, sign up for events and use the kiosk"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:65
+msgid "Skills & Certifications"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:66
+msgid "Add Skill"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:67
+#, python-format
+msgid ""
+"Skills help match volunteers with appropriate events and high-impact roles. "
+"Up to %(max_skills)s skills."
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:72
+msgid "Permanent Positions"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:73
+msgid "Can check in at the venue kiosk as"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:78
+msgid "Internal only"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:84
+msgid "Save Profile Changes"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:91
+msgid "New Volunteer"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:92
+#, python-format
+msgid "%(pts)s impact points earned so far."
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:94
+msgid "Events Led"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:98
+msgid "Recent Engagement"
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:106
+msgid "No activity yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_edit.html:109
+msgid "View Full History"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:20
+msgid ""
+"Manage and engage your community of dedicated builders and contributors."
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:23
+msgid "Export List"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:24
+#: .\console\templates\console\volunteer_list.html:78
+msgid "Add Volunteer"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:32
+#, python-format
+msgid "+%(n)s joined this quarter"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:36
+msgid "Active This Month"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:41
+msgid "Average Hours"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:43
+msgid "per active volunteer / week"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:46
+msgid "Top Skills in Pool"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:48
+msgid "No skills recorded yet."
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:59
+msgid "Search name, email, skill or ID..."
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:62
+#: .\education\templates\education\submit_certificate.html:27
+msgid "Status:"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:64
+msgid "All Statuses"
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:88
+msgid ""
+"Share the temporary password with them; they can change it from their "
+"account settings. A 6-digit kiosk ID is generated automatically."
+msgstr ""
+
+#: .\console\templates\console\volunteer_list.html:92
+msgid "Create Account"
+msgstr ""
+
+#: .\console\utils.py:134
+msgid "checked in for"
+msgstr ""
+
+#: .\console\utils.py:139
+msgid "checked out of"
+msgstr ""
+
+#: .\console\utils.py:146
+msgid "completed training"
+msgstr ""
+
+#: .\console\utils.py:151
+#, python-format
+msgid "endorsed %(name)s for"
+msgstr ""
+
+#: .\console\utils.py:157
+msgid "joined the"
+msgstr ""
+
+#: .\console\views\certificates.py:51
+#, python-format
+msgid "Certificate \"%(name)s\" saved."
+msgstr ""
+
+#: .\console\views\certificates.py:53 .\console\views\communication.py:31
+#: .\console\views\events.py:92 .\console\views\roles.py:82
+#: .\console\views\settings.py:67 .\console\views\settings.py:109
+#: .\console\views\training.py:92 .\console\views\training.py:174
+#: .\console\views\training.py:231 .\console\views\volunteers.py:222
+msgid "Please fix the highlighted fields."
+msgstr ""
+
+#: .\console\views\certificates.py:78
+msgid "Volunteers have submitted this certificate, so it can't be deleted."
+msgstr ""
+
+#: .\console\views\certificates.py:81
+msgid "Certificate deleted."
+msgstr ""
+
+#: .\console\views\certificates.py:140
+#, python-format
+msgid "Your %(cert)s certificate was verified."
+msgstr ""
+
+#: .\console\views\certificates.py:143
+#, python-format
+msgid "%(cert)s approved for %(name)s."
+msgstr ""
+
+#: .\console\views\certificates.py:150
+#, python-format
+msgid "Your %(cert)s documents need another look. Please re-upload."
+msgstr ""
+
+#: .\console\views\certificates.py:153
+msgid "Submission rejected. The volunteer has been notified."
+msgstr ""
+
+#: .\console\views\certificates.py:156
+msgid "Notes saved."
+msgstr ""
+
+#: .\console\views\communication.py:29
+msgid "Email settings saved."
+msgstr ""
+
+#: .\console\views\communication.py:63
+msgid "Creating missing templates"
+msgstr ""
+
+#: .\console\views\communication.py:76
+#, python-format
+msgid "Reset failed: %(error)s"
+msgstr ""
+
+#: .\console\views\communication.py:78
+#, python-format
+msgid "\"%(event)s\" templates were reset to the Town Hall defaults."
+msgstr ""
+
+#: .\console\views\communication.py:87
+msgid "Syncing users"
+msgstr ""
+
+#: .\console\views\communication.py:88
+msgid "Syncing users to listmonk in the background."
+msgstr ""
+
+#: .\console\views\events.py:88
+msgid "Event created. Now add the roles you need filled."
+msgstr ""
+
+#: .\console\views\events.py:90
+msgid "Event details saved."
+msgstr ""
+
+#: .\console\views\events.py:132
+msgid "Time slot removed."
+msgstr ""
+
+#: .\console\views\events.py:142
+#, python-format
+msgid "The listmonk announcement failed: %(error)s"
+msgstr ""
+
+#: .\console\views\events.py:145
+msgid "Announcement emailed to \"Town Hall users\"."
+msgstr ""
+
+#: .\console\views\events.py:147
+msgid "An announcement campaign is waiting as a draft in listmonk."
+msgstr ""
+
+#: .\console\views\events.py:158
+#, python-format
+msgid "\"%(title)s\" is now visible to volunteers."
+msgstr ""
+
+#: .\console\views\events.py:160
+#, python-format
+msgid "\"%(title)s\" is hidden from volunteers."
+msgstr ""
+
+#: .\console\views\events.py:170 .\console\views\volunteers.py:265
+msgid "Write a message before sending."
+msgstr ""
+
+#: .\console\views\events.py:181
+#, python-format
+msgid "Message sent to %(count)d volunteers."
+msgstr ""
+
+#: .\console\views\events.py:201
+#, python-format
+msgid "Slot %(n)d has an invalid date or time."
+msgstr ""
+
+#: .\console\views\events.py:204
+#, python-format
+msgid "Slot %(n)d must end after it starts."
+msgstr ""
+
+#: .\console\views\events.py:211
+msgid "Add at least one time slot."
+msgstr ""
+
+#: .\console\views\events.py:230
+msgid "Select a role first."
+msgstr ""
+
+#: .\console\views\events.py:240
+#, python-format
+msgid "Added %(role)s with %(count)d time slot(s)."
+msgstr ""
+
+#: .\console\views\events.py:330
+msgid "Add a role to this event before inviting volunteers."
+msgstr ""
+
+#: .\console\views\events.py:337
+#, python-format
+msgid "You are invited to %(event)s"
+msgstr ""
+
+#: .\console\views\events.py:356
+#, python-format
+msgid "Sent %(count)d invitation(s) for %(role)s."
+msgstr ""
+
+#: .\console\views\events.py:358
+msgid "Select at least one volunteer to invite."
+msgstr ""
+
+#: .\console\views\events.py:363
+#, python-format
+msgid ""
+"Hello [Name],\n"
+"\n"
+"Your skills would make a real difference at %(event)s. We're looking for a "
+"%(role)s on %(date)s and thought of you.\n"
+"\n"
+"We'd love to have you on the team!"
+msgstr ""
+
+#: .\console\views\events.py:374
+#, python-format
+msgid "Be the spark at %(event)s!"
+msgstr ""
+
+#: .\console\views\events.py:474
+#, python-format
+msgid "%(name)s checked out."
+msgstr ""
+
+#: .\console\views\events.py:479
+#, python-format
+msgid "%(name)s is already checked in."
+msgstr ""
+
+#: .\console\views\events.py:486
+msgid "That volunteer is not signed up for this event."
+msgstr ""
+
+#: .\console\views\events.py:489
+#, python-format
+msgid "%(name)s checked in as %(role)s."
+msgstr ""
+
+#: .\console\views\events.py:523
+msgid "Post-event statement saved."
+msgstr ""
+
+#: .\console\views\roles.py:16
+msgid "Introductory"
+msgstr ""
+
+#: .\console\views\roles.py:16
+msgid "Basic"
+msgstr ""
+
+#: .\console\views\roles.py:16
+msgid "Intermediate"
+msgstr ""
+
+#: .\console\views\roles.py:17
+msgid "Advanced"
+msgstr ""
+
+#: .\console\views\roles.py:17
+msgid "Expert"
+msgstr ""
+
+#: .\console\views\roles.py:80
+#, python-format
+msgid "Role template \"%(name)s\" saved."
+msgstr ""
+
+#: .\console\views\roles.py:117
+#, python-format
+msgid ""
+"\"%(name)s\" is used by events or logged shifts, so it can't be deleted."
+msgstr ""
+
+#: .\console\views\roles.py:120
+msgid "Role template deleted."
+msgstr ""
+
+#: .\console\views\settings.py:20
+msgid "Background Colors"
+msgstr ""
+
+#: .\console\views\settings.py:21 .\console\views\settings.py:25
+#: .\console\views\settings.py:30 .\console\views\settings.py:34
+msgid "Primary"
+msgstr ""
+
+#: .\console\views\settings.py:22 .\console\views\settings.py:26
+#: .\console\views\settings.py:31 .\console\views\settings.py:35
+msgid "Secondary"
+msgstr ""
+
+#: .\console\views\settings.py:23 .\console\views\settings.py:27
+#: .\console\views\settings.py:32 .\console\views\settings.py:36
+msgid "Tertiary"
+msgstr ""
+
+#: .\console\views\settings.py:29
+msgid "Text Colors"
+msgstr ""
+
+#: .\console\views\settings.py:38
+msgid "UI Elements"
+msgstr ""
+
+#: .\console\views\settings.py:39 .\console\views\settings.py:42
+msgid "Border"
+msgstr ""
+
+#: .\console\views\settings.py:40 .\console\views\settings.py:43
+msgid "Divider"
+msgstr ""
+
+#: .\console\views\settings.py:48
+msgid "Success"
+msgstr ""
+
+#: .\console\views\settings.py:49
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Warning"
+msgstr "Ukrainien"
+
+#: .\console\views\settings.py:50
+msgid "Error"
+msgstr ""
+
+#: .\console\views\settings.py:61
+msgid "Organization settings saved."
+msgstr ""
+
+#: .\console\views\settings.py:64
+msgid "Updating email branding"
+msgstr ""
+
+#: .\console\views\settings.py:65
+msgid "Your listmonk email templates are being updated with the new branding."
+msgstr ""
+
+#: .\console\views\settings.py:90
+#, python-format
+msgid "listmonk couldn't be reached: %(error)s"
+msgstr ""
+
+#: .\console\views\settings.py:92
+msgid "Setting up listmonk"
+msgstr ""
+
+#: .\console\views\settings.py:94
+#, python-format
+msgid ""
+"Connected to listmonk. Setting up the \"%(name)s\" list and your email "
+"templates; this takes a minute."
+msgstr ""
+
+#: .\console\views\settings.py:105
+msgid "Backend settings saved."
+msgstr ""
+
+#: .\console\views\settings.py:114
+msgid "Blocked"
+msgstr ""
+
+#: .\console\views\settings.py:117
+msgid "Your own server. Free, private, no limits."
+msgstr ""
+
+#: .\console\views\settings.py:118
+msgid "Paid, reliable."
+msgstr ""
+
+#: .\console\views\settings.py:119
+msgid "Free tier: 500,000 characters a month."
+msgstr ""
+
+#: .\console\views\settings.py:120
+msgid "Google Translate (free)"
+msgstr ""
+
+#: .\console\views\settings.py:120
+msgid "No key. Google may block your network with a CAPTCHA."
+msgstr ""
+
+#: .\console\views\settings.py:121
+msgid "No key. About 5,000 characters a day, 50,000 with a contact email."
+msgstr ""
+
+#: .\console\views\settings.py:170
+msgid "Add an email address to your account first."
+msgstr ""
+
+#: .\console\views\settings.py:174
+#, fuzzy
+#| msgid "Town Hall"
+msgid "Town Hall test email"
+msgstr "Hôtel de Ville"
+
+#: .\console\views\settings.py:175
+msgid ""
+"Your email settings work. Invitations and password resets will be delivered "
+"through listmonk."
+msgstr ""
+
+#: .\console\views\settings.py:179
+#, python-format
+msgid "Sending failed: %(error)s"
+msgstr ""
+
+#: .\console\views\settings.py:181
+#, python-format
+msgid "Test email sent to %(email)s."
+msgstr ""
+
+#: .\console\views\training.py:88
+msgid "Module saved and published, but it has no lessons or quizzes yet."
+msgstr ""
+
+#: .\console\views\training.py:90
+msgid "Module saved."
+msgstr ""
+
+#: .\console\views\training.py:122
+msgid ""
+"Volunteers have completed this module, so it can only be unpublished, not "
+"deleted."
+msgstr ""
+
+#: .\console\views\training.py:125
+msgid "Module deleted."
+msgstr ""
+
+#: .\console\views\training.py:170
+msgid "Lesson saved."
+msgstr ""
+
+#: .\console\views\training.py:190
+msgid "Lesson deleted."
+msgstr ""
+
+#: .\console\views\training.py:203
+msgid "Quiz created. Add your first question below."
+msgstr ""
+
+#: .\console\views\training.py:229
+msgid "Quiz settings saved."
+msgstr ""
+
+#: .\console\views\training.py:253
+msgid "Question updated."
+msgstr ""
+
+#: .\console\views\training.py:253
+msgid "Question added to the quiz."
+msgstr ""
+
+#: .\console\views\training.py:267
+msgid "Question removed."
+msgstr ""
+
+#: .\console\views\training.py:279
+msgid "Quiz deleted."
+msgstr ""
+
+#: .\console\views\training.py:289
+msgid "Nothing to preview yet."
+msgstr ""
+
+#: .\console\views\translate.py:46
+#, python-format
+msgid "Auto-translate failed: %(error)s"
+msgstr ""
+
+#: .\console\views\translate.py:49
+#, python-format
+msgid "Filled %(count)d translation(s). Review them before saving."
+msgstr ""
+
+#: .\console\views\translate.py:51
+msgid ""
+"Nothing to translate: fill in the first language, or every language already "
+"has text."
+msgstr ""
+
+#: .\console\views\volunteers.py:143
+#, python-format
+msgid "%(name)s was added. Their kiosk ID is %(code)s."
+msgstr ""
+
+#: .\console\views\volunteers.py:158
+msgid "Private feedback saved."
+msgstr ""
+
+#: .\console\views\volunteers.py:160
+msgid "Choose a rating from 1 to 5 stars."
+msgstr ""
+
+#: .\console\views\volunteers.py:213
+msgid "You can't deactivate your own account here."
+msgstr ""
+
+#: .\console\views\volunteers.py:219
+msgid "Profile changes saved."
+msgstr ""
+
+#: .\console\views\volunteers.py:248
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training completed"
+msgstr "Ukrainien"
+
+#: .\console\views\volunteers.py:263
+#, python-format
+msgid "Message sent to %(name)s."
+msgstr ""
+
+#: .\console\views\volunteers.py:274
+msgid "You can't deactivate your own account."
+msgstr ""
+
+#: .\console\views\volunteers.py:279
+msgid "Account reactivated."
+msgstr ""
+
+#: .\console\views\volunteers.py:281
+msgid "Account deactivated. They can no longer sign in."
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:22
+#, python-format
+msgid ""
+"\n"
+"                    Congratulations, %(name)s! You've Completed the <span "
+"class=\"accent-text\">%(module)s.</span>\n"
+"                    "
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:27
+msgid "You're now one step closer to making a huge impact."
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:36
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Continue Training"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\completed_module.html:37
+msgid "Level up your skills with other available volunteer modules."
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:39
+msgid "Go to Dashboard"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:51
+msgid "has completed"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:58
+msgid "About this Module"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:66
+msgid "Completed On"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:73
+#: .\education\templates\education\module_overview.html:49
+#: .\education\templates\education\module_overview.html:69
+msgid "Duration"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:74
+#: .\education\templates\education\lesson_detail.html:66
+#: .\education\templates\education\lesson_detail.html:146
+#: .\education\templates\education\lesson_detail.html:163
+#: .\education\templates\education\module_overview.html:50
+#: .\education\templates\education\module_overview.html:70
+#: .\education\templates\education\quiz_detail.html:89
+#: .\education\templates\education\quiz_detail.html:112
+#: .\education\templates\education\quiz_results.html:130
+#: .\education\templates\education\quiz_results.html:153
+msgid "mins"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:99
+#: .\education\templates\education\printable_certificate.html:30
+msgid "Certificate of Completion"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:108
+msgid "This certifies that"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:110
+msgid "has successfully mastered"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:116
+msgid "Date Issued"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:133
+msgid "Download Certificate (PDF)"
+msgstr ""
+
+#: .\education\templates\education\completed_module.html:137
+msgid "Review Module"
+msgstr ""
+
+#: .\education\templates\education\education_layout.html:17
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training Dashboard"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\education_layout.html:21
+#: .\education\templates\education\submit_certificate.html:16
+#: .\education\templates\education\verify_certificates.html:16
+msgid "Verify Certificate"
+msgstr ""
+
+#: .\education\templates\education\education_layout.html:31
+msgid "Explore courses"
+msgstr ""
+
+#: .\education\templates\education\education_layout.html:32
+msgid "Explore"
+msgstr ""
+
+#: .\education\templates\education\education_layout.html:36
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training dashboard"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\education_layout.html:37
+msgid "Dashboard"
+msgstr ""
+
+#: .\education\templates\education\education_layout.html:41
+msgid "Verify certificate"
+msgstr ""
+
+#: .\education\templates\education\education_layout.html:42
+msgid "Verify"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:26
+msgid "Lesson"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:39
+msgid "Reading Material"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:62
+msgid "Next Lesson"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:76
+msgid "Next: Quiz"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:79
+msgid "questions"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:90
+#: .\education\templates\education\quiz_results.html:87
+msgid "Complete Module"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:92
+msgid "Finish & Earn Your Certificate"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:126
+#: .\education\templates\education\module_layout.html:33
+#: .\education\templates\education\quiz_detail.html:74
+#: .\education\templates\education\quiz_results.html:115
+msgid "Introduction"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:144
+#: .\education\templates\education\training_dashboard.html:104
+msgid "In Progress"
+msgstr ""
+
+#: .\education\templates\education\lesson_detail.html:162
+#: .\education\templates\education\module_layout.html:80
+#: .\education\templates\education\quiz_detail.html:107
+#: .\education\templates\education\quiz_results.html:148
+msgid "Final Quiz"
+msgstr ""
+
+#: .\education\templates\education\module_layout.html:22
+msgid "Units"
+msgstr ""
+
+#: .\education\templates\education\module_layout.html:60
+msgid "Current Lesson"
+msgstr ""
+
+#: .\education\templates\education\module_layout.html:62
+#: .\education\templates\education\module_layout.html:84
+msgid "min"
+msgid_plural "mins"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\education\templates\education\module_layout.html:67
+msgid "No lessons available."
+msgstr ""
+
+#: .\education\templates\education\module_layout.html:82
+#: .\education\templates\education\quiz_detail.html:110
+#: .\education\templates\education\quiz_results.html:151
+msgid "Current Quiz"
+msgstr ""
+
+#: .\education\templates\education\module_overview.html:19
+msgid "completed"
+msgstr ""
+
+#: .\education\templates\education\module_overview.html:42
+#: .\education\templates\education\module_overview.html:62
+msgid "Volunteers Joined"
+msgstr ""
+
+#: .\education\templates\education\module_overview.html:50
+#: .\education\templates\education\module_overview.html:70
+msgid "TBD"
+msgstr ""
+
+#: .\education\templates\education\module_overview.html:91
+msgid "Required for these Roles"
+msgstr ""
+
+#: .\education\templates\education\module_overview.html:112
+#: .\education\templates\education\module_overview.html:119
+#: .\education\templates\education\module_overview.html:125
+msgid "Start Module"
+msgstr ""
+
+#: .\education\templates\education\module_overview.html:124
+msgid "No content available yet"
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:9
+msgid "Certificate"
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:36
+msgid ""
+"This certifies that the above-named individual has successfully completed "
+"the training module."
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:39
+msgid "Awarded To"
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:69
+msgid "ID Number"
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:71
+msgid "Issued On"
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:82
+msgid "Print Certificate"
+msgstr ""
+
+#: .\education\templates\education\printable_certificate.html:86
+msgid "Go Back"
+msgstr ""
+
+#: .\education\templates\education\quiz_detail.html:13
+msgid "Knowledge Check:"
+msgstr ""
+
+#: .\education\templates\education\quiz_detail.html:16
+#, python-format
+msgid "Answer all %(count)s questions below"
+msgstr ""
+
+#: .\education\templates\education\quiz_detail.html:61
+msgid "Submit Quiz"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:13
+msgid "Quiz Results"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:27
+msgid "Excellent Work!"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:29
+msgid "Keep Practicing!"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:33
+#, python-format
+msgid ""
+"\n"
+"                You answered %(correct)s out of %(total)s questions "
+"correctly.\n"
+"            "
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:40
+msgid "Quiz Passed"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:45
+#, python-format
+msgid "%(pct)s%% required to pass"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:53
+msgid "Performance Breakdown"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:67
+msgid "Your answer:"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:72
+msgid "Correct answer:"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:93
+msgid "Next Section"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:98
+msgid "Back to Module"
+msgstr ""
+
+#: .\education\templates\education\quiz_results.html:103
+msgid "Retake Quiz"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:31
+msgid "Your documents need another look."
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:32
+msgid "Please upload a clearer or more complete copy and submit again."
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:35
+#, python-format
+msgid "Valid until %(d)s"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:48
+msgid "Description"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:71
+msgid "Document Upload"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:72
+msgid "Required"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:75
+#, python-format
+msgid ""
+"\n"
+"                Please upload a clear, legible copy of your %(name)s "
+"certificate. Ensure the issue date and expiration date are visible. Allowed "
+"formats: PDF, JPG, PNG (Max 5 MB).\n"
+"                "
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:84
+msgid "Select a file or drag and drop here"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:85
+msgid "PDF, JPG, or PNG up to 5 MB"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:86
+msgid "Browse Files"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:95
+#: .\education\templates\education\submit_certificate.html:166
+msgid "Files Attached"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:109
+msgid "No files attached yet."
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:116
+msgid ""
+"By submitting, you confirm that the provided documents are authentic and "
+"accurate."
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:121
+msgid "Submit Verification"
+msgstr ""
+
+#: .\education\templates\education\submit_certificate.html:126
+msgid "Update Documents"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:17
+#, python-format
+msgid "Welcome back, %(name)s."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:19
+msgid "You're making a real spark in your community."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:21
+msgid "Welcome to the Training Portal."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:22
+msgid ""
+"You're about to start your journey in community building. Our modules are "
+"designed to empower you with the tools needed to become an effective "
+"volunteer."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:36
+msgid "Level"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:43
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training Progress"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\training_dashboard.html:57
+msgid "Modules Completed"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:68
+msgid "Time Invested"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:89
+msgid "Your Training Track"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:92
+msgid "View All Modules"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:122
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Resume Training"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\training_dashboard.html:146
+#, python-format
+msgid "Completed on %(date)s"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:150
+msgid "Review Material"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:163
+msgid "Your Training Track is Empty"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:164
+msgid ""
+"Ready to make an impact? Select your first specialized module to begin "
+"earning your community certifications."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:179
+#: .\education\templates\education\training_directory.html:147
+msgid "Start"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:187
+msgid "Get Started"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:217
+#, python-format
+msgid "Verified %(date)s"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:227
+msgid "more certificates"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:236
+msgid "No Certificates Yet"
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:237
+msgid ""
+"Complete modules to earn certificates and unlock advanced training tracks."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:242
+msgid ""
+"These are your external certificates earned outside of the platform during "
+"courses administered by other institutions. E.g. First Aid Certificate or "
+"Food Safe Certificate."
+msgstr ""
+
+#: .\education\templates\education\training_dashboard.html:246
+msgid "Submit a Certificate"
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:12
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training Directory"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\training_directory.html:14
+msgid ""
+"Empower your community journey. Elevate your skills through our curated "
+"modules designed to help you build stronger, safer environments."
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:20
+msgid "Current training"
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:35
+msgid "Last Opened"
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:40
+#: .\education\templates\education\training_directory.html:60
+#: .\education\templates\education\training_directory.html:90
+msgid "Current Progress"
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:47
+msgid "Resume course"
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:71
+#: .\education\templates\education\training_directory.html:101
+#: .\education\templates\education\training_directory.html:136
+#, python-format
+msgid "Needed for %(count)s Role"
+msgid_plural "Needed for %(count)s Roles"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\education\templates\education\training_directory.html:74
+#: .\education\templates\education\training_directory.html:104
+msgid "Start Course"
+msgstr ""
+
+#: .\education\templates\education\training_directory.html:116
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Available Training"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\training_directory.html:117
+#, fuzzy
+#| msgid "Ukrainian"
+msgid "Training topics"
+msgstr "Ukrainien"
+
+#: .\education\templates\education\training_directory.html:151
+msgid "No available training modules found matching your filter."
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:23
+msgid "Verify Certificates"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:25
+msgid ""
+"Expand your impact by submitting external credentials. Track your progress "
+"and review completed organisational standards."
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:32
+msgid "Available Certifications"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:42
+msgid "Under review"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:43
+msgid "Needs re-upload"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:47
+msgid "View Status"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:47
+msgid "Verify Now"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:52
+msgid "No available certifications."
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:61
+msgid "My Verified Certificates"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:70
+msgid "Earned:"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:78
+msgid "Review Details"
+msgstr ""
+
+#: .\education\templates\education\verify_certificates.html:89
+msgid "No certificates are available yet."
+msgstr ""
+
+#: .\education\views.py:198
+msgid "Failed to mark module as completed."
+msgstr ""
+
+#: .\education\views.py:437
+msgid "Please attach at least one document."
+msgstr ""
+
+#: .\education\views.py:446
+msgid "Your documents have been submitted for verification."
+msgstr ""
+
+#: .\education\views.py:453
+msgid "Not submitted"
+msgstr ""
+
+#: .\education\views.py:459
+msgid "Action required"
+msgstr ""
+
+#: .\education\views.py:461
+msgid "Pending verification"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:4
+#, python-format
+msgid "Volunteer Impact Certificate - %(name)s"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:12
+msgid "Back"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:13
+msgid "Download PDF"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:14
+msgid "Print"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:22
+msgid "Official certification of service"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:26
+msgid "Verified Record"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:26
+msgid "Registered Volunteer"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:30
+msgid "Certificate of Appreciation"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:31
+msgid "This certificate is proudly presented to"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:37
+#, python-format
+msgid ""
+"In recognition of outstanding contributions to <strong>%(title)s %(year)s</"
+"strong>. Your dedication and service have made a significant impact on our "
+"community's success."
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:40
+msgid "Impact Summary"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:46
+#: .\events\templates\events\my_events.html:209
+msgid "Hours"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:47
+msgid "Volunteer Role"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:56
+#: .\jobs\templates\jobs\kiosk_logged_in.html:67
+msgid "Event Supervisor"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:64
+msgid "Scan to Verify"
+msgstr ""
+
+#: .\events\templates\events\event_certificate.html:64
+#, python-format
+msgid "Certificate ID: %(certificate_id)s"
 msgstr ""
 
 #: .\events\templates\events\event_detail.html:37
@@ -361,10 +5948,6 @@ msgstr ""
 
 #: .\events\templates\events\event_detail.html:58
 msgid "Event Overview"
-msgstr ""
-
-#: .\events\templates\events\event_detail.html:68
-msgid "Staffing Progress"
 msgstr ""
 
 #: .\events\templates\events\event_detail.html:71
@@ -393,7 +5976,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: .\events\templates\events\event_detail.html:113
-#: .\events\templates\events\event_detail.html:344
+#: .\events\templates\events\event_detail.html:350
 msgid "Full"
 msgstr ""
 
@@ -406,10 +5989,6 @@ msgstr[1] ""
 
 #: .\events\templates\events\event_detail.html:120
 msgid "Multiple time slots available"
-msgstr ""
-
-#: .\events\templates\events\event_detail.html:130
-msgid "Select Role"
 msgstr ""
 
 #: .\events\templates\events\event_detail.html:137
@@ -431,99 +6010,242 @@ msgstr ""
 msgid "Event Coordinator"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:174
+#: .\events\templates\events\event_detail.html:162
+msgid "Coordinator avatar"
+msgstr ""
+
+#: .\events\templates\events\event_detail.html:180
 msgid "Volunteer Crew"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:178
+#: .\events\templates\events\event_detail.html:184
 msgid "Volunteer avatar"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:195
+#: .\events\templates\events\event_detail.html:201
 #, python-format
-msgid "Join %(counter)s other community member making an impact this %(day)s!"
-msgid_plural ""
-"Join %(counter)s other community members making an impact this %(day)s!"
+msgid "Join %(counter)s other community member making an impact!"
+msgid_plural "Join %(counter)s other community members making an impact!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\events\templates\events\event_detail.html:199
+#: .\events\templates\events\event_detail.html:205
 msgid "Be the first to volunteer for this event!"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:207
-msgid "Post-Event Statement"
-msgstr ""
-
-#: .\events\templates\events\event_detail.html:221
+#: .\events\templates\events\event_detail.html:227
+#: .\jobs\templates\jobs\kiosk_role_select.html:11
 msgid "Select Your Role"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:242
+#: .\events\templates\events\event_detail.html:248
 msgid "Role Description"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:258
+#: .\events\templates\events\event_detail.html:264
 msgid "Training Status"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:262
+#: .\events\templates\events\event_detail.html:268
 msgid "No required training."
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:267
+#: .\events\templates\events\event_detail.html:273
 msgid "Mandatory training"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:275
+#: .\events\templates\events\event_detail.html:281
 msgid "Mandatory module"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:287
+#: .\events\templates\events\event_detail.html:293
+#: .\events\templates\events\respond_to_invite.html:30
 msgid "Required training"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:295
+#: .\events\templates\events\event_detail.html:301
 msgid "Recommended module"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:307
+#: .\events\templates\events\event_detail.html:313
 msgid "Completed training"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:315
-#: .\events\templates\events\event_detail.html:318
-msgid "Completed"
-msgstr ""
-
-#: .\events\templates\events\event_detail.html:332
+#: .\events\templates\events\event_detail.html:338
 msgid "Available Time Slots"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:342
+#: .\events\templates\events\event_detail.html:348
 msgid "Signed up"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:347
+#: .\events\templates\events\event_detail.html:353
 msgid "spot left"
 msgid_plural "spots left"
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\events\templates\events\event_detail.html:349
+#: .\events\templates\events\event_detail.html:355
 msgid "Filling Fast"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:361
+#: .\events\templates\events\event_detail.html:367
 msgid "You must complete required training to sign up."
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:368
+#: .\events\templates\events\event_detail.html:374
 msgid "Confirm Selection"
 msgstr ""
 
-#: .\events\templates\events\event_detail.html:425
+#: .\events\templates\events\event_detail.html:428
 msgid "Confirming..."
+msgstr ""
+
+#: .\events\templates\events\event_impact_card.html:4
+#, python-format
+msgid "%(title)s Impact"
+msgstr ""
+
+#: .\events\templates\events\event_impact_card.html:8
+#, python-format
+msgid "%(v)s volunteers, %(h)s hours of service."
+msgstr ""
+
+#: .\events\templates\events\event_impact_card.html:29
+msgid "Event Efficiency"
+msgstr ""
+
+#: .\events\templates\events\event_impact_card.html:44
+msgid "Link copied"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:4
+msgid "Thank you"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:14
+msgid "Event completed"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:14
+msgid "Event in progress"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:16
+#, python-format
+msgid "Thank you, %(name)s!"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:17
+msgid "Your impact was"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:17
+msgid "incredible."
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:19
+#, python-format
+msgid ""
+"You were a vital part of <strong>%(title)s</strong>. Because of your "
+"dedication, our community is stronger and more connected today."
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:25
+msgid "Personal Impact Summary"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:30
+msgid "Verified hours contributed"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:30
+msgid "Scheduled hours"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:35
+msgid "Community connections"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:40
+msgid "Impact points earned"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:47
+msgid "Teammates You Worked With"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:48
+msgid ""
+"Quickly recognize a peer for their great work. One tap sends an endorsement."
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:67
+msgid "Share Your Experience"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:68
+msgid "Help us make the next event even better."
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:71
+msgid "Overall Experience"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:78
+msgid "What did you enjoy most?"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:79
+msgid "The teamwork, the music, the impact..."
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:80
+msgid "Suggestions for improvement?"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:81
+msgid "Maybe more shade in the volunteer lounge?"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:82
+msgid "Update Report"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:82
+msgid "Submit Report"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:87
+msgid "The Bigger Picture"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:88
+msgid "Here is what we achieved together."
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:90
+msgid "Total hours contributed"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:91
+msgid "Volunteers united"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:100
+msgid "Ready for your next spark?"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:102
+msgid "Find Your Next Opportunity"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:104
+msgid "My Certificate"
+msgstr ""
+
+#: .\events\templates\events\event_thank_you.html:106
+msgid "View My Impact Record"
 msgstr ""
 
 #: .\events\templates\events\explore_events.html:16
@@ -536,112 +6258,573 @@ msgid ""
 "match your passion and skillset in your local neighborhood."
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:23
-msgid "Upcoming Events"
-msgstr ""
-
 #: .\events\templates\events\explore_events.html:28
 msgid "Open Roles"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:41
+#: .\events\templates\events\explore_events.html:48
 msgid "Keywords (e.g. teaching, gardening)"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:53
-#: .\events\templates\events\explore_events.html:61
+#: .\events\templates\events\explore_events.html:63
+#: .\events\templates\events\explore_events.html:81
+#: .\events\templates\events\explore_events.html:85
+#: .\events\templates\events\my_events.html:100
+#: .\events\templates\events\my_events.html:118
 msgid "Today"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:54
-#: .\events\templates\events\explore_events.html:62
+#: .\events\templates\events\explore_events.html:64
+#: .\events\templates\events\explore_events.html:87
+#: .\events\templates\events\explore_events.html:91
 msgid "This Week"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:55
-#: .\events\templates\events\explore_events.html:63
+#: .\events\templates\events\explore_events.html:65
+#: .\events\templates\events\explore_events.html:93
+#: .\events\templates\events\explore_events.html:97
 msgid "This Month"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:56
-#: .\events\templates\events\explore_events.html:60
-msgid "Date"
-msgstr ""
-
-#: .\events\templates\events\explore_events.html:60
+#: .\events\templates\events\explore_events.html:79
 msgid "Any Date"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:73
-#: .\events\templates\events\explore_events.html:77
+#: .\events\templates\events\explore_events.html:108
+#: .\events\templates\events\explore_events.html:116
 msgid "Category"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:77
+#: .\events\templates\events\explore_events.html:120
 msgid "All Categories"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:90
+#: .\events\templates\events\explore_events.html:142
 msgid "Distance"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:95
-msgid "Within"
+#: .\events\templates\events\explore_events.html:150
+#: .\events\templates\events\explore_events.html:212
+msgid "Any distance"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:103
+#: .\events\templates\events\explore_events.html:152
+#, python-format
+msgid "Within %(distance)s km"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:173
 msgid "Search"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:235
+#: .\events\templates\events\explore_events.html:213
+msgid "Any"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:215
+msgid "Within"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:215
+#: .\events\templates\events\explore_events.html:216
+msgid " km"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:275
+msgid "Trending Now"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:293
+msgid "Personalized for You"
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:294
+msgid "Based on your skills and interests, we can find the best roles for you."
+msgstr ""
+
+#: .\events\templates\events\explore_events.html:295
+msgid "View Recommendations"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:18
+msgid ""
+"Track your upcoming commitments and celebrate your completed community "
+"impact."
+msgstr ""
+
+#: .\events\templates\events\my_events.html:23
+msgid "available events"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:28
+msgid "Upcoming"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:33
+msgid "Impact Pts"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:51
+msgid "Invitations"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:63
+msgid "Respond"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:81
+#, python-format
+msgid "Today: %(count)s Shift"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:137
+msgid "Check-in Now"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:141
+#: .\events\templates\events\partials\events_grid.html:26
 msgid "View Details"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:242
+#: .\events\templates\events\my_events.html:154
+msgid "You haven't signed up for any upcoming events yet."
+msgstr ""
+
+#: .\events\templates\events\my_events.html:157
+msgid "Browse Opportunities"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:168
+msgid "Past Events & Verified Impact"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:215
+msgid "View Report"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:225
+msgid "Your completed events will appear here."
+msgstr ""
+
+#: .\events\templates\events\my_events.html:246
+msgid "Where to Check In"
+msgstr ""
+
+#: .\events\templates\events\my_events.html:253
+msgid "View full event details"
+msgstr ""
+
+#: .\events\templates\events\partials\events_grid.html:33
 msgid "No events match your criteria"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:243
+#: .\events\templates\events\partials\events_grid.html:34
 msgid ""
 "Try adjusting your filters or search keywords to find more opportunities."
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:245
-msgid "No upcoming events"
-msgstr ""
-
-#: .\events\templates\events\explore_events.html:246
+#: .\events\templates\events\partials\events_grid.html:37
 msgid "Check back soon for new volunteering opportunities!"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:257
-msgid "Trending Now"
+#: .\events\templates\events\respond_to_invite.html:4
+msgid "You're Invited"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:275
-msgid "Personalized for You"
+#: .\events\templates\events\respond_to_invite.html:14
+msgid "Personal invitation"
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:276
-msgid "Based on your skills and interests, we can find the best roles for you."
+#: .\events\templates\events\respond_to_invite.html:18
+#, python-format
+msgid "You've been invited to volunteer as <strong>%(role)s</strong>."
 msgstr ""
 
-#: .\events\templates\events\explore_events.html:277
-msgid "View Recommendations"
+#: .\events\templates\events\respond_to_invite.html:22
+#, python-format
+msgid "Check in at %(p)s"
 msgstr ""
 
-#: .\town_hall\settings.py:136
+#: .\events\templates\events\respond_to_invite.html:39
+msgid ""
+"Complete the training above before accepting. Your invitation will wait for "
+"you."
+msgstr ""
+
+#: .\events\templates\events\respond_to_invite.html:43
+msgid "Heads up: this overlaps with another shift you've signed up for."
+msgstr ""
+
+#: .\events\templates\events\respond_to_invite.html:46
+msgid "You've already accepted this invitation."
+msgstr ""
+
+#: .\events\templates\events\respond_to_invite.html:51
+msgid "Decline"
+msgstr ""
+
+#: .\events\templates\events\respond_to_invite.html:53
+msgid "Accept & Sign Up"
+msgstr ""
+
+#: .\events\views.py:183
+msgid "This time slot is invite-only."
+msgstr ""
+
+#: .\events\views.py:187
+#, python-format
+msgid "You haven't completed the required training modules for %(role)s."
+msgstr ""
+
+#: .\events\views.py:191
+msgid "Sorry, this slot just filled up!"
+msgstr ""
+
+#: .\events\views.py:195 .\events\views.py:231
+msgid "You have other commitments that conflict with this slot."
+msgstr ""
+
+#: .\events\views.py:203
+#, python-format
+msgid "Successfully signed up for %(role)s at %(event)s!"
+msgstr ""
+
+#: .\events\views.py:213
+msgid "Log in to respond to your invitation."
+msgstr ""
+
+#: .\events\views.py:221
+msgid "Invitation declined. Thanks for letting us know."
+msgstr ""
+
+#: .\events\views.py:224
+msgid "You're already signed up for this slot."
+msgstr ""
+
+#: .\events\views.py:226
+msgid "Finish the required training first, then accept the invitation."
+msgstr ""
+
+#: .\events\views.py:229
+msgid "Sorry, this slot is already full."
+msgstr ""
+
+#: .\events\views.py:236
+#, python-format
+msgid "You're on the team! See you at %(event)s."
+msgstr ""
+
+#: .\events\views.py:364
+#, python-format
+msgid "You weren't signed up for %(event)s."
+msgstr ""
+
+#: .\events\views.py:371
+msgid "Please choose a rating from 1 to 5 stars."
+msgstr ""
+
+#: .\events\views.py:378
+msgid "Thanks for sharing your experience!"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:4
+msgid "Set Up Kiosk"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:15
+msgid "Back to admin"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:16
+msgid "Set Up This Kiosk"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:17
+msgid ""
+"Choose what this device checks volunteers in to. Bookmark the screen it "
+"opens so the device can go straight there next time."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:20
+msgid "Events today"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:30
+msgid "No events are running today."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:37
+msgid "Coming up"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:51
+msgid "Venues (permanent positions)"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:57
+#, python-format
+msgid "%(counter)s role"
+msgid_plural "%(counter)s roles"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\jobs\templates\jobs\kiosk_home.html:60
+msgid ""
+"No venues yet. Add them in the Django admin, then attach permanent roles."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_layout.html:4
+msgid "Volunteer Kiosk"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_layout.html:22
+msgid "Need assistance? Ask a coordinator."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:4
+msgid "Shift Check-in"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:16
+msgid "Done, keep my shift running"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:23
+msgid "Active Assignment"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:27
+msgid "Shift Duration"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:33
+msgid "Check Out"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:35
+#, python-format
+msgid "Checked in at %(t)s"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:40
+msgid "Shift Details"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:43
+msgid "Clutch cover &middot; bonus points"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:43
+msgid "Verified Position"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:47
+msgid "Estimated Impact"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:53
+msgid "Team Arrived"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:68
+msgid "Call supervisor"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:8
+msgid "Sign In with Email"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:9
+msgid "Please enter your registered email and password to continue."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:21
+msgid "Show password"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:27
+msgid "Sign In & Start Shift"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:30
+msgid "Back to ID Login"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:7
+msgid "Volunteer Check-in"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:8
+msgid "Please enter your 6-digit Volunteer ID code"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:13
+msgid "Entered digits"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:21
+msgid "Delete last digit"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:23
+msgid "Clear"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:27
+#: .\jobs\templates\jobs\kiosk_role_select.html:38
+msgid "Confirm & Start Shift"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:31
+msgid "Forgot your Volunteer ID? Sign in with email"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:32
+msgid "Secure kiosk mode active"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:10
+#, python-format
+msgid "Welcome, %(name)s"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:13
+msgid ""
+"You aren't scheduled right now, but these roles could use a hand. Stepping "
+"in earns a clutch bonus!"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:14
+msgid "Please select your primary assignment for today's shift."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:15
+msgid "You're signed up for more than one shift. Which are you starting?"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:18
+msgid "Cancel and sign out"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:44
+msgid "No positions at this venue"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:45
+msgid ""
+"You don't have a permanent role here yet. Please check in with a staff "
+"member."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:47
+msgid "You're early!"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:48
+#, python-format
+msgid ""
+"Your %(role)s shift starts at %(t)s. Check in up to an hour before it begins."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:50
+msgid "No open shifts right now"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:51
+msgid ""
+"You aren't scheduled for this event and every current role is either full or "
+"needs training you haven't completed. Please see a coordinator."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:53
+msgid "Done"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:5
+msgid "Active event"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:5
+msgid "Upcoming event"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:11
+msgid "Shift timings"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:15
+msgid "Registered"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:16
+#, python-format
+msgid "%(counter)s volunteer"
+msgid_plural "%(counter)s volunteers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:20
+msgid "Live Impact Tracking"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:21
+msgid "Hours Logged Today"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:23
+#, python-format
+msgid "%(counter)s volunteer on shift right now"
+msgid_plural "%(counter)s volunteers on shift right now"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:37
+msgid "Operating Hours"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:45
+msgid "Hours haven't been set for this venue."
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:50
+msgid "Need Assistance?"
+msgstr ""
+
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:50
+msgid "Ask a staff member at the front desk."
+msgstr ""
+
+#: .\jobs\views.py:93
+msgid "We couldn't find that Volunteer ID. Please try again."
+msgstr ""
+
+#: .\jobs\views.py:143 .\jobs\views.py:160
+msgid "Please choose one of the listed roles."
+msgstr ""
+
+#: .\jobs\views.py:181
+msgid "Your kiosk session has ended."
+msgstr ""
+
+#: .\jobs\views.py:214
+#, python-format
+msgid ""
+"Thanks, %(name)s! You logged %(hours)s hours and earned %(points)s impact "
+"points."
+msgstr ""
+
+#: .\town_hall\settings.py:142
 msgid "English"
 msgstr "Anglais"
 
-#: .\town_hall\settings.py:137
+#: .\town_hall\settings.py:143
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: .\town_hall\settings.py:138
+#: .\town_hall\settings.py:144
 msgid "French"
 msgstr "Français"
 
-#: .\town_hall\settings.py:139
+#: .\town_hall\settings.py:145
 msgid "Ukrainian"
 msgstr "Ukrainien"

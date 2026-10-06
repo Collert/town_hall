@@ -1,0 +1,109 @@
+.pool-stats {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 0.8fr 1.5fr;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.pool-big {
+    font-size: 3.5rem;
+}
+
+.pool-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+    color: var(--color-success);
+}
+
+.pool-stat-art {
+    position: absolute;
+    right: 1rem;
+    bottom: 0.5rem;
+    font-size: 6rem;
+    opacity: 0.08;
+    color: var(--color-text-primary);
+}
+
+.c-stat.dark .pool-stat-art {
+    color: var(--color-primary-contrast);
+}
+
+.pool-mini-progress {
+    margin-top: 1.25rem;
+    width: 7rem;
+}
+
+.pool-skills-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-primary-light);
+    margin-bottom: 1rem;
+}
+
+.pool-skill {
+    position: relative;
+    z-index: 1;
+    padding: 0.4rem 0.9rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    color: var(--color-primary-contrast);
+    box-shadow: inset 0 0 0 1px rgba(from var(--color-primary-contrast) r g b / 0.3);
+    transition: background-color 200ms ease;
+}
+
+.pool-skill:hover {
+    background: rgba(from var(--color-primary-contrast) r g b / 0.12);
+}
+
+.pool-table .c-table-wrap {
+    border-radius: 0 0 1.5rem 1.5rem;
+}
+
+.pool-filters {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1.5rem 1.5rem 0 0;
+    background: var(--color-surface);
+    box-shadow: inset 0 -1px 0 rgba(from var(--color-text-tertiary) r g b / 0.1);
+}
+
+.pool-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.pool-filter .c-select {
+    padding: 0.6rem 1rem;
+    border-radius: 9999px;
+}
+
+.pool-hours-note {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.pool-hours-note.up {
+    color: var(--color-success);
+}
+
+@media (max-width: 1200px) {
+    .pool-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .pool-stats {
+        grid-template-columns: 1fr;
+    }
+}

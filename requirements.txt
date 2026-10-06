@@ -4,3 +4,6 @@ Pillow
 yt-dlp
 markdown
 qrcode[pil]
+whitenoise
+deep-translator
+dotenv

@@ -1,0 +1,36 @@
+{% load i18n %}
+<div class="role-grid" id="role-grid">
+    {% for role in roles %}
+    <a href="{% url 'console_role_edit' role.pk %}" class="role-tile role-tile-level-{{ role.level }}">
+        <div class="role-tile-top">
+            <span class="c-badge {% if role.permanent %}c-badge-dark{% else %}c-badge-mint{% endif %}">{% if role.permanent %}{% trans "Permanent" %}{% else %}{% trans "Event role" %}{% endif %}</span>
+            <span class="c-icon-tile round {% if role.level >= 3 %}accent{% endif %}"><span class="material-symbols-outlined">{{ role.icon|default:"badge" }}</span></span>
+        </div>
+        <h3>{{ role.name }}</h3>
+        <p>{{ role.description|default:_("No description yet.")|truncatechars:90 }}</p>
+        {% if role.permanent and role.venue.all %}
+        <p class="role-tile-venues"><span class="material-symbols-outlined">location_city</span>{% for v in role.venue.all %}{{ v.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        {% endif %}
+        {% if role.preferred_skills.all %}
+        <div class="c-chips role-tile-skills">
+            {% for skill in role.preferred_skills.all|slice:":3" %}<span class="c-chip">{{ skill.name }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        <div class="role-tile-foot">
+            <span><span class="material-symbols-outlined">school</span>{% blocktrans count counter=role.module_count %}{{ counter }} Training Module Required{% plural %}{{ counter }} Training Modules Required{% endblocktrans %}</span>
+            <span class="role-tile-level">{{ role.level_label }}</span>
+        </div>
+    </a>
+    {% empty %}
+    <div class="c-empty role-grid-empty">
+        <span class="material-symbols-outlined">work_off</span>
+        {% if query or kind or difficulty %}
+        <h3>{% trans "No roles match these filters" %}</h3>
+        {% else %}
+        <h3>{% trans "No role templates yet" %}</h3>
+        <p>{% trans "Role templates describe a job volunteers can do, and which training they need first." %}</p>
+        <a href="{% url 'console_role_create' %}" class="c-btn c-btn-primary"><span class="material-symbols-outlined">add</span>{% trans "Create New Role" %}</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,62 @@
+{% load i18n avatar_tags %}
+<div id="monitor-activity" class="c-table-wrap"
+     hx-get="{% url 'console_monitor_activity' event.pk %}?action={{ action }}&q={{ query|urlencode }}"
+     hx-trigger="every 15s" hx-swap="outerHTML">
+    {% if log %}
+    <table class="c-table">
+        <thead>
+            <tr>
+                <th>{% trans "Volunteer" %}</th>
+                <th>{% trans "Role" %}</th>
+                <th>{% trans "Action" %}</th>
+                <th>{% trans "Time" %}</th>
+                <th class="num">{% trans "Status" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in log %}
+            {% with shift=entry.shift %}
+            <tr>
+                <td>
+                    <div class="c-table-person">
+                        {% avatar shift.user 'sm' %}
+                        <strong>{{ shift.user|display_name }}</strong>
+                    </div>
+                </td>
+                <td><span class="c-chip">{{ shift.role.name|default:"—" }}</span></td>
+                <td>
+                    {% if entry.action == 'in' %}
+                    <span class="log-action"><span class="material-symbols-outlined">login</span>{% trans "Checked In" %}{% if shift.clutched %} <span class="c-badge c-badge-accent">{% trans "Clutch" %}</span>{% endif %}</span>
+                    {% else %}
+                    <span class="log-action out"><span class="material-symbols-outlined">logout</span>{% trans "Checked Out" %}</span>
+                    {% endif %}
+                </td>
+                <td class="log-time">{{ entry.time|time }}</td>
+                <td class="num">
+                    {% if entry.action == 'in' and not shift.end_time %}
+                    <form method="post" action="{% url 'console_manual_check_in' event.pk %}" class="log-checkout">
+                        {% csrf_token %}
+                        <input type="hidden" name="shift_id" value="{{ shift.pk }}">
+                        <span class="status-dot on" title="{% trans 'On shift' %}"></span>
+                        <button type="submit" class="c-btn c-btn-sm c-btn-ghost">{% trans "Check out" %}</button>
+                    </form>
+                    {% else %}
+                    <span class="status-dot" title="{% trans 'Off shift' %}"></span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if log_total > log|length %}
+    <div class="c-table-footer"><span>{% blocktrans with shown=log|length %}Showing the latest {{ shown }} of {{ log_total }} activities.{% endblocktrans %}</span><a href="{% url 'console_export_shift_log' event.pk %}" class="c-link">{% trans "Download full log" %}</a></div>
+    {% endif %}
+    {% else %}
+    <div class="c-empty">
+        <span class="material-symbols-outlined">how_to_reg</span>
+        <h3>{% if query or action %}{% trans "No matching activity" %}{% else %}{% trans "No check-ins yet" %}{% endif %}</h3>
+        <p>{% trans "Volunteers appear here as they check in at the kiosk or are checked in manually. This list refreshes automatically." %}</p>
+    </div>
+    {% endif %}
+</div>

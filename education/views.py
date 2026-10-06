@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from .models import TrainingModule, TrainingLesson, TrainingModuleCompletion, Quiz, ExternalCertificate, UserCertification, UserCertificationFile
 from django.db.models import Count, Exists, OuterRef
+
+from base.email import notify
+from base.utils import qr_svg
 
 
 def get_module_sidebar_context(module):
@@ -30,7 +33,7 @@ def training_directory(request):
         last_viewed = user.profile.last_viewed_training_module
         if last_viewed and not last_viewed.published:
             last_viewed = None  # Ignore if the last viewed module is unpublished
-        if last_viewed.completion_percentage_for_user(user) >= 100:
+        if last_viewed and last_viewed.completion_percentage_for_user(user) >= 100:
             last_viewed = None  # Ignore if the last viewed module is already completed
 
     # Order modules by number of roles they are required for
@@ -63,6 +66,7 @@ def training_directory(request):
                 )
             )
         ).order_by('is_completed', '-role_count')
+    available_modules = available_modules.prefetch_related('lessons', 'quizzes__questions')
 
     context = {
         'last_viewed': last_viewed,
@@ -76,7 +80,6 @@ def training_directory(request):
 def module_overview(request, module_id):
     module = get_object_or_404(TrainingModule, id=module_id)
     user = request.user
-    print(module.complexity_level())
 
     # Calculate progress
     progress = module.completion_percentage_for_user(user) if user.is_authenticated else 0
@@ -172,13 +175,15 @@ def mark_lesson_complete(request, module_id, lesson_id):
     lesson = get_object_or_404(TrainingLesson, id=lesson_id, training_module=module)
     lesson.completed_by.add(request.user)
     progress = module.completion_percentage_for_user(request.user)
+    if request.headers.get('HX-Request') == 'true':
+        # Out-of-band update of the lesson's tick in the module sidebar.
+        return render(request, 'education/partials/lesson_completed.html', {'lesson': lesson, 'progress': progress})
     return JsonResponse({'status': 'ok', 'progress': progress})
 
 
+@require_POST
+@login_required
 def complete_module(request, module_id):
-    if request.method != 'POST':
-        messages.error(request, _('Invalid request method.'))
-        return redirect('module_overview', module_id=module_id)
     module = get_object_or_404(TrainingModule, id=module_id)
     user = request.user
 
@@ -186,6 +191,9 @@ def complete_module(request, module_id):
 
     if result:
         completion, created = result
+        if created:
+            link = request.build_absolute_uri(reverse('completed_module', kwargs={'completion_id': completion.id}))
+            notify('training_completed', user, {'module': module.title, 'link': link})
         return redirect(f"{reverse('completed_module', kwargs={'completion_id': completion.id})}?first_time=1")
     else:
         messages.error(request, _('Failed to mark module as completed.'))
@@ -200,26 +208,12 @@ def completed_module(request, completion_id):
     verification_path = reverse('completed_module', kwargs={'completion_id': completion.id})
     verification_url = request.build_absolute_uri(verification_path)
 
-    # Generate QR code as base64 data URI
-    import qrcode
-    import qrcode.image.svg
-    import io
-    import base64
-
-    qr = qrcode.QRCode(version=1, box_size=10, border=2)
-    qr.add_data(verification_url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color="#00434d", back_color="transparent", image_factory=qrcode.image.svg.SvgPathImage)
-    buffer = io.BytesIO()
-    img.save(buffer)
-    qr_svg = buffer.getvalue().decode('utf-8')
-
     context = {
         'completion': completion,
         'module': module,
         'user': completion.user,
         'first_time': first_time,
-        'qr_svg': qr_svg,
+        'qr_svg': qr_svg(verification_url),
         'verification_url': verification_url,
     }
     return render(request, 'education/completed_module.html', context)
@@ -232,23 +226,11 @@ def printable_certificate(request, completion_id):
     verification_path = reverse('completed_module', kwargs={'completion_id': completion.id})
     verification_url = request.build_absolute_uri(verification_path)
 
-    import qrcode
-    import qrcode.image.svg
-    import io
-
-    qr = qrcode.QRCode(version=1, box_size=10, border=2)
-    qr.add_data(verification_url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color="#00434d", back_color="transparent", image_factory=qrcode.image.svg.SvgPathImage)
-    buffer = io.BytesIO()
-    img.save(buffer)
-    qr_svg = buffer.getvalue().decode('utf-8')
-
     context = {
         'completion': completion,
         'module': module,
-        'user': completion.user,
-        'qr_svg': qr_svg,
+        'recipient': completion.user,
+        'qr_svg': qr_svg(verification_url),
     }
     return render(request, 'education/printable_certificate.html', context)
 
@@ -364,7 +346,10 @@ def verify_certificates(request):
     user_certifications = UserCertification.objects.filter(user=request.user).select_related('certificate') if request.user.is_authenticated else UserCertification.objects.none()
     verified_certs = user_certifications.filter(verified=True)
     verified_cert_ids = verified_certs.values_list('certificate_id', flat=True)
-    available_certs = ExternalCertificate.objects.exclude(id__in=verified_cert_ids)
+    available_certs = list(ExternalCertificate.objects.exclude(id__in=verified_cert_ids))
+    statuses = {uc.certificate_id: uc.status for uc in user_certifications.filter(verified=False) if uc.rejected or uc.files.exists()}
+    for cert in available_certs:
+        cert.user_status = statuses.get(cert.pk)
 
     context = {
         'available_certs': available_certs,
@@ -400,7 +385,7 @@ def training_dashboard(request):
     # Time invested: sum lengths of completed lessons + completed quizzes
     time_minutes = 0
     for lesson in user.completed_lessons.all():
-        time_minutes += lesson.overall_length()
+        time_minutes += lesson.overall_length
     for quiz in user.completed_quizzes.all():
         for question in quiz.questions.all():
             time_minutes += question.length_minutes or 1
@@ -412,7 +397,7 @@ def training_dashboard(request):
     # Profile & level
     profile = getattr(user, 'profile', None)
     impact_points = profile.impact_points if profile else 0
-    level = profile.level() if profile else None
+    level = profile.level if profile else None
 
     # Suggested modules for empty state
     suggested_modules = (
@@ -448,13 +433,17 @@ def submit_certificate(request, cert_id):
     ).first()
 
     if request.method == 'POST':
-        user_cert = user_cert or UserCertification.objects.create(user=user, certificate=certificate)
         files = request.FILES.getlist('documents')
         if not files:
             messages.error(request, _('Please attach at least one document.'))
         else:
+            user_cert = user_cert or UserCertification.objects.create(user=user, certificate=certificate)
             for f in files:
                 UserCertificationFile.objects.create(certification=user_cert, file=f)
+            if user_cert.rejected:
+                # Re-submission after a rejection goes back into the review queue.
+                user_cert.rejected = False
+                user_cert.save(update_fields=['rejected'])
             messages.success(request, _('Your documents have been submitted for verification.'))
             return redirect('verify_certificates')
 
@@ -467,7 +456,9 @@ def submit_certificate(request, cert_id):
     if user_cert:
         if user_cert.verified:
             status = {"code": 2, "text": _("Verified")}
-        else:
+        elif user_cert.rejected:
+            status = {"code": 3, "text": _("Action required")}
+        elif user_cert.files.exists():
             status = {"code": 1, "text": _("Pending verification")}
     context = {
         'certificate': certificate,

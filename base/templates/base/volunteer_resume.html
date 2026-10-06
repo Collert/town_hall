@@ -1,0 +1,139 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n humanize avatar_tags %}
+
+{% block title %}{% blocktrans with name=person|display_name %}Volunteer Resume - {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/volunteer_resume.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="resume-bar no-print">
+    <a href="{% url 'profile_view' person.username %}" class="resume-bar-back"><span class="material-symbols-outlined">arrow_back</span>{% trans "Volunteer Resume" %}</a>
+    <button type="button" class="resume-btn" onclick="window.print()"><span class="material-symbols-outlined">download</span>{% trans "Download PDF" %}</button>
+</header>
+
+<main class="resume-sheet">
+    <header class="resume-head">
+        {% avatar person 'lg' %}
+        <div class="resume-identity">
+            <h1>{{ person|display_name }}</h1>
+            <p class="resume-title">
+                {% if profile.level %}{% blocktrans with n=profile.level.numeric_name name=profile.level.name %}Level {{ n }} {{ name }}{% endblocktrans %} &middot; {% endif %}{% blocktrans %}Volunteer with {{ company_name }}{% endblocktrans %}
+            </p>
+            <ul class="resume-contact">
+                {% if profile.location %}<li><span class="material-symbols-outlined">location_on</span>{{ profile.location }}</li>{% endif %}
+                {% if show_contact and person.email %}<li><span class="material-symbols-outlined">mail</span>{{ person.email }}</li>{% endif %}
+                {% if show_contact and profile.phone %}<li><span class="material-symbols-outlined">call</span>{{ profile.phone }}</li>{% endif %}
+                <li><span class="material-symbols-outlined">event_available</span>{% blocktrans with d=person.date_joined|date:"F Y" %}Volunteering since {{ d }}{% endblocktrans %}</li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="resume-stats">
+        <div><strong>{{ hours|floatformat:"-1"|intcomma }}</strong><span>{% trans "Verified Hours" %}</span></div>
+        <div><strong>{{ events_count }}</strong><span>{% trans "Events Served" %}</span></div>
+        <div><strong>{{ profile.impact_points|intcomma }}</strong><span>{% trans "Impact Points" %}</span></div>
+        <div><strong>{{ credentials_count }}</strong><span>{% trans "Credentials" %}</span></div>
+    </div>
+
+    <div class="resume-body">
+        <div class="resume-main">
+            {% if profile.bio %}
+            <section class="resume-section">
+                <h2>{% trans "Profile" %}</h2>
+                <p class="resume-summary">{{ profile.bio }}</p>
+            </section>
+            {% endif %}
+
+            <section class="resume-section">
+                <h2>{% trans "Volunteer Experience" %}</h2>
+                {% for item in experience %}
+                <article class="resume-job">
+                    <div class="resume-job-head">
+                        <h3>{{ item.role.name }}</h3>
+                        <span class="resume-job-dates">
+                            {% if item.permanent %}{% trans "Ongoing" %}
+                            {% elif item.first %}{{ item.first|date:"M Y" }}{% if item.last|date:"M Y" != item.first|date:"M Y" %} &ndash; {{ item.last|date:"M Y" }}{% endif %}{% endif %}
+                        </span>
+                    </div>
+                    <p class="resume-job-meta">
+                        {% if item.permanent %}{% for venue in item.role.venue.all %}{{ venue.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if item.role.venue.all and item.hours %} &middot; {% endif %}{% endif %}{% if item.hours %}{% blocktrans with h=item.hours|floatformat:"-1" %}{{ h }} hours{% endblocktrans %}{% endif %}{% if item.hours and item.event_count %} &middot; {% endif %}{% if item.event_count %}{% blocktrans count counter=item.event_count %}{{ counter }} event{% plural %}{{ counter }} events{% endblocktrans %}{% endif %}
+                    </p>
+                    {% if item.role.description %}<p class="resume-job-desc">{{ item.role.description|striptags|truncatewords:32 }}</p>{% endif %}
+                    {% if item.events %}
+                    <ul class="resume-job-events">
+                        {% for event in item.events %}<li>{{ event.title }} <span>{{ event.start_date|date:"M j, Y" }}</span></li>{% endfor %}
+                        {% if item.more_events %}<li class="resume-more">{% blocktrans count counter=item.more_events %}and {{ counter }} more event{% plural %}and {{ counter }} more events{% endblocktrans %}</li>{% endif %}
+                    </ul>
+                    {% endif %}
+                </article>
+                {% empty %}
+                <p class="resume-empty">{% trans "No volunteer experience recorded yet." %}</p>
+                {% endfor %}
+            </section>
+
+            {% if endorsements %}
+            <section class="resume-section">
+                <h2>{% trans "References" %}</h2>
+                {% for e in endorsements %}
+                <blockquote class="resume-quote">
+                    <p>&ldquo;{{ e.text|truncatewords:45 }}&rdquo;</p>
+                    <footer>&mdash; {{ e.endorser|display_name }}<span>{% for skill in e.skills.all %}{{ skill.name }}{% if not forloop.last %}, {% endif %}{% endfor %} &middot; {{ e.timestamp|date:"M Y" }}</span></footer>
+                </blockquote>
+                {% endfor %}
+            </section>
+            {% endif %}
+        </div>
+
+        <aside class="resume-side">
+            <section class="resume-section">
+                <h2>{% trans "Skills" %}</h2>
+                {% if skills %}
+                <ul class="resume-skills">
+                    {% for s in skills %}
+                    <li>
+                        <span>{{ s.skill.name }}</span>
+                        {% if s.count %}<span class="resume-endorsed" title="{% trans 'Endorsements' %}"><span class="material-symbols-outlined">verified</span>{{ s.count }}</span>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="resume-empty">{% trans "No skills listed." %}</p>
+                {% endif %}
+            </section>
+
+            <section class="resume-section">
+                <h2>{% trans "Certifications" %}</h2>
+                {% if certifications or training %}
+                <ul class="resume-creds">
+                    {% for c in certifications %}
+                    <li>
+                        <strong>{{ c.certificate.name }}</strong>
+                        <span>{% if c.certificate.issuer %}{{ c.certificate.issuer }} &middot; {% endif %}{{ c.issue_date|default:c.issued_at|date:"M Y" }}{% if c.expiration_date %} &ndash; {{ c.expiration_date|date:"M Y" }}{% endif %}</span>
+                    </li>
+                    {% endfor %}
+                    {% for t in training %}
+                    <li>
+                        <strong>{{ t.name }}</strong>
+                        <span>{{ company_name }} &middot; {{ t.date|date:"M Y" }}{% if t.expires %} &ndash; {{ t.expires|date:"M Y" }}{% endif %}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="resume-empty">{% trans "No certifications yet." %}</p>
+                {% endif %}
+            </section>
+        </aside>
+    </div>
+
+    <footer class="resume-foot">
+        <div>
+            <strong>{% blocktrans %}Verified by {{ company_name }}{% endblocktrans %}</strong>
+            <span>{% blocktrans with d=issued|date:"F j, Y" %}Hours and credentials as recorded on {{ d }}.{% endblocktrans %}</span>
+            <span class="resume-url">{{ profile_url }}</span>
+        </div>
+        <div class="resume-qr">{{ qr_svg|safe }}</div>
+    </footer>
+</main>
+{% endblock %}

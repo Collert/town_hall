@@ -1,0 +1,30 @@
+{% load i18n %}
+<div class="role-grid" id="module-grid">
+    {% for module in modules %}
+    <a href="{% url 'console_module_edit' module.pk %}" class="role-tile module-tile">
+        <div class="module-tile-cover" {% if module.photo %}style="background-image: url('{{ module.photo.url }}')"{% endif %}>
+            <span class="c-icon-tile dark"><span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span></span>
+            {% if module.published %}<span class="c-badge c-badge-mint">{% trans "Published" %}</span>{% else %}<span class="c-badge c-badge-dark">{% trans "Draft" %}</span>{% endif %}
+        </div>
+        {% if module.topic %}<span class="c-label module-topic">{{ module.topic.name }}</span>{% endif %}
+        <h3>{{ module.title }}</h3>
+        <p>{{ module.description|striptags|truncatechars:90 }}</p>
+        <div class="module-tile-stats">
+            <span><span class="material-symbols-outlined">menu_book</span>{% blocktrans count counter=module.lesson_count %}{{ counter }} lesson{% plural %}{{ counter }} lessons{% endblocktrans %}</span>
+            <span><span class="material-symbols-outlined">quiz</span>{% blocktrans count counter=module.quiz_count %}{{ counter }} quiz{% plural %}{{ counter }} quizzes{% endblocktrans %}</span>
+            <span><span class="material-symbols-outlined">workspace_premium</span>{% blocktrans count counter=module.completion_count %}{{ counter }} completion{% plural %}{{ counter }} completions{% endblocktrans %}</span>
+        </div>
+    </a>
+    {% empty %}
+    <div class="c-empty role-grid-empty">
+        <span class="material-symbols-outlined">school</span>
+        {% if query or status %}
+        <h3>{% trans "No modules match" %}</h3>
+        {% else %}
+        <h3>{% trans "No training modules yet" %}</h3>
+        <p>{% trans "Create a module, add lessons and a quiz, then attach it to the roles that need it." %}</p>
+        <a href="{% url 'console_module_create' %}" class="c-btn c-btn-primary"><span class="material-symbols-outlined">add</span>{% trans "New Module" %}</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>

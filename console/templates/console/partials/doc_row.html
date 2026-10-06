@@ -1,0 +1,6 @@
+{% load i18n %}
+<div class="c-list-item doc-row">
+    <span class="material-symbols-outlined doc-row-handle">description</span>
+    <input type="text" name="docs" value="{{ doc }}" class="c-input" maxlength="120" placeholder="{% trans 'e.g. Government ID or Passport' %}">
+    <button type="button" class="c-icon-btn danger" data-remove-closest=".doc-row" aria-label="{% trans 'Remove requirement' %}"><span class="material-symbols-outlined">delete</span></button>
+</div>

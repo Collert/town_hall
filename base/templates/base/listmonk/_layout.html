@@ -1,0 +1,58 @@
+{% load i18n %}{% comment %}
+Shared frame for the transactional email seeds (see base/email_templates.py). This renders
+to a listmonk (Go) template: brand.x prints {{ $x }}, tx.x prints {{ .Tx.Data.x }}. Emails
+can't use the site's CSS variables, so the stylesheet below takes its colours from the brand
+variables at the top. Seeds style their markup with these th-* classes.
+{% endcomment %}{{ brand_header }}
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<style>
+body { margin: 0; padding: 0; background-color: {{ brand.color_background }}; }
+.th-page { width: 100%; background-color: {{ brand.color_background }}; }
+.th-page-cell { padding: 32px 16px; }
+.th-container { width: 100%; max-width: 560px; }
+.th-header { padding: 0 8px 20px; }
+.th-logo-tile { width: 48px; height: 48px; border-radius: 16px; background-color: {{ brand.color_card }}; }
+.th-logo { display: block; margin: 0 auto; width: auto; height: auto; max-width: 40px; max-height: 40px; border: 0; border-radius: 10px; }
+.th-logo-gap { width: 12px; font-size: 0; line-height: 0; }
+.th-org { font-family: Manrope, Inter, Arial, sans-serif; font-size: 18px; line-height: 1.2; font-weight: 800; color: {{ brand.color_primary }}; }
+.th-card { background-color: {{ brand.color_card }}; border-radius: 16px; padding: 36px 32px; font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: {{ brand.color_text }}; }
+.th-footer { padding: 20px 8px 0; font-family: Inter, Arial, sans-serif; font-size: 13px; line-height: 1.5; color: {{ brand.color_muted }}; }
+.th-eyebrow { margin: 0 0 6px; font-family: Manrope, Inter, Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{ brand.color_accent }}; }
+.th-title { margin: 0 0 20px; font-family: Manrope, Inter, Arial, sans-serif; font-size: 26px; line-height: 1.25; font-weight: 800; color: {{ brand.color_primary }}; }
+.th-text { margin: 0 0 16px; }
+.th-meta { margin: 0 0 16px; font-weight: 600; color: {{ brand.color_muted }}; }
+.th-note { margin: 20px 0 0; font-size: 14px; color: {{ brand.color_muted }}; }
+.th-box { margin: 20px 0; padding: 16px 20px; border-radius: 16px; background-color: {{ brand.color_background }}; }
+.th-quote { font-style: italic; }
+.th-label { margin: 20px 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{ brand.color_muted }}; }
+.th-details { width: 100%; margin: 20px 0; border-radius: 16px; background-color: {{ brand.color_background }}; }
+.th-details-label { padding: 16px 20px 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{ brand.color_muted }}; }
+.th-details-value { padding: 0 20px 12px; }
+.th-button-wrap { margin: 28px 0 8px; }
+.th-button-cell { border-radius: 999px; background-color: {{ brand.color_accent }}; }
+.th-button { display: inline-block; padding: 14px 28px; border-radius: 999px; font-family: Manrope, Inter, Arial, sans-serif; font-size: 16px; font-weight: 700; color: {{ brand.color_on_accent }}; text-decoration: none; }
+</style>
+</head>
+<body>
+<table role="presentation" class="th-page" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr><td align="center" class="th-page-cell">
+<table role="presentation" class="th-container" width="100%" cellpadding="0" cellspacing="0" border="0">
+<tr><td class="th-header">
+{% include 'base/listmonk/_brand.html' %}
+</td></tr>
+<tr><td class="th-card">
+{% block content %}{% endblock %}
+</td></tr>
+<tr><td class="th-footer">
+{% block footer %}{% blocktranslate with org=brand.org_name %}You're getting this email because you have an account with {{ org }}.{% endblocktranslate %}{% endblock %}
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>

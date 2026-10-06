@@ -1,0 +1,28 @@
+{% load i18n %}
+{% comment %}
+Usage: {% include 'console/partials/pagination.html' with page=page pages=pages hx_url=... hx_target=... %}
+Without hx_url the links are plain page loads.
+{% endcomment %}
+{% if page.paginator.num_pages > 1 %}
+<nav class="c-pagination" aria-label="{% trans 'Pagination' %}">
+    {% if page.has_previous %}
+    <a class="c-page" href="{{ hx_url }}{% querystring page=page.previous_page_number %}" {% if hx_url %}hx-get="{{ hx_url }}{% querystring page=page.previous_page_number %}" hx-target="{{ hx_target }}" hx-swap="outerHTML"{% endif %} aria-label="{% trans 'Previous page' %}"><span class="material-symbols-outlined">chevron_left</span></a>
+    {% else %}
+    <span class="c-page disabled"><span class="material-symbols-outlined">chevron_left</span></span>
+    {% endif %}
+    {% for n in pages %}
+        {% if n is None %}
+        <span class="c-page disabled">&hellip;</span>
+        {% elif n == page.number %}
+        <span class="c-page current" aria-current="page">{{ n }}</span>
+        {% else %}
+        <a class="c-page" href="{{ hx_url }}{% querystring page=n %}" {% if hx_url %}hx-get="{{ hx_url }}{% querystring page=n %}" hx-target="{{ hx_target }}" hx-swap="outerHTML"{% endif %}>{{ n }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page.has_next %}
+    <a class="c-page" href="{{ hx_url }}{% querystring page=page.next_page_number %}" {% if hx_url %}hx-get="{{ hx_url }}{% querystring page=page.next_page_number %}" hx-target="{{ hx_target }}" hx-swap="outerHTML"{% endif %} aria-label="{% trans 'Next page' %}"><span class="material-symbols-outlined">chevron_right</span></a>
+    {% else %}
+    <span class="c-page disabled"><span class="material-symbols-outlined">chevron_right</span></span>
+    {% endif %}
+</nav>
+{% endif %}

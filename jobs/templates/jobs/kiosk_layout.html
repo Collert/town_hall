@@ -1,0 +1,41 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if kind == 'event' %}{{ place.title }}{% else %}{{ place.name }}{% endif %} | {% trans "Volunteer Kiosk" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css">
+<link rel="stylesheet" href="{% static 'jobs/kiosk_layout.css' %}">
+{% block kiosk_css %}{% endblock %}
+{% endblock %}
+
+{% block body_class %}kiosk{% endblock %}
+
+{% block content %}
+<main class="kiosk-shell">
+    <section class="kiosk-side">
+        {% include 'jobs/partials/kiosk_place_card.html' %}
+    </section>
+    <section class="kiosk-main">
+        {% block kiosk_content %}{% endblock %}
+    </section>
+</main>
+{% include 'jobs/partials/kiosk_language.html' %}
+{% endblock %}
+
+{% block extra_js %}
+{% if kiosk_user %}
+<script>
+    // Shared device: end the kiosk session after a period of inactivity.
+    (function () {
+        const timeout = {{ idle_timeout|default:30 }} * 1000;
+        const signOutUrl = "{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}";
+        let timer;
+        const reset = () => { clearTimeout(timer); timer = setTimeout(() => { location.href = signOutUrl; }, timeout); };
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((evt) => document.addEventListener(evt, reset, { passive: true }));
+        reset();
+    })();
+</script>
+{% endif %}
+{% block kiosk_js %}{% endblock %}
+{% endblock %}

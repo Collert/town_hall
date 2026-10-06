@@ -1,0 +1,102 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if role %}{% trans "Edit Role Template" %}{% else %}{% trans "Create New Role Template" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/role_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_roles' %}">{% trans "Role Directory" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% if role %}{{ role.name }}{% else %}{% trans "New Template" %}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" id="role-form">
+    {% csrf_token %}
+    <header class="page-header">
+        <h1 class="page-title">{% if role %}{% trans "Edit Role Template" %}{% else %}{% trans "Template Builder" %}{% endif %}</h1>
+        <div class="page-actions">
+            <a href="{% url 'console_roles' %}" class="c-btn c-btn-ghost c-btn-lg">{% trans "Cancel" %}</a>
+            <button type="submit" class="c-btn c-btn-primary c-btn-lg">{% trans "Save Template" %}</button>
+        </div>
+    </header>
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">info</span>{% trans "General Information" %}</h2>
+                {% include 'console/partials/translated_fields.html' %}
+                <div class="role-icon-row">
+                    {% include 'console/partials/icon_picker.html' with icons=icons current=current_icon label=_("Role Icon") errors=form.icon.errors %}
+                </div>
+            </section>
+
+            <section class="c-card">
+                <div class="c-card-title role-modules-title">
+                    <span class="material-symbols-outlined">school</span>{% trans "Required Training Modules" %}
+                    <div class="c-input-icon c-search c-card-title-aside">
+                        <span class="material-symbols-outlined">search</span>
+                        <input type="search" name="module_q" class="c-input" placeholder="{% trans 'Search modules...' %}" autocomplete="off"
+                               hx-get="{% url 'console_role_module_search' %}" hx-trigger="input changed delay:250ms, focus once"
+                               hx-include="#module-rows" hx-target="#module-results">
+                    </div>
+                </div>
+                <div id="module-results" class="module-results"></div>
+                <div class="c-list" id="module-rows">
+                    {% for req in requirements %}{% include 'console/partials/module_requirement_row.html' %}{% endfor %}
+                </div>
+                <p class="c-help module-help">{% trans "Mandatory modules must be completed before a volunteer can sign up. Optional modules are recommended." %}</p>
+            </section>
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">auto_awesome</span>{% trans "Preferred Skills" %}</h2>
+                <p class="c-muted role-side-intro">{% trans "Non-mandatory skills that improve volunteer matching when you send invitations." %}</p>
+                {% include 'console/partials/skills_editor.html' %}
+            </section>
+
+            <section class="c-card c-card-dark role-settings">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">settings</span>{% trans "Template Settings" %}</h2>
+                <div class="c-stack">
+                    {% trans "Ongoing position not tied to events (kiosk check-in at venues)" as permanent_hint %}
+                    {% include 'console/partials/toggle.html' with field=form.permanent title=_("Permanent position") hint=permanent_hint %}
+                    {% include 'console/partials/field.html' with field=form.regular_number_of_beneficiaries %}
+                    {% include 'console/partials/field.html' with field=form.points_weight %}
+                    <div class="role-venues">
+                        {% if form.venue.field.queryset.exists %}
+                        {% include 'console/partials/field.html' with field=form.venue %}
+                        {% else %}
+                        <span class="c-label">{% trans "Venues" %}</span>
+                        <p class="c-help">{% trans "No venues yet. Add the places this position works from so staff can check in at their kiosk." %}</p>
+                        {% endif %}
+                        <a href="{% url 'console_venues' %}" class="role-venues-link" target="_blank" rel="noopener">{% trans "Manage venues" %} <span class="material-symbols-outlined">arrow_outward</span></a>
+                    </div>
+                </div>
+            </section>
+
+            <a href="{% url 'console_roles' %}" class="role-count-card">
+                <span>
+                    <span class="c-label">{% trans "Active Templates" %}</span>
+                    <strong>{{ total_roles }}</strong>
+                </span>
+                <span class="material-symbols-outlined">content_copy</span>
+                <span class="role-count-link">{% trans "View Full Directory" %} <span class="material-symbols-outlined">arrow_forward</span></span>
+            </a>
+
+            {% if role %}
+            <button type="submit" form="role-delete-form" class="c-btn c-btn-danger"
+                    onclick="return confirm('{% trans "Delete this role template?" %}')">
+                <span class="material-symbols-outlined">delete</span>{% trans "Delete template" %}
+            </button>
+            {% endif %}
+        </aside>
+    </div>
+</form>
+{% if role %}
+<form method="post" action="{% url 'console_role_delete' role.pk %}" id="role-delete-form">{% csrf_token %}</form>
+{% endif %}
+{% endblock %}

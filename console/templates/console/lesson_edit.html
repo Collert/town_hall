@@ -1,0 +1,81 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if lesson %}{{ lesson.title }}{% else %}{% trans "New Lesson" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/lesson_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_modules' %}">{% trans "Training Modules" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_module_edit' module.pk %}">{{ module.title }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% if lesson %}{{ lesson.title }}{% else %}{% trans "New Lesson" %}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% if lesson %}{{ lesson.title }}{% else %}{% trans "New Lesson" %}{% endif %}</h1>
+        {% if lesson %}
+        <div class="page-meta">
+            <span class="c-badge"><span class="material-symbols-outlined">{% if lesson.video_url %}smart_display{% else %}article{% endif %}</span>{% if lesson.video_url %}{% trans "Video Lesson" %}{% else %}{% trans "Reading" %}{% endif %}</span>
+            <span><span class="material-symbols-outlined">timer</span>{% blocktrans with m=lesson.overall_length %}{{ m }} min estimated time{% endblocktrans %}</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="page-actions">
+        {% if lesson %}<a href="{% url 'lesson_detail' module.pk lesson.pk %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener"><span class="material-symbols-outlined">visibility</span>{% trans "Preview" %}</a>{% endif %}
+        <button type="submit" form="lesson-form" name="next" value="new" class="c-btn c-btn-outline">{% trans "Save & Add Another" %}</button>
+        <button type="submit" form="lesson-form" class="c-btn c-btn-primary">{% trans "Save Lesson" %}</button>
+    </div>
+</header>
+
+<div class="c-split">
+    <form method="post" id="lesson-form" class="c-stack">
+        {% csrf_token %}
+        <section class="lesson-video">
+            {% if lesson.youtube_video_id %}
+            <div class="lesson-video-embed">
+                <iframe src="https://www.youtube.com/embed/{{ lesson.youtube_video_id }}" title="{{ lesson.title }}" allowfullscreen loading="lazy"></iframe>
+            </div>
+            {% else %}
+            <span class="lesson-video-icon"><span class="material-symbols-outlined">play_arrow</span></span>
+            <h2>{% trans "Add Lesson Video" %}</h2>
+            <p>{% trans "Paste a YouTube link to embed a video in this lesson. Leave blank for a reading-only lesson." %}</p>
+            {% endif %}
+            <div class="lesson-video-fields">
+                <div class="c-input-icon">
+                    <span class="material-symbols-outlined">link</span>
+                    {{ form.video_url }}
+                </div>
+                {{ form.video_length_minutes }}
+            </div>
+            {% for error in form.video_url.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+            <span class="c-help">{{ form.video_length_minutes.help_text }}</span>
+        </section>
+
+        <section class="c-card">
+            {% include 'console/partials/translated_fields.html' with md_fields="content" %}
+        </section>
+
+        {% if lesson %}
+        <div class="c-form-actions lesson-delete">
+            <button type="submit" form="lesson-delete-form" class="c-btn c-btn-danger" onclick="return confirm('{% trans "Delete this lesson?" %}')">
+                <span class="material-symbols-outlined">delete</span>{% trans "Delete lesson" %}
+            </button>
+        </div>
+        {% endif %}
+    </form>
+
+    <aside>
+        {% include 'console/partials/module_structure.html' %}
+    </aside>
+</div>
+
+{% if lesson %}
+<form method="post" action="{% url 'console_lesson_delete' module.pk lesson.pk %}" id="lesson-delete-form">{% csrf_token %}</form>
+{% endif %}
+{% endblock %}

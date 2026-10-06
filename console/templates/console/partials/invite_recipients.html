@@ -1,0 +1,25 @@
+{% load i18n avatar_tags %}
+<div id="recipients" class="recipients">
+    {% for r in recipients %}
+    {% ifchanged r.recommended %}<h3 class="c-label recipients-heading">{% if r.recommended %}{% trans "Recommended Volunteers" %}{% else %}{% trans "Other Volunteers" %}{% endif %}</h3>{% endifchanged %}
+    <label class="recipient {% if r.invited %}is-invited{% endif %}">
+        <input type="checkbox" name="user_ids" value="{{ r.user.pk }}" {% if r.conflict %}disabled{% endif %}>
+        {% avatar r.user 'sm' %}
+        <span class="recipient-info">
+            <strong>{{ r.user|display_name }}</strong>
+            <small>
+                {% if r.conflict %}{% trans "Busy: has a conflicting commitment" %}
+                {% elif r.invited %}{% trans "Already invited, awaiting reply" %}
+                {% elif r.matched %}{% trans "Matched for:" %} {{ r.matched|join:", " }}
+                {% else %}{{ r.user.email }}{% endif %}
+            </small>
+        </span>
+        <span class="c-badge {% if r.score >= 80 %}c-badge-mint{% endif %}">{% blocktrans with s=r.score %}{{ s }}% match{% endblocktrans %}</span>
+    </label>
+    {% empty %}
+    <div class="c-empty">
+        <span class="material-symbols-outlined">person_search</span>
+        <p>{% trans "No volunteers found. Everyone may already be signed up for this slot." %}</p>
+    </div>
+    {% endfor %}
+</div>

@@ -1,0 +1,200 @@
+.invite-page {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.invite-card {
+    border-radius: 2rem;
+    overflow: hidden;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+}
+
+.invite-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    min-height: 14rem;
+    padding: 2rem;
+    background-color: var(--color-primary);
+    background-size: cover;
+    background-position: center;
+}
+
+.invite-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(from var(--color-primary) r g b / 0.92), rgba(from var(--color-primary) r g b / 0.25));
+}
+
+.invite-hero > * {
+    position: relative;
+}
+
+.invite-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: max-content;
+    padding: 0.3rem 0.9rem;
+    border-radius: 9999px;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.invite-badge .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.invite-hero h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-primary-contrast);
+    line-height: 1.1;
+}
+
+.invite-body {
+    padding: 2rem 2.5rem 2.5rem;
+}
+
+.invite-lead {
+    font-size: 1.15rem;
+    color: var(--color-text-primary);
+}
+
+.invite-lead strong {
+    color: var(--color-accent);
+}
+
+.invite-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1.75rem 0;
+}
+
+.invite-facts div {
+    padding: 1.1rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.invite-facts dt {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 0.35rem;
+}
+
+.invite-facts dt .material-symbols-outlined {
+    font-size: 1rem;
+    color: var(--color-accent);
+}
+
+.invite-facts dd {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.invite-facts small {
+    font-weight: 400;
+    color: var(--color-text-secondary);
+}
+
+.invite-desc {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.invite-training {
+    margin-top: 1.75rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--color-bg-secondary);
+}
+
+.invite-training h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.invite-training ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.invite-training li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+}
+
+.invite-training li a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.invite-training li.done {
+    color: var(--color-success);
+}
+
+.invite-warn {
+    margin-top: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-accent) r g b / 0.1);
+    color: var(--color-accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.invite-done {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0 1rem;
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+.invite-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.invite-decline {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 600px) {
+    .invite-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .invite-body {
+        padding: 1.5rem;
+    }
+}

@@ -1,0 +1,6 @@
+{% comment %}One color input with live hex readout. `var` (optional) previews the change on this page.{% endcomment %}
+<label class="color-row {% if is_dark %}dark{% endif %}{% if field.errors %} has-error{% endif %}">
+    <input type="color" name="{{ field.html_name }}" value="{{ field.value }}" class="color-swatch" {% if var %}data-css-var="{{ var }}"{% endif %}>
+    <span class="color-hex" data-hex-for="{{ field.html_name }}">{{ field.value|upper }}</span>
+    <span class="color-label">{{ label }}</span>
+</label>

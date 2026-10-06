@@ -1,0 +1,96 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n humanize %}
+
+{% block title %}{% trans "Volunteer Pool" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/volunteer_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Volunteer Pool" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Volunteer Pool" %}</h1>
+        <p class="page-lead">{% trans "Manage and engage your community of dedicated builders and contributors." %}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'console_export_volunteers' %}" class="c-btn c-btn-lg"><span class="material-symbols-outlined">download</span>{% trans "Export List" %}</a>
+        <button type="button" class="c-btn c-btn-dark c-btn-lg" data-dialog-open="new-volunteer-dialog"><span class="material-symbols-outlined">person_add</span>{% trans "Add Volunteer" %}</button>
+    </div>
+</header>
+
+<section class="pool-stats">
+    <div class="c-stat pool-stat-total">
+        <div class="c-stat-label">{% trans "Total Volunteers" %}</div>
+        <div class="c-stat-value pool-big">{{ total_volunteers|intcomma }}</div>
+        {% if new_this_quarter %}<div class="c-stat-note pool-trend"><span class="material-symbols-outlined">trending_up</span>{% blocktrans with n=new_this_quarter %}+{{ n }} joined this quarter{% endblocktrans %}</div>{% endif %}
+        <span class="material-symbols-outlined pool-stat-art">groups</span>
+    </div>
+    <div class="c-stat c-card-tonal">
+        <div class="c-stat-label">{% trans "Active This Month" %}</div>
+        <div class="c-stat-value">{{ active_month|intcomma }}</div>
+        <div class="c-progress thin pool-mini-progress"><span style="width: {{ active_percent }}%"></span></div>
+    </div>
+    <div class="c-stat c-card-tonal">
+        <div class="c-stat-label">{% trans "Average Hours" %}</div>
+        <div class="c-stat-value">{{ avg_weekly_hours }}</div>
+        <div class="c-stat-note">{% trans "per active volunteer / week" %}</div>
+    </div>
+    <div class="c-stat dark pool-skills">
+        <div class="pool-skills-title">{% trans "Top Skills in Pool" %}</div>
+        <div class="c-chips">
+            {% for skill in top_skills %}<a href="?q={{ skill.name|urlencode }}" class="pool-skill">{{ skill.name }}</a>{% empty %}<span class="c-stat-note">{% trans "No skills recorded yet." %}</span>{% endfor %}
+        </div>
+        <span class="material-symbols-outlined pool-stat-art">settings</span>
+    </div>
+</section>
+
+<section class="pool-table">
+    <form class="pool-filters" hx-get="{% url 'console_volunteers' %}" hx-target="#volunteer-table" hx-swap="outerHTML"
+          hx-trigger="change, input delay:300ms from:input[name=q]" hx-push-url="true">
+        <div class="c-input-icon c-search">
+            <span class="material-symbols-outlined">search</span>
+            <input type="search" name="q" value="{{ query }}" class="c-input" placeholder="{% trans 'Search name, email, skill or ID...' %}">
+        </div>
+        <label class="pool-filter">
+            <span>{% trans "Status:" %}</span>
+            <select name="status" class="c-select">
+                <option value="">{% trans "All Statuses" %}</option>
+                <option value="active" {% if status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                <option value="inactive" {% if status == 'inactive' %}selected{% endif %}>{% trans "Inactive" %}</option>
+                <option value="deactivated" {% if status == 'deactivated' %}selected{% endif %}>{% trans "Deactivated" %}</option>
+            </select>
+        </label>
+    </form>
+    {% include 'console/partials/volunteer_table.html' %}
+</section>
+
+<dialog class="c-dialog" id="new-volunteer-dialog">
+    <form method="post" action="{% url 'console_volunteer_create' %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Add Volunteer" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-form">
+            <div class="c-grid-2">
+                {% include 'console/partials/field.html' with field=new_form.first_name %}
+                {% include 'console/partials/field.html' with field=new_form.last_name %}
+            </div>
+            {% include 'console/partials/field.html' with field=new_form.email %}
+            {% include 'console/partials/field.html' with field=new_form.password %}
+            <p class="c-help">{% trans "Share the temporary password with them; they can change it from their account settings. A 6-digit kiosk ID is generated automatically." %}</p>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% trans "Create Account" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endblock %}

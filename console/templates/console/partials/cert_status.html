@@ -1,0 +1,1 @@
+{% load i18n %}{% if status == 'verified' %}{% trans "Verified" %}{% elif status == 'expired' %}{% trans "Expired" %}{% elif status == 'rejected' %}{% trans "Rejected" %}{% else %}{% trans "Pending review" %}{% endif %}

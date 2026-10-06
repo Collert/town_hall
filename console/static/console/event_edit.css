@@ -1,0 +1,111 @@
+.event-tabs {
+    margin-bottom: 2.5rem;
+}
+
+.event-form-row {
+    margin-top: 1.5rem;
+}
+
+.event-image-drop {
+    margin-top: 0.75rem;
+    min-height: 16rem;
+}
+
+.event-side {
+    position: sticky;
+    top: 6rem;
+}
+
+.event-settings .c-field div[id] {
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+@media (max-width: 1200px) {
+    .event-side {
+        position: static;
+    }
+}
+
+/* Venue picker: the typed address only shows when "Somewhere else" is chosen. */
+.event-where {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.event-where:has(#id_venue option:checked:not([value=""])) .event-address {
+    display: none;
+}
+
+.event-where:has(#id_venue option[value=""]:checked) .venue-preview {
+    display: none;
+}
+
+.event-venue-new {
+    align-self: flex-start;
+    margin-top: 0.35rem;
+    font-size: 0.8125rem;
+}
+
+.venue-preview {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.venue-preview:empty {
+    display: none;
+}
+
+.venue-preview-photo {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 1rem;
+    background: var(--color-primary) center / cover no-repeat;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.6);
+}
+
+.venue-preview-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.venue-preview-body strong {
+    color: var(--color-text-primary);
+}
+
+.venue-preview-body small {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.venue-preview-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.venue-preview-meta > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.venue-preview-meta .material-symbols-outlined {
+    font-size: 1.05rem;
+    color: var(--color-text-tertiary);
+}

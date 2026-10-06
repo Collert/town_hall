@@ -1,0 +1,110 @@
+{% extends 'base/layout.html' %}
+{% load static i18n humanize avatar_tags %}
+
+{% block title %}{% trans "Thank you" %} | {{ event.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'events/event_thank_you.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="ty-page">
+    <section class="ty-hero">
+        <div class="ty-hero-text">
+            <span class="ty-chip">{% if event.is_past %}{% trans "Event completed" %}{% else %}{% trans "Event in progress" %}{% endif %}</span>
+            <h1>
+                {% blocktrans with name=user.first_name|default:user.username %}Thank you, {{ name }}!{% endblocktrans %}
+                <span class="ty-accent">{% trans "Your impact was" %}</span> {% trans "incredible." %}
+            </h1>
+            <p>{% blocktrans with title=event.title %}You were a vital part of <strong>{{ title }}</strong>. Because of your dedication, our community is stronger and more connected today.{% endblocktrans %}</p>
+        </div>
+        {% if event.image %}<img src="{{ event.image.url }}" alt="" class="ty-hero-image">{% endif %}
+    </section>
+
+    <section>
+        <h2 class="ty-section-title">{% trans "Personal Impact Summary" %}</h2>
+        <div class="ty-stats">
+            <div class="ty-stat">
+                <span class="material-symbols-outlined">schedule</span>
+                <strong>{{ me.hours }} {% trans "hrs" %}</strong>
+                <small>{% if me.verified %}{% trans "Verified hours contributed" %}{% else %}{% trans "Scheduled hours" %}{% endif %}</small>
+            </div>
+            <div class="ty-stat">
+                <span class="material-symbols-outlined">group</span>
+                <strong>{{ connections }}</strong>
+                <small>{% trans "Community connections" %}</small>
+            </div>
+            <div class="ty-stat">
+                <span class="material-symbols-outlined">bolt</span>
+                <strong>{{ me.points|intcomma }}</strong>
+                <small>{% trans "Impact points earned" %}</small>
+            </div>
+        </div>
+    </section>
+
+    {% if teammates %}
+    <section>
+        <h2 class="ty-section-title ty-no-rule">{% trans "Teammates You Worked With" %}</h2>
+        <p class="ty-sub">{% trans "Quickly recognize a peer for their great work. One tap sends an endorsement." %}</p>
+        <div class="ty-teammates">
+            {% for t in teammates %}
+            <article class="ty-teammate">
+                <a href="{% url 'profile_view' t.user.username %}" class="ty-teammate-head">
+                    {% avatar t.user 'md' %}
+                    <span><strong>{{ t.user|display_name }}</strong><small>{{ t.role }}</small></span>
+                </a>
+                {% for s in t.skills %}
+                {% include 'base/partials/quick_endorse_chip.html' with teammate=t.user skill=s.skill endorsed=s.endorsed %}
+                {% endfor %}
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="ty-split">
+        <section class="ty-feedback">
+            <h2>{% trans "Share Your Experience" %}</h2>
+            <p class="ty-sub">{% trans "Help us make the next event even better." %}</p>
+            <form method="post">
+                {% csrf_token %}
+                <span class="ty-label">{% trans "Overall Experience" %}</span>
+                <div class="ty-stars">
+                    {% for n in "54321" %}
+                    <input type="radio" name="rating" value="{{ n }}" id="ty-rating-{{ n }}" required {% if feedback.rating|stringformat:"s" == n %}checked{% endif %}>
+                    <label for="ty-rating-{{ n }}" aria-label="{% blocktrans %}{{ n }} stars{% endblocktrans %}"><span class="material-symbols-outlined">star</span></label>
+                    {% endfor %}
+                </div>
+                <label class="ty-label" for="ty-enjoyed">{% trans "What did you enjoy most?" %}</label>
+                <textarea id="ty-enjoyed" name="enjoyed" rows="3" placeholder="{% trans 'The teamwork, the music, the impact...' %}">{{ feedback.enjoyed }}</textarea>
+                <label class="ty-label" for="ty-suggestions">{% trans "Suggestions for improvement?" %}</label>
+                <textarea id="ty-suggestions" name="suggestions" rows="3" placeholder="{% trans 'Maybe more shade in the volunteer lounge?' %}">{{ feedback.suggestions }}</textarea>
+                <button type="submit" class="btn btn-accent btn-rounded btn-full">{% if feedback %}{% trans "Update Report" %}{% else %}{% trans "Submit Report" %}{% endif %}</button>
+            </form>
+        </section>
+
+        <section class="ty-bigger">
+            <h2>{% trans "The Bigger Picture" %}</h2>
+            <p class="ty-sub">{% trans "Here is what we achieved together." %}</p>
+            <div class="ty-bigger-card" {% if event.image %}style="--ty-bg: url('{{ event.image.url }}')"{% endif %}>
+                <div><strong>{{ totals.hours|intcomma }}</strong><span>{% trans "Total hours contributed" %}</span></div>
+                <div><strong>{{ totals.volunteers|intcomma }}</strong><span>{% trans "Volunteers united" %}</span></div>
+                {% if event.post_event_statement %}
+                <blockquote>&ldquo;{{ event.post_event_statement|truncatewords:60 }}&rdquo;{% if coordinator %}<cite>&mdash; {{ coordinator|display_name }}</cite>{% endif %}</blockquote>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <section class="ty-cta">
+        <h2>{% trans "Ready for your next spark?" %}</h2>
+        <div class="ty-cta-actions">
+            <a href="{% url 'explore_opportunities' %}" class="btn btn-dark btn-rounded btn-lg">{% trans "Find Your Next Opportunity" %}</a>
+            {% if event.is_past %}
+            <a href="{% url 'event_certificate' event.pk user.username %}" class="btn btn-dark btn-rounded btn-lg"><span class="material-symbols-outlined">workspace_premium</span>{% trans "My Certificate" %}</a>
+            {% endif %}
+            <a href="{% url 'impact_record' user.username %}" class="btn btn-rounded btn-lg ty-cta-light">{% trans "View My Impact Record" %}</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

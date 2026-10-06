@@ -1,0 +1,19 @@
+{% load i18n static %}
+<!-- Toast Notifications Container -->
+<div class="toast-container" id="toast-container" data-dismiss-label="{% trans 'Dismiss' %}">
+    {% for message in messages %}
+    <div class="toast toast-{{ message.tags }}" data-auto-dismiss="true">
+        <div class="toast-icon">
+            <span class="material-symbols-outlined">{% if message.tags == 'success' %}check_circle{% elif message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}notifications{% endif %}</span>
+        </div>
+        <div class="toast-content">
+            <span class="toast-message">{{ message }}</span>
+        </div>
+        <button class="toast-dismiss" aria-label="{% trans 'Dismiss' %}">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <div class="toast-progress"></div>
+    </div>
+    {% endfor %}
+</div>
+<script src="{% static 'base/toasts.js' %}"></script>

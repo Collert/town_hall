@@ -537,7 +537,7 @@
 .sidebar-nav-link:hover,
 .sidebar-nav-link.active {
     background: var(--color-bg-tertiary);
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .sidebar-nav-link .material-symbols-outlined {
@@ -562,7 +562,7 @@
 }
 
 .sidebar-event-item a:hover .sidebar-event-name {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .sidebar-event-dot {
@@ -718,7 +718,7 @@
 
 .checkin-dialog-icon .material-symbols-outlined {
     font-size: 1.75rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .checkin-dialog-title {
@@ -750,7 +750,7 @@
 
 .checkin-dialog-location .material-symbols-outlined {
     font-size: 1.25rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     flex-shrink: 0;
     margin-top: 0.1rem;
 }
@@ -770,7 +770,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     text-decoration: none;
     margin-top: 0.5rem;
     transition: opacity 0.15s;
@@ -782,4 +782,64 @@
 
 .checkin-dialog-details-link .material-symbols-outlined {
     font-size: 1rem;
+}
+
+/* ── Invitations ── */
+.invite-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.invite-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.5rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    box-shadow: inset 4px 0 0 var(--color-accent);
+    transition: transform 0.2s ease;
+}
+
+.invite-row:hover {
+    transform: translateX(4px);
+}
+
+.invite-row > .material-symbols-outlined {
+    color: var(--color-accent);
+}
+
+.invite-row-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.invite-row-text strong {
+    display: block;
+    font-family: 'Manrope', sans-serif;
+    color: var(--color-text-primary);
+}
+
+.invite-row-text small {
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-secondary);
+}
+
+.invite-row-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--color-accent);
+}
+
+.checkin-dialog-location small {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-text-secondary);
 }

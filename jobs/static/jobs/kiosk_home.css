@@ -1,0 +1,80 @@
+.kiosk-setup {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+}
+
+.kiosk-setup .kiosk-title,
+.kiosk-setup .kiosk-lead {
+    text-align: left;
+}
+
+.kiosk-setup-back {
+    margin: 0 0 1.5rem;
+}
+
+.kiosk-setup-group {
+    margin-top: 2.75rem;
+}
+
+.kiosk-setup-group h2 {
+    margin-bottom: 1rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.kiosk-setup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 1.25rem;
+}
+
+.kiosk-setup-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.75rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+    transition: transform 150ms ease;
+}
+
+.kiosk-setup-card:hover {
+    transform: translateY(-3px);
+}
+
+.kiosk-setup-card.muted {
+    background: var(--color-bg-secondary);
+    box-shadow: none;
+}
+
+.kiosk-setup-card > .material-symbols-outlined {
+    font-size: 2rem;
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.kiosk-setup-card strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+}
+
+.kiosk-setup-card small {
+    color: var(--color-text-secondary);
+}
+
+.kiosk-setup-card .place-chip {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+}
+
+.kiosk-setup-empty {
+    color: var(--color-text-tertiary);
+}

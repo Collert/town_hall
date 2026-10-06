@@ -1,0 +1,80 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if certificate %}{{ certificate.name }}{% else %}{% trans "Create New Certificate" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/certificate_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_certificates' %}">{% trans "Certificates" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% if certificate %}{{ certificate.name }}{% else %}{% trans "New Certificate" %}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <a href="{% url 'console_certificates' %}" class="c-link cert-back"><span class="material-symbols-outlined">arrow_back</span>{% trans "Back to Certificates" %}</a>
+            <h1 class="page-title">{% if certificate %}{% trans "Edit Certificate" %}{% else %}{% trans "Create New Certificate" %}{% endif %}</h1>
+            <p class="page-lead">{% trans "Describe a standard credential so volunteers know exactly what proof to upload." %}</p>
+        </div>
+        <div class="page-actions">
+            <a href="{% url 'console_certificates' %}" class="c-btn c-btn-ghost c-btn-lg">{% trans "Cancel" %}</a>
+            <button type="submit" class="c-btn c-btn-primary c-btn-lg">{% if certificate %}{% trans "Save Changes" %}{% else %}{% trans "Publish" %}{% endif %}</button>
+        </div>
+    </header>
+
+    <div class="cert-edit-grid">
+        <section class="c-card cert-edit-main">
+            <div class="c-form">
+                {% include 'console/partials/field.html' with field=form.name %}
+                {% include 'console/partials/field.html' with field=form.issuer %}
+                {% include 'console/partials/field.html' with field=form.expires_after_days %}
+            </div>
+        </section>
+
+        <section class="c-card">
+            <div class="c-form">
+                {% include 'console/partials/field.html' with field=form.description %}
+                <span class="c-help">{% trans "Visible to volunteers browsing available certificates. Explain its value and purpose." %}</span>
+            </div>
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title">{% trans "Visual Identity" %}<span class="c-badge c-card-title-aside">{% trans "Badge Icon" %}</span></h2>
+            {% include 'console/partials/icon_picker.html' with icons=icons current=current_icon label=" " errors=form.icon.errors %}
+        </section>
+
+        <section class="c-card">
+            <div class="cert-docs-head">
+                <div>
+                    <h2 class="c-card-title">{% trans "Required Supporting Documents" %}</h2>
+                    <p class="c-muted">{% trans "Build the checklist of items applicants must submit." %}</p>
+                </div>
+                <button type="button" class="c-btn c-btn-sm cert-add-doc" hx-get="{% url 'console_doc_row' %}" hx-target="#doc-rows" hx-swap="beforeend">
+                    <span class="material-symbols-outlined">add</span>{% trans "Add Requirement" %}
+                </button>
+            </div>
+            <div class="c-list" id="doc-rows">
+                {% for doc in docs %}{% include 'console/partials/doc_row.html' %}{% empty %}{% include 'console/partials/doc_row.html' with doc='' %}{% endfor %}
+            </div>
+        </section>
+    </div>
+
+    {% if certificate %}
+    <div class="c-form-actions cert-delete">
+        <span class="c-muted">{% blocktrans count counter=holder_count %}{{ counter }} volunteer holds this certificate.{% plural %}{{ counter }} volunteers hold this certificate.{% endblocktrans %}</span>
+        <button type="submit" form="cert-delete-form" class="c-btn c-btn-danger" onclick="return confirm('{% trans "Delete this certificate template?" %}')">
+            <span class="material-symbols-outlined">delete</span>{% trans "Delete" %}
+        </button>
+    </div>
+    {% endif %}
+</form>
+{% if certificate %}
+<form method="post" action="{% url 'console_certificate_delete' certificate.pk %}" id="cert-delete-form">{% csrf_token %}</form>
+{% endif %}
+{% endblock %}

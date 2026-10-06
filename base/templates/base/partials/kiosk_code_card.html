@@ -1,0 +1,13 @@
+{% load i18n %}{% comment %}The signed-in user's kiosk check-in code, with a reset. Swapped in place by reset_kiosk_code.{% endcomment %}
+<div class="account-kiosk-card" id="kiosk-code-card">
+    <h4>{% trans "Kiosk Check-in" %}</h4>
+    <p class="kiosk-code-label">{% trans "Your kiosk ID" %}</p>
+    <p class="kiosk-code" aria-label="{% trans 'Kiosk ID' %} {{ profile.id_code }}">{{ profile.id_code|slice:":3" }}<span class="kiosk-code-gap"></span>{{ profile.id_code|slice:"3:" }}</p>
+    <p class="kiosk-code-help">{% trans "Type this code on an event kiosk to check in and out. Keep it to yourself: anyone with it can check in as you." %}</p>
+    <button type="button" class="security-link" hx-post="{% url 'reset_kiosk_code' %}" hx-target="#kiosk-code-card" hx-swap="outerHTML"
+            hx-confirm="{% trans 'Generate a new kiosk ID? Your current one will stop working right away.' %}">
+        <span class="material-symbols-outlined">autorenew</span>
+        {% trans "Generate a new code" %}
+        <span class="material-symbols-outlined security-link-arrow">chevron_right</span>
+    </button>
+</div>

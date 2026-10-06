@@ -1,0 +1,148 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{{ event.title }} &middot; {% trans "Check-in Monitor" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_edit.css' %}">
+<link rel="stylesheet" href="{% static 'console/event_monitor.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_events' %}">{% trans "Events" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_event_roles' event.pk %}">{{ event.title }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Active Monitoring" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{{ event.title }}</h1>
+        <div class="page-meta">
+            <span class="c-badge"><span class="material-symbols-outlined">calendar_today</span>{{ event.start_date|date:"F j, Y" }}</span>
+            {% if event.is_live %}<span class="c-badge c-badge-danger c-badge-live">{% trans "Live Monitoring" %}</span>
+            {% elif event.is_past %}<span class="c-badge">{% trans "Event ended" %}</span>
+            {% else %}<span class="c-badge c-badge-mint">{% blocktrans with t=event.start_date|timeuntil %}Starts in {{ t }}{% endblocktrans %}</span>{% endif %}
+        </div>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'kiosk_login_id_code' 'event' event.pk %}" class="c-btn c-btn-surface c-btn-lg" target="_blank" rel="noopener"><span class="material-symbols-outlined">tablet_mac</span>{% trans "Open Kiosk" %}</a>
+        <a href="{% url 'console_export_shift_log' event.pk %}" class="c-btn c-btn-surface c-btn-lg"><span class="material-symbols-outlined">download</span>{% trans "Export Log" %}</a>
+        <button type="button" class="c-btn c-btn-primary c-btn-lg" data-dialog-open="checkin-dialog"><span class="material-symbols-outlined">person_add</span>{% trans "Manual Check-in" %}</button>
+    </div>
+</header>
+
+{% include 'console/partials/event_tabs.html' %}
+
+<section class="monitor-stats">
+    <div class="monitor-stat monitor-stat-primary">
+        <span class="c-stat-label">{% trans "Checked In" %}</span>
+        <span class="monitor-stat-value">{{ checked_in }}</span>
+        <span class="monitor-stat-note">{% blocktrans %}{{ checked_in_percent }}% of {{ signed_up }} expected volunteers{% endblocktrans %}</span>
+        <span class="material-symbols-outlined monitor-stat-art">how_to_reg</span>
+    </div>
+    <div class="monitor-stat">
+        <span class="c-stat-label">{% trans "Expected Next 1hr" %}</span>
+        <span class="monitor-stat-value">{{ expected_next_hour }}</span>
+        <span class="monitor-stat-note">{% if next_arrival %}{% blocktrans with t=next_arrival|time %}Next shift starts at {{ t }}{% endblocktrans %}{% else %}{% trans "No shifts starting soon" %}{% endif %}</span>
+        <span class="material-symbols-outlined monitor-stat-art">schedule</span>
+    </div>
+    <div class="monitor-stat monitor-stat-surface">
+        <span class="c-stat-label">{% trans "Active Roles" %}</span>
+        <span class="monitor-stat-value accent">{{ active_roles }}</span>
+        <span class="monitor-stat-note">{% blocktrans %}Check-in level at {{ overall_percent }}%{% endblocktrans %}</span>
+        <span class="material-symbols-outlined monitor-stat-art">badge</span>
+    </div>
+</section>
+
+<div class="c-split">
+    <section>
+        <div class="c-section-head monitor-filters">
+            <h2 class="c-section-title">{% trans "Recent Activity" %}</h2>
+            <form class="monitor-filter-form" hx-get="{% url 'console_monitor_activity' event.pk %}" hx-target="#monitor-activity" hx-swap="outerHTML" hx-trigger="change, input delay:300ms from:input[name=q]">
+                <div class="c-input-icon">
+                    <span class="material-symbols-outlined">filter_list</span>
+                    <select name="action" class="c-select">
+                        <option value="">{% trans "All Activities" %}</option>
+                        <option value="in">{% trans "Check-ins" %}</option>
+                        <option value="out">{% trans "Check-outs" %}</option>
+                    </select>
+                </div>
+                <div class="c-input-icon">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="search" name="q" class="c-input" placeholder="{% trans 'Volunteer name' %}">
+                </div>
+            </form>
+        </div>
+        {% include 'console/partials/monitor_activity.html' %}
+    </section>
+
+    <aside class="c-stack">
+        <h2 class="c-section-title">{% trans "Staffing Overview" %}</h2>
+        <div class="c-card c-card-tonal">
+            <div class="c-progress-head">
+                <span class="c-label">{% trans "Current allocation" %}</span>
+                <span>{% blocktrans %}{{ overall_percent }}% total{% endblocktrans %}</span>
+            </div>
+            <div class="c-stack allocation-list">
+                {% for entry in staffing %}
+                <div>
+                    <div class="allocation-head">
+                        <span>{{ entry.role.name }}</span>
+                        <strong class="{% if entry.percent < 50 %}accent{% endif %}">{{ entry.checked_in }}/{{ entry.signed_up }}</strong>
+                    </div>
+                    <div class="c-progress {% if entry.percent < 50 %}accent{% endif %}"><span style="width: {{ entry.percent }}%"></span></div>
+                </div>
+                {% empty %}
+                <p class="c-muted">{% trans "No roles have been added to this event yet." %}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if shortage and event.is_live %}
+        <div class="shortage-card">
+            <span class="c-label"><span class="material-symbols-outlined">warning</span>{% trans "Critical Shortage" %}</span>
+            <p>{% blocktrans with role=shortage.role.name a=shortage.checked_in b=shortage.signed_up %}{{ role }} only has {{ a }}/{{ b }} volunteers checked in.{% endblocktrans %}</p>
+            <a href="{% url 'console_event_invite' event.pk %}" class="c-btn c-btn-dark c-btn-sm">{% trans "Call in backup" %}</a>
+            <span class="material-symbols-outlined shortage-art">emergency</span>
+        </div>
+        {% endif %}
+    </aside>
+</div>
+
+<dialog class="c-dialog" id="checkin-dialog">
+    <form method="post" action="{% url 'console_manual_check_in' event.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Manual Check-in" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body">
+            {% if awaiting %}
+            <p class="c-muted checkin-hint">{% trans "Select a registered volunteer who hasn't checked in yet. Their shift starts now." %}</p>
+            <div class="checkin-list">
+                {% for volunteer in awaiting %}
+                <label class="checkin-option">
+                    <input type="radio" name="user_id" value="{{ volunteer.pk }}" required>
+                    {% avatar volunteer 'sm' %}
+                    <span>{{ volunteer|display_name }}</span>
+                    <small>{{ volunteer.profile.id_code }}</small>
+                </label>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="c-empty">
+                <span class="material-symbols-outlined">done_all</span>
+                <p>{% trans "Every registered volunteer is already checked in." %}</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            {% if awaiting %}<button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">login</span>{% trans "Check In" %}</button>{% endif %}
+        </div>
+    </form>
+</dialog>
+{% endblock %}

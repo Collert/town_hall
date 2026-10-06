@@ -1,0 +1,458 @@
+/* =========================================================
+   Volunteer resume: a printable one-page CV built from a
+   volunteer's shifts, training, certificates and endorsements
+   ========================================================= */
+
+body.bare {
+    font-family: 'Inter', sans-serif;
+    padding: 0 1rem 3rem;
+}
+
+.resume-bar {
+    max-width: 52rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 0;
+}
+
+.resume-bar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+.resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.resume-sheet {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 3rem;
+    border-radius: 1.5rem;
+    background: var(--color-surface);
+    box-shadow: 0 24px 64px rgba(from var(--color-text-primary) r g b / 0.08);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+/* ---------- Header ---------- */
+
+.resume-head {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.resume-head .avatar {
+    flex-shrink: 0;
+}
+
+.resume-identity h1 {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.resume-title {
+    margin: 0.35rem 0 0;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.resume-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.25rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+.resume-contact li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.resume-contact .material-symbols-outlined {
+    font-size: 1rem;
+    color: var(--color-text-tertiary);
+}
+
+/* ---------- Stats strip ---------- */
+
+.resume-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin: 2rem 0;
+}
+
+.resume-stats div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+}
+
+.resume-stats strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.resume-stats span {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+}
+
+/* ---------- Body columns ---------- */
+
+.resume-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    gap: 2.5rem;
+}
+
+.resume-section + .resume-section {
+    margin-top: 1.75rem;
+}
+
+.resume-section h2 {
+    margin: 0 0 0.85rem;
+    padding-bottom: 0.4rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    border-bottom: 2px solid var(--color-primary-vivid);
+    width: fit-content;
+}
+
+.resume-summary {
+    margin: 0;
+    color: var(--color-text-secondary);
+}
+
+.resume-empty {
+    margin: 0;
+    color: var(--color-text-tertiary);
+}
+
+/* Experience entries */
+
+.resume-job {
+    break-inside: avoid;
+}
+
+.resume-job + .resume-job {
+    margin-top: 1.1rem;
+}
+
+.resume-job-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+.resume-job-head h3 {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.resume-job-dates {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+}
+
+.resume-job-meta {
+    margin: 0.1rem 0 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.resume-job-desc {
+    margin: 0.35rem 0 0;
+    color: var(--color-text-secondary);
+}
+
+.resume-job-events {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--color-text-secondary);
+}
+
+.resume-job-events li span {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+}
+
+.resume-job-events li span::before {
+    content: '\00b7\00a0';
+}
+
+.resume-job-events .resume-more {
+    list-style: none;
+    margin-left: -1.1rem;
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--color-text-tertiary);
+}
+
+/* References */
+
+.resume-quote {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+    break-inside: avoid;
+}
+
+.resume-quote + .resume-quote {
+    margin-top: 0.75rem;
+}
+
+.resume-quote p {
+    margin: 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+.resume-quote footer {
+    margin-top: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.resume-quote footer span {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-tertiary);
+}
+
+/* Sidebar */
+
+.resume-side {
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    align-self: start;
+}
+
+.resume-skills,
+.resume-creds {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.resume-skills li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+}
+
+.resume-endorsed {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+}
+
+.resume-endorsed .material-symbols-outlined {
+    font-size: 0.95rem;
+    color: var(--color-primary-vivid);
+    font-variation-settings: 'FILL' 1;
+}
+
+.resume-creds li {
+    break-inside: avoid;
+}
+
+.resume-creds li + li {
+    margin-top: 0.7rem;
+}
+
+.resume-creds strong {
+    display: block;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+}
+
+.resume-creds span {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+/* ---------- Footer ---------- */
+
+.resume-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(from var(--color-text-primary) r g b / 0.15);
+    break-inside: avoid;
+}
+
+.resume-foot div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.resume-foot strong {
+    font-size: 0.8125rem;
+    color: var(--color-text-primary);
+}
+
+.resume-url {
+    word-break: break-all;
+}
+
+.resume-qr {
+    color: var(--color-text-primary); /* the QR code is drawn in currentColor */
+    flex-shrink: 0;
+    width: 4.5rem;
+    height: 4.5rem;
+}
+
+.resume-qr svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ---------- Responsive ---------- */
+
+@media screen and (max-width: 720px) {
+    .resume-sheet {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .resume-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .resume-identity h1 {
+        font-size: 1.75rem;
+    }
+
+    .resume-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .resume-body {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+    }
+}
+
+/* ---------- Print: one A4 / Letter page ---------- */
+
+@page {
+    size: auto;
+    margin: 12mm;
+}
+
+@media print {
+    body.bare {
+        padding: 0;
+        background: var(--color-surface);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .resume-sheet {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        font-size: 9.5pt;
+    }
+
+    .resume-identity h1 {
+        font-size: 22pt;
+    }
+
+    .resume-stats {
+        margin: 5mm 0;
+    }
+
+    .resume-stats strong {
+        font-size: 15pt;
+    }
+
+    .resume-body {
+        grid-template-columns: minmax(0, 1fr) 55mm;
+        gap: 7mm;
+    }
+
+    .resume-side {
+        padding: 5mm;
+    }
+
+    .resume-section + .resume-section {
+        margin-top: 5mm;
+    }
+
+    .resume-foot {
+        margin-top: 6mm;
+    }
+}

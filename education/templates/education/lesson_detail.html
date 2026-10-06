@@ -1,6 +1,6 @@
 {% extends "education/module_layout.html" %}
 {% load static %}
-{% load i18n %}
+{% load i18n md_extras %}
 
 {% block module_css %}
     <link rel="stylesheet" href="{% static 'education/lesson_detail.css' %}">
@@ -39,11 +39,17 @@
         <h3 class="reading-title">{% trans "Reading Material" %}</h3>
     </div>
     <div class="reading-body">
-        {{ lesson.content|safe }}
+        {{ lesson.content|render_markdown }}
     </div>
 </section>
 
-<div id="reading-end-sentinel"></div>
+{% if request.user.is_authenticated and not lesson_already_completed %}
+{# Marks the lesson complete: when the reading is scrolled to the end, or when the video finishes. #}
+<div id="lesson-complete-trigger"
+     hx-post="{% url 'mark_lesson_complete' module_id=module.id lesson_id=lesson.id %}"
+     hx-trigger="{% if lesson.video_url %}videoEnded once{% else %}intersect once threshold:0.1{% endif %}"
+     hx-swap="none"></div>
+{% endif %}
 
 <!-- Next Lesson / Next Quiz CTA -->
 <section class="next-unit-section">
@@ -89,67 +95,23 @@
     </form>
     {% endif %}
 </section>
-{% if request.user.is_authenticated and not lesson_already_completed %}
+{% if request.user.is_authenticated and not lesson_already_completed and lesson.video_url %}
 <script>
-(function() {
-    var completed = false;
-    var completeUrl = "{% url 'mark_lesson_complete' module_id=module.id lesson_id=lesson.id %}";
-    var csrfToken = "{{ csrf_token }}";
-    var hasVideo = {{ lesson.video_url|yesno:"true,false" }};
-
-    function markComplete() {
-        if (completed) return;
-        completed = true;
-        fetch(completeUrl, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin'
-        }).then(function(response) {
-            if (!response.ok) return;
-            // Update the sidebar icon for the current lesson
-            var activeItem = document.querySelector('.unit-item.active .unit-indicator');
-            if (activeItem) {
-                activeItem.innerHTML = '<span class="material-symbols-outlined unit-check" style="font-variation-settings: \'FILL\' 1;">check_circle</span>';
-            }
-        });
-    }
-
-    if (hasVideo) {
-        // YouTube IFrame API
+    // Tell HTMX when the YouTube video finishes (IFrame API).
+    (function () {
         var tag = document.createElement('script');
         tag.src = 'https://www.youtube.com/iframe_api';
         document.head.appendChild(tag);
-
-        window.onYouTubeIframeAPIReady = function() {
+        window.onYouTubeIframeAPIReady = function () {
             new YT.Player('lesson-video', {
                 events: {
-                    'onStateChange': function(event) {
-                        if (event.data === YT.PlayerState.ENDED) {
-                            markComplete();
-                        }
+                    onStateChange: function (event) {
+                        if (event.data === YT.PlayerState.ENDED) htmx.trigger('#lesson-complete-trigger', 'videoEnded');
                     }
                 }
             });
         };
-    } else {
-        // No video — mark complete when user scrolls to end of reading material
-        var sentinel = document.getElementById('reading-end-sentinel');
-        if (sentinel) {
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        markComplete();
-                        observer.disconnect();
-                    }
-                });
-            }, { threshold: 0.1 });
-            observer.observe(sentinel);
-        }
-    }
-})();
+    })();
 </script>
 {% endif %}
 {% endblock %}
@@ -167,7 +129,7 @@
 
     {% for l in lessons %}
     <a href="{% url 'lesson_detail' module_id=module.id lesson_id=l.id %}" class="unit-item {% if l.id == lesson.id %}active{% else %}link{% endif %}">
-        <div class="unit-indicator">
+        <div class="unit-indicator" id="unit-indicator-lesson-{{ l.id }}">
             {% if request.user in l.completed_by.all %}
                 <span class="material-symbols-outlined unit-check" style="font-variation-settings: 'FILL' 1;">check_circle</span>
             {% elif l.id == lesson.id %}

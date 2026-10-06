@@ -1,0 +1,26 @@
+{% load i18n %}
+<fieldset class="slot-row">
+    <div class="slot-row-grid">
+        <div class="c-field">
+            <label class="c-label">{% trans "Date" %}</label>
+            <input type="date" name="slot_date" value="{{ default_slot.date }}" required>
+        </div>
+        <div class="c-field">
+            <label class="c-label">{% trans "Time Range" %}</label>
+            <div class="slot-row-times">
+                <input type="time" name="slot_start" value="{{ default_slot.start }}" required aria-label="{% trans 'Start time' %}">
+                <span>&mdash;</span>
+                <input type="time" name="slot_end" value="{{ default_slot.end }}" required aria-label="{% trans 'End time' %}">
+            </div>
+        </div>
+    </div>
+    <div class="slot-row-qty">
+        <label class="slot-row-qty-label"><span class="material-symbols-outlined">groups</span>{% trans "Volunteers Needed" %}</label>
+        <input type="number" name="slot_qty" value="2" min="1" max="500" class="c-input slot-row-number" aria-label="{% trans 'Volunteers needed' %}">
+        <label class="slot-row-qty-label slot-row-over">{% trans "Extra allowed" %}</label>
+        <input type="number" name="slot_over" value="0" min="0" max="100" class="c-input slot-row-number" aria-label="{% trans 'Extra volunteers allowed' %}">
+        {% if not first %}
+        <button type="button" class="c-icon-btn danger" data-remove-closest=".slot-row" aria-label="{% trans 'Remove slot' %}"><span class="material-symbols-outlined">delete</span></button>
+        {% endif %}
+    </div>
+</fieldset>

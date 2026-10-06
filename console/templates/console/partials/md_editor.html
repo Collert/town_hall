@@ -1,0 +1,24 @@
+{% load i18n console_tags %}
+<div class="c-field{% if field.errors %} has-error{% endif %}" id="field-{{ field.html_name }}"{% if oob %} hx-swap-oob="true"{% endif %}>
+    <label class="c-label" for="{{ field.id_for_label }}">{{ label|default:field.label|strip_lang }}{% if field.field.required %} *{% endif %}</label>
+    <div class="md-editor">
+        <div class="md-toolbar">
+            <button type="button" class="c-icon-btn" data-md="bold" data-md-target="{{ field.id_for_label }}" aria-label="{% trans 'Bold' %}"><span class="material-symbols-outlined">format_bold</span></button>
+            <button type="button" class="c-icon-btn" data-md="italic" data-md-target="{{ field.id_for_label }}" aria-label="{% trans 'Italic' %}"><span class="material-symbols-outlined">format_italic</span></button>
+            <button type="button" class="c-icon-btn" data-md="heading" data-md-target="{{ field.id_for_label }}" aria-label="{% trans 'Heading' %}"><span class="material-symbols-outlined">title</span></button>
+            <button type="button" class="c-icon-btn" data-md="list" data-md-target="{{ field.id_for_label }}" aria-label="{% trans 'Bulleted list' %}"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+            <span class="md-toolbar-sep"></span>
+            <button type="button" class="c-icon-btn" data-md="link" data-md-target="{{ field.id_for_label }}" aria-label="{% trans 'Link' %}"><span class="material-symbols-outlined">link</span></button>
+            <div class="c-tabs" role="tablist">
+                <button type="button" class="c-tab" role="tab" aria-selected="true" data-md-mode="write">{% trans "Write" %}</button>
+                <button type="button" class="c-tab" role="tab" aria-selected="false" data-md-mode="preview"
+                        hx-post="{% url 'console_markdown_preview' %}" hx-include="#{{ field.id_for_label }}"
+                        hx-vals='{"field": "{{ field.html_name }}"}' hx-target="next .md-preview">{% trans "Preview" %}</button>
+            </div>
+        </div>
+        {{ field }}
+        <div class="md-preview" hidden></div>
+    </div>
+    <span class="c-help">{{ help|default:_("Markdown supported: **bold**, _italic_, ## headings, - lists, [links](https://...).") }}</span>
+    {% for error in field.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+</div>

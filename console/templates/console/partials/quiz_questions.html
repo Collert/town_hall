@@ -1,0 +1,103 @@
+{% load i18n console_tags %}
+<div id="quiz-questions" class="c-stack">
+    {% if questions %}
+    <section class="c-card">
+        <h2 class="c-card-title">{% trans "Questions" %}<span class="c-badge c-badge-mint c-card-title-aside">{{ questions|length }}</span></h2>
+        <ol class="question-list">
+            {% for q in questions %}
+            <li class="question-card {% if editing.pk == q.pk %}editing{% endif %}">
+                <span class="question-num">{{ forloop.counter|stringformat:"02d" }}</span>
+                <div class="question-body">
+                    <strong>{{ q.question_text }}</strong>
+                    <ul class="question-options">
+                        <li class="{% if q.correct_option == 'A' %}correct{% endif %}">{{ q.option_a }}</li>
+                        <li class="{% if q.correct_option == 'B' %}correct{% endif %}">{{ q.option_b }}</li>
+                        {% if q.option_c %}<li class="{% if q.correct_option == 'C' %}correct{% endif %}">{{ q.option_c }}</li>{% endif %}
+                        {% if q.option_d %}<li class="{% if q.correct_option == 'D' %}correct{% endif %}">{{ q.option_d }}</li>{% endif %}
+                    </ul>
+                </div>
+                <div class="question-actions">
+                    <button type="button" class="c-icon-btn" aria-label="{% trans 'Edit question' %}"
+                            hx-get="{% url 'console_question_edit' module.pk quiz.pk q.pk %}" hx-target="#quiz-questions" hx-swap="outerHTML">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                    <button type="button" class="c-icon-btn danger" aria-label="{% trans 'Delete question' %}"
+                            hx-post="{% url 'console_question_delete' module.pk quiz.pk q.pk %}" hx-target="#quiz-questions" hx-swap="outerHTML"
+                            hx-confirm="{% trans 'Delete this question?' %}">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
+
+    {% with form=question_form %}
+    <form class="c-card question-composer"
+          hx-post="{% if editing %}{% url 'console_question_edit' module.pk quiz.pk editing.pk %}{% else %}{% url 'console_question_create' module.pk quiz.pk %}{% endif %}"
+          hx-target="#quiz-questions" hx-swap="outerHTML">
+        <div class="composer-head">
+            <span class="question-num dark">{% if editing %}<span class="material-symbols-outlined">edit</span>{% else %}{{ questions|length|add:1|stringformat:"02d" }}{% endif %}</span>
+            <span class="c-label">{% if editing %}{% trans "Editing question" %}{% else %}{% trans "Draft question" %}{% endif %}</span>
+            <label class="composer-type">
+                <span>{% trans "True / False" %}</span>
+                <span class="c-toggle">{{ form.is_true_false }}<span></span></span>
+            </label>
+        </div>
+
+        <div class="lang-group" data-lang-group>
+            <div class="lang-group-head">
+                <div class="c-tabs" role="tablist">
+                    {% for code, fields in form.translated_groups %}
+                    <button type="button" class="c-tab" role="tab" data-lang-tab="{{ code }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                        {{ code|language_name_local|capfirst }}{% for f in fields %}{% if f.errors %}<span class="lang-error-dot"></span>{% endif %}{% endfor %}
+                    </button>
+                    {% endfor %}
+                </div>
+                <button type="button" class="c-btn c-btn-sm c-btn-surface lang-auto"
+                hx-post="{% url 'console_auto_translate' %}" hx-include="closest [data-lang-group]" hx-swap="none"
+                hx-vals='{"form_key": "question", "md_fields": ""}'
+                title="{% trans 'Fill empty languages from the first one with Google Translate' %}">
+            <span class="material-symbols-outlined">translate</span>{% trans "Auto-translate" %}
+        </button>
+            </div>
+            {% for code, fields in form.translated_groups %}
+            <div class="c-form" data-lang-panel="{{ code }}" {% if not forloop.first %}hidden{% endif %}>
+                {% for field in fields %}
+                    {% if forloop.first %}
+                    {% include 'console/partials/field.html' with label=_("Question") %}
+                    <div class="composer-options">
+                    {% else %}
+                    {% include 'console/partials/field.html' with field_class='mc-only' %}
+                    {% endif %}
+                {% endfor %}
+                    </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="c-field composer-correct">
+            <span class="c-label">{% trans "Correct answer" %}</span>
+            {{ form.correct_option }}
+            <span class="c-help tf-only">{% trans "For True / False questions, Option A is True and Option B is False." %}</span>
+            {% for error in form.correct_option.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+            {% for error in form.non_field_errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+        </div>
+
+        <div class="c-form-actions composer-actions">
+            {% if editing %}
+            <button type="button" class="c-btn c-btn-ghost" hx-get="{% url 'console_quiz_edit' module.pk quiz.pk %}" hx-select="#quiz-questions" hx-target="#quiz-questions" hx-swap="outerHTML">{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-dark">{% trans "Save Question" %}</button>
+            {% else %}
+            <button type="reset" class="c-btn c-btn-ghost">{% trans "Discard" %}</button>
+            <button type="submit" class="c-btn c-btn-dark"><span class="material-symbols-outlined">add</span>{% trans "Add to Quiz" %}</button>
+            {% endif %}
+        </div>
+    </form>
+    {% endwith %}
+
+    {% if not questions %}
+    <p class="c-muted quiz-empty-hint"><span class="material-symbols-outlined">info</span>{% trans "Volunteers need to answer at least one question. Add your first one above." %}</p>
+    {% endif %}
+</div>

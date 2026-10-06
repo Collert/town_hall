@@ -27,11 +27,72 @@ html {
     font-optical-sizing: auto;
 }
 
+/* ========================================
+   Scrollbars
+   Thin, rounded and tinted with the brand color, on a transparent track. Both come
+   from theme variables, so they follow dark mode (--color-primary-vivid lightens there).
+   ======================================== */
+:root {
+    --scrollbar-thumb: rgba(from var(--color-primary-vivid) r g b / 0.4);
+    --scrollbar-thumb-active: rgba(from var(--color-primary-vivid) r g b / 0.75);
+    --scrollbar-track: transparent;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Safari doesn't support scrollbar-color yet. Chrome and Firefox do, and Chrome ignores
+   these rules when it is set, so they only apply where it's missing (and add a hover state). */
+@supports not (scrollbar-color: auto) {
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        border-radius: 9999px;
+        background: var(--scrollbar-thumb) padding-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover,
+    ::-webkit-scrollbar-thumb:active {
+        background: var(--scrollbar-thumb-active) padding-box;
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+}
+
 body {
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     margin: 0;
     line-height: 1.6;
+}
+
+/* Main site layout (base/layout.html): at least one screen tall, so the footer sits at the
+   bottom of the window on short pages. */
+body.site-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.site-page > main {
+    flex: 1 0 auto;
+}
+
+body.site-page > .site-footer {
+    flex-shrink: 0;
 }
 
 img {
@@ -161,17 +222,36 @@ ul {
 }
 
 .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.05em;
-    display: flex;
     color: var(--color-text-secondary);
+}
+
+.brand-logo-text {
+    display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    line-height: 1.15;
 
     small {
         font-size: 0.75rem;
     }
+}
+
+/* Logo in a rounded tile, like the admin portal's brand mark. */
+.brand-logo-mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 1rem;
+    background: var(--color-surface);
+    overflow: hidden;
 }
 
 .brand-accent {
@@ -530,6 +610,113 @@ ul {
     border-radius: 50%;
 }
 
+/* ---- Account menu (avatar button in the header) ---- */
+.user-menu {
+    position: relative;
+}
+
+.user-menu-trigger {
+    padding: 0;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+.user-menu-trigger:hover,
+.user-menu-trigger[aria-expanded="true"] {
+    box-shadow: 0 0 0 3px rgba(from var(--color-primary-vivid) r g b / 0.35);
+}
+
+.user-menu-trigger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-vivid);
+}
+
+.user-menu-panel {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    z-index: 1000;
+    width: 16rem;
+    padding: 0.5rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    box-shadow: var(--shadow-lg);
+    transform-origin: top right;
+    animation: dropdownShow 0.18s ease-out;
+}
+
+.user-menu-panel[hidden] {
+    display: none;
+}
+
+.user-menu-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    background: var(--color-bg-tertiary);
+}
+
+.user-menu-head > span:last-child {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.user-menu-head strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-menu-head small {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    transition: background-color 0.15s ease;
+}
+
+.user-menu-item .material-symbols-outlined {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+}
+
+.user-menu-item:hover,
+.user-menu-item:focus-visible {
+    outline: none;
+    background: var(--color-bg-tertiary);
+}
+
+.user-menu-item.danger,
+.user-menu-item.danger .material-symbols-outlined {
+    color: var(--color-error);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .user-menu-panel {
+        animation: none;
+    }
+}
+
 .avatar-initials {
     display: flex;
     align-items: center;
@@ -682,8 +869,10 @@ ul {
         gap: 1rem;
     }
 
-    .brand-logo {
-        align-items: flex-start;
+    .brand-logo-mark {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.85rem;
     }
 
     .bottom-mobile-nav {
@@ -986,6 +1175,44 @@ span.mobile-avatar.avatar-initials {
     height: auto;
     width: auto;
 }
+
+.brand-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ========================================
+   Avatar ({% avatar user 'size' %})
+   ======================================== */
+.avatar {
+    display: inline-flex;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--color-bg-tertiary);
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar .avatar-initials {
+    color: var(--color-primary-contrast);
+}
+
+.avatar-xs { width: 1.75rem; height: 1.75rem; }
+.avatar-xs .avatar-initials { font-size: 0.625rem; }
+.avatar-sm { width: 2.25rem; height: 2.25rem; }
+.avatar-sm .avatar-initials { font-size: 0.75rem; }
+.avatar-lg { width: 4rem; height: 4rem; }
+.avatar-lg .avatar-initials { font-size: 1.25rem; }
+.avatar-xl { width: 7rem; height: 7rem; border-radius: 1.5rem; }
+.avatar-xl .avatar-initials { font-size: 2.25rem; border-radius: 1.5rem; }
 
 .bottom-nav-container {
     width: 100%;

@@ -1,0 +1,257 @@
+.venue-form-row {
+    margin-top: 1.5rem;
+}
+
+.venue-intro {
+    margin: -0.75rem 0 1.25rem;
+}
+
+.venue-image-drop {
+    min-height: 14rem;
+}
+
+.venue-side {
+    position: sticky;
+    top: 6rem;
+}
+
+/* Features & amenities */
+.venue-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.venue-feature-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+}
+
+.venue-feature-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 1rem 0.5rem 0.8rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+.venue-feature-option:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.venue-feature-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.venue-feature-option .material-symbols-outlined {
+    font-size: 1.15rem;
+    color: var(--color-text-tertiary);
+}
+
+.venue-feature-option:has(input:checked) {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.venue-feature-option:has(input:checked) .material-symbols-outlined {
+    color: var(--color-primary-contrast);
+}
+
+.venue-feature-option:has(input:focus-visible) {
+    outline: 2px solid var(--color-primary-vivid);
+    outline-offset: 2px;
+}
+
+.venue-feature-add {
+    padding-top: 1.25rem;
+    box-shadow: 0 -1px 0 rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.venue-feature-add-row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    margin-top: 0.6rem;
+}
+
+/* Operating hours */
+.venue-hours {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.venue-hours-head,
+.venue-hours-row {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1fr) 6.5rem;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.venue-hours-head {
+    padding: 0 1rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+}
+
+.venue-hours-head span:last-child {
+    text-align: center;
+}
+
+.venue-hours-row {
+    padding: 0.6rem 1rem;
+    border-radius: 1rem;
+}
+
+.venue-hours-row:nth-child(even) {
+    background: var(--color-bg-secondary);
+}
+
+.venue-hours-row strong {
+    color: var(--color-text-primary);
+}
+
+.venue-hours-row .c-toggle {
+    justify-self: center;
+}
+
+.venue-hours-row .c-error {
+    grid-column: 2 / -1;
+}
+
+/* Notices */
+.venue-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.venue-note {
+    padding: 1rem 1.1rem 0.6rem;
+    border-radius: 1rem;
+    background: var(--color-surface);
+}
+
+.venue-note p {
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+
+.venue-note-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.venue-note-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.venue-note-form-row {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.venue-note-form-row .c-select {
+    flex: 1;
+}
+
+/* Used by */
+.venue-usage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.venue-usage .c-label {
+    margin-top: 0.5rem;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.7);
+}
+
+.venue-usage-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-primary-contrast) r g b / 0.08);
+    color: var(--color-primary-contrast);
+    transition: background-color 200ms ease;
+}
+
+.venue-usage-item:hover {
+    background: rgba(from var(--color-primary-contrast) r g b / 0.15);
+}
+
+.venue-usage-item strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.venue-usage-item strong .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.venue-usage-item small {
+    font-size: 0.75rem;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.7);
+}
+
+.venue-usage-empty {
+    font-size: 0.85rem;
+    color: rgba(from var(--color-primary-contrast) r g b / 0.7);
+}
+
+.venue-kiosk {
+    margin-top: 1rem;
+}
+
+@media (max-width: 1200px) {
+    .venue-side {
+        position: static;
+    }
+}
+
+@media (max-width: 760px) {
+    .venue-feature-add-row {
+        grid-template-columns: 1fr;
+    }
+
+    .venue-hours-head {
+        display: none;
+    }
+
+    .venue-hours-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .venue-hours-row strong {
+        grid-column: 1 / -1;
+    }
+
+    .venue-hours-row .c-toggle {
+        justify-self: start;
+    }
+}

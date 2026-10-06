@@ -1,0 +1,30 @@
+{% load i18n console_tags %}
+{% comment %}
+Language tabs for a TranslatedFormMixin form. Only the first (default) language is required.
+Pass md_fields="content description" to render those fields with the Markdown editor.
+{% endcomment %}
+<div class="lang-group" data-lang-group>
+    <div class="lang-group-head">
+        <div class="c-tabs" role="tablist">
+            {% for code, fields in form.translated_groups %}
+            <button type="button" class="c-tab" role="tab" data-lang-tab="{{ code }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                {{ code|language_name_local|capfirst }}{% for f in fields %}{% if f.errors %}<span class="lang-error-dot" aria-label="{% trans 'has errors' %}"></span>{% endif %}{% endfor %}
+            </button>
+            {% endfor %}
+        </div>
+        <button type="button" class="c-btn c-btn-sm c-btn-surface lang-auto" data-marks-dirty
+                hx-post="{% url 'console_auto_translate' %}" hx-include="closest [data-lang-group]" hx-swap="none"
+                hx-vals='{"form_key": "{{ form.translation_key }}", "md_fields": "{{ md_fields|default:"" }}"}'
+                title="{% trans 'Fill empty languages from the first one with Google Translate' %}">
+            <span class="material-symbols-outlined">translate</span>{% trans "Auto-translate" %}
+        </button>
+    </div>
+    <span class="c-help lang-group-help">{% trans "Only the first language is required. Missing translations fall back to it." %}</span>
+    {% for code, fields in form.translated_groups %}
+    <div class="c-form" data-lang-panel="{{ code }}" {% if not forloop.first %}hidden{% endif %}>
+        {% for field in fields %}
+            {% if md_fields and field.name|base_field in md_fields %}{% include 'console/partials/md_editor.html' %}{% else %}{% include 'console/partials/field.html' %}{% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>

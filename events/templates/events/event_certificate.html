@@ -1,0 +1,78 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% blocktrans with name=volunteer|display_name %}Volunteer Impact Certificate - {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'events/event_certificate.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cert-actions no-print">
+    {% if is_owner %}<a href="{% url 'event_thank_you' event.pk %}" class="cert-action-btn ghost"><span class="material-symbols-outlined">arrow_back</span>{% trans "Back" %}</a>{% endif %}
+    <button type="button" class="cert-action-btn" onclick="window.print()"><span class="material-symbols-outlined">download</span>{% trans "Download PDF" %}</button>
+    <button type="button" class="cert-action-round" onclick="window.print()" aria-label="{% trans 'Print' %}"><span class="material-symbols-outlined">print</span></button>
+</div>
+
+<main class="cert-sheet">
+    <div class="cert-frame">
+        <header class="cert-head">
+            <div>
+                <h1>{{ company_name }}</h1>
+                <span>{% trans "Official certification of service" %}</span>
+            </div>
+            <span class="cert-status">
+                <span class="material-symbols-outlined">verified</span>
+                <span><small>{% trans "Status" %}</small>{% if me.verified %}{% trans "Verified Record" %}{% else %}{% trans "Registered Volunteer" %}{% endif %}</span>
+            </span>
+        </header>
+
+        <p class="cert-kicker">{% trans "Certificate of Appreciation" %}</p>
+        <p class="cert-presented">{% trans "This certificate is proudly presented to" %}</p>
+        <h2 class="cert-name">{{ volunteer|display_name }}</h2>
+        <span class="cert-rule"></span>
+
+        <div class="cert-body">
+            <div>
+                <p class="cert-text">{% blocktrans with title=event.title year=event.start_date|date:"Y" %}In recognition of outstanding contributions to <strong>{{ title }} {{ year }}</strong>. Your dedication and service have made a significant impact on our community's success.{% endblocktrans %}</p>
+                {% if summary %}
+                <div class="cert-summary">
+                    <span>{% trans "Impact Summary" %}</span>
+                    <p>&ldquo;{{ summary|truncatewords:45 }}&rdquo;</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="cert-facts">
+                <div class="cert-fact dark">
+                    <span class="cert-fact-label">{% trans "Total Hours" %}</span>
+                    <p class="cert-fact-value"><strong>{{ me.hours|floatformat:"-1" }}</strong><small>{% trans "Hours" %}</small></p>
+                </div>
+                {% if me.role %}
+                <div class="cert-fact">
+                    <span class="cert-fact-label">{% trans "Volunteer Role" %}</span>
+                    <p class="cert-fact-value cert-role"><strong>{{ me.role.name }}</strong></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <footer class="cert-foot">
+            <div class="cert-signature">
+                {% if supervisor %}
+                <span class="cert-signature-script">{{ supervisor|display_name }}</span>
+                <strong>{{ supervisor|display_name }}</strong>
+                <small>{% trans "Event Supervisor" %}</small>
+                {% else %}
+                <span class="cert-signature-script">{{ company_name }}</span>
+                <strong>{{ company_name }}</strong>
+                <small>{{ event.end_date|date:"F j, Y" }}</small>
+                {% endif %}
+            </div>
+            <div class="cert-verify">
+                <span><strong>{% trans "Scan to Verify" %}</strong><small>{% blocktrans %}Certificate ID: {{ certificate_id }}{% endblocktrans %}</small></span>
+                <span class="cert-qr">{{ qr_svg|safe }}</span>
+            </div>
+        </footer>
+    </div>
+</main>
+{% endblock %}

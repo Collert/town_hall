@@ -1,0 +1,40 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Global Venue Directory" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/venue_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Venues" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Global Venue Directory" %}</h1>
+        <p class="page-lead">{% trans "Every place your organization works from. Events and permanent positions pick their venue from here, so addresses, hours and amenities stay in one place." %}</p>
+    </div>
+    <a href="{% url 'console_venue_create' %}" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">add_location_alt</span>{% trans "Add Venue" %}</a>
+</header>
+
+<form class="venue-filters" hx-get="{% url 'console_venues' %}" hx-target="#venue-grid" hx-swap="outerHTML"
+      hx-trigger="change, input delay:300ms from:input[name=q]" hx-push-url="true">
+    <div class="c-input-icon">
+        <span class="material-symbols-outlined">search</span>
+        <input type="search" name="q" value="{{ query }}" class="c-input" placeholder="{% trans 'Search venues by name or address...' %}">
+    </div>
+    <select name="feature" class="c-select" aria-label="{% trans 'Feature' %}">
+        <option value="">{% trans "Any Features" %}</option>
+        {% for f in features %}
+        <option value="{{ f.pk }}" {% if feature == f.pk|stringformat:"s" %}selected{% endif %}>{{ f.name }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+{% include 'console/partials/venue_grid.html' %}
+{% endblock %}

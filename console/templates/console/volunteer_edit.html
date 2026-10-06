@@ -1,0 +1,114 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n humanize avatar_tags console_tags %}
+
+{% block title %}{% trans "Edit Volunteer Profile" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/volunteer_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_volunteers' %}">{% trans "Volunteers" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_volunteer_detail' volunteer.pk %}">{{ volunteer|display_name }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Edit Profile" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <header class="page-header">
+        <h1 class="page-title">{% trans "Edit Volunteer Profile" %}</h1>
+        <div class="page-actions">
+            <a href="{% url 'console_volunteer_detail' volunteer.pk %}" class="c-btn c-btn-outline c-btn-lg">{% trans "Cancel" %}</a>
+            <button type="submit" class="c-btn c-btn-primary c-btn-lg">{% trans "Save Changes" %}</button>
+        </div>
+    </header>
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <div class="ve-identity">
+                    <label class="ve-photo" title="{% trans 'Change photo' %}">
+                        <span class="c-image-drop ve-photo-drop {% if profile.avatar %}has-image{% endif %}" id="avatar-drop"
+                              {% if profile.avatar %}style="background-image: url('{{ profile.avatar.url }}')"{% endif %}>
+                            {% if not profile.avatar %}{% avatar volunteer 'xl' %}{% endif %}
+                        </span>
+                        <input type="file" name="profile-avatar" accept="image/*" data-image-preview="avatar-drop" class="ve-photo-input">
+                        <span class="ve-photo-edit"><span class="material-symbols-outlined">edit</span></span>
+                    </label>
+                    <div class="ve-name">
+                        <h2>{{ volunteer|display_name }}</h2>
+                        <p class="c-muted"><span class="material-symbols-outlined">calendar_today</span>{% blocktrans with d=volunteer.date_joined|date:"M j, Y" %}Member since {{ d }}{% endblocktrans %}</p>
+                    </div>
+                    <div class="ve-status">
+                        {% trans "Can sign in, sign up for events and use the kiosk" as active_hint %}
+                        {% include 'console/partials/toggle.html' with field=user_form.is_active title=_("Account active") hint=active_hint %}
+                    </div>
+                </div>
+                <div class="c-grid-2 ve-fields">
+                    {% include 'console/partials/field.html' with field=user_form.first_name %}
+                    {% include 'console/partials/field.html' with field=user_form.last_name %}
+                    {% include 'console/partials/field.html' with field=user_form.email %}
+                    {% include 'console/partials/field.html' with field=profile_form.phone %}
+                    {% include 'console/partials/field.html' with field=profile_form.location %}
+                    <div class="c-field">
+                        <span class="c-label">{% trans "Kiosk ID" %}</span>
+                        <input type="text" value="{{ profile.id_code }}" readonly class="ve-readonly">
+                    </div>
+                </div>
+                {% include 'console/partials/field.html' with field=profile_form.bio %}
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title">{% trans "Skills & Certifications" %}</h2>
+                {% include 'console/partials/skills_editor.html' with placeholder=_("Add Skill") %}
+                <p class="c-help ve-hint">{% blocktrans %}Skills help match volunteers with appropriate events and high-impact roles. Up to {{ max_skills }} skills.{% endblocktrans %}</p>
+            </section>
+
+            {% if profile_form.permanent_roles.field.queryset.exists %}
+            <section class="c-card">
+                <h2 class="c-card-title">{% trans "Permanent Positions" %}</h2>
+                {% include 'console/partials/field.html' with field=profile_form.permanent_roles label=_("Can check in at the venue kiosk as") %}
+            </section>
+            {% endif %}
+
+            <section class="c-card">
+                <h2 class="c-card-title">{% trans "Admin Notes" %} <span class="c-badge c-badge-danger">{% trans "Internal only" %}</span></h2>
+                {{ profile_form.admin_notes }}
+            </section>
+
+            <div class="c-form-actions">
+                <a href="{% url 'console_volunteer_detail' volunteer.pk %}" class="c-btn c-btn-outline c-btn-lg">{% trans "Cancel" %}</a>
+                <button type="submit" class="c-btn c-btn-primary c-btn-lg">{% trans "Save Profile Changes" %}</button>
+            </div>
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card c-card-tonal ve-impact">
+                <span class="ve-impact-icon"><span class="material-symbols-outlined">bolt</span></span>
+                <h3>{% if profile.level %}{{ profile.level.name }}{% else %}{% trans "New Volunteer" %}{% endif %}</h3>
+                <p>{% blocktrans with pts=profile.impact_points|intcomma %}{{ pts }} impact points earned so far.{% endblocktrans %}</p>
+                <div class="ve-impact-row"><span>{% trans "Total Hours" %}</span><strong>{{ total_hours|hours }}</strong></div>
+                <div class="ve-impact-row"><span>{% trans "Events Led" %}</span><strong>{{ events_led }}</strong></div>
+            </section>
+
+            <section class="c-card">
+                <h3 class="c-card-title">{% trans "Recent Engagement" %}</h3>
+                <div class="c-stack ve-recent">
+                    {% for item in recent %}
+                    <div class="ve-recent-item {% if item.accent %}accent{% endif %}">
+                        <strong>{{ item.title }}</strong>
+                        <small>{{ item.detail }} &bull; {{ item.time|date:"M j" }}</small>
+                    </div>
+                    {% empty %}
+                    <p class="c-muted">{% trans "No activity yet." %}</p>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'console_volunteer_detail' volunteer.pk %}" class="c-link ve-history-link">{% trans "View Full History" %}<span class="material-symbols-outlined">arrow_forward</span></a>
+            </section>
+        </aside>
+    </div>
+</form>
+{% endblock %}

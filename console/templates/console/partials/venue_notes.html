@@ -1,0 +1,23 @@
+{% load i18n %}
+<div class="venue-notes" id="venue-notes">
+    {% for note in notes %}
+    <div class="venue-note">
+        <p>{{ note.text|linebreaksbr }}</p>
+        <div class="venue-note-meta">
+            <small>{% blocktrans with date=note.expires_at|date:"M j" %}Shown until {{ date }}{% endblocktrans %}</small>
+            <button type="button" class="c-icon-btn" aria-label="{% trans 'Remove note' %}"
+                    hx-post="{% url 'console_venue_note_delete' venue.pk note.pk %}" hx-target="#venue-notes" hx-swap="outerHTML">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+    <form class="venue-note-form" hx-post="{% url 'console_venue_note_add' venue.pk %}" hx-target="#venue-notes" hx-swap="outerHTML">
+        {{ note_form.text }}
+        {% for error in note_form.text.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+        <div class="venue-note-form-row">
+            {{ note_form.expires_in_days }}
+            <button type="submit" class="c-btn c-btn-primary c-btn-sm"><span class="material-symbols-outlined">send</span>{% trans "Post" %}</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,147 @@
+.role-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+h3 {
+    color: var(--color-text-primary);
+}
+
+.role-filters .c-input,
+.role-filters .c-select {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-radius: 9999px;
+}
+
+.role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1.75rem;
+}
+
+.role-grid-empty {
+    grid-column: 1 / -1;
+}
+
+.role-tile {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.role-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(from var(--color-text-primary) r g b / 0.08);
+}
+
+.role-tile-level-3,
+.role-tile-level-4 {
+    box-shadow: inset 4px 0 0 rgba(from var(--color-accent) r g b / 0.5), var(--shadow-ambient);
+}
+
+.role-tile-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.role-tile h3 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+}
+
+.role-tile>p {
+    margin-top: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+}
+
+.role-tile-skills {
+    margin-top: 1rem;
+}
+
+.role-tile-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.role-tile-foot>span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding-top: 1.25rem;
+    box-shadow: 0 -1px 0 rgba(from var(--color-text-tertiary) r g b / 0.12);
+}
+
+.role-tile-foot .material-symbols-outlined {
+    font-size: 1.05rem;
+}
+
+.role-tile-level {
+    padding-top: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+}
+
+.role-drafts {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding: 2.5rem;
+    border-radius: 2.5rem;
+    background: var(--color-bg-secondary);
+}
+
+.role-drafts p {
+    margin-top: 0.5rem;
+    max-width: 36rem;
+    color: var(--color-text-secondary);
+}
+
+.role-drafts-art {
+    position: absolute;
+    right: 1.5rem;
+    bottom: -1.5rem;
+    font-size: 9rem;
+    color: var(--color-text-tertiary);
+    opacity: 0.12;
+}
+
+@media (max-width: 760px) {
+    .role-filters {
+        grid-template-columns: 1fr;
+    }
+}
+.role-tile > p.role-tile-venues {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.role-tile-venues .material-symbols-outlined {
+    font-size: 1.05rem;
+    color: var(--color-accent);
+}

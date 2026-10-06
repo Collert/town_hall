@@ -1,0 +1,16 @@
+{% load i18n avatar_tags %}
+{% if people %}
+<h3 class="give-people-label">{% if query %}{% trans "Matches" %}{% else %}{% trans "Recently Worked With" %}{% endif %}</h3>
+<div class="give-people">
+    {% for person in people %}
+    <a href="{% url 'give_endorsement' %}?user={{ person.username }}{% if event %}&event={{ event.pk }}{% endif %}" class="give-person {% if target.pk == person.pk %}selected{% endif %}">
+        {% avatar person 'lg' %}
+        <span>{{ person.first_name|default:person.username }}{% if person.last_name %} {{ person.last_name|first }}.{% endif %}</span>
+    </a>
+    {% endfor %}
+</div>
+{% elif query %}
+<p class="give-muted">{% blocktrans %}Nobody matches "{{ query }}".{% endblocktrans %}</p>
+{% else %}
+<p class="give-muted">{% trans "Search for a volunteer above. People you've shared events with will show up here." %}</p>
+{% endif %}

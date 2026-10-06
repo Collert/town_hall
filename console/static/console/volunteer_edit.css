@@ -1,0 +1,187 @@
+.ve-identity {
+    display: grid;
+    grid-template-columns: auto 1fr minmax(15rem, auto);
+    gap: 1.75rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.ve-photo {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.ve-photo-drop {
+    width: 8rem;
+    height: 8rem;
+    min-height: 0;
+    border-radius: 1.75rem;
+    outline: none;
+}
+
+.ve-photo-drop.has-image .avatar {
+    display: none;
+}
+
+.ve-photo-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.ve-photo-edit {
+    position: absolute;
+    right: -0.5rem;
+    bottom: -0.5rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    pointer-events: none;
+}
+
+.ve-photo-edit .material-symbols-outlined {
+    font-size: 1.15rem;
+}
+
+.ve-name h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.ve-name p {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.ve-name .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.ve-status .c-setting {
+    background: var(--color-bg-secondary);
+}
+
+.ve-fields {
+    margin-bottom: 1.25rem;
+}
+
+.ve-readonly {
+    font-family: monospace;
+    letter-spacing: 0.2em;
+    opacity: 0.75;
+}
+
+.ve-hint {
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+.c-card > textarea {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(from var(--color-text-tertiary) r g b / 0.15);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font: inherit;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.ve-impact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.ve-impact-icon {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-accent);
+    margin-bottom: 0.5rem;
+}
+
+.ve-impact-icon .material-symbols-outlined {
+    font-size: 2.25rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+.ve-impact h3 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.35rem;
+    color: var(--color-text-primary);
+}
+
+.ve-impact p {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.ve-impact-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+}
+
+.ve-impact-row strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.75rem;
+    color: var(--color-text-primary);
+}
+
+.ve-recent {
+    gap: 1rem;
+}
+
+.ve-recent-item {
+    padding-left: 1rem;
+    box-shadow: inset 3px 0 0 var(--color-primary-vivid);
+}
+
+.ve-recent-item.accent {
+    box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.ve-recent-item strong {
+    display: block;
+    color: var(--color-text-primary);
+}
+
+.ve-recent-item small {
+    color: var(--color-text-tertiary);
+}
+
+.ve-history-link {
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .ve-identity {
+        grid-template-columns: auto 1fr;
+    }
+
+    .ve-status {
+        grid-column: 1 / -1;
+    }
+}

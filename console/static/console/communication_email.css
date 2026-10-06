@@ -1,0 +1,343 @@
+.comm-notice {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: rgba(from var(--color-warning) r g b / 0.15);
+    color: var(--color-text-primary);
+}
+
+.comm-notice.is-error {
+    background: rgba(from var(--color-error) r g b / 0.12);
+}
+
+.comm-notice > .material-symbols-outlined {
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+}
+
+.comm-notice.is-error > .material-symbols-outlined {
+    color: var(--color-error);
+}
+
+.comm-notice p {
+    flex: 1 1 14rem;
+    min-width: 0;
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- Trigger rows ---------- */
+.trigger-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.trigger {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.25rem 1rem;
+    align-items: start;
+    padding: 1.1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-surface);
+}
+
+.trigger-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+}
+
+.trigger-main strong {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+}
+
+.trigger-main small {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+.trigger-main .trigger-audience {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.trigger-audience .material-symbols-outlined {
+    font-size: 1rem;
+}
+
+.trigger-switch {
+    margin-top: 0.4rem;
+}
+
+.trigger-settings {
+    grid-column: 2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem 1.5rem;
+    margin-top: 0.75rem;
+}
+
+/* One row per language: label, template picker, edit link. */
+.trigger-templates {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.trigger-template {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.trigger-lang {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.trigger-template .c-select,
+.trigger-template input {
+    width: 100%;
+}
+
+.trigger-lists {
+    flex: 1 1 100%;
+    padding: 0.9rem 1.1rem;
+    border: none;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+}
+
+.trigger-lists legend {
+    padding: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* Django's CheckboxSelectMultiple: <div><div><label><input> name</label></div>…</div> */
+.trigger-lists > div:not(.c-help) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 0.4rem 1.25rem;
+    margin-top: 0.6rem;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+.trigger-lists label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.trigger-lists input {
+    accent-color: var(--color-primary-vivid);
+}
+
+.trigger-lists .c-help {
+    clear: both;
+    margin-top: 0.5rem;
+}
+
+.trigger-footer {
+    flex: 1 1 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+}
+
+.trigger-reset.htmx-request {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Switched-off events fade back but stay editable. */
+.trigger:has(.trigger-switch input:not(:checked)) :is(.trigger-icon, .trigger-main, .trigger-settings) {
+    opacity: 0.55;
+}
+
+.trigger:has(.trigger-switch input:not(:checked)) .trigger-settings:focus-within {
+    opacity: 1;
+}
+
+.trigger-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.trigger-option small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.trigger-fields {
+    flex: 1 1 18rem;
+    min-width: 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+.trigger-fields summary {
+    cursor: pointer;
+    width: fit-content;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.trigger-fields p {
+    margin-top: 0.5rem;
+}
+
+.trigger-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.trigger-tags code {
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+}
+
+.comm-notice.is-busy {
+    background: rgba(from var(--color-primary-vivid) r g b / 0.12);
+}
+
+.comm-spin {
+    animation: comm-spin 1.2s linear infinite;
+}
+
+@keyframes comm-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comm-spin {
+        animation: none;
+    }
+}
+
+/* ---------- Sidebar ---------- */
+.comm-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+}
+
+.comm-status.ok {
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+.comm-status.error {
+    color: var(--color-error);
+}
+
+.comm-facts {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+.comm-facts dt {
+    color: var(--color-text-tertiary);
+}
+
+.comm-facts dd {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.comm-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.comm-actions .c-btn.htmx-request {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.comm-howto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-left: 1.1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 760px) {
+    .comm-notice {
+        flex-wrap: wrap;
+    }
+
+    .trigger {
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 1rem;
+    }
+
+    .trigger-icon {
+        display: none;
+    }
+
+    .trigger-settings {
+        grid-column: 1 / -1;
+    }
+
+    .trigger-template {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .trigger-lang {
+        grid-column: 1 / -1;
+    }
+}

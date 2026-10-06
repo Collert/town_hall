@@ -1,0 +1,141 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if venue %}{% trans "Edit Venue" %}{% else %}{% trans "Add Venue" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/venue_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_venues' %}">{% trans "Venues" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% if venue %}{{ venue.name }}{% else %}{% trans "New Venue" %}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% if venue %}{% trans "Edit Venue" %}{% else %}{% trans "Add a Venue" %}{% endif %}</h1>
+        {% if not venue %}<p class="page-lead">{% trans "Describe the place once. Events and permanent positions can then pick it instead of typing an address." %}</p>{% endif %}
+    </div>
+    {% if venue %}
+    <a href="{% url 'venue_detail' venue.pk %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener">
+        <span class="material-symbols-outlined">visibility</span>{% trans "View public page" %}
+    </a>
+    {% endif %}
+</header>
+
+<div class="c-split">
+    <form method="post" enctype="multipart/form-data" class="c-stack" id="venue-form" data-unsaved-warning>
+        {% csrf_token %}
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">info</span>{% trans "Venue Details" %}</h2>
+            {% include 'console/partials/translated_fields.html' %}
+            <div class="venue-form-row">
+                <div class="c-field{% if form.address.errors %} has-error{% endif %}" id="field-address">
+                    <label class="c-label" for="{{ form.address.id_for_label }}">{% trans "Address" %} *</label>
+                    <div class="c-input-icon">
+                        <span class="material-symbols-outlined">location_on</span>
+                        {{ form.address }}
+                    </div>
+                    {% if venue and venue.address and venue.latitude is None %}<span class="c-help">{% trans "We couldn't find this address on the map, so it won't show up in distance searches. Try adding the city and postal code." %}</span>{% endif %}
+                    {% for error in form.address.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                </div>
+            </div>
+            <div class="c-grid-2 venue-form-row">
+                {% include 'console/partials/field.html' with field=form.phone_number %}
+                {% include 'console/partials/field.html' with field=form.capacity %}
+            </div>
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">image</span>{% trans "Photo" %}</h2>
+            <label class="c-image-drop venue-image-drop {% if venue.photo %}has-image{% endif %}" id="venue-image-drop"
+                   {% if venue.photo %}style="background-image: url('{{ venue.photo.url }}')"{% endif %}>
+                <input type="file" name="photo" accept="image/*" data-image-preview="venue-image-drop">
+                <span class="c-image-drop-label">
+                    <span class="material-symbols-outlined">add_a_photo</span>
+                    <strong>{% if venue.photo %}{% trans "Click to change the photo" %}{% else %}{% trans "Click to upload a photo" %}{% endif %}</strong>
+                    <small>{% trans "Shown on the venue page and in the directory" %}</small>
+                </span>
+            </label>
+            {% for error in form.photo.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">checklist</span>{% trans "Features & Amenities" %}</h2>
+            <p class="c-muted venue-intro">{% trans "Tick everything this venue offers. Volunteers see these on the venue page." %}</p>
+            {% include 'console/partials/venue_features.html' %}
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">schedule</span>{% trans "Operating Hours" %}</h2>
+            <p class="c-muted venue-intro">{% trans "Leave both times empty on days the venue is closed. Staff access lets permanent staff check in at the kiosk outside these hours." %}</p>
+            <div class="venue-hours">
+                <div class="venue-hours-head" aria-hidden="true">
+                    <span>{% trans "Day" %}</span><span>{% trans "Opens" %}</span><span>{% trans "Closes" %}</span><span>{% trans "Staff access" %}</span>
+                </div>
+                {% for row in hours_form.rows %}
+                <div class="venue-hours-row{% if row.open.errors or row.close.errors %} has-error{% endif %}">
+                    <strong>{{ row.label }}</strong>
+                    {{ row.open }}
+                    {{ row.close }}
+                    <label class="c-toggle" title="{% trans 'Open to staff outside hours' %}">{{ row.staff }}<span></span></label>
+                    {% for error in row.open.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                    {% for error in row.close.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </form>
+
+    <aside class="c-stack venue-side">
+        <button type="submit" form="venue-form" class="c-btn c-btn-primary c-btn-lg c-btn-block">
+            <span class="material-symbols-outlined">save</span>{% if venue %}{% trans "Save Changes" %}{% else %}{% trans "Create Venue" %}{% endif %}
+        </button>
+        <a href="{% if venue %}{% url 'console_venue_edit' venue.pk %}{% else %}{% url 'console_venues' %}{% endif %}" class="c-btn c-btn-lg c-btn-block" data-discard>
+            <span class="material-symbols-outlined">close</span>{% trans "Discard" %}
+        </a>
+
+        {% if venue %}
+        <section class="c-card c-card-tonal">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">campaign</span>{% trans "Notices" %}</h2>
+            <p class="c-muted venue-intro">{% trans "Short-lived notes shown on the venue page, like a closed entrance or a moved check-in desk." %}</p>
+            {% include 'console/partials/venue_notes.html' %}
+        </section>
+
+        <section class="c-card c-card-dark venue-usage">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">hub</span>{% trans "Used By" %}</h2>
+            <span class="c-label">{% trans "Upcoming events" %}</span>
+            {% for event in upcoming_events %}
+            <a href="{% url 'console_event_edit' event.pk %}" class="venue-usage-item">
+                <strong>{{ event.title }}</strong><small>{{ event.start_date|date:"M j" }}, {{ event.start_date|time }}</small>
+            </a>
+            {% empty %}
+            <p class="venue-usage-empty">{% trans "No upcoming events here." %}</p>
+            {% endfor %}
+            <span class="c-label">{% trans "Permanent positions" %}</span>
+            {% for role in roles %}
+            <a href="{% url 'console_role_edit' role.pk %}" class="venue-usage-item">
+                <strong><span class="material-symbols-outlined">{{ role.icon|default:"badge" }}</span>{{ role.name }}</strong>
+            </a>
+            {% empty %}
+            <p class="venue-usage-empty">{% trans "No positions are tied to this venue yet. Pick it in a permanent role template." %}</p>
+            {% endfor %}
+            <a href="{% url 'kiosk_login_id_code' 'venue' venue.pk %}" class="c-btn c-btn-surface c-btn-block venue-kiosk">
+                <span class="material-symbols-outlined">tablet_mac</span>{% trans "Open venue kiosk" %}
+            </a>
+        </section>
+
+        <form method="post" action="{% url 'console_venue_delete' venue.pk %}"
+              onsubmit="return confirm('{% trans "Delete this venue? Its events keep the address as plain text." %}')">
+            {% csrf_token %}
+            <button type="submit" class="c-btn c-btn-danger c-btn-block">
+                <span class="material-symbols-outlined">delete</span>{% trans "Delete venue" %}
+            </button>
+        </form>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}

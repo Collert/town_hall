@@ -1,0 +1,55 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Global Role Directory" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/role_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Role Directory" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Global Role Directory" %}</h1>
+        <p class="page-lead">{% trans "Manage reusable role templates for all organization events. Centralize your requirements and keep standards consistent across your volunteer network." %}</p>
+    </div>
+    <a href="{% url 'console_role_create' %}" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">add_circle</span>{% trans "Create New Role Template" %}</a>
+</header>
+
+<form class="role-filters" hx-get="{% url 'console_roles' %}" hx-target="#role-grid" hx-swap="outerHTML"
+      hx-trigger="change, input delay:300ms from:input[name=q]" hx-push-url="true">
+    <div class="c-input-icon role-filter-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="search" name="q" value="{{ query }}" class="c-input" placeholder="{% trans 'Search roles by name or skills...' %}">
+    </div>
+    <select name="kind" class="c-select" aria-label="{% trans 'Role type' %}">
+        <option value="">{% trans "All Role Types" %}</option>
+        <option value="event" {% if kind == 'event' %}selected{% endif %}>{% trans "Event roles" %}</option>
+        <option value="permanent" {% if kind == 'permanent' %}selected{% endif %}>{% trans "Permanent positions" %}</option>
+    </select>
+    <select name="difficulty" class="c-select" aria-label="{% trans 'Difficulty' %}">
+        <option value="">{% trans "Any Difficulty" %}</option>
+        {% for value, label in difficulties %}
+        <option value="{{ value }}" {% if difficulty == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+</form>
+
+{% include 'console/partials/role_grid.html' %}
+
+{% if untrained_roles %}
+<section class="role-drafts">
+    <div>
+        <h2 class="c-section-title">{% trans "Roles Without Training" %}</h2>
+        <p>{% blocktrans count counter=untrained_roles %}{{ counter }} role template has no training modules attached. Volunteers can sign up for it without any preparation.{% plural %}{{ counter }} role templates have no training modules attached. Volunteers can sign up for them without any preparation.{% endblocktrans %}</p>
+    </div>
+    <span class="material-symbols-outlined role-drafts-art">assignment_late</span>
+</section>
+{% endif %}
+{% endblock %}

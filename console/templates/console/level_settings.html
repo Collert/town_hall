@@ -1,0 +1,99 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Impact Levels" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/level_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Levels" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Impact Levels" %}</h1>
+            <p class="page-lead">{% trans "Volunteers earn impact points for every completed shift. Their level is the highest one whose minimum they've reached, so changes here apply to everyone right away." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Levels" %}</button>
+    </header>
+
+    {% include 'console/partials/settings_tabs.html' %}
+
+    <div class="c-split">
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">military_tech</span>{% trans "Level Ladder" %}</h2>
+            {% for error in formset.non_form_errors %}<p class="c-error">{{ error }}</p>{% endfor %}
+
+            <ol class="level-list">
+                {% for form in formset %}
+                <li class="level-row{% if not form.instance.pk %} level-row-new{% endif %}{% if form.errors %} has-error{% endif %}">
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                    <span class="level-number">
+                        {% if form.instance.pk %}{{ form.instance.numeric_name }}{% else %}<span class="material-symbols-outlined">add</span>{% endif %}
+                    </span>
+                    <div class="level-fields">
+                        <div class="c-field">
+                            <label class="c-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            {% for error in form.name.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                        </div>
+                        <div class="c-field">
+                            <label class="c-label" for="{{ form.min_points.id_for_label }}">{{ form.min_points.label }}</label>
+                            {{ form.min_points }}
+                            {% for error in form.min_points.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                        </div>
+                        <div class="c-field level-benefits">
+                            <label class="c-label" for="{{ form.benefits.id_for_label }}">{{ form.benefits.label }}</label>
+                            {{ form.benefits }}
+                            {% for error in form.benefits.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                        </div>
+                    </div>
+                    {% if form.instance.pk %}
+                    <label class="level-delete" title="{% trans 'Remove this level' %}">
+                        {{ form.DELETE }}
+                        <span class="material-symbols-outlined">delete</span>
+                        <span class="level-delete-text">{% trans "Remove" %}</span>
+                    </label>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ol>
+            <p class="c-help level-help">{% trans "Fill in the last row to add a level. Levels are numbered automatically from the lowest points up. Removing a level never removes anyone's points." %}</p>
+        </section>
+
+        <aside class="c-stack">
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">groups</span>{% trans "Where Volunteers Are" %}</h2>
+                <div class="level-dist">
+                    {% if unranked %}
+                    <div class="level-dist-row">
+                        <span class="level-dist-name">{% trans "Not ranked yet" %}</span>
+                        <span class="level-dist-count">{{ unranked }}</span>
+                    </div>
+                    {% endif %}
+                    {% for row in distribution %}
+                    <div class="level-dist-row">
+                        <span class="level-dist-name">
+                            <strong>{{ row.level.name }}</strong>
+                            <small>{% if row.upper is not None %}{% blocktrans with a=row.level.min_points b=row.upper|add:-1 %}{{ a }}–{{ b }} points{% endblocktrans %}{% else %}{% blocktrans with a=row.level.min_points %}{{ a }}+ points{% endblocktrans %}{% endif %}</small>
+                        </span>
+                        <span class="level-dist-count">{{ row.count }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="c-muted">{% trans "No levels yet. Add your first one to start ranking volunteers." %}</p>
+                    {% endfor %}
+                </div>
+                <p class="c-help">{% blocktrans count counter=volunteer_total %}{{ counter }} active volunteer{% plural %}{{ counter }} active volunteers{% endblocktrans %}</p>
+            </section>
+        </aside>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n humanize %}
+
+{% block title %}{% trans "Events Management" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Events" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1 class="page-title">{% trans "Events Management" %}</h1>
+    <a href="{% url 'console_event_create' %}" class="c-btn c-btn-primary c-btn-lg">
+        <span class="material-symbols-outlined">add_circle</span>{% trans "Create New Event" %}
+    </a>
+</header>
+
+<div class="events-top">
+    <section class="events-live">
+        <div class="c-section-head">
+            <h2 class="c-section-title">{% trans "Currently Happening" %}</h2>
+            {% if live_events %}<span class="c-badge c-badge-danger c-badge-live">{% trans "Live now" %}</span>{% endif %}
+        </div>
+        {% for event in live_events %}
+        {% with required=event.total_required signed=event.total_signed_up %}
+        <article class="live-card">
+            <div class="live-card-image">
+                {% if event.image %}<img src="{{ event.image.url }}" alt="">{% else %}<span class="material-symbols-outlined">celebration</span>{% endif %}
+                <span class="c-badge c-badge-dark live-card-flag">{% trans "Active" %}</span>
+            </div>
+            <div class="live-card-body">
+                <h3>{{ event.title }}</h3>
+                <div class="live-card-meta">
+                    <span><span class="material-symbols-outlined">calendar_today</span>{{ event.start_date|date:"M j, Y" }}</span>
+                    <span><span class="material-symbols-outlined">schedule</span>{{ event.start_date|time:"H:i" }} &ndash; {{ event.end_date|time:"H:i" }}</span>
+                </div>
+                <div class="c-progress-head">
+                    <span>{% trans "Staffing Status" %}</span>
+                    <span>{% blocktrans with pct=event.staffing_progress %}{{ pct }}% Staffed{% endblocktrans %}</span>
+                </div>
+                <div class="c-progress"><span style="width: {{ event.staffing_progress }}%"></span></div>
+                <p class="c-muted live-card-note">{% blocktrans %}{{ signed }} of {{ required }} volunteer slots filled{% endblocktrans %}</p>
+                <div class="live-card-actions">
+                    <a href="{% url 'console_event_monitor' event.pk %}" class="c-btn c-btn-dark c-btn-lg">{% trans "Go to Live Feed" %}</a>
+                    <a href="{% url 'console_event_roles' event.pk %}" class="c-btn" aria-label="{% trans 'Manage event' %}"><span class="material-symbols-outlined">more_horiz</span></a>
+                </div>
+            </div>
+        </article>
+        {% endwith %}
+        {% empty %}
+        <div class="c-empty">
+            <span class="material-symbols-outlined">event_busy</span>
+            <h3>{% trans "Nothing live right now" %}</h3>
+            <p>{% trans "Events show up here while they are running, with a shortcut to the live check-in feed." %}</p>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section class="events-upcoming">
+        <div class="c-section-head">
+            <h2 class="c-section-title">{% trans "Upcoming Events" %}</h2>
+            {% if upcoming_total > upcoming_events|length %}<span class="c-muted">{% blocktrans with n=upcoming_total %}{{ n }} scheduled{% endblocktrans %}</span>{% endif %}
+        </div>
+        <div class="upcoming-grid">
+            {% for event in upcoming_events %}
+            <article class="upcoming-card">
+                <div class="upcoming-card-image">
+                    {% if event.image %}<img src="{{ event.image.url }}" alt="">{% else %}<span class="material-symbols-outlined">event</span>{% endif %}
+                    <span class="c-badge upcoming-card-when">{% blocktrans with t=event.start_date|timeuntil %}in {{ t }}{% endblocktrans %}</span>
+                    {% if not event.published %}<span class="c-badge c-badge-dark upcoming-card-draft">{% trans "Draft" %}</span>{% endif %}
+                </div>
+                <div class="upcoming-card-body">
+                    <h3>{{ event.title }}</h3>
+                    <p class="c-muted">{{ event.start_date|date:"M j" }} &bull; {{ event.start_date|time }}</p>
+                    <div class="c-progress-head"><span>{% trans "Staffing" %}</span><span>{{ event.staffing_progress }}%</span></div>
+                    <div class="c-progress accent thin"><span style="width: {{ event.staffing_progress }}%"></span></div>
+                    <a href="{% url 'console_event_roles' event.pk %}" class="c-btn c-btn-surface c-btn-block">{% trans "Manage" %}</a>
+                </div>
+            </article>
+            {% empty %}
+            <a href="{% url 'console_event_create' %}" class="c-add-tile">
+                <span class="material-symbols-outlined">add</span>
+                {% trans "Schedule your next event" %}
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<section class="events-history">
+    <div class="c-section-head">
+        <h2 class="c-section-title">{% trans "Past Events History" %}</h2>
+        <div class="c-input-icon c-search">
+            <span class="material-symbols-outlined">search</span>
+            <input type="search" name="q" value="{{ query }}" class="c-input" placeholder="{% trans 'Search events...' %}"
+                   hx-get="{% url 'console_event_history' %}" hx-trigger="input changed delay:300ms, search"
+                   hx-target="#event-history" hx-swap="outerHTML">
+        </div>
+    </div>
+    {% include 'console/partials/event_history.html' %}
+</section>
+{% endblock %}

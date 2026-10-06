@@ -1,0 +1,462 @@
+body.bare {
+    font-family: 'Inter', sans-serif;
+    padding: 0 1.5rem 3rem;
+}
+
+.record-bar {
+    max-width: 60rem;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+}
+
+.record-bar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.record-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.record-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.record-shield {
+    color: var(--color-text-primary);
+    font-variation-settings: 'FILL' 1;
+}
+
+.record-sheet {
+    max-width: 60rem;
+    margin: 1.5rem auto 0;
+    padding: 4rem;
+    border-radius: 1.5rem;
+    background: var(--color-surface);
+    box-shadow: 0 24px 64px rgba(from var(--color-text-primary) r g b / 0.08);
+    color: var(--color-text-primary);
+}
+
+.record-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.record-org {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+}
+
+.record-org img {
+    height: 1.5rem;
+}
+
+.record-head h1 {
+    margin-top: 0.4rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    line-height: 1.1;
+}
+
+.record-id {
+    font-family: monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+}
+
+.record-seal {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px rgba(from var(--color-accent) r g b / 0.25), inset 0 0 0 6px var(--color-surface), inset 0 0 0 7px rgba(from var(--color-accent) r g b / 0.15);
+    color: var(--color-accent);
+    text-align: center;
+}
+
+.record-seal .material-symbols-outlined {
+    font-size: 3rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+.record-seal small {
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.record-intro {
+    margin-top: 3.5rem;
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-tertiary);
+}
+
+.record-name {
+    text-align: center;
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2.75rem, 7vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+}
+
+.record-level {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: max-content;
+    margin: 1rem auto 0;
+    padding: 0.4rem 1.2rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+}
+
+.record-level .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.record-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin: 3rem 0;
+}
+
+.record-stats div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    border-radius: 1.75rem;
+    background: var(--color-bg-secondary);
+}
+
+.record-stats div.featured {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    transform: scale(1.05);
+    box-shadow: 0 16px 32px rgba(from var(--color-primary-vivid) r g b / 0.25);
+}
+
+.record-stats strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    line-height: 1.1;
+}
+
+.record-stats .featured strong {
+    color: var(--color-primary-contrast);
+}
+
+.record-stats span {
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.record-stats .featured span {
+    color: var(--color-primary-light);
+}
+
+.record-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.record-detail h3 {
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.record-skills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.record-skills li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    box-shadow: inset 0 0 0 1px rgba(from var(--color-text-tertiary) r g b / 0.15);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.record-verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+}
+
+.record-verified .material-symbols-outlined {
+    font-size: 1.1rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+.record-empty {
+    color: var(--color-text-tertiary) !important;
+    font-weight: 400 !important;
+}
+
+.record-quote {
+    position: relative;
+    padding: 2rem;
+    border-radius: 1.75rem;
+    background: var(--color-bg-secondary);
+    box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
+.record-quote blockquote {
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.record-quote-by {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.record-quote-by strong {
+    display: block;
+    color: var(--color-text-primary);
+}
+
+.record-quote-by small {
+    color: var(--color-text-tertiary);
+}
+
+.record-quote-mark {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 3rem;
+    color: rgba(from var(--color-accent) r g b / 0.25);
+}
+
+.record-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.record-signature {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.75rem;
+    min-width: 14rem;
+    border-top: 1px solid rgba(from var(--color-text-tertiary) r g b / 0.5);
+}
+
+.record-signature span {
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.record-signature small {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+}
+
+.record-qr {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.record-qr-code {
+    color: var(--color-text-primary); /* the QR code is drawn in currentColor */
+    width: 4.5rem;
+    height: 4.5rem;
+    padding: 0.35rem;
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+}
+
+.record-qr-code svg {
+    width: 100%;
+    height: 100%;
+}
+
+.record-qr strong {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+}
+
+.record-qr small {
+    font-family: monospace;
+    font-size: 0.6875rem;
+    color: var(--color-text-tertiary);
+}
+
+.record-legal {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+@media screen and (max-width: 720px) {
+    .record-sheet {
+        padding: 2rem 1.5rem;
+    }
+
+    .record-head,
+    .record-foot {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .record-stats,
+    .record-detail {
+        grid-template-columns: 1fr;
+    }
+
+    .record-stats div.featured {
+        transform: none;
+    }
+}
+
+/* Print: one portrait page, A4 or Letter. The sheet is sized to the area both
+   papers share inside 10mm margins (190mm x 257mm), so nothing needs scaling. */
+@page {
+    size: portrait;
+    margin: 10mm;
+}
+
+@media print {
+    body.bare {
+        padding: 0;
+        background: var(--color-surface);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .record-sheet {
+        width: 190mm;
+        height: 257mm;
+        max-width: none;
+        margin: 0 auto;
+        padding: 12mm 12mm 9mm;
+        border-radius: 0;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        break-inside: avoid;
+        overflow: hidden;
+    }
+
+    .record-head h1 { font-size: 18pt; }
+    .record-seal { width: 26mm; height: 26mm; }
+    .record-seal .material-symbols-outlined { font-size: 26pt; }
+    .record-intro { margin-top: auto; }
+    .record-name { font-size: 34pt; }
+
+    .record-stats {
+        margin: 8mm 0;
+        gap: 4mm;
+    }
+
+    .record-stats div { padding: 5mm 3mm; border-radius: 5mm; }
+    .record-stats strong { font-size: 22pt; }
+
+    .record-stats div.featured {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .record-detail { gap: 7mm; }
+    .record-skills { gap: 2mm; }
+    .record-skills li { padding: 3mm 4mm; }
+    .record-quote { padding: 6mm; }
+    .record-quote blockquote { font-size: 10.5pt; }
+
+    .record-foot {
+        margin-top: auto;
+        padding-top: 6mm;
+    }
+}

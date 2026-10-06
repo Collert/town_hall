@@ -1,0 +1,60 @@
+{% extends 'base/layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "You're Invited" %} | {{ event.title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'events/respond_to_invite.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="invite-page">
+    <article class="invite-card">
+        <div class="invite-hero" {% if event.image %}style="background-image: url('{{ event.image.url }}')"{% endif %}>
+            <span class="invite-badge"><span class="material-symbols-outlined">mail</span>{% trans "Personal invitation" %}</span>
+            <h1>{{ event.title }}</h1>
+        </div>
+        <div class="invite-body">
+            <p class="invite-lead">{% blocktrans with role=slot.role.name %}You've been invited to volunteer as <strong>{{ role }}</strong>.{% endblocktrans %}</p>
+
+            <dl class="invite-facts">
+                <div><dt><span class="material-symbols-outlined">calendar_today</span>{% trans "When" %}</dt><dd>{{ slot.start_time|date:"l, F j" }}<br>{{ slot.start_time|time }} &ndash; {{ slot.end_time|time }}</dd></div>
+                <div><dt><span class="material-symbols-outlined">location_on</span>{% trans "Where" %}</dt><dd>{{ event.full_location }}{% if event.report_to_location %}<br><small>{% blocktrans with p=event.report_to_location %}Check in at {{ p }}{% endblocktrans %}</small>{% endif %}</dd></div>
+                <div><dt><span class="material-symbols-outlined">{{ slot.role.icon|default:"badge" }}</span>{% trans "Role" %}</dt><dd>{{ slot.role.name }}</dd></div>
+            </dl>
+
+            {% if slot.role.description %}<p class="invite-desc">{{ slot.role.description }}</p>{% endif %}
+
+            {% if training %}
+            <div class="invite-training">
+                <h2>{% trans "Required training" %}</h2>
+                <ul>
+                    {% for t in training %}
+                    <li class="{% if t.done %}done{% endif %}">
+                        <span class="material-symbols-outlined">{% if t.done %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+                        <a href="{% url 'module_overview' t.module.pk %}">{{ t.module.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if not training_ok %}<p class="invite-warn">{% trans "Complete the training above before accepting. Your invitation will wait for you." %}</p>{% endif %}
+            </div>
+            {% endif %}
+
+            {% if conflict %}<p class="invite-warn">{% trans "Heads up: this overlaps with another shift you've signed up for." %}</p>{% endif %}
+
+            {% if invite.accepted %}
+            <p class="invite-done"><span class="material-symbols-outlined">task_alt</span>{% trans "You've already accepted this invitation." %}</p>
+            <a href="{% url 'opportunity_detail' event.pk %}" class="btn btn-dark btn-rounded">{% trans "View event" %}</a>
+            {% else %}
+            <form method="post" class="invite-actions">
+                {% csrf_token %}
+                <button type="submit" name="response" value="decline" class="btn btn-rounded invite-decline">{% trans "Decline" %}</button>
+                <button type="submit" name="response" value="accept" class="btn btn-accent btn-rounded btn-lg" {% if not training_ok or conflict %}disabled{% endif %}>
+                    {% trans "Accept & Sign Up" %}<span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </article>
+</div>
+{% endblock %}

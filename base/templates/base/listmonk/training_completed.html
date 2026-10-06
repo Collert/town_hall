@@ -1,0 +1,5 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% blocktranslate asvar title with name=tx.name %}Well done, {{ name }}!{% endblocktranslate %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with module=tx.module %}You completed <strong>{{ module }}</strong>. Any roles that need it are now open to you.{% endblocktranslate %}</p>
+{% translate "View your certificate" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+{% endblock %}

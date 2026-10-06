@@ -1,0 +1,81 @@
+# CLAUDE.md
+
+Town Hall is a Django 6 volunteer-management app. Organizations create **events**, attach **role slots** (a role + time window + headcount) to them, and volunteers sign up. A volunteer can only sign up for a role after finishing that role's **mandatory training modules**. Time worked is recorded as **shifts**, which earn **impact points**, and impact points set a volunteer's **level**. The UI is server-rendered Django templates with HTMX and custom CSS.
+
+## Commands (Windows / PowerShell)
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python manage.py runserver
+python manage.py makemigrations; python manage.py migrate
+python manage.py test                 # all apps
+python manage.py test console        # one app (console/tests.py covers most screens and flows)
+python manage.py populate_dummy_data  # fresh migrated DB only: demo parish (sofia.melnyk etc. / password123, admin/admin); dates relative to today
+python manage.py makemessages -l es   # i18n; locales: en, es, fr, uk
+python manage.py compilemessages
+```
+
+Database: local SQLite (`db.sqlite3`, committed). Deployment uses Nixpacks (`nixpacks.toml`): it runs `collectstatic`, then serves with gunicorn and WhiteNoise. `gunicorn` is not listed in `requirements.txt`.
+
+## Apps and domain model
+
+| App | Responsibility | Key models |
+| --- | --- | --- |
+| `base` | Users/profiles, site theming, home, auth, notifications, email (listmonk), venues | `Profile`, `SiteSettings` (singleton), `HeroSection` (singleton), `Level`, `Notification`, `EmailTrigger`, `Endorsement`, `Venue`, `VenueFeature`, `VenueNote`, `OperatingHour` |
+| `events` | Events, role slots, sign-ups, search | `Event`, `EventCategory`, `EventRoleSlot`, `EventSlotInvite` |
+| `jobs` | Roles, training requirements, shifts, kiosk check-in | `Role`, `RoleTrainingRequirement`, `Shift` |
+| `education` | Training modules, lessons, quizzes, external certificates | `TrainingModule`, `TrainingLesson`, `Quiz`, `QuizQuestion`, `TrainingModuleCompletion`, `Skill`, `TrainingTopic`, `ExternalCertificate`, `UserCertification(File)` |
+| `api` | API-key-authenticated JSON endpoints for kiosk/device shift tracking | `APIKey`, `ShiftHeartbeat` |
+| `console` | Staff-only admin portal: dashboard, events/staffing/invites/check-in monitor/reports, roles, venues, volunteers, training editors, certificates, communication (email triggers), org settings | none (uses other apps' models) |
+
+How the pieces connect:
+
+- `Event` → many `EventRoleSlot`. Each slot points to one `jobs.Role`, has `required_qty` + `allowed_overstaffing_qty`, and stores sign-ups as an M2M to User (`user.commitments`).
+- `Role` ↔ `TrainingModule` through `RoleTrainingRequirement(mandatory=bool)`. `Role.has_user_completed_required_training(user)` gates sign-up in `events.views.role_slot_signup`.
+- A role is either event-based or `permanent=True`. Permanent staff are linked through `Profile.permanent_roles`, and a permanent role can be venue-specific (`Role.venue` → `base.Venue`).
+- `Shift` is tied to an `EventRoleSlot` or directly to a `Role` (permanent roles / kiosk).
+- Impact points are a ledger: every award is a `base.PointsEntry` (shift, training, endorsement, admin adjustment) and `Profile.impact_points` is their sum (kept current by a signal). Scoring lives in `base/points.py`: a shift earns points per hour × hours × role weight (`Role.points_weight`, else from `complexity_level`) × capped reach (attendees per volunteer, or beneficiaries) × clutch bonuses (kiosk walk-in, last-minute sign-up from `events.SlotSignup`, early/late shifts). Rules are the `PointsRules` singleton, edited at Console > Organization > Points. `Shift.save()` refreshes its entry; finishing a module and `Endorsement.give()` award theirs. Sign up through `EventRoleSlot.add_signup()` so the sign-up time is logged. `python manage.py recalculate_points` reapplies current rules to past shifts.
+- `Event.venue` → `base.Venue` (nullable). Without a venue, the event uses its one-off `location` text instead. Templates and code should read `event.place_name` (short), `event.address`, `event.full_location` (calendars and emails) and `event.map_url`, never `event.location` directly. Event coordinates are copied from the venue, and `Venue.save()` geocodes when the address changes, then pushes the new coordinates to its events. Deleting a venue in the console turns its name and address into each event's `location`.
+- `Venue.features` → `VenueFeature` (name, icon, category). Default features are seeded by migration `base.0032`, and staff can add more from the venue editor. `VenueNote`s are short-lived notices shown on the public venue page and the venue kiosk (`Venue.active_notes()`).
+- `Profile.level` = the highest `Level` whose `min_points` ≤ the user's impact points. A `Profile` is created automatically by a `post_save` signal on `User` and gets a unique 6-digit `id_code`, which is used for kiosk login.
+- Module completion: a user marks lessons and passes quizzes (M2M `completed_by`). Once every item is done, `TrainingModule.mark_as_completed_for_user` creates a `TrainingModuleCompletion`. `expires_after_days` makes a completion expire.
+
+## URL layout
+
+All app URLs are wrapped in `i18n_patterns` with `prefix_default_language=True`, so every route starts with a language prefix (e.g. `/en/opportunities/`).
+
+- `''` → `base` (includes the public venue page `/venues/<id>/`) · `opportunities/` → `events` · `training/` → `education` · `jobs/` → `jobs` (kiosk views) · `console/` → `console` (staff portal, `console.decorators.staff_required`) · `admin/`
+- Kiosk: `/jobs/kiosk/` (staff picker) → `/jobs/kiosk/event/<id>/` or `/jobs/kiosk/venue/<id>/`. The kiosk stores the volunteer in `session['kiosk_user_id']`; it never logs them into the site.
+- `api` has views but **no URL routes yet**. `base/api_views.py` is not routed either.
+- Media is served by Django's `serve` view in all environments.
+
+## Conventions
+
+These match `.github/copilot-instructions.md` and `DESIGN.md`. Read `DESIGN.md` before doing UI work.
+
+- **Views**: function-based views using `get_object_or_404`, `messages`, `@login_required`, and `@require_POST`. Wrap user-facing strings in `gettext_lazy as _` in Python and `{% trans %}` / `{% blocktranslate %}` in templates.
+- **Translatable model fields** are registered in each app's `translation.py` (django-modeltranslation). Adding a translated field means updating `translation.py` and making a migration, because this creates `_en/_es/_fr/_uk` columns.
+- **Templates**: `templates/<app>/…` extends `base/layout.html` (blocks: `extra_css`, `content`, `extra_js`, `body_class`). Education pages extend `education/education_layout.html`. HTMX partials go in `templates/<app>/partials/` (e.g. `events/partials/events_grid.html`, returned by `search_events`).
+- **Frontend**: prefer HTMX over hand-written JS. Use inline styles only for dynamic values. Layouts load the shared head from `base/partials/head.html` and set `hx-headers` with the CSRF token on `<body>`. Messages added during an HTMX request become toasts automatically (`base.middleware.HtmxMessagesMiddleware` → `HX-Trigger: toasts` → `base/static/base/toasts.js`). Full-screen pages without nav (kiosk, certificates) extend `base/bare_layout.html`; console pages extend `console/console_layout.html` and reuse the `c-*` components in `console/static/console/console_layout.css`.
+- **Avatars**: `{% load avatar_tags %}{% avatar user 'sm' %}` (sizes xs/sm/md/lg/xl) and `{{ user|display_name }}`.
+- **No Tailwind, ever.** Don't add the Tailwind CDN, config, or utility classes anywhere. When implementing anything that started as Tailwind (Stitch mockups, snippets, examples), translate every utility class into plain CSS that uses the project's CSS variables.
+- **One CSS file per template, with the same name**: `templates/<app>/<name>.html` gets `static/<app>/<name>.css` (e.g. `events/templates/events/event_detail.html` → `events/static/events/event_detail.css`). Load it in that template's `extra_css` block. Shared styles stay in `base/static/base/styles.css`.
+- **Text colors**: use `--color-text-primary/secondary/tertiary` for text. They swap in dark mode; `--color-primary` does not, so it's for fills (buttons, dark cards) with `--color-primary-contrast` text on top. Thin accents that must stay visible in dark mode (progress bars, selection rings, toggles) use `--color-primary-vivid`. Bright card surfaces use `--color-surface`.
+- **Colors**: always use CSS variables (`var(--color-primary)`, `--color-accent`, `--color-bg-*`, `--color-text-*`, …). Never hardcode hex. `layout.html` generates these variables from the `SiteSettings` model through the `base.context_processors.site_settings` processor. Dark mode swaps them under `prefers-color-scheme`.
+- **Design rules** ("Empowered Architect"): no 1px solid borders for sectioning, so use background tone shifts instead. Use "ghost borders" (15% opacity) only when a border is necessary. Never use black shadows. Radii are 1rem or larger. Headlines use Manrope and body text uses Inter. Icons are Google Material Symbols, and models store icon names in `icon` CharFields.
+- **Singletons** (`SiteSettings`, `HeroSection`) force `pk=1` in `save()`. Read settings with `SiteSettings.get_settings()`, which is cached in locmem and cleared on save.
+
+## Design mockups
+
+`stitch_town_halll/` (untracked) holds about 65 Google Stitch screen mockups, each a folder with `code.html` + `screen.png`. Many of them are for screens that haven't been built yet: admin dashboard, role/module editors, kiosk, endorsements, impact reports. Use them as **visual references only**. They're written in Tailwind, so never copy their markup and classes as-is. Rebuild each screen with semantic class names and translate the styles into the matching `<template-name>.css` file, replacing their hardcoded colors with the project's CSS variables.
+
+## Known gotchas
+
+- `theme_settings_edit` (`/settings/theme/`) now only redirects to the console's Organization page.
+- Many model methods run queries in Python loops. Watch for N+1 queries in list views. `Role.complexity_levels()` computes every role's level in one pass; prefer it over `role.complexity_level` in loops.
+- `Event.save()` geocodes `location` through Nominatim, which is a network call that fails silently. Tests set `latitude`/`longitude` to skip it. `TrainingLesson.save()` fetches video length with `yt-dlp` (failures are swallowed).
+- `EventRoleSlot.is_public=False` slots are invite-only; volunteers join them through `EventSlotInvite` links (`respond_to_invite`). `Event.published=False` hides an event from volunteers.
+- Lesson `content` is rendered with `render_markdown` (raw HTML still passes through).
+- Settings are dev-grade: hardcoded `SECRET_KEY`, `DEBUG=True`, `ALLOWED_HOSTS=["*"]`. Email goes through listmonk (`base/listmonk.py`). Organization > Backend holds only the connection (URL, API user/token, from address; env fallbacks `LISTMONK_URL` / `LISTMONK_API_USER` / `LISTMONK_API_TOKEN`); without it, emails print to the runserver console. Saving a working connection runs `listmonk.connect()` in the background: it creates the private "Town Hall users" list, uploads the logo to listmonk media, seeds one template per email trigger and enabled language, and syncs users. Triggers live in `base/triggers.py`; seeds are Django templates in `base/templates/base/listmonk/` (all strings translatable) rendered to Go templates by `base/email_templates.py`, and `EmailTemplate` rows map (trigger, language) to listmonk template IDs. Each transactional seed starts with brand variables ($org_name, $color_primary, ...) that `listmonk.refresh_brand()` rewrites when Identity settings change; "New event published" is a visual campaign template filled with `[event_title]`-style tokens. Views send with `base.email.notify(trigger, user, data)` (data only, no text; it picks the recipient's `Profile.language`, kept current by `RememberLanguageMiddleware`, and sends in a thread after commit). Console > Communication > Email picks templates per event/language, extra campaign lists, and offers Reset to default. Existing list memberships are never changed, so unsubscribes stick. Password reset (`/password-reset/`) and invitations depend on it.
+- Console "Auto-translate" (`console/auto_translate.py`) fills empty translations from the first language. Keys and URLs are set in the console (Organization > Backend, stored on `SiteSettings`, write-only in the form); each falls back to the env var. Provider order: your own LibreTranslate (`LIBRETRANSLATE_URL`, optional `LIBRETRANSLATE_API_KEY`; falls through if it is down), Google Cloud (`GOOGLE_TRANSLATE_API_KEY`), DeepL (`DEEPL_API_KEY`, free tier 500k chars/month), Google's free web endpoint, then MyMemory (no key; about 5k chars/day, 50k with `MYMEMORY_EMAIL`). Google's free endpoint shows a CAPTCHA to networks it flags, so after a block it's skipped for an hour; failures print `[auto-translate]` diagnostics in the runserver terminal.

@@ -1,0 +1,40 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Training Modules" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/role_list.css' %}">
+<link rel="stylesheet" href="{% static 'console/module_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Training Modules" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Training Modules" %}</h1>
+        <p class="page-lead">{% trans "Build the lessons and quizzes volunteers complete before taking on a role. Published modules appear in the training directory." %}</p>
+    </div>
+    <a href="{% url 'console_module_create' %}" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">add_circle</span>{% trans "New Module" %}</a>
+</header>
+
+<form class="role-filters module-filters" hx-get="{% url 'console_modules' %}" hx-target="#module-grid" hx-swap="outerHTML"
+      hx-trigger="change, input delay:300ms from:input[name=q]" hx-push-url="true">
+    <div class="c-input-icon role-filter-search">
+        <span class="material-symbols-outlined">search</span>
+        <input type="search" name="q" value="{{ query }}" class="c-input" placeholder="{% trans 'Search modules or topics...' %}">
+    </div>
+    <div class="c-tabs" role="radiogroup">
+        <label class="c-tab"><input type="radio" name="status" value="" {% if not status %}checked{% endif %} hidden>{% trans "All" %}</label>
+        <label class="c-tab"><input type="radio" name="status" value="published" {% if status == 'published' %}checked{% endif %} hidden>{% trans "Published" %} <span class="c-badge">{{ published_count }}</span></label>
+        <label class="c-tab"><input type="radio" name="status" value="draft" {% if status == 'draft' %}checked{% endif %} hidden>{% trans "Drafts" %} <span class="c-badge">{{ draft_count }}</span></label>
+    </div>
+</form>
+
+{% include 'console/partials/module_grid.html' %}
+{% endblock %}

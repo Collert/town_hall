@@ -1,0 +1,130 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Craft Invitations" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_invite.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_events' %}">{% trans "Event Planner" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_event_roles' event.pk %}">{{ event.title }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Outreach" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Craft Invitations" %}</h1>
+        <p class="page-lead">{% blocktrans with title=event.title %}Personalize your message for <strong class="invite-event-name">{{ title }}</strong>. Volunteers are more likely to respond to tailored messages.{% endblocktrans %}</p>
+    </div>
+</header>
+
+<form method="post" class="invite-layout" id="invite-form" data-unsaved-warning>
+    {% csrf_token %}
+    <div class="c-stack">
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">assignment_ind</span>{% trans "Inviting For" %}</h2>
+            <div class="c-field">
+                <label class="c-label" for="invite-slot">{% trans "Role & time slot" %}</label>
+                <select id="invite-slot" name="slot" onchange="window.location.search = '?slot=' + this.value">
+                    {% for s in slots %}
+                    <option value="{{ s.pk }}" {% if s.pk == slot.pk %}selected{% endif %}>
+                        {{ s.role.name }} &middot; {{ s.start_time|date:"M j" }}, {{ s.start_time|time }}&ndash;{{ s.end_time|time }} ({{ s.signups.count }}/{{ s.required_qty }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">person_add</span>{% trans "Recipient Selection" %}</h2>
+            <div class="c-input-icon">
+                <span class="material-symbols-outlined">search</span>
+                <input type="search" name="q" class="c-input" placeholder="{% trans 'Search volunteers by name or skill...' %}" autocomplete="off"
+                       hx-get="{% url 'console_invite_recipients' event.pk %}" hx-vals='{"slot": "{{ slot.pk }}"}'
+                       hx-trigger="input changed delay:300ms, search" hx-target="#recipients" hx-swap="outerHTML">
+            </div>
+            {% include 'console/partials/invite_recipients.html' %}
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">edit_note</span>{% trans "Message Customization" %}</h2>
+            <div class="c-form">
+                <div class="c-field">
+                    <label class="c-label" for="invite-subject">{% trans "Subject Line" %}</label>
+                    <input type="text" id="invite-subject" name="subject" value="{{ default_subject }}" maxlength="200" data-preview="preview-subject">
+                </div>
+                <div class="c-field">
+                    <label class="c-label" for="invite-body">{% trans "Message Body" %}</label>
+                    <textarea id="invite-body" name="body" rows="8" data-preview="preview-body">{{ default_body }}</textarea>
+                    <span class="c-help">{% trans "[Name] is replaced with each volunteer's first name. A sign-up link is added automatically." %}</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <aside class="invite-preview">
+        <div class="c-section-head">
+            <h2 class="c-section-title">{% trans "Preview" %}</h2>
+        </div>
+        <div class="preview-window">
+            <div class="preview-chrome"><span></span><span></span><span></span><small>{% trans "Preview mode" %}</small></div>
+            <div class="preview-subject">{% trans "Subject:" %} <span id="preview-subject">{{ default_subject }}</span></div>
+            <div class="preview-hero" {% if event.image %}style="background-image: url('{{ event.image.url }}')"{% endif %}>
+                <h3>{{ event.title }}</h3>
+            </div>
+            <div class="preview-body">
+                <p id="preview-body">{{ default_body|linebreaksbr }}</p>
+                <dl class="preview-facts">
+                    <div><dt>{% trans "When" %}</dt><dd>{{ slot.start_time|date:"M j, Y" }} &bull; {{ slot.start_time|time }}</dd></div>
+                    <div><dt>{% trans "Where" %}</dt><dd>{{ event.full_location }}</dd></div>
+                </dl>
+                <span class="c-btn c-btn-primary preview-cta">{% trans "Sign Up" %}</span>
+            </div>
+        </div>
+    </aside>
+
+    <footer class="invite-bar">
+        <span class="invite-bar-count"><span class="material-symbols-outlined">group_add</span><span id="selected-count">0</span> {% trans "volunteers selected to invite" %}</span>
+        <a href="{% url 'console_event_roles' event.pk %}" class="c-btn c-btn-ghost" data-discard>{% trans "Cancel" %}</a>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">send</span>{% trans "Send Invitations" %}</button>
+    </footer>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Live preview + selected count; selections survive HTMX search swaps.
+    (function () {
+        const form = document.getElementById('invite-form');
+        const selected = new Set();
+        const count = document.getElementById('selected-count');
+        const sync = () => {
+            form.querySelectorAll('input[name=user_ids]').forEach((box) => { box.checked = selected.has(box.value); });
+            count.textContent = selected.size;
+            form.querySelectorAll('input[type=hidden][data-keep]').forEach((h) => h.remove());
+            selected.forEach((id) => {
+                if (!form.querySelector(`input[name=user_ids][value="${id}"]`)) {
+                    const keep = Object.assign(document.createElement('input'), { type: 'hidden', name: 'user_ids', value: id });
+                    keep.dataset.keep = '';
+                    form.appendChild(keep);
+                }
+            });
+        };
+        form.addEventListener('change', (e) => {
+            if (e.target.name !== 'user_ids') return;
+            e.target.checked ? selected.add(e.target.value) : selected.delete(e.target.value);
+            sync();
+        });
+        document.body.addEventListener('htmx:afterSwap', sync);
+        form.addEventListener('input', (e) => {
+            const target = e.target.dataset.preview && document.getElementById(e.target.dataset.preview);
+            if (target) target.textContent = e.target.value;
+        });
+    })();
+</script>
+{% endblock %}

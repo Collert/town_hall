@@ -1,0 +1,251 @@
+.backend-intro {
+    margin: -0.75rem 0 1.5rem;
+}
+
+.backend-subhead {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.75rem 0 1rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.backend-intro + .backend-subhead {
+    margin-top: 0;
+}
+
+.backend-howto {
+    margin-top: 1rem;
+    padding: 0.9rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.backend-howto summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.backend-howto p {
+    margin-top: 0.75rem;
+}
+
+.backend-howto pre {
+    margin-top: 0.5rem;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    font-size: 0.8125rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.secret-badge {
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.secret-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.secret-clear input {
+    accent-color: var(--color-error);
+}
+
+.backend-span-2 {
+    grid-column: span 2;
+}
+
+.backend-test {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    box-shadow: inset 0 1px 0 rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.backend-test .c-btn {
+    align-self: flex-start;
+}
+
+.backend-test-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.backend-test-controls .c-select {
+    width: auto;
+    border-radius: 9999px;
+}
+
+.backend-test .c-btn.htmx-request {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.backend-test-result {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.backend-test-result.ok > .material-symbols-outlined {
+    color: var(--color-success);
+}
+
+.backend-test-result.error > .material-symbols-outlined {
+    color: var(--color-error);
+}
+
+.backend-test-result p {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.backend-test-sample {
+    color: var(--color-text-tertiary);
+}
+
+.provider-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.provider {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border-radius: 1.25rem;
+    background: var(--color-surface);
+}
+
+.provider > span:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+}
+
+.provider strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+
+.provider small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.provider-dot {
+    flex-shrink: 0;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: var(--color-primary-vivid);
+}
+
+.provider.active {
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid);
+}
+
+.provider.active .provider-dot {
+    background: var(--color-success);
+    box-shadow: 0 0 0 4px rgba(from var(--color-success) r g b / 0.2);
+}
+
+.provider.off {
+    opacity: 0.6;
+}
+
+.provider.off .provider-dot {
+    background: rgba(from var(--color-text-tertiary) r g b / 0.4);
+}
+
+.backend-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+}
+
+.backend-status.ok {
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+.backend-status.error {
+    color: var(--color-error);
+    overflow-wrap: anywhere;
+}
+
+.backend-status-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.backend-security {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+.backend-security .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 760px) {
+    .backend-span-2 {
+        grid-column: auto;
+    }
+}
+
+.provider-note {
+    margin-top: 1rem;
+}
+
+.backend-task {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+}
+
+.backend-task .material-symbols-outlined {
+    font-size: 1.1rem;
+    animation: backend-spin 1.2s linear infinite;
+}
+
+@keyframes backend-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .backend-task .material-symbols-outlined {
+        animation: none;
+    }
+}

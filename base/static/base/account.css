@@ -154,7 +154,7 @@
 
 .security-link .material-symbols-outlined {
     font-size: 1.2rem;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .security-link.danger .material-symbols-outlined {
@@ -169,6 +169,56 @@
     margin-left: auto;
     color: var(--color-text-tertiary) !important;
     font-size: 1rem !important;
+}
+
+/* ---- Kiosk check-in code ---- */
+.account-kiosk-card {
+    background: var(--color-bg-secondary);
+    border-radius: 1.25rem;
+    overflow: hidden;
+}
+
+.account-kiosk-card h4 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-text-tertiary);
+    padding: 1rem 1.25rem 0.5rem;
+}
+
+.kiosk-code-label {
+    padding: 0 1.25rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+.kiosk-code {
+    margin: 0.35rem 1.25rem 0.5rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-primary);
+}
+
+.kiosk-code-gap {
+    display: inline-block;
+    width: 0.5em;
+}
+
+.kiosk-code-help {
+    padding: 0 1.25rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-text-tertiary);
+}
+
+.account-kiosk-card .security-link.htmx-request {
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 /* ---- Main Content ---- */
@@ -273,7 +323,7 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    color: var(--color-primary);
+    color: var(--color-text-primary);
     display: flex;
     align-items: center;
     opacity: 0.6;
@@ -339,11 +389,25 @@
     padding: 0.4rem 0;
 }
 
-.skills-dropdown.open {
+.skills-add-row[open] .skills-dropdown {
     display: block;
 }
 
+.skills-add-row summary {
+    list-style: none;
+    width: max-content;
+}
+
+.skills-add-row summary::-webkit-details-marker {
+    display: none;
+}
+
 .skills-dropdown-item {
+    display: block;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
     padding: 0.65rem 1rem;
     font-family: 'Inter', sans-serif;
     font-size: 0.875rem;
@@ -492,7 +556,7 @@ dialog.account-dialog.dialog-closing::backdrop {
 
 .account-dialog-close:hover {
     background: var(--color-bg-tertiary);
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .account-dialog-body {
@@ -577,7 +641,7 @@ dialog.account-dialog.dialog-closing::backdrop {
 }
 
 .password-toggle:hover {
-    color: var(--color-primary);
+    color: var(--color-text-primary);
 }
 
 .password-hint {
@@ -624,7 +688,8 @@ dialog.account-dialog.dialog-closing::backdrop {
         min-width: 200px;
     }
 
-    .account-security-card {
+    .account-security-card,
+    .account-kiosk-card {
         flex: 1;
         min-width: 200px;
     }

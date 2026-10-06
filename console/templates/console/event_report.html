@@ -1,0 +1,155 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n humanize avatar_tags console_tags %}
+
+{% block title %}{{ event.title }} &middot; {% trans "Impact Report" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_edit.css' %}">
+<link rel="stylesheet" href="{% static 'console/event_report.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_events' %}">{% trans "Events" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_event_roles' event.pk %}">{{ event.title }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Impact Report" %}</span>
+{% endblock %}
+
+{% block content %}
+{% include 'console/partials/event_tabs.html' %}
+
+<section class="report-hero">
+    <div class="report-hero-head">
+        <div>
+            <span class="c-label">{% trans "Post-Event Report" %}</span>
+            <h1 class="page-title">{{ event.title }}</h1>
+            <p class="page-lead">{% trans "Overview of event efficiency, role execution, and volunteer recognition." %}</p>
+        </div>
+        <div class="page-actions">
+            <a href="{% url 'event_impact_card' event.pk %}" class="c-btn c-btn-surface" target="_blank" rel="noopener"><span class="material-symbols-outlined">share</span>{% trans "Share" %}</a>
+            <a href="?export=1" class="c-btn c-btn-surface"><span class="material-symbols-outlined">download</span>{% trans "Export" %}</a>
+        </div>
+    </div>
+    <div class="c-grid-3">
+        <div class="report-stat">
+            <span>{% trans "Volunteer Turnout" %}<span class="material-symbols-outlined">trending_up</span></span>
+            <strong>{% if efficiency is None %}&mdash;{% else %}{{ efficiency }}%{% endif %}</strong>
+        </div>
+        <div class="report-stat">
+            <span>{% trans "Total Volunteers" %}<span class="material-symbols-outlined">group</span></span>
+            <strong>{{ volunteer_total|intcomma }}</strong>
+        </div>
+        <div class="report-stat">
+            <span>{% trans "Hours Logged" %}<span class="material-symbols-outlined">schedule</span></span>
+            <strong>{{ hours_total|hours|intcomma }}</strong>
+        </div>
+    </div>
+    {% if not event.is_past %}
+    <p class="report-note"><span class="material-symbols-outlined">info</span>{% trans "This event hasn't finished yet, so these numbers are still moving." %}</p>
+    {% endif %}
+</section>
+
+<section class="report-section">
+    <h2 class="c-section-title">{% trans "Post-Event Statement" %}</h2>
+    <p class="c-muted">{% trans "Shown to volunteers on their thank-you page and certificates." %}</p>
+    <form class="c-card report-statement" hx-post="{% url 'console_event_report' event.pk %}" hx-swap="none" data-unsaved-warning>
+        <div class="c-field">
+            <label class="c-label" for="statement">{% trans "Event Summary & Impact" %}</label>
+            <textarea id="statement" name="post_event_statement" rows="5" placeholder="{% trans 'Summarize the overall impact, key successes, and lessons learned from this event...' %}">{{ event.post_event_statement|default:"" }}</textarea>
+        </div>
+        <div class="c-form-actions">
+            <button type="submit" class="c-btn c-btn-dark c-btn-sm"><span class="material-symbols-outlined">save</span>{% trans "Save Statement" %}</button>
+        </div>
+    </form>
+</section>
+
+<section class="report-section">
+    <h2 class="c-section-title">{% trans "Role-Specific Breakdown" %}</h2>
+    <p class="c-muted">{% trans "Efficiency compares hours actually logged with hours scheduled for signed-up volunteers." %}</p>
+    <div class="c-list report-roles">
+        {% for row in roles %}
+        <div class="c-list-item report-role">
+            <span class="c-icon-tile round"><span class="material-symbols-outlined">{{ row.role.icon|default:"badge" }}</span></span>
+            <div class="c-list-item-main">
+                <strong>{{ row.role.name }}</strong>
+                <small>{{ row.role.description|truncatechars:70 }}</small>
+            </div>
+            <div class="report-role-bar"><div class="c-progress"><span style="width: {{ row.efficiency|default:0 }}%"></span></div></div>
+            <span class="report-role-pct">{% if row.efficiency is None %}<strong>{{ row.hours }}</strong> {% trans "hrs, unscheduled" %}{% else %}<strong>{{ row.efficiency }}%</strong> {% trans "Efficiency" %}{% endif %}</span>
+        </div>
+        {% empty %}
+        <div class="c-empty"><span class="material-symbols-outlined">work_off</span><p>{% trans "No roles were staffed for this event." %}</p></div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="report-section">
+    <h2 class="c-section-title">{% trans "Volunteer Feedback & Endorsements" %}</h2>
+    <p class="c-muted">{% trans "Recognize the individuals who made the event a success." %}</p>
+
+    {% if top_performers %}
+    <h3 class="report-subhead">{% trans "Top Performers" %}</h3>
+    <div class="c-grid-3">
+        {% for t in top_performers %}
+        <article class="performer">
+            <span class="material-symbols-outlined performer-star">star</span>
+            {% avatar t.user 'lg' %}
+            <strong>{{ t.user|display_name }}</strong>
+            <small>{{ t.role }} &middot; {{ t.hours|hours }} {% trans "hrs" %}</small>
+            {% if t.top_skill %}<span class="c-chip">{{ t.top_skill }}</span>{% endif %}
+            {% if t.user.pk in endorsed_ids %}
+            <span class="c-badge c-badge-mint"><span class="material-symbols-outlined">check</span>{% trans "Endorsed" %}</span>
+            {% else %}
+            <a href="{% url 'give_endorsement' %}?user={{ t.user.username }}&event={{ event.pk }}" class="c-btn c-btn-primary c-btn-sm"><span class="material-symbols-outlined">thumb_up</span>{% trans "Endorse" %}</a>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if page.object_list %}
+    <h3 class="report-subhead">{% trans "Team Endorsements" %}</h3>
+    <div class="c-list">
+        {% for t in page %}
+        <div class="c-list-item report-team-row">
+            {% avatar t.user 'sm' %}
+            <div class="c-list-item-main">
+                <strong>{{ t.user|display_name }}</strong>
+                <small>{{ t.role }}{% if t.hours %} &middot; {{ t.hours|hours }} {% trans "hrs" %}{% endif %}</small>
+            </div>
+            {% if t.user.pk in endorsed_ids %}
+            <span class="c-badge c-badge-mint">{% trans "Endorsed" %}</span>
+            {% else %}
+            <a href="{% url 'give_endorsement' %}?user={{ t.user.username }}&event={{ event.pk }}" class="c-btn c-btn-primary c-btn-sm"><span class="material-symbols-outlined">thumb_up</span>{% trans "Endorse" %}</a>
+            {% endif %}
+            <a href="{% url 'console_volunteer_detail' t.user.pk %}" class="c-btn c-btn-outline c-btn-sm"><span class="material-symbols-outlined">edit</span>{% trans "Give Feedback" %}</a>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="report-pagination">{% include 'console/partials/pagination.html' %}</div>
+    {% endif %}
+</section>
+
+<section class="report-section">
+    <div class="c-section-head">
+        <h2 class="c-section-title">{% trans "What Volunteers Said" %}</h2>
+        {% if average_rating %}<span class="c-badge c-badge-mint"><span class="material-symbols-outlined">star</span>{% blocktrans with avg=average_rating n=feedback_count %}{{ avg }} average from {{ n }} responses{% endblocktrans %}</span>{% endif %}
+    </div>
+    <div class="c-grid-2">
+        {% for f in feedback %}
+        <article class="c-card feedback-card">
+            <div class="feedback-head">
+                {% avatar f.user 'sm' %}
+                <strong>{{ f.user|display_name }}</strong>
+                <span class="c-star-display">{% for i in "12345" %}<span class="material-symbols-outlined {% if forloop.counter > f.rating %}empty{% endif %}">star</span>{% endfor %}</span>
+            </div>
+            {% if f.enjoyed %}<p><span class="c-label">{% trans "Enjoyed" %}</span>{{ f.enjoyed }}</p>{% endif %}
+            {% if f.suggestions %}<p><span class="c-label">{% trans "Suggestions" %}</span>{{ f.suggestions }}</p>{% endif %}
+        </article>
+        {% empty %}
+        <div class="c-empty"><span class="material-symbols-outlined">rate_review</span><p>{% if event.is_past %}{% trans "No volunteer feedback yet. Volunteers can rate the event from their thank-you page." %}{% else %}{% trans "Volunteers can rate the event from their thank-you page once it ends." %}{% endif %}</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

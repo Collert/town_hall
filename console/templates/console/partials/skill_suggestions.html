@@ -1,0 +1,18 @@
+{% load i18n %}
+{% if skills or can_create %}
+<span class="c-label">{% if query %}{% trans "Matches" %}{% else %}{% trans "Suggestions" %}{% endif %}</span>
+<div class="c-chips">
+    {% for skill in skills %}
+    <button type="button" class="c-chip c-chip-ghost" hx-get="{% url 'console_skill_chip' %}?skill_id={{ skill.pk }}"
+            hx-target="#skill-chips" hx-swap="beforeend"
+            hx-on::after-request="this.closest('.skill-suggestions').innerHTML = ''; document.querySelector('input[name=skill_q]').value = '';">{{ skill.name }}</button>
+    {% endfor %}
+    {% if can_create %}
+    <button type="button" class="c-chip c-chip-ghost" hx-get="{% url 'console_skill_chip' %}?name={{ query|urlencode }}"
+            hx-target="#skill-chips" hx-swap="beforeend"
+            hx-on::after-request="this.closest('.skill-suggestions').innerHTML = ''; document.querySelector('input[name=skill_q]').value = '';">
+        <span class="material-symbols-outlined">add</span>{% blocktrans %}Create "{{ query }}"{% endblocktrans %}
+    </button>
+    {% endif %}
+</div>
+{% endif %}

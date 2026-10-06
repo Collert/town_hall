@@ -1,0 +1,96 @@
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+<!-- Dynamic Theme Colors -->
+<style>
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+    }
+    :root {
+        /* Primary Colors */
+        --color-primary: {{ theme_colors.primary }};
+        --color-primary-contrast: {{ theme_colors.primary_contrast }};
+        --color-primary-dark: oklch(from var(--color-primary) calc(l - calc({{ theme_colors.primary_dark_offset }} * 0.01)) c h);
+        --color-primary-light: oklch(from var(--color-primary) calc(l + calc({{ theme_colors.primary_light_offset }} * 0.01)) c h);
+
+        /* Accent Colors */
+        --color-accent: {{ theme_colors.accent }};
+        --color-accent-contrast: {{ theme_colors.accent_contrast }};
+        --color-accent-dark: oklch(from var(--color-accent) calc(l - calc({{ theme_colors.accent_dark_offset }} * 0.01)) c h);
+        --color-accent-light: oklch(from var(--color-accent) calc(l + calc({{ theme_colors.accent_light_offset }} * 0.01)) c h);
+
+        /* Background Colors */
+        --color-bg-primary: {{ theme_colors.bg_primary }};
+        --color-bg-secondary: {{ theme_colors.bg_secondary }};
+        --color-bg-tertiary: {{ theme_colors.bg_tertiary }};
+        /* Brightest card surface ("surface_container_lowest" in DESIGN.md) */
+        --color-surface: color-mix(in srgb, var(--color-bg-primary) 30%, var(--color-primary-contrast));
+        /* Primary for thin accents (bars, rings, toggles) that must stay visible in dark mode */
+        --color-primary-vivid: var(--color-primary);
+
+        /* Text Colors */
+        --color-text-primary: {{ theme_colors.text_primary }};
+        --color-text-secondary: {{ theme_colors.text_secondary }};
+        --color-text-tertiary: {{ theme_colors.text_tertiary }};
+
+        /* Border & Divider Colors */
+        --color-border: {{ theme_colors.border }};
+        --color-divider: {{ theme_colors.divider }};
+
+        /* Status Colors */
+        --color-success: {{ theme_colors.success }};
+        --color-warning: {{ theme_colors.warning }};
+        --color-error: {{ theme_colors.error }};
+
+        /* Shadows (using primary color for tint) */
+        --shadow-sm: 0 2px 4px rgba(from var(--color-primary) r g b / 0.1);
+        --shadow-md: 0 4px 12px rgba(from var(--color-primary) r g b / 0.15);
+        --shadow-lg: 0 8px 24px rgba(from var(--color-primary) r g b / 0.2);
+        --shadow-ambient: 0 12px 32px rgba(from var(--color-text-primary) r g b / 0.06);
+
+        /* Dark Mode - Background Colors */
+        --color-dark-bg-primary: {{ theme_colors.dark_bg_primary }};
+        --color-dark-bg-secondary: {{ theme_colors.dark_bg_secondary }};
+        --color-dark-bg-tertiary: {{ theme_colors.dark_bg_tertiary }};
+
+        /* Dark Mode - Text Colors */
+        --color-dark-text-primary: {{ theme_colors.dark_text_primary }};
+        --color-dark-text-secondary: {{ theme_colors.dark_text_secondary }};
+        --color-dark-text-tertiary: {{ theme_colors.dark_text_tertiary }};
+
+        /* Dark Mode - Border & Divider Colors */
+        --color-dark-border: {{ theme_colors.dark_border }};
+        --color-dark-divider: {{ theme_colors.dark_divider }};
+
+        /* Dark Mode - Shadows */
+        --shadow-dark-sm: 0 2px 4px var(--color-primary-dark, rgba(0, 0, 0, 0.3));
+        --shadow-dark-md: 0 4px 12px rgba(from var(--color-dark-bg-primary) r g b / 0.6);
+        --shadow-dark-lg: 0 8px 24px rgba(from var(--color-dark-bg-primary) r g b / 0.7);
+
+        @media (prefers-color-scheme: dark) {
+            /* Override colors for dark mode */
+            --color-bg-primary: var(--color-dark-bg-primary);
+            --color-bg-secondary: var(--color-dark-bg-secondary);
+            --color-bg-tertiary: var(--color-dark-bg-tertiary);
+            --color-surface: color-mix(in srgb, var(--color-dark-bg-secondary) 60%, var(--color-dark-bg-tertiary));
+            --color-primary-vivid: var(--color-primary-light);
+            --color-text-primary: var(--color-dark-text-primary);
+            --color-text-secondary: var(--color-dark-text-secondary);
+            --color-text-tertiary: var(--color-dark-text-tertiary);
+            --color-border: var(--color-dark-border);
+            --color-divider: var(--color-dark-divider);
+            --shadow-sm: var(--shadow-dark-sm);
+            --shadow-md: var(--shadow-dark-md);
+            --shadow-lg: var(--shadow-dark-lg);
+        }
+    }
+</style>
+<link rel="stylesheet" href="{% static 'base/styles.css' %}">
+<link rel="stylesheet" href="{% static 'base/toasts.css' %}">

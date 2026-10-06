@@ -1,0 +1,134 @@
+.dash-hero {
+    margin: 1.5rem 0 2.5rem;
+}
+
+.dash-greeting {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    color: var(--color-text-primary);
+    max-width: 50rem;
+}
+
+.dash-greeting-accent {
+    color: var(--color-accent);
+}
+
+.dash-stats {
+    margin-bottom: 2.5rem;
+}
+
+a.c-stat {
+    transition: transform 200ms ease;
+}
+
+a.c-stat:hover {
+    transform: translateY(-3px);
+}
+
+.dash-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: 2rem;
+    align-items: start;
+}
+
+.dash-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+}
+
+.dash-event {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1.75rem;
+    padding: 1.5rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+    transition: transform 200ms ease;
+}
+
+.dash-event:hover {
+    transform: translateY(-2px);
+}
+
+.dash-event-image {
+    height: 7rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: var(--color-bg-tertiary);
+    display: grid;
+    place-items: center;
+    color: var(--color-text-tertiary);
+}
+
+.dash-event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dash-event-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+}
+
+.dash-event-top h3 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.dash-event-date {
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+}
+
+.dash-event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin: 0.5rem 0 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.dash-event-meta > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.dash-event-meta .material-symbols-outlined {
+    font-size: 1.05rem;
+}
+
+.dash-activity {
+    position: sticky;
+    top: 6rem;
+}
+
+@media (max-width: 1100px) {
+    .dash-body {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-activity {
+        position: static;
+    }
+}
+
+@media (max-width: 640px) {
+    .dash-event {
+        grid-template-columns: 1fr;
+    }
+}

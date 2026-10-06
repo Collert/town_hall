@@ -1,0 +1,88 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% trans "Certificate Verification" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/verification_list.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_certificates' %}">{% trans "Certificates" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Verification" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Certificate Verification" %}</h1>
+        <p class="page-lead">{% trans "Review and validate volunteer credentials to maintain compliance and safety standards." %}</p>
+    </div>
+    <div class="verify-counts">
+        <div><span class="c-label">{% trans "Pending" %}</span><strong class="accent">{{ pending_count }}</strong></div>
+        <div><span class="c-label">{% trans "Verified" %}</span><strong>{{ verified_count }}</strong></div>
+    </div>
+</header>
+
+<section class="verify-section">
+    <h2 class="c-section-title verify-heading"><span class="material-symbols-outlined">pending_actions</span>{% trans "Available for Verification" %}</h2>
+    <div class="verify-grid">
+        {% for item in pending %}
+        <article class="verify-card">
+            <div class="verify-card-top">
+                <span class="c-icon-tile round dark"><span class="material-symbols-outlined">{{ item.certificate.icon|default:"workspace_premium" }}</span></span>
+                {% if item.urgent %}<span class="c-badge c-badge-accent c-badge-live">{% trans "Urgent" %}</span>{% endif %}
+            </div>
+            <h3>{{ item.certificate.name }}</h3>
+            <div class="verify-submitter">{% avatar item.user 'xs' %}<span>{% blocktrans with name=item.user|display_name %}Submitted by {{ name }}{% endblocktrans %}</span></div>
+            <p>{{ item.certificate.description|truncatechars:110 }}</p>
+            <div class="verify-meta">
+                <div title="{{ item.submitted_at|date:'DATETIME_FORMAT' }}">
+                    <span class="verify-meta-label"><span class="material-symbols-outlined">schedule</span>{% trans "Submitted" %}</span>
+                    <span class="verify-meta-value">{{ item.submitted_at|date:"M j, Y" }}</span>
+                </div>
+                <a href="{% url 'console_verification_review' item.pk %}">
+                    <span class="verify-meta-label"><span class="material-symbols-outlined">description</span>{% trans "Documents" %}</span>
+                    <span class="verify-meta-value">{{ item.file_count }}<span class="material-symbols-outlined">open_in_new</span></span>
+                </a>
+            </div>
+            <a href="{% url 'console_verification_review' item.pk %}" class="c-btn c-btn-primary c-btn-block">{% trans "Verify Credential" %}</a>
+        </article>
+        {% empty %}
+        <div class="c-empty verify-empty">
+            <span class="material-symbols-outlined">task_alt</span>
+            <h3>{% trans "All caught up" %}</h3>
+            <p>{% trans "New submissions appear here as soon as a volunteer uploads documents." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% if recent %}
+<section class="verify-section">
+    <div class="c-section-head">
+        <h2 class="c-section-title verify-heading"><span class="material-symbols-outlined">verified_user</span>{% trans "Recently Reviewed" %}</h2>
+    </div>
+    <div class="c-grid-2">
+        {% for item in recent %}
+        <article class="verify-recent">
+            <span class="c-icon-tile round {% if item.verified %}mint{% else %}accent{% endif %} verify-recent-icon"><span class="material-symbols-outlined">{{ item.certificate.icon|default:"workspace_premium" }}</span></span>
+            <div class="verify-recent-body">
+                <h3>{{ item.certificate.name }} {% if item.verified %}<span class="material-symbols-outlined verify-check">verified</span>{% endif %}</h3>
+                <p>
+                    {% if item.verified %}{% blocktrans with name=item.user|display_name %}Verified for {{ name }}{% endblocktrans %}{% else %}{% blocktrans with name=item.user|display_name %}Rejected for {{ name }}{% endblocktrans %}{% endif %}
+                    {% if item.expiration_date %}&bull; {% blocktrans with t=item.expiration_date|timeuntil %}Expires in {{ t }}{% endblocktrans %}{% endif %}
+                </p>
+                <div class="c-chips">
+                    <span class="c-badge">{{ item.reviewed_at|date:"M j" }}</span>
+                    {% if item.reviewed_by %}<span class="c-badge">{{ item.reviewed_by|display_name }}</span>{% endif %}
+                </div>
+            </div>
+            <a href="{% url 'console_verification_review' item.pk %}" class="c-btn c-btn-outline c-btn-sm">{% trans "Review" %}</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

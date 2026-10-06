@@ -1,0 +1,20 @@
+{% load i18n avatar_tags %}
+{% if activity %}
+<ol class="c-timeline">
+    {% for item in activity %}
+    <li class="c-timeline-item {% if item.accent %}accent{% endif %}">
+        <div class="c-timeline-time">{% blocktrans with ago=item.time|timesince %}{{ ago }} ago{% endblocktrans %}</div>
+        <p class="c-timeline-text">
+            <strong>{{ item.user|display_name }}</strong> {{ item.text }}
+            {% if item.target %}<em>&ldquo;{{ item.target }}&rdquo;</em>{% endif %}
+            {% if item.chip %}<span class="c-chip">{{ item.chip }}</span>{% endif %}
+        </p>
+    </li>
+    {% endfor %}
+</ol>
+{% else %}
+<div class="c-empty">
+    <span class="material-symbols-outlined">history</span>
+    <p>{% trans "Activity will appear here as volunteers check in, train and endorse each other." %}</p>
+</div>
+{% endif %}

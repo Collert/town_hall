@@ -1,0 +1,5 @@
+{% load i18n %}{% comment %}Progress banner for a background listmonk job; polls until it finishes, then the page reloads.{% endcomment %}
+<div class="comm-notice is-busy" hx-get="{% url 'console_listmonk_status' %}" hx-trigger="every 3s" hx-swap="outerHTML" role="status">
+    <span class="material-symbols-outlined comm-spin">progress_activity</span>
+    <p>{% blocktranslate %}{{ task }}… This page refreshes when it's done.{% endblocktranslate %}</p>
+</div>

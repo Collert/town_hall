@@ -1,0 +1,17 @@
+{% load i18n %}
+<div class="venue-preview" id="venue-preview">
+    {% if venue %}
+    <div class="venue-preview-photo" {% if venue.photo %}style="background-image: url('{{ venue.photo.url }}')"{% endif %}>
+        {% if not venue.photo %}<span class="material-symbols-outlined">location_city</span>{% endif %}
+    </div>
+    <div class="venue-preview-body">
+        <strong>{{ venue.name }}</strong>
+        {% if venue.address %}<small>{{ venue.address }}</small>{% endif %}
+        <div class="venue-preview-meta">
+            {% if venue.capacity %}<span><span class="material-symbols-outlined">groups</span>{% blocktrans with n=venue.capacity %}Up to {{ n }}{% endblocktrans %}</span>{% endif %}
+            {% for f in venue.features.all|slice:":5" %}<span title="{{ f.name }}"><span class="material-symbols-outlined">{{ f.icon }}</span></span>{% endfor %}
+        </div>
+    </div>
+    <a href="{% url 'console_venue_edit' venue.pk %}" class="c-link" target="_blank" rel="noopener">{% trans "Edit venue" %}</a>
+    {% endif %}
+</div>

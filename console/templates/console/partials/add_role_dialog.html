@@ -1,0 +1,49 @@
+{% load i18n %}
+<dialog class="c-dialog add-role-dialog" data-autoshow>
+    <form method="post" action="{% url 'console_add_role_slots' event.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Add Role to Event" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+
+        <div class="c-dialog-body">
+            <div class="c-step"><span class="c-step-num">1</span>{% trans "Select Role" %}</div>
+            <div class="c-input-icon">
+                <span class="material-symbols-outlined">search</span>
+                <input type="search" name="q" class="c-input" placeholder="{% trans 'Search role templates...' %}" autocomplete="off"
+                       hx-get="{% url 'console_add_role_slots' event.pk %}?partial=options" hx-trigger="input changed delay:250ms, search"
+                       hx-target="#role-options" hx-swap="outerHTML">
+            </div>
+            {% include 'console/partials/role_options.html' %}
+            <a href="{% url 'console_role_create' %}" class="c-link add-role-new">
+                <span class="material-symbols-outlined">add</span>{% trans "Create a new role template" %}
+            </a>
+
+            <div class="c-step-row">
+                <div class="c-step"><span class="c-step-num">2</span>{% trans "Define Time Slots" %}</div>
+                <button type="button" class="c-link add-slot-link"
+                        hx-get="{% url 'console_slot_row' event.pk %}" hx-target="#slot-rows" hx-swap="beforeend">
+                    <span class="material-symbols-outlined">add</span>{% trans "Add Another Slot" %}
+                </button>
+            </div>
+            <div id="slot-rows" class="c-stack slot-rows">
+                {% include 'console/partials/slot_row.html' with first=True %}
+            </div>
+
+            <label class="c-setting add-role-public">
+                <span>
+                    <strong>{% trans "Open sign-up" %}</strong>
+                    <small>{% trans "Turn off to make these slots invite-only." %}</small>
+                </span>
+                <span class="c-toggle"><input type="checkbox" name="is_public" checked><span></span></span>
+            </label>
+        </div>
+
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" name="next" value="invite" class="c-btn c-btn-outline">{% trans "Add & Invite Volunteers" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% trans "Add Role to Event" %}</button>
+        </div>
+    </form>
+</dialog>

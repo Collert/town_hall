@@ -1,3 +1,5 @@
+from datetime import timezone as dt_timezone
+
 from django.utils import timezone
 from django.conf import settings
 import uuid
@@ -5,6 +7,10 @@ import uuid
 from django.db import models
 from django.db.models import Q
 import math
+
+def generate_token():
+    return uuid.uuid4().hex
+
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     R = 6371  # Earth radius in kilometers
@@ -21,7 +27,9 @@ class Event(models.Model):
     description = models.TextField()
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    location = models.CharField(max_length=200)
+    venue = models.ForeignKey('base.Venue', on_delete=models.SET_NULL, blank=True, null=True, related_name='events',
+                              help_text='Where the event takes place. Leave blank and fill in location for a one-off address.')
+    location = models.CharField(max_length=200, blank=True, default='', help_text='One-off address, used when no venue is chosen')
     report_to_location = models.CharField(max_length=200, blank=True, null=True, help_text='Where volunteers should report to inside the location venue')
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
@@ -31,29 +39,18 @@ class Event(models.Model):
     featured = models.BooleanField(default=False)
     category = models.ManyToManyField('EventCategory', related_name='events', blank=True)
     attendees = models.IntegerField(default=0, help_text='Number of attendees (for calculating impact points)')
+    published = models.BooleanField(default=True, help_text='Unpublished events are hidden from volunteers')
 
     def __str__(self):
         return self.title
     
     def save(self, *args, **kwargs):
-        # Auto-populate coordinates based on location
-        if self.location and not self.latitude and not self.longitude:
-            try:
-                import urllib.request
-                import urllib.parse
-                import json
-                
-                query = urllib.parse.urlencode({'q': self.location, 'format': 'json', 'limit': 1})
-                url = f"https://nominatim.openstreetmap.org/search?{query}"
-                req = urllib.request.Request(url, headers={'User-Agent': 'TownHallApp'})
-                
-                with urllib.request.urlopen(req, timeout=5) as response:
-                    data = json.loads(response.read().decode())
-                    if data:
-                        self.latitude = float(data[0]['lat'])
-                        self.longitude = float(data[0]['lon'])
-            except Exception as e:
-                pass # Fail silently if geocoding fails
+        # Coordinates (for distance search) come from the venue, or are geocoded from a one-off address.
+        if self.venue_id:
+            self.latitude, self.longitude = self.venue.latitude, self.venue.longitude
+        elif self.location and self.latitude is None and self.longitude is None:
+            from base.geo import geocode
+            self.latitude, self.longitude = geocode(self.location) or (None, None)
 
         # Delete all role invites after the event is over
         if self.pk and self.end_date < timezone.now():
@@ -66,12 +63,12 @@ class Event(models.Model):
         from django.utils.dateformat import format as date_format
         dtfmt = '%Y%m%dT%H%M%SZ'
         now = timezone.now().strftime(dtfmt)
-        start = self.start_date.astimezone(timezone.utc).strftime(dtfmt)
-        end = self.end_date.astimezone(timezone.utc).strftime(dtfmt)
+        start = self.start_date.astimezone(dt_timezone.utc).strftime(dtfmt)
+        end = self.end_date.astimezone(dt_timezone.utc).strftime(dtfmt)
         # Escape special characters per RFC 5545
         title = self.title.replace('\\', '\\\\').replace(',', '\\,').replace(';', '\\;').replace('\n', '\\n')
         desc = self.description.replace('\\', '\\\\').replace(',', '\\,').replace(';', '\\;').replace('\n', '\\n')
-        location = self.location.replace('\\', '\\\\').replace(',', '\\,').replace(';', '\\;').replace('\n', '\\n')
+        location = self.full_location.replace('\\', '\\\\').replace(',', '\\,').replace(';', '\\;').replace('\n', '\\n')
         uid = f"event-{self.pk}@townhall"
         return (
             "BEGIN:VCALENDAR\r\n"
@@ -89,23 +86,65 @@ class Event(models.Model):
             "END:VCALENDAR\r\n"
         )
 
+    @property
+    def place_name(self):
+        """Short "where": the venue name, or the one-off address."""
+        return self.venue.name if self.venue_id else self.location
+
+    @property
+    def address(self):
+        """Street address: the venue's, or the one-off address."""
+        return (self.venue.address or '') if self.venue_id else self.location
+
+    @property
+    def full_location(self):
+        """One line for calendars and emails, e.g. "Central Library, 1 Main St"."""
+        if not self.venue_id:
+            return self.location
+        return ', '.join(part for part in (self.venue.name, self.venue.address) if part)
+
+    @property
+    def map_url(self):
+        from base.geo import map_url
+        return map_url(self.latitude, self.longitude, self.address)
+
     def staffing_progress(self):
         """Calculate staffing progress as a percentage."""
-        total_required = sum(slot.required_qty for slot in self.role_slots.all())
-        total_signed_up = sum(slot.signups.count() for slot in self.role_slots.all())
+        total_required = self.total_required()
         if total_required == 0:
             return 100
-        return int((total_signed_up / total_required) * 100)
+        return min(100, int((self.total_signed_up() / total_required) * 100))
+
+    def total_required(self):
+        return self.role_slots.aggregate(total=models.Sum('required_qty'))['total'] or 0
+
+    def total_signed_up(self):
+        return EventRoleSlot.signups.through.objects.filter(eventroleslot__event=self).count()
+
+    def volunteers(self):
+        from django.contrib.auth import get_user_model
+        return get_user_model().objects.filter(commitments__event=self).distinct()
+
+    @property
+    def is_live(self):
+        now = timezone.now()
+        return self.start_date <= now <= self.end_date
+
+    @property
+    def is_past(self):
+        return self.end_date < timezone.now()
 
     @classmethod
     def search_events(cls, query, date_filter=None, category=None, user_lat=None, user_lon=None, distance=None):
-        events = cls.objects.filter(end_date__gte=timezone.now()).order_by('start_date')
+        events = cls.objects.filter(end_date__gte=timezone.now(), published=True).select_related('venue').order_by('start_date')
     
         if query:
             events = events.filter(
                 Q(title__icontains=query) |
                 Q(description__icontains=query) |
                 Q(location__icontains=query) |
+                Q(venue__name__icontains=query) |
+                Q(venue__address__icontains=query) |
                 Q(category__name__icontains=query)
             ).distinct()
 
@@ -154,6 +193,20 @@ class Event(models.Model):
 
         return events
     
+    def shifts(self):
+        from jobs.models import Shift
+        return Shift.objects.filter(event_role_slot__event=self)
+
+    @property
+    def hours_logged(self):
+        """Hours worked across all shifts, counting open shifts up to now."""
+        now = timezone.now()
+        total_seconds = sum(
+            ((shift.end_time or now) - shift.start_time).total_seconds()
+            for shift in self.shifts()
+        )
+        return round(total_seconds / 3600)
+    
 class EventCategory(models.Model):
     name = models.CharField(max_length=50)
 
@@ -195,6 +248,15 @@ class EventRoleSlot(models.Model):
     def user_signed_up(self, user):
         return self.signups.filter(pk=user.pk).exists()
 
+    def add_signup(self, user):
+        """Sign `user` up and remember when, which decides the last-minute points bonus."""
+        from base.models import PointsRules
+        window = timezone.timedelta(hours=PointsRules.get().last_minute_window_hours)
+        last_minute = (timezone.now() >= self.start_time - window and self.end_time > timezone.now()
+                       and self.signups.count() < self.required_qty)
+        self.signups.add(user)
+        SlotSignup.objects.get_or_create(slot=self, user=user, defaults={'last_minute': last_minute})
+
     def save(self, *args, **kwargs):
         # Ensure end_time is after start_time
         if self.end_time <= self.start_time:
@@ -204,10 +266,25 @@ class EventRoleSlot(models.Model):
             raise ValueError("No more slots available.")
         super().save(*args, **kwargs)
     
+class SlotSignup(models.Model):
+    """When someone signed up for a slot. `last_minute` marks filling an understaffed slot
+    shortly before it started."""
+    slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='signup_log')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='slot_signups')
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_minute = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('slot', 'user')
+
+    def __str__(self):
+        return f"{self.user} signed up for {self.slot}"
+
+
 class EventSlotInvite(models.Model):
     event_role_slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='invites')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='event_invites')
-    token = models.CharField(max_length=64, unique=True, default=uuid.uuid4().hex)
+    token = models.CharField(max_length=64, unique=True, default=generate_token)
     accepted = models.BooleanField(default=False)
     sent_at = models.DateTimeField(auto_now_add=True)
 
@@ -216,3 +293,19 @@ class EventSlotInvite(models.Model):
 
     def event(self):
         return self.event_role_slot.event
+
+
+class EventFeedback(models.Model):
+    """A volunteer's post-event survey response."""
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='feedback')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='event_feedback')
+    rating = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(1, 6)])
+    enjoyed = models.TextField(blank=True, default='')
+    suggestions = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('event', 'user')
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.event.title} {self.rating}/5"

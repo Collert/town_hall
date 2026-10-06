@@ -1,0 +1,9 @@
+{% load i18n %}
+{% with url_name=request.resolver_match.url_name %}
+<nav class="c-tabs c-tabs-lg settings-tabs" aria-label="{% trans 'Settings sections' %}">
+    <a href="{% url 'console_settings' %}" class="c-tab {% if url_name == 'console_settings' %}active{% endif %}">{% trans "Identity" %}</a>
+    <a href="{% url 'console_settings_levels' %}" class="c-tab {% if url_name == 'console_settings_levels' %}active{% endif %}">{% trans "Levels" %}</a>
+    <a href="{% url 'console_settings_points' %}" class="c-tab {% if url_name == 'console_settings_points' %}active{% endif %}">{% trans "Points" %}</a>
+    <a href="{% url 'console_settings_backend' %}" class="c-tab {% if url_name == 'console_settings_backend' %}active{% endif %}">{% trans "Backend" %}</a>
+</nav>
+{% endwith %}

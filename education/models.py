@@ -138,12 +138,15 @@ class TrainingLesson(models.Model):
             return
         import yt_dlp
         ydl_opts = {'quiet': True, 'no_warnings': True, 'skip_download': True}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(self.video_url, download=False)
-            duration_seconds = info.get('duration')
-            if duration_seconds:
-                self.video_length_minutes = ceil(duration_seconds / 60)
-                self.save(update_fields=['video_length_minutes'])
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(self.video_url, download=False)
+        except Exception:
+            return  # Offline, private video or unsupported host: leave the length blank
+        duration_seconds = info.get('duration') if info else None
+        if duration_seconds:
+            self.video_length_minutes = ceil(duration_seconds / 60)
+            self.save(update_fields=['video_length_minutes'])
     
     @property
     def overall_length(self):
@@ -198,7 +201,6 @@ class QuizQuestion(models.Model):
             self.option_d = None
             if self.correct_option not in ['A', 'B']:
                 self.correct_option = 'A'  # Default to True if correct option is invalid
-            self.save(update_fields=['option_a', 'option_b', 'option_c', 'option_d', 'correct_option'])
 
     def save(self, *args, **kwargs):
         if self.is_true_false:
@@ -208,6 +210,7 @@ class QuizQuestion(models.Model):
 
 class ExternalCertificate(models.Model):
     name = models.CharField(max_length=100)
+    issuer = models.CharField(max_length=100, blank=True, default='', help_text='Issuing authority, e.g. "American Red Cross"')
     description = models.TextField()
     icon = models.CharField(max_length=50, blank=True, null=True, help_text='Material Symbols icon name for this certificate')
     expires_after_days = models.PositiveIntegerField(blank=True, null=True, help_text='Number of days after which the certificate expires for a user')
@@ -215,6 +218,10 @@ class ExternalCertificate(models.Model):
 
     def __str__(self):
         return f"{self.name} certificate"
+
+    @property
+    def required_docs(self):
+        return [d.strip() for d in (self.docs_list or '').split(',') if d.strip()]
     
 class UserCertification(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='certifications')
@@ -222,9 +229,22 @@ class UserCertification(models.Model):
     issued_at = models.DateTimeField(auto_now_add=True)
     expiration_date = models.DateTimeField(blank=True, null=True)
     verified = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False, help_text='Set when staff rejected the submitted documents')
+    issue_date = models.DateField(blank=True, null=True, help_text='Date printed on the external certificate')
+    admin_notes = models.TextField(blank=True, default='', help_text='Private reviewer notes')
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, related_name='reviewed_certifications')
+    reviewed_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         unique_together = ('user', 'certificate')
+
+    @property
+    def status(self):
+        if self.verified:
+            return 'expired' if self.expiration_date and self.expiration_date < timezone.now() else 'verified'
+        if self.rejected:
+            return 'rejected'
+        return 'pending'
 
     def __str__(self):
         return f"{self.user.username} - {self.certificate.name} Certification"

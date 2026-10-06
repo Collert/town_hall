@@ -1,0 +1,11 @@
+{% load i18n %}
+{% for module in modules %}
+<button type="button" class="module-result" hx-get="{% url 'console_role_module_row' %}?module_id={{ module.pk }}"
+        hx-target="#module-rows" hx-swap="beforeend" hx-on::after-request="this.remove()">
+    <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
+    <span>{{ module.title }}</span>
+    <span class="material-symbols-outlined">add_circle</span>
+</button>
+{% empty %}
+{% if query %}<p class="c-muted">{% blocktrans %}No modules match "{{ query }}".{% endblocktrans %} <a class="c-link" href="{% url 'console_module_create' %}">{% trans "Create one" %}</a></p>{% endif %}
+{% endfor %}

@@ -1,0 +1,119 @@
+{% extends 'base/layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% trans "Give an Endorsement" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/give_endorsement.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="give-page">
+    <header class="give-header">
+        <h1>{% trans "Volunteer Feedback & Endorsements" %}</h1>
+        <p>{% trans "Recognize excellence and celebrate the people you volunteer with." %}</p>
+    </header>
+
+    <div class="give-layout">
+        <div class="give-main">
+            <section class="give-card">
+                <h2 class="give-card-title"><span class="material-symbols-outlined">person_search</span>{% if target %}{% trans "Endorse Someone Else" %}{% else %}{% trans "Give an Endorsement" %}{% endif %}</h2>
+                <div class="give-search">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="search" name="person_q" placeholder="{% trans 'Search volunteers by name or skill...' %}" autocomplete="off"
+                           hx-get="{% url 'endorse_people_search' %}" hx-trigger="input changed delay:300ms, search" hx-target="#people-results" hx-swap="innerHTML"
+                           aria-label="{% trans 'Search volunteers' %}">
+                </div>
+                <div id="people-results">
+                    {% include 'base/partials/endorse_people.html' %}
+                </div>
+            </section>
+
+            {% if target %}
+            <form method="post" class="give-form">
+                {% csrf_token %}
+                <input type="hidden" name="user" value="{{ target.username }}">
+                {% if event %}<input type="hidden" name="event" value="{{ event.pk }}">{% endif %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+                <div class="give-target">
+                    {% avatar target 'xl' %}
+                    <div>
+                        <h2>{{ target|display_name }}</h2>
+                        <p>
+                            {% if target_role %}{{ target_role.role.name }} &bull; {% endif %}
+                            {% blocktrans with h=target_hours %}{{ h }} Hours Contributed{% endblocktrans %}
+                        </p>
+                        {% if event %}<span class="give-event-chip"><span class="material-symbols-outlined">event</span>{{ event.title }}</span>{% endif %}
+                    </div>
+                </div>
+
+                <fieldset class="give-section">
+                    <legend><span class="material-symbols-outlined">bolt</span>{% trans "Select Skills to Endorse" %}</legend>
+                    <div class="give-skills">
+                        {% for skill in skills %}
+                        <label class="give-skill">
+                            <input type="checkbox" name="skills" value="{{ skill.pk }}" {% if skill.pk in already %}checked{% endif %}>
+                            <span>{{ skill.name }}<span class="material-symbols-outlined">close</span></span>
+                        </label>
+                        {% empty %}
+                        <p class="give-muted">{% trans "No skills are set up yet. Ask an administrator to add some." %}</p>
+                        {% endfor %}
+                    </div>
+                    {% if already %}<p class="give-muted">{% trans "You've endorsed the checked skills before. Submitting again replaces those earlier endorsements with this one." %}</p>{% endif %}
+                </fieldset>
+
+                <fieldset class="give-section">
+                    <legend><span class="material-symbols-outlined">volunteer_activism</span>{% trans "Public Appreciation Note" %}</legend>
+                    <textarea name="text" rows="4" maxlength="1000" placeholder="{% trans 'Write a message of gratitude that will be visible to the community...' %}"></textarea>
+                </fieldset>
+
+                {% if user.is_staff %}
+                <fieldset class="give-section give-admin">
+                    <legend class="give-admin-head">
+                        <span><span class="material-symbols-outlined">admin_panel_settings</span>{% trans "Admin Feedback (Private)" %}</span>
+                        <span class="give-stars">
+                            {% for n in "54321" %}
+                            <input type="radio" name="rating" value="{{ n }}" id="rating-{{ n }}">
+                            <label for="rating-{{ n }}" aria-label="{% blocktrans %}{{ n }} stars{% endblocktrans %}"><span class="material-symbols-outlined">star</span></label>
+                            {% endfor %}
+                        </span>
+                    </legend>
+                    <input type="text" name="admin_note" placeholder="{% trans 'Internal performance notes...' %}">
+                </fieldset>
+                {% endif %}
+
+                <button type="submit" class="give-submit">{% trans "Submit Endorsement" %}<span class="material-symbols-outlined">send</span></button>
+            </form>
+            {% else %}
+            <div class="give-placeholder">
+                <span class="material-symbols-outlined">waving_hand</span>
+                <p>{% trans "Pick someone you've volunteered with to recognize their work." %}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <aside class="give-feed">
+            <div class="give-feed-head">
+                <h2>{% trans "Community Feed" %}</h2>
+                <a href="{% url 'endorsements_feed' %}">{% trans "View all" %}</a>
+            </div>
+            {% for e in feed %}
+            <article class="give-feed-card">
+                <div class="give-feed-person">
+                    {% avatar e.endorser 'sm' %}
+                    <span>
+                        <strong>{{ e.endorser|display_name }}</strong> {% trans "endorsed" %} <strong>{{ e.endorsed|display_name }}</strong>
+                        <small>{% blocktrans with t=e.timestamp|timesince %}{{ t }} ago{% endblocktrans %}</small>
+                    </span>
+                </div>
+                {% if e.text %}<p>&ldquo;{{ e.text|truncatechars:160 }}&rdquo;</p>{% endif %}
+                <span class="give-feed-chips">{% for skill in e.skills.all %}<span class="give-feed-chip">{{ skill.name }}</span>{% endfor %}</span>
+            </article>
+            {% empty %}
+            <p class="give-muted">{% trans "No endorsements yet. Be the first!" %}</p>
+            {% endfor %}
+        </aside>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% if module %}{{ module.title }}{% else %}{% trans "New Training Module" %}{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/module_edit.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_modules' %}">{% trans "Training Modules" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% if module %}{{ module.title }}{% else %}{% trans "New Module" %}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="module-form">
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% if module %}{% trans "Edit Training Module" %}{% else %}{% trans "Create Training Module" %}{% endif %}</h1>
+            <p class="page-lead">{% trans "Define the core objectives and content of your volunteer training. Use the structure panel to build the learning path." %}</p>
+        </div>
+        <div class="page-actions">
+            {% if module %}<a href="{% url 'module_overview' module.pk %}" class="c-btn c-btn-ghost c-btn-lg" target="_blank" rel="noopener"><span class="material-symbols-outlined">visibility</span>{% trans "Preview" %}</a>{% endif %}
+            <button type="submit" class="c-btn c-btn-primary c-btn-lg">{% trans "Save Module" %}</button>
+        </div>
+    </header>
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">description</span>{% trans "Module Overview" %}</h2>
+                {% include 'console/partials/translated_fields.html' with md_fields="description" %}
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">palette</span>{% trans "Presentation" %}</h2>
+                {% include 'console/partials/icon_picker.html' with icons=icons current=current_icon errors=form.icon.errors %}
+                <div class="c-grid-2 module-row">
+                    <div class="c-field">
+                        <label class="c-label" for="{{ form.topic.id_for_label }}">{% trans "Topic" %}</label>
+                        {{ form.topic }}
+                        <input type="text" name="new_topic" class="c-input" placeholder="{% trans 'Or create a new topic' %}">
+                    </div>
+                    <div class="c-field">
+                        <span class="c-label">{% trans "Cover photo" %}</span>
+                        <label class="c-image-drop module-photo {% if module.photo %}has-image{% endif %}" id="module-photo"
+                               {% if module.photo %}style="background-image: url('{{ module.photo.url }}')"{% endif %}>
+                            <input type="file" name="photo" accept="image/*" data-image-preview="module-photo">
+                            <span class="c-image-drop-label"><span class="material-symbols-outlined">add_photo_alternate</span>{% trans "Upload" %}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="module-row">
+                    <span class="c-label">{% trans "Skills taught" %}</span>
+                    {% include 'console/partials/skills_editor.html' %}
+                </div>
+            </section>
+
+            {% if not module %}
+            <section class="c-card c-card-dark module-tip">
+                <h2 class="c-card-title">{% trans "Next step" %}</h2>
+                <p>{% trans "Save the overview first. Then add lessons and quizzes from the Module Structure panel, and attach the module to roles in the Role Directory." %}</p>
+                <span class="material-symbols-outlined module-tip-art">lightbulb</span>
+            </section>
+            {% endif %}
+        </div>
+
+        <aside class="c-stack">
+            {% if module %}
+                {% include 'console/partials/module_structure.html' %}
+            {% endif %}
+
+            <section class="c-card">
+                <h2 class="c-card-title">{% trans "Module Settings" %}</h2>
+                <div class="c-stack">
+                    {% trans "Visible in the training directory" as publish_hint %}
+                    {% include 'console/partials/toggle.html' with field=form.published title=_("Published") hint=publish_hint %}
+                    {% include 'console/partials/field.html' with field=form.expires_after_days %}
+                    {% include 'console/partials/field.html' with field=form.complexity_level %}
+                </div>
+                {% if module %}
+                <dl class="module-facts">
+                    <div><dt>{% trans "Estimated duration" %}</dt><dd>{% blocktrans with m=total_length %}{{ m }} mins{% endblocktrans %}</dd></div>
+                    <div><dt>{% trans "Passing score" %}</dt><dd>{% for p in pass_scores %}{{ p }}%{% if not forloop.last %}, {% endif %}{% empty %}&mdash;{% endfor %}</dd></div>
+                    <div><dt>{% trans "Learners started" %}</dt><dd>{{ started_count }}</dd></div>
+                    <div><dt>{% trans "Certificates issued" %}</dt><dd>{{ completion_count }}</dd></div>
+                    <div><dt>{% trans "Required by roles" %}</dt><dd>{{ role_count }}</dd></div>
+                </dl>
+                {% endif %}
+            </section>
+
+            {% if module %}
+            <button type="submit" form="module-delete-form" class="c-btn c-btn-danger" onclick="return confirm('{% trans "Delete this module and all of its lessons and quizzes?" %}')">
+                <span class="material-symbols-outlined">delete</span>{% trans "Delete module" %}
+            </button>
+            {% endif %}
+        </aside>
+    </div>
+</form>
+{% if module %}
+<form method="post" action="{% url 'console_module_delete' module.pk %}" id="module-delete-form">{% csrf_token %}</form>
+{% endif %}
+{% endblock %}

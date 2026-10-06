@@ -1,0 +1,35 @@
+{% load i18n %}
+<div id="profile-skills">
+    <div class="skills-list">
+        {% for skill in user_skills %}
+        <span class="skill-tag">
+            {{ skill.name }}
+            <button type="button" class="skill-tag-remove" title="{% trans 'Remove' %}"
+                    hx-post="{% url 'profile_skills' %}" hx-vals='{"action": "remove", "skill_id": "{{ skill.pk }}"}'
+                    hx-include="this" hx-target="#profile-skills" hx-swap="outerHTML">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </span>
+        {% endfor %}
+    </div>
+
+    <p class="skills-count">{{ user_skills|length }} / {{ max_skills }} {% trans "skills" %}</p>
+
+    {% if available_skills and user_skills|length < max_skills %}
+    <details class="skills-add-row">
+        <summary class="btn-skills-new">
+            <span class="material-symbols-outlined">add</span>
+            {% trans "New" %}
+        </summary>
+        <div class="skills-dropdown" role="listbox">
+            {% for skill in available_skills %}
+            <button type="button" class="skills-dropdown-item" role="option"
+                    hx-post="{% url 'profile_skills' %}" hx-vals='{"action": "add", "skill_id": "{{ skill.pk }}"}'
+                    hx-include="this" hx-target="#profile-skills" hx-swap="outerHTML">{{ skill.name }}</button>
+            {% endfor %}
+        </div>
+    </details>
+    {% elif user_skills|length >= max_skills %}
+    <p class="skills-count">{% trans "You've reached the skill limit. Remove one to add another." %}</p>
+    {% endif %}
+</div>

@@ -1,0 +1,143 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Organization Identity" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/organization_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Organization Identity" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="org-form">
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Organization Identity" %}</h1>
+            <p class="page-lead">{% trans "Define how your community sees you. These details are reflected across volunteer portals and public pages. Color changes preview live on this page." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
+    </header>
+
+    {% include 'console/partials/settings_tabs.html' %}
+
+    <div class="c-stack">
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">badge</span>{% trans "General Identity" %}</h2>
+            <div class="org-identity">
+                <div class="c-form">
+                    {% include 'console/partials/field.html' with field=form.company_name label=_("Organization Name") %}
+                    <div class="c-grid-2">
+                        {% include 'console/partials/field.html' with field=form.contact_email %}
+                        {% include 'console/partials/field.html' with field=form.careers_page_url %}
+                    </div>
+                </div>
+                <div class="c-field">
+                    <span class="c-label">{% trans "Logo" %}</span>
+                    <label class="c-image-drop org-logo {% if site.logo %}has-image{% endif %}" id="org-logo" {% if site.logo %}style="background-image: url('{{ site.logo.url }}')"{% endif %}>
+                        <input type="file" name="logo" accept="image/png,image/svg+xml,image/jpeg,image/webp" data-image-preview="org-logo">
+                        <span class="c-image-drop-label"><span class="material-symbols-outlined">upload</span>{% trans "Upload New" %}</span>
+                    </label>
+                    <span class="c-help">{% trans "PNG or SVG, square works best." %}</span>
+                    {% for error in form.logo.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">palette</span>{% trans "Brand Colors & System" %}</h2>
+            <div class="c-grid-2 org-brand">
+                <div class="org-brand-col">
+                    <h3 class="org-group-title">{% trans "Primary Color" %}</h3>
+                    <div class="org-brand-swatch">
+                        <input type="color" name="color_primary" value="{{ form.color_primary.value }}" data-css-var="--color-primary" class="org-big-swatch" aria-label="{% trans 'Primary color' %}">
+                        <span><small>{% trans "Base primary" %}</small><span class="color-hex" data-hex-for="color_primary">{{ form.color_primary.value|upper }}</span></span>
+                        <label class="org-contrast" title="{% trans 'Text on primary' %}"><input type="color" name="color_primary_contrast" value="{{ form.color_primary_contrast.value }}" data-css-var="--color-primary-contrast" class="color-swatch"><small>{% trans "Text on it" %}</small></label>
+                    </div>
+                    {% include 'console/partials/range_field.html' with field=form.color_primary_light_offset label=_("Light variation offset") %}
+                    {% include 'console/partials/range_field.html' with field=form.color_primary_dark_offset label=_("Dark variation offset") %}
+                </div>
+                <div class="org-brand-col">
+                    <h3 class="org-group-title">{% trans "Accent Color" %}</h3>
+                    <div class="org-brand-swatch">
+                        <input type="color" name="color_accent" value="{{ form.color_accent.value }}" data-css-var="--color-accent" class="org-big-swatch" aria-label="{% trans 'Accent color' %}">
+                        <span><small>{% trans "Base accent" %}</small><span class="color-hex" data-hex-for="color_accent">{{ form.color_accent.value|upper }}</span></span>
+                        <label class="org-contrast" title="{% trans 'Text on accent' %}"><input type="color" name="color_accent_contrast" value="{{ form.color_accent_contrast.value }}" data-css-var="--color-accent-contrast" class="color-swatch"><small>{% trans "Text on it" %}</small></label>
+                    </div>
+                    {% include 'console/partials/range_field.html' with field=form.color_accent_light_offset label=_("Light variation offset") %}
+                    {% include 'console/partials/range_field.html' with field=form.color_accent_dark_offset label=_("Dark variation offset") %}
+                </div>
+            </div>
+
+            {% for title, light, dark in color_groups %}
+            <h3 class="org-group-title org-group-divider">{{ title }}</h3>
+            <div class="c-grid-2">
+                <div>
+                    <span class="org-mode"><span class="material-symbols-outlined">light_mode</span>{% trans "Light Mode" %}</span>
+                    <div class="org-colors">{% for field, var, label in light %}{% include 'console/partials/color_field.html' %}{% endfor %}</div>
+                </div>
+                <div>
+                    <span class="org-mode"><span class="material-symbols-outlined">dark_mode</span>{% trans "Dark Mode" %}</span>
+                    <div class="org-colors">{% for field, var, label in dark %}{% include 'console/partials/color_field.html' with is_dark=True %}{% endfor %}</div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <h3 class="org-group-title org-group-divider">{% trans "Status Colors" %}</h3>
+            <div class="org-colors org-colors-row">{% for field, var, label in status_colors %}{% include 'console/partials/color_field.html' %}{% endfor %}</div>
+            {% for field in form %}{% for error in field.errors %}{% if 'color' in field.name %}<p class="c-error">{{ field.label }}: {{ error }}</p>{% endif %}{% endfor %}{% endfor %}
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">gavel</span>{% trans "Legal & Compliance" %}</h2>
+            {% include 'console/partials/md_editor.html' with field=form.terms_of_service label=_("Terms of Service") %}
+            <a href="{% url 'terms_of_service' %}" class="c-link org-tos-link" target="_blank" rel="noopener">{% trans "View public page" %}<span class="material-symbols-outlined">open_in_new</span></a>
+        </section>
+
+        <div class="org-bottom">
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">tune</span>{% trans "Volunteer Experience" %}</h2>
+                <div class="c-grid-2">
+                    {% include 'console/partials/field.html' with field=form.max_skills_per_user %}
+                    {% include 'console/partials/field.html' with field=form.kiosk_idle_timeout_seconds %}
+                </div>
+            </section>
+            <section class="c-card c-card-dark org-progress">
+                <span class="c-label">{% trans "Setup Progress" %}</span>
+                <strong>{% blocktrans %}{{ setup_percent }}% Complete{% endblocktrans %}</strong>
+                <div class="c-progress"><span style="width: {{ setup_percent }}%"></span></div>
+                <p>{% trans "Add a logo, contact email and terms of service so volunteers know who they're working with." %}</p>
+                <span class="material-symbols-outlined org-progress-art">rocket_launch</span>
+            </section>
+        </div>
+
+        <div class="c-form-actions">
+            <a href="{% url 'console_settings' %}" class="c-btn c-btn-ghost">{% trans "Discard Changes" %}</a>
+            <button type="submit" class="c-btn c-btn-dark c-btn-lg">{% trans "Save Profile" %}</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Live theme preview: color inputs with data-css-var restyle this page as you pick.
+    document.getElementById('org-form').addEventListener('input', (e) => {
+        const input = e.target;
+        if (input.type === 'color') {
+            const hex = document.querySelector(`[data-hex-for="${input.name}"]`);
+            if (hex) hex.textContent = input.value.toUpperCase();
+            if (input.dataset.cssVar) document.documentElement.style.setProperty(input.dataset.cssVar, input.value);
+        }
+        if (input.type === 'range') {
+            const out = document.querySelector(`[data-range-for="${input.name}"]`);
+            if (out) out.textContent = input.value + '%';
+        }
+    });
+</script>
+{% endblock %}

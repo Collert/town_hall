@@ -1,0 +1,6 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% translate "You're invited" as eyebrow %}{% include 'base/listmonk/_heading.html' with text=tx.event eyebrow=eyebrow %}
+<p class="th-meta">{{ tx.role }} &middot; {{ tx.date }}</p>
+{% include 'base/listmonk/_message.html' %}
+{% translate "View invitation" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+{% endblock %}

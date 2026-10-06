@@ -1,0 +1,27 @@
+{% extends 'base/layout.html' %}
+{% load static i18n md_extras %}
+
+{% block title %}{% trans "Terms of Service" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/terms_of_service.css' %}">
+{% endblock %}
+
+{% block content %}
+<article class="terms-page">
+    <header class="terms-header">
+        <span class="terms-eyebrow">{{ company_name }}</span>
+        <h1>{% trans "Terms of Service" %}</h1>
+    </header>
+    <div class="terms-body">
+        {% if terms %}
+            {{ terms|render_markdown }}
+        {% else %}
+            <p class="terms-empty">{% trans "This organization hasn't published its terms of service yet." %}</p>
+        {% endif %}
+    </div>
+    {% if site_settings.contact_email %}
+    <p class="terms-contact">{% blocktrans with email=site_settings.contact_email %}Questions? Contact us at <a href="mailto:{{ email }}">{{ email }}</a>.{% endblocktrans %}</p>
+    {% endif %}
+</article>
+{% endblock %}
