@@ -31,7 +31,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = [os.environ.get('APP_ORIGIN', 'localhost').rstrip('/')]
 
-CSRF_TRUSTED_ORIGINS = [[f"http://{origin}", f"https://{origin}"] for origin in os.environ.get('APP_ORIGIN', 'http://localhost').rstrip('/').split(',')]
+CSRF_TRUSTED_ORIGINS = [
+    f"{scheme}://{origin.strip().rstrip('/')}"
+    for origin in os.environ.get('APP_ORIGIN', 'localhost:8000').split(',')
+    for scheme in ('http', 'https')
+]
 
 # Application definition
 
