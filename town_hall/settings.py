@@ -29,11 +29,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('APP_ORIGIN', 'localhost').rstrip('/')]
+ALLOWED_HOSTS = [os.environ.get('APP_ORIGIN', '127.0.0.1').rstrip('/')]
 
 CSRF_TRUSTED_ORIGINS = [
     f"{scheme}://{origin.strip().rstrip('/')}"
-    for origin in os.environ.get('APP_ORIGIN', 'localhost:8000').split(',')
+    for origin in os.environ.get('APP_ORIGIN', '127.0.0.1:8000').split(',')
     for scheme in ('http', 'https')
 ]
 
