@@ -8,3 +8,4 @@ whitenoise
 deep-translator
 dotenv
 dj-database-url
+gunicorn
