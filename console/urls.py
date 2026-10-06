@@ -91,6 +91,7 @@ urlpatterns = [
     # Organization
     path('settings/', settings_views.organization_settings, name='console_settings'),
     path('settings/backend/', settings_views.backend_settings, name='console_settings_backend'),
+    path('settings/home/', settings_views.home_page_settings, name='console_settings_home'),
     path('settings/levels/', settings_views.level_settings, name='console_settings_levels'),
     path('settings/points/', settings_views.points_settings, name='console_settings_points'),
     path('settings/backend/test-translation/', settings_views.test_translation, name='console_settings_test_translation'),

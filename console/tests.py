@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.utils import timezone, translation
 
 from base.models import (
-    AdminFeedback, EmailTemplate, EmailTrigger, Endorsement, Level, Notification, OperatingHour, Profile, SiteSettings, Venue,
+    AdminFeedback, EmailTemplate, EmailTrigger, Endorsement, HeroSection, Level, Notification, OperatingHour, Profile, SiteSettings, Venue,
     VenueFeature, VenueNote,
 )
 from education.models import (
@@ -105,6 +105,7 @@ class ConsolePageTests(ConsoleFixture):
     def test_console_pages_render(self):
         pages = [
             ('console_dashboard', []),
+            ('console_settings_home', []),
             ('console_events', []),
             ('console_event_history', []),
             ('console_event_create', []),
@@ -190,6 +191,30 @@ class ConsoleAccessTests(ConsoleFixture):
 class ConsoleFlowTests(ConsoleFixture):
     def setUp(self):
         self.client.force_login(self.staff)
+
+    def test_home_page_banner_edit(self):
+        from io import BytesIO
+        from PIL import Image
+        buffer = BytesIO()
+        Image.new('RGB', (4, 3)).save(buffer, 'PNG')
+        url = reverse('console_settings_home')
+        self.assertEqual(self.client.get(url).status_code, 200)
+        data = {
+            'title_en': 'Join us', 'subtitle_en': 'Help out.', 'button_1_text_en': 'Roles',
+            'button_2_text_en': 'Train', 'button_1_url': '/en/opportunities/', 'button_2_url': 'https://example.com',
+            'image': SimpleUploadedFile('hero.png', buffer.getvalue(), content_type='image/png'),
+        }
+        self.assertRedirects(self.client.post(url, data), url)
+        hero = HeroSection.objects.get(pk=1)
+        self.assertEqual((hero.title, hero.button_1_url), ('Join us', '/en/opportunities/'))
+        self.assertTrue(hero.image)
+        self.assertContains(self.client.get(reverse('home')), hero.image.url)
+
+        data.pop('image')
+        self.client.post(url, dict(data, **{'image-clear': 'on'}))
+        hero.refresh_from_db()
+        self.assertFalse(hero.image)
+        self.assertContains(self.client.get(reverse('home')), 'hero-inner--text-only')
 
     def test_level_settings_add_edit_and_renumber(self):
         low = Level.objects.create(name='Starter', numeric_name=1, min_points=0)

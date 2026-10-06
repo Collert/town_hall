@@ -417,9 +417,10 @@ class HeroSection(models.Model):
     subtitle = models.TextField(max_length=150 ,default='Engage with your community and stay informed about local news and events.')
     image = models.ImageField(upload_to='hero_images/', blank=True, null=True)
     button_1_text = models.CharField(max_length=20, default='Learn More')
-    button_1_url = models.URLField(default='#')
+    # Plain text so site-relative links like /en/opportunities/ are allowed.
+    button_1_url = models.CharField(max_length=200, default='#')
     button_2_text = models.CharField(max_length=20, default='Get Involved')
-    button_2_url = models.URLField(default='#')
+    button_2_url = models.CharField(max_length=200, default='#')
 
     def __str__(self):
         return self.title

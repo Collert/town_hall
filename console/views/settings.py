@@ -12,11 +12,11 @@ from base import listmonk
 from django.db import transaction
 
 from base import points
-from base.models import Level, PointsRules, Profile, SiteSettings
+from base.models import HeroSection, Level, PointsRules, Profile, SiteSettings
 
 from ..decorators import staff_required
 from .. import auto_translate
-from ..forms import BackendSettingsForm, LevelFormSet, OrganizationForm, PointsRulesForm
+from ..forms import BackendSettingsForm, HeroSectionForm, LevelFormSet, OrganizationForm, PointsRulesForm
 
 # (field, CSS variable it previews live, label) grouped for the template.
 # Dark-mode fields have no live preview variable.
@@ -83,6 +83,21 @@ def organization_settings(request):
         'status_colors': bind(STATUS_COLORS),
         'setup_percent': round(sum(1 for f in filled if f) / len(filled) * 100),
     })
+
+
+@staff_required
+def home_page_settings(request):
+    hero, _created = HeroSection.objects.get_or_create(pk=1)
+    if request.method == 'POST':
+        form = HeroSectionForm(request.POST, request.FILES, instance=hero)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _('Home page banner saved.'))
+            return redirect('console_settings_home')
+        messages.error(request, _('Please fix the highlighted fields.'))
+    else:
+        form = HeroSectionForm(instance=hero)
+    return render(request, 'console/home_page_settings.html', {'form': form, 'hero': hero})
 
 
 @staff_required

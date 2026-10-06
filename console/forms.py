@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from base import email_templates, triggers
-from base.models import EmailTemplate, EmailTrigger, Level, OperatingHour, PointsRules, Profile, SiteSettings, Venue, VenueFeature, VenueNote
+from base.models import EmailTemplate, EmailTrigger, HeroSection, Level, OperatingHour, PointsRules, Profile, SiteSettings, Venue, VenueFeature, VenueNote
 from education.models import ExternalCertificate, Quiz, QuizQuestion, TrainingLesson, TrainingModule
 from events.models import Event, EventCategory
 from jobs.models import Role
@@ -156,6 +156,21 @@ class VenueForm(TranslatedFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['address'].required = True
+
+
+class HeroSectionForm(TranslatedFormMixin, forms.ModelForm):
+    translation_key = 'hero'
+    translated = ('title', 'subtitle', 'button_1_text', 'button_2_text')
+
+    class Meta:
+        model = HeroSection
+        fields = translated_fields('title', 'subtitle', 'button_1_text', 'button_2_text') + ['image', 'button_1_url', 'button_2_url']
+        widgets = {f'subtitle_{code}': forms.Textarea(attrs={'rows': 3}) for code in LANGUAGE_CODES}
+        labels = {
+            'button_1_url': _('Main button link'), 'button_2_url': _('Second link'),
+            **{f'button_1_text_{code}': _('Main button text') for code in LANGUAGE_CODES},
+            **{f'button_2_text_{code}': _('Second link text') for code in LANGUAGE_CODES},
+        }
 
 
 class VenueHoursForm(forms.Form):

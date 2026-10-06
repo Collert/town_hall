@@ -1,0 +1,75 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Home Page" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/home_page_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_dashboard' %}">{% trans "Admin" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Home Page" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="hero-form" data-unsaved-warning>
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Home Page" %}</h1>
+            <p class="page-lead">{% trans "The banner at the top of the public home page: headline, intro text, buttons and image." %}</p>
+        </div>
+        <div class="hero-header-actions">
+            <a href="{% url 'home' %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span>{% trans "View home page" %}</a>
+            <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
+        </div>
+    </header>
+
+    {% include 'console/partials/settings_tabs.html' %}
+
+    <div class="c-stack">
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">title</span>{% trans "Banner Text" %}</h2>
+            {% include 'console/partials/translated_fields.html' %}
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">link</span>{% trans "Button Links" %}</h2>
+            <div class="c-grid-2">
+                {% include 'console/partials/field.html' with field=form.button_1_url %}
+                {% include 'console/partials/field.html' with field=form.button_2_url %}
+            </div>
+            <span class="c-help">{% trans "Use a full address (https://…) or a page on this site, like /en/opportunities/." %}</span>
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">image</span>{% trans "Banner Image" %}</h2>
+            <label class="c-image-drop hero-image-drop {% if hero.image %}has-image{% endif %}" id="hero-image-drop"
+                   {% if hero.image %}style="background-image: url('{{ hero.image.url }}')"{% endif %}>
+                <input type="file" name="image" accept="image/*" data-image-preview="hero-image-drop">
+                <span class="c-image-drop-label">
+                    <span class="material-symbols-outlined">add_a_photo</span>
+                    <strong>{% if hero.image %}{% trans "Click to change the image" %}{% else %}{% trans "Click to upload an image" %}{% endif %}</strong>
+                    <small>{% trans "Landscape, 4:3 works best" %}</small>
+                </span>
+            </label>
+            {% if hero.image %}
+            <label class="hero-image-clear">
+                <input type="checkbox" name="image-clear">
+                {% trans "Remove the image" %}
+            </label>
+            {% endif %}
+            {% for error in form.image.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+        </section>
+
+        <div class="c-form-actions">
+            <a href="{% url 'console_settings_home' %}" class="c-btn c-btn-ghost">{% trans "Discard Changes" %}</a>
+            <button type="submit" class="c-btn c-btn-dark c-btn-lg">{% trans "Save Changes" %}</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

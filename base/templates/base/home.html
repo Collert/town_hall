@@ -11,7 +11,7 @@
 <!-- Hero Section -->
 <section class="hero">
     <div class="hero-bg-pattern"></div>
-    <div class="hero-inner">
+    <div class="hero-inner{% if not hero.image %} hero-inner--text-only{% endif %}">
         <div class="hero-content">
             <h1>{{ hero.title }}</h1>
             <p>{{ hero.subtitle }}</p>
@@ -22,14 +22,14 @@
                 </a>
             </div>
         </div>
+        {% if hero.image %}
         <div class="hero-image-wrap">
             <div class="hero-image-frame">
-                {% if hero.image %}
                 <img src="{{ hero.image.url }}" alt="{{ hero.title }}" />
-                {% endif %}
             </div>
             <div class="hero-glow"></div>
         </div>
+        {% endif %}
     </div>
 </section>
 
@@ -87,7 +87,9 @@
                     {% if event.image %}
                     <img src="{{ event.image.url }}" alt="{{ event.title }}" />
                     {% else %}
-                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIpcHifwWWlr49TjU4Q2-gzxfz_TQiyGSwEqyFaS5V1wTA6oDUeiKPUKobwgyQw1H3qh_7lRlqI4emXA3M80sBpdLEAvjuO0VyJR7CqjIFatXXY679wYO-ldXe7lbCwZ2qtwJtpCv-G2hGvwgKU2MikGSI0RZjs_O8pwJ9YYYuqJNtqLinu9f--utcxfjtFiwzwkLU7PemrgmOi3GSVtca4p56WGF6MPAKnTkIns4MJkVEbFpOEuGcAC9zOudprnf1F65RepPWEgs" alt="{{ event.title }}" />
+                    <div class="card-image-placeholder">
+                        <span class="material-symbols-outlined">event</span>
+                    </div>
                     {% endif %}
                 </div>
                 <div class="card-body">
