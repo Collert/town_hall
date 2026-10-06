@@ -7,3 +7,4 @@ qrcode[pil]
 whitenoise
 deep-translator
 dotenv
+dj-database-url
