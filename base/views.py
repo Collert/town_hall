@@ -390,6 +390,7 @@ def profile_view(request, username):
         'recent_endorsers': recent_endorsers,
         'extra_endorsers': max(0, total_endorsers - len(recent_endorsers)),
         'skill_endorsement_counts': skill_endorsement_counts,
+        'permanent_roles': profile.permanent_roles.prefetch_related('venue').order_by('name'),
     })
 
 

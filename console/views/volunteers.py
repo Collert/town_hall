@@ -17,7 +17,7 @@ from base import points
 from base.models import AdminFeedback, Endorsement, Notification, PointsEntry, SiteSettings
 from education.models import Skill, TrainingModule, TrainingModuleCompletion, UserCertification
 from events.models import EventRoleSlot
-from jobs.models import Shift
+from jobs.models import Role, Shift
 
 from ..decorators import staff_required
 from ..forms import NewVolunteerForm, VolunteerProfileForm, VolunteerUserForm
@@ -204,7 +204,30 @@ def volunteer_detail(request, user_id):
         'can_manage_access': _can_manage_access(request.user, volunteer),
         'groups': Group.objects.order_by('name'),
         'volunteer_group_ids': set(volunteer.groups.values_list('pk', flat=True)),
+        **_permanent_roles_context(volunteer),
     })
+
+
+def _permanent_roles_context(volunteer):
+    return {
+        'permanent_roles': Role.objects.filter(permanent=True).prefetch_related('venue').order_by('name'),
+        'assigned_role_ids': set(volunteer.profile.permanent_roles.values_list('pk', flat=True)),
+    }
+
+
+@staff_required
+@require_POST
+def volunteer_roles(request, user_id):
+    """Assign the permanent roles this person may start shifts in (kiosk or device)."""
+    volunteer = get_object_or_404(User.objects.select_related('profile'), pk=user_id)
+    roles = Role.objects.filter(permanent=True, pk__in=posted_ids(request, 'role_ids'))
+    volunteer.profile.permanent_roles.set(roles)
+    messages.success(request, _('Permanent roles updated for %(name)s.') % {'name': volunteer.get_full_name() or volunteer.username})
+    if request.headers.get('HX-Request') == 'true':
+        return render(request, 'console/partials/volunteer_roles.html', {
+            'volunteer': volunteer, **_permanent_roles_context(volunteer),
+        })
+    return redirect('console_volunteer_detail', user_id=volunteer.pk)
 
 
 @staff_required

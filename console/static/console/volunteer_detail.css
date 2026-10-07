@@ -186,6 +186,85 @@
     margin-bottom: 1.5rem;
 }
 
+/* Permanent roles */
+.vd-roles {
+    margin-bottom: 1.5rem;
+}
+
+.vd-role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.vd-role {
+    position: relative;
+    cursor: pointer;
+}
+
+.vd-role input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.vd-role-body {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    height: 100%;
+    padding: 0.875rem 1rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+    box-shadow: inset 0 0 0 2px transparent;
+    transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.vd-role:hover .vd-role-body {
+    background: var(--color-bg-tertiary);
+}
+
+.vd-role-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.vd-role-main strong {
+    color: var(--color-text-primary);
+    font-size: 0.9375rem;
+}
+
+.vd-role-main small {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+}
+
+.vd-role-check {
+    color: var(--color-primary-vivid);
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+
+.vd-role input:checked + .vd-role-body {
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid);
+}
+
+.vd-role input:checked + .vd-role-body .vd-role-check {
+    opacity: 1;
+}
+
+.vd-role input:focus-visible + .vd-role-body {
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid), 0 0 0 3px rgba(from var(--color-primary-light) r g b / 0.4);
+}
+
+.vd-role-grid.htmx-request {
+    opacity: 0.6;
+}
+
 .vd-history .c-card-title {
     margin-bottom: 0.2rem;
 }

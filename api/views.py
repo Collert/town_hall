@@ -30,6 +30,9 @@ def register_heartbeat(request):
     except Role.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Invalid role_id'}, status=404)
 
+    if not role.is_assigned_to(request.user):
+        return JsonResponse({'status': 'error', 'message': 'This permanent role is not assigned to you'}, status=403)
+
     heartbeat = ShiftHeartbeat(role=role)
     heartbeat.save(user=request.user, role=role)
     return JsonResponse({'status': 'success', 'new_heartbeat': True})

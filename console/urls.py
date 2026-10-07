@@ -66,6 +66,7 @@ urlpatterns = [
     path('volunteers/<int:user_id>/message/', volunteers.message_volunteer, name='console_message_volunteer'),
     path('volunteers/<int:user_id>/status/', volunteers.toggle_active, name='console_volunteer_status'),
     path('volunteers/<int:user_id>/access/', volunteers.volunteer_access, name='console_volunteer_access'),
+    path('volunteers/<int:user_id>/roles/', volunteers.volunteer_roles, name='console_volunteer_roles'),
     path('volunteers/<int:user_id>/points/', volunteers.adjust_points, name='console_adjust_points'),
 
     # Shared HTMX helpers

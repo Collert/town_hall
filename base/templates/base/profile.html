@@ -177,6 +177,30 @@
 
   </div>
 
+  {% if permanent_roles %}
+  <section class="profile-section">
+    <div class="profile-section-header">
+      <div>
+        <h2>{% trans "Permanent Positions" %}</h2>
+        <p>{% if is_own_profile %}{% trans "Ongoing roles you can check in for at the venue kiosk." %}{% else %}{% trans "Ongoing roles this volunteer holds with the organization." %}{% endif %}</p>
+      </div>
+    </div>
+    <div class="permanent-role-grid">
+      {% for role in permanent_roles %}
+      <div class="permanent-role-card">
+        <span class="permanent-role-icon material-symbols-outlined">{{ role.icon|default:"badge" }}</span>
+        <div class="permanent-role-main">
+          <strong>{{ role.name }}</strong>
+          <span>
+            {% for venue in role.venue.all %}<a href="{% url 'venue_detail' venue.pk %}">{{ venue.name }}</a>{% if not forloop.last %}, {% endif %}{% empty %}{% trans "Any venue" %}{% endfor %}
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
   {% if points_history %}
   <section class="profile-section">
     <div class="profile-section-header">

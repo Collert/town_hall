@@ -428,6 +428,63 @@
     margin: 0;
 }
 
+/* Permanent positions */
+.permanent-role-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1rem;
+}
+
+.permanent-role-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+}
+
+.permanent-role-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.permanent-role-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.permanent-role-main strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.permanent-role-main span {
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+}
+
+.permanent-role-main a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+}
+
+.permanent-role-main a:hover {
+    text-decoration: underline;
+}
+
 .view-all-link {
     font-family: 'Inter', sans-serif;
     font-size: 0.875rem;

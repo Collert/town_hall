@@ -72,6 +72,12 @@ class Role(models.Model):
                 return False
         return True
 
+    def is_assigned_to(self, user):
+        """Permanent roles can only be worked by people staff assigned them to (Profile.permanent_roles)."""
+        if not self.permanent:
+            return True
+        return user.is_authenticated and user.profile.permanent_roles.filter(pk=self.pk).exists()
+
 class RoleTrainingRequirement(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
     training_module = models.ForeignKey(TrainingModule, on_delete=models.CASCADE)

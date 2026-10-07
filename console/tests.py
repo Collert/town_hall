@@ -236,6 +236,28 @@ class ConsoleFlowTests(ConsoleFixture):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Level.objects.get(name='Helper').min_points, 100)
 
+    def test_assign_permanent_roles(self):
+        detail = self.client.get(reverse('console_volunteer_detail', args=[self.mate.pk]))
+        self.assertContains(detail, 'Permanent Roles')
+        self.assertContains(detail, 'Librarian Assistant')
+
+        url = reverse('console_volunteer_roles', args=[self.mate.pk])
+        # Event roles can't be assigned as permanent positions
+        response = self.client.post(url, {'role_ids': [self.perm_role.pk, self.role.pk]}, **HTMX)
+        self.assertContains(response, 'id="vd-roles"')
+        self.assertEqual(list(self.mate.profile.permanent_roles.all()), [self.perm_role])
+
+        self.client.post(url, {}, **HTMX)
+        self.assertFalse(self.mate.profile.permanent_roles.exists())
+
+        self.client.force_login(self.vol)
+        self.client.post(url, {'role_ids': [self.perm_role.pk]})
+        self.assertFalse(self.mate.profile.permanent_roles.exists())
+
+    def test_public_profile_lists_permanent_roles(self):
+        self.assertContains(self.client.get(reverse('profile_view', args=[self.vol.username])), 'Librarian Assistant')
+        self.assertNotContains(self.client.get(reverse('profile_view', args=[self.mate.username])), 'Permanent Positions')
+
     def test_volunteer_access_needs_permission(self):
         # Plain staff can't hand out staff status
         self.client.post(reverse('console_volunteer_access', args=[self.vol.pk]), {'is_staff': 'on'})
@@ -1234,6 +1256,29 @@ class KioskTests(ConsoleFixture):
         self.client.post(start_url, {'choice': self.perm_role.pk})
         self.assertTrue(Shift.objects.filter(user=self.vol, role=self.perm_role, end_time__isnull=True).exists())
         self.assertEqual(self.client.get(reverse('kiosk_logged_in')).status_code, 200)
+
+    def test_unassigned_volunteer_cannot_start_permanent_role(self):
+        self.client.post(reverse('kiosk_login_id_code', args=['venue', self.venue.pk]), {'code': self.mate.profile.id_code})
+        start_url = reverse('kiosk_start', args=['venue', self.venue.pk])
+        self.assertNotContains(self.client.get(start_url), 'Librarian Assistant')
+        self.client.post(start_url, {'choice': self.perm_role.pk})
+        self.assertFalse(Shift.objects.filter(user=self.mate, end_time__isnull=True).exists())
+
+    def test_device_heartbeat_needs_assigned_permanent_role(self):
+        from django.test import RequestFactory
+        from api.models import APIKey
+        from api.views import register_heartbeat
+        key = APIKey.objects.create(expires_at=timezone.now() + timedelta(days=1))
+
+        def beat(user):
+            request = RequestFactory().post('/', {'role_id': self.perm_role.pk}, HTTP_X_TOWNHALL_API_KEY=key.key)
+            request.user = user
+            return register_heartbeat(request)
+
+        self.assertEqual(beat(self.mate).status_code, 403)
+        self.assertFalse(Shift.objects.filter(user=self.mate, role=self.perm_role).exists())
+        self.assertEqual(beat(self.vol).status_code, 200)
+        self.assertTrue(Shift.objects.filter(user=self.vol, role=self.perm_role, end_time__isnull=True).exists())
 
 
 @patch('base.geo.geocode', return_value=(10.0, 20.0))

@@ -1,0 +1,31 @@
+{% load i18n %}
+<section class="c-card vd-roles" id="vd-roles">
+    <div class="c-section-head">
+        <div>
+            <h2 class="c-card-title">{% trans "Permanent Roles" %}</h2>
+            <p class="c-muted">{% trans "Ongoing positions this person may start shifts in, at the venue kiosk or on a device. Click a role to assign or remove it." %}</p>
+        </div>
+        <span class="c-badge {% if assigned_role_ids %}c-badge-dark{% endif %}">{% blocktrans count counter=assigned_role_ids|length %}{{ counter }} assigned{% plural %}{{ counter }} assigned{% endblocktrans %}</span>
+    </div>
+    {% if permanent_roles %}
+    <form method="post" action="{% url 'console_volunteer_roles' volunteer.pk %}" class="vd-role-grid"
+          hx-post="{% url 'console_volunteer_roles' volunteer.pk %}" hx-trigger="change" hx-target="#vd-roles" hx-swap="outerHTML">
+        {% csrf_token %}
+        {% for role in permanent_roles %}
+        <label class="vd-role">
+            <input type="checkbox" name="role_ids" value="{{ role.pk }}" {% if role.pk in assigned_role_ids %}checked{% endif %}>
+            <span class="vd-role-body">
+                <span class="c-icon-tile round"><span class="material-symbols-outlined">{{ role.icon|default:"badge" }}</span></span>
+                <span class="vd-role-main">
+                    <strong>{{ role.name }}</strong>
+                    <small>{% for venue in role.venue.all %}{{ venue.name }}{% if not forloop.last %}, {% endif %}{% empty %}{% trans "Any venue" %}{% endfor %}</small>
+                </span>
+                <span class="material-symbols-outlined vd-role-check">check_circle</span>
+            </span>
+        </label>
+        {% endfor %}
+    </form>
+    {% else %}
+    <p class="c-muted">{% url 'console_roles' as roles_url %}{% blocktrans %}No permanent roles exist yet. <a href="{{ roles_url }}" class="c-link">Create one</a> and mark it as a permanent position.{% endblocktrans %}</p>
+    {% endif %}
+</section>
