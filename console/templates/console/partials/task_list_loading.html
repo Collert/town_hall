@@ -1,0 +1,10 @@
+{% load i18n %}{% comment %}Placeholder that swaps itself for the list's card, so a slow Bell Tower doesn't hold up the page.{% endcomment %}
+<article class="task-card{% if task_list.kind == 'planning' %} task-card-planning{% endif %} is-loading"
+         hx-get="{% url 'console_task_list' event.pk task_list.pk %}" hx-trigger="load" hx-swap="outerHTML">
+    <header class="task-card-head">
+        <div>
+            <h3>{{ task_list.name }}</h3>
+            <span class="task-card-meta">{% trans "Loading tasks…" %}</span>
+        </div>
+    </header>
+</article>

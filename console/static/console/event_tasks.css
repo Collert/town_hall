@@ -1,0 +1,734 @@
+/* Planning beside the day-of lists; with planning hidden (or once the event starts)
+   the day-of lists take the full width as a grid of cards. */
+.tasks-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+}
+
+.tasks-layout.planning-hidden {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.tasks-section-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.tasks-section-head .c-help {
+    margin-top: 0.25rem;
+}
+
+.tasks-section-head .c-btn {
+    flex-shrink: 0;
+}
+
+.tasks-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.planning-hidden .tasks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(24rem, 100%), 1fr));
+}
+
+.tasks-grid:empty {
+    display: none;
+}
+
+/* ---------- List card ---------- */
+.task-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+}
+
+.task-card-planning {
+    padding: 2rem;
+}
+
+.task-card.is-loading {
+    opacity: 0.7;
+}
+
+.task-card-planning.is-loading {
+    align-items: flex-start;
+}
+
+.task-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.task-card-heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-card-head h3 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    overflow-wrap: anywhere;
+}
+
+.task-card-planning .task-card-head h3 {
+    font-size: 1.4rem;
+}
+
+.task-card-meta {
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+}
+
+.task-card-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.15rem;
+}
+
+.task-card-delete:hover {
+    color: var(--color-error);
+}
+
+.task-card .htmx-request,
+.task-card.htmx-request {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.task-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-error) r g b / 0.1);
+    color: var(--color-error);
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+}
+
+.task-error .material-symbols-outlined {
+    font-size: 1.15rem;
+}
+
+.task-all-done {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ---------- Tasks ---------- */
+.task-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.task-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.25rem 0.5rem;
+    padding: 0.35rem 0.4rem;
+    border-radius: 1rem;
+    transition: background-color 150ms ease;
+}
+
+.task-item:hover {
+    background: var(--color-bg-secondary);
+}
+
+.task-check {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--color-text-tertiary);
+    cursor: pointer;
+}
+
+.task-check:hover,
+.task-item.done .task-check {
+    color: var(--color-primary-vivid);
+}
+
+.task-item.done > .task-check .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
+}
+
+/* The task's text is a button: clicking it opens the edit form. */
+.task-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+    min-width: 0;
+    padding: 0.3rem 0 0;
+    border: none;
+    background: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.task-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    margin-top: 0.15rem;
+}
+
+.task-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.task-meta-item .material-symbols-outlined {
+    font-size: 0.95rem;
+}
+
+.task-meta-item.expired {
+    color: var(--color-error);
+}
+
+.task-title {
+    color: var(--color-text-primary);
+    overflow-wrap: anywhere;
+}
+
+.task-text small {
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+}
+
+.task-item.done > .task-text .task-title {
+    text-decoration: line-through;
+    color: var(--color-text-tertiary);
+}
+
+.task-delete {
+    width: 2rem;
+    height: 2rem;
+    opacity: 0;
+}
+
+.task-item:hover > .task-delete,
+.task-delete:focus-visible {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .task-delete {
+        opacity: 1;
+    }
+}
+
+.task-sub {
+    grid-column: 2 / -1;
+}
+
+/* ---------- Adding and editing ---------- */
+.task-add-main,
+.task-new-list,
+.task-share-add {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.task-add-main .c-input,
+.task-new-list .c-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-add,
+.task-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Details, expiry and assignee appear once you're adding a task. */
+.task-add-more {
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.task-add:focus-within .task-add-more,
+.task-add:has(.task-add-title:not(:placeholder-shown)) .task-add-more {
+    display: flex;
+}
+
+.task-description {
+    resize: vertical;
+    min-height: 2.75rem;
+}
+
+.task-field {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+    color: var(--color-text-tertiary);
+}
+
+.task-field .c-input,
+.task-field .c-select {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-editing {
+    display: block;
+    padding: 0.75rem;
+    background: var(--color-bg-secondary);
+}
+
+.task-editing:hover {
+    background: var(--color-bg-secondary);
+}
+
+.task-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.task-new-list {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: var(--color-bg-secondary);
+}
+
+.task-done summary {
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+}
+
+.task-done .task-items {
+    margin-top: 0.5rem;
+}
+
+/* ---------- Sharing ---------- */
+.task-share {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1rem;
+    box-shadow: inset 0 1px 0 rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.task-share-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.task-share-label .material-symbols-outlined {
+    font-size: 1.05rem;
+}
+
+/* About three and a half people tall, then it scrolls (the half row hints there's more). */
+.task-members {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: 11rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+
+.task-member {
+    flex-shrink: 0;
+}
+
+.task-member {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.25rem 0.25rem 0.75rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+}
+
+.task-member-name {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.task-member-name strong {
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    overflow-wrap: anywhere;
+}
+
+.task-member-name small {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    overflow-wrap: anywhere;
+}
+
+.task-role {
+    flex-shrink: 0;
+    padding: 0.25rem 0.7rem;
+    border: none;
+    border-radius: 9999px;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.task-role.is-admin {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.task-member-remove {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Share row: email pill, Member/Admin switch, round add button. Wraps under the email
+   on narrow cards. */
+.task-share-add {
+    flex-wrap: wrap;
+}
+
+.task-share-input {
+    display: flex;
+    flex: 1 1 14rem;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-tertiary);
+    cursor: text;
+    transition: box-shadow 150ms ease;
+}
+
+.task-share-input:focus-within {
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid);
+    color: var(--color-primary-vivid);
+}
+
+.task-share-input .material-symbols-outlined {
+    font-size: 1.15rem;
+}
+
+.task-share-input input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.65rem 0;
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--color-text-primary);
+    font: inherit;
+    font-size: 0.875rem;
+}
+
+.task-share-input input::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+/* The datalist's dropdown arrow: suggestions still show while typing. */
+.task-share-input input::-webkit-calendar-picker-indicator {
+    display: none !important;
+}
+
+.task-share-role {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding: 0.2rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+}
+
+.task-share-role label {
+    position: relative;
+    cursor: pointer;
+}
+
+.task-share-role input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.task-share-role span {
+    display: block;
+    padding: 0.4rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.task-share-role label:hover span {
+    color: var(--color-text-primary);
+}
+
+.task-share-role input:checked + span {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.task-share-role input:focus-visible + span {
+    box-shadow: 0 0 0 2px var(--color-primary-vivid);
+}
+
+.task-share-submit {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    cursor: pointer;
+    transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.task-share-submit:hover {
+    transform: scale(1.06);
+}
+
+.task-share-submit:focus-visible {
+    outline: 2px solid var(--color-primary-vivid);
+    outline-offset: 2px;
+}
+
+.task-share-submit .material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+.task-share-none {
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+}
+
+@media (max-width: 1100px) {
+    .tasks-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .task-card,
+    .task-card-planning {
+        padding: 1.25rem;
+    }
+}
+
+/* ---------- Expiry quick picks ---------- */
+.task-expiry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.task-expiry-icon {
+    margin-right: 0.15rem;
+    color: var(--color-text-tertiary);
+}
+
+.task-chip {
+    position: relative;
+    cursor: pointer;
+}
+
+.task-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.task-chip > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.task-chip > span .material-symbols-outlined {
+    font-size: 0.95rem;
+}
+
+.task-chip:hover > span {
+    color: var(--color-text-primary);
+}
+
+.task-chip input:checked + span {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.task-chip input:focus-visible + span {
+    box-shadow: 0 0 0 2px var(--color-primary-vivid);
+}
+
+/* The exact date and time only shows once "Pick" is chosen. */
+.task-expiry-custom {
+    display: none;
+    flex: 1 1 100%;
+}
+
+.task-expiry:has(input[value="custom"]:checked) .task-expiry-custom {
+    display: block;
+}
+
+/* ---------- Renaming ---------- */
+.task-card-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    max-width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: text;
+}
+
+.task-card-title .material-symbols-outlined {
+    font-size: 1rem;
+    color: var(--color-text-tertiary);
+    opacity: 0;
+    transition: opacity 150ms ease;
+}
+
+.task-card-title:hover .material-symbols-outlined,
+.task-card-title:focus-visible .material-symbols-outlined {
+    opacity: 1;
+}
+
+.task-rename {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.task-rename .c-input {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ---------- Drag and drop (event_tasks.js) ---------- */
+.task-drag-handle {
+    display: inline-grid;
+    flex-shrink: 0;
+    margin: 0.1rem -0.35rem 0 -0.5rem;
+    color: var(--color-text-tertiary);
+    cursor: grab;
+}
+
+/* Role icon and grip share one spot; hovering the card swaps the icon for the grip. */
+.task-drag-handle > span {
+    grid-area: 1 / 1;
+    transition: opacity 150ms ease;
+}
+
+.task-handle-role {
+    color: var(--color-primary-vivid);
+}
+
+.task-drag-handle.has-role .task-handle-grip,
+.task-card:hover .task-drag-handle.has-role .task-handle-role {
+    opacity: 0;
+}
+
+.task-card:hover .task-drag-handle.has-role .task-handle-grip {
+    opacity: 1;
+}
+
+.task-drag-handle:active {
+    cursor: grabbing;
+}
+
+.task-item[draggable="true"] {
+    cursor: grab;
+}
+
+.task-item.is-dragging,
+.task-card.is-dragging {
+    opacity: 0.4;
+}
+
+.task-card {
+    transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+.task-card.is-drop-target {
+    box-shadow: inset 0 0 0 3px var(--color-primary-vivid), var(--shadow-ambient);
+    transform: scale(1.01);
+}
+
+.tasks-dragging-list .task-card[data-merge-url]:not(.is-dragging) {
+    box-shadow: inset 0 0 0 2px rgba(from var(--color-primary-vivid) r g b / 0.35), var(--shadow-ambient);
+}
+
+.tasks-dragging-task .task-card[data-list-id]:not(.is-drop-target) {
+    box-shadow: inset 0 0 0 2px rgba(from var(--color-primary-vivid) r g b / 0.2), var(--shadow-ambient);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .task-card.is-drop-target {
+        transform: none;
+    }
+}

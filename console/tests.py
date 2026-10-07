@@ -21,7 +21,7 @@ from education.models import (
     ExternalCertificate, Quiz, QuizQuestion, Skill, TrainingLesson, TrainingModule,
     TrainingModuleCompletion, UserCertification, UserCertificationFile,
 )
-from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite
+from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList
 from jobs.models import Role, RoleTrainingRequirement, Shift
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -1366,3 +1366,620 @@ class VenueTests(ConsoleFixture):
         response = self.client.get(reverse('console_role_edit', args=[self.perm_role.pk]))
         self.assertContains(response, 'Manage venues')
         self.assertContains(response, f'value="{self.venue.pk}"')
+
+
+class FakeBellTower:
+    """Stands in for a Bell Tower server at base.belltower._http, so the client code
+    (URL building, pagination, error mapping) runs for real."""
+    BASE = 'http://tasks.local:8001'
+
+    def __init__(self):
+        self.lists, self.tasks, self.next_id = {}, {}, 1
+        self.users = {'townhall': 'hall@example.org', 'pager1': 'pager@example.org', 'carol': 'vol@example.com'}
+        self.staff = True  # Town Hall's own account is Bell Tower staff
+        self.staff_accounts = {'townhall'}
+        self.login_links = []
+        self.codes = {'good-code': 'townhall'}
+        self.revoked = False
+        self.calls = []
+
+    def _id(self):
+        self.next_id += 1
+        return self.next_id
+
+    def __call__(self, method, url, *, data=None, headers=None):
+        import json
+        import urllib.parse
+        from base.belltower import BellTowerError
+        self.calls.append((method, url))
+        parts = urllib.parse.urlsplit(url)
+        path, query = parts.path, dict(urllib.parse.parse_qsl(parts.query))
+        body = json.loads(data) if data and headers.get('Content-Type') == 'application/json' else dict(urllib.parse.parse_qsl((data or b'').decode()))
+        if path == '/.well-known/belltower':
+            return {'service': 'belltower', 'version': 1, 'authorize_url': self.BASE + '/connect/authorize/',
+                    'token_url': self.BASE + '/connect/token/', 'revoke_url': self.BASE + '/api/connect/revoke/',
+                    'api_url': self.BASE + '/api/', 'list_url': self.BASE + '/lists/{id}/', 'mcp_url': self.BASE + '/mcp'}
+        if path == '/connect/token/':
+            user = self.codes.pop(body.get('code'), None)
+            if not user:
+                raise BellTowerError('Bell Tower returned 400: invalid_grant', 400)
+            return {'api_key': 'bt_secret', 'username': user}
+        if headers.get('Authorization') != 'Bearer bt_secret' or self.revoked:
+            raise BellTowerError('Bell Tower returned 401: Invalid token.', 401)
+        if path == '/api/connect/revoke/':
+            self.revoked = True
+            return None
+        if path == '/api/me/':
+            return {'username': 'townhall', 'email': self.users['townhall'], 'name': '', 'is_staff': self.staff}
+        if path == '/api/users/link/':
+            if not self.staff:
+                raise BellTowerError('Bell Tower returned 403: Only staff accounts can manage Belltower accounts.', 403)
+            email = body['email'].lower()
+            username = next((u for u, e in self.users.items() if e.lower() == email), None)
+            if username:
+                return {'username': username, 'email': email, 'name': '', 'created': False}
+            username = email.split('@')[0]
+            self.users[username] = email
+            return {'username': username, 'email': email, 'name': '', 'created': True}
+        if path.startswith('/api/users/') and path.endswith('/login-link/'):
+            username = path.split('/')[3]
+            if username in self.staff_accounts:
+                raise BellTowerError('Bell Tower returned 403: Sign-in links are not issued for staff accounts.', 403)
+            self.login_links.append((username, body['next']))
+            return {'url': f'{self.BASE}/connect/login/token-for-{username}/'}
+        segments = path.strip('/').split('/')[1:]  # drop "api"
+        kind, pk = segments[0], int(segments[1]) if len(segments) > 1 else None
+        store = self.lists if kind == 'lists' else self.tasks
+        if pk is not None and pk not in store:
+            raise BellTowerError('Bell Tower returned 404: Not found.', 404)
+        if kind == 'lists':
+            if method == 'GET' and pk is None:
+                return {'results': [self._list(row) for row in self.lists.values()], 'next': None}
+            if method == 'POST' and pk is None:
+                row = {'id': self._id(), 'name': body['name'], 'persistent': body['persistent'],
+                       'users': ['townhall', *body['users']], 'admins': ['townhall']}
+                self.lists[row['id']] = row
+                return self._list(row)
+            row = store[pk]
+            if segments[2:3] == ['members']:
+                if method == 'POST':
+                    username = body.get('username') or next((u for u, e in self.users.items() if e == body.get('email', '').lower()), None)
+                    if username not in self.users:
+                        raise BellTowerError('Bell Tower returned 404: No Belltower account matches.', 404)
+                    admin = body.get('admin')  # None: keep an existing member's role
+                    if username == 'townhall' and admin is False:
+                        raise BellTowerError("Bell Tower returned 400: You can't remove your own admin role.", 400)
+                    if username not in row['users']:
+                        row['users'].append(username)
+                    if admin is not None:
+                        row['admins'] = [u for u in row['admins'] if u != username] + ([username] if admin else [])
+                else:  # DELETE members/<username>/
+                    row['users'].remove(segments[3])
+                    row['admins'] = [u for u in row['admins'] if u != segments[3]]
+                return self._list(row)
+            if segments[2:3] == ['merge']:
+                other = self.lists.pop(int(body['list']))
+                for task in self.tasks.values():
+                    if task['list'] == other['id']:
+                        task['list'] = pk
+                row['users'] += [u for u in other['users'] if u not in row['users']]
+                row['admins'] += [u for u in other['admins'] if u not in row['admins']]
+                row['name'] = body.get('name') or f"{row['name']} & {other['name']}"
+                return self._list(row)
+            if method == 'PATCH':
+                row.update(body)
+            if method == 'DELETE':
+                del store[pk]
+                return None
+            return self._list(row)
+        if method == 'GET' and pk is None:
+            rows = [t for t in self.tasks.values() if str(t['list']) == query['list']]
+            page = int(query.get('page', 1))
+            # Pages of two, to exercise pagination.
+            return {'results': [self._task(r) for r in rows[(page - 1) * 2:page * 2]], 'next': 'more' if len(rows) > page * 2 else None}
+        if method == 'POST':
+            row = {'id': self._id(), 'completed': False, 'is_expired': False, 'assignee': None, 'expires_at': None, **body}
+            self.tasks[row['id']] = row
+            return self._task(row)
+        if method == 'PATCH':
+            store[pk].update(body)
+        if method == 'DELETE':
+            del store[pk]
+            return None
+        return self._task(store[pk])
+
+    def _list(self, row):
+        return {**row, 'members': [
+            {'username': u, 'name': '', 'email': self.users[u], 'admin': u in row['admins']} for u in row['users']
+        ]}
+
+    def _task(self, row):
+        return {**row, 'assignee_name': row['assignee'] or ''}
+
+
+class BellTowerConnectTests(ConsoleFixture):
+    def setUp(self):
+        cache.clear()
+        self.client.force_login(self.staff)
+        self.fake = FakeBellTower()
+        patcher = patch('base.belltower._http', self.fake)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def tearDown(self):
+        cache.clear()
+
+    def test_normalize_url(self):
+        from base.belltower import normalize_url
+        self.assertEqual(normalize_url(' tasks.example.org/lists/3/?x=1 '), 'https://tasks.example.org')
+        self.assertEqual(normalize_url('HTTPS://Tasks.Example.org:8443/'), 'https://tasks.example.org:8443')
+        self.assertEqual(normalize_url('localhost:8001/'), 'http://localhost:8001')
+        self.assertEqual(normalize_url('http://[::1]:8001/x'), 'http://[::1]:8001')
+        for bad in ('', 'ftp://x.org', 'http://x.org:99999'):
+            with self.assertRaises(ValueError):
+                normalize_url(bad)
+
+    def test_connect_flow(self):
+        self.assertContains(self.client.get(reverse('console_settings_backend')), 'Connect to Bell Tower')
+        response = self.client.post(reverse('console_belltower_connect'), {'belltower_url': 'tasks.local:8001/lists/'})
+        location = response['Location']
+        self.assertTrue(location.startswith(self.fake.BASE + '/connect/authorize/?client_name=Town+Hall'))
+        state = self.client.session['belltower_connect']['state']
+        callback = reverse('console_belltower_callback')
+        self.assertIn('redirect_uri=http%3A%2F%2Ftestserver' + callback.replace('/', '%2F'), location)
+
+        response = self.client.get(callback, {'code': 'good-code', 'state': state})
+        self.assertRedirects(response, reverse('console_settings_backend'), fetch_redirect_response=False)
+        site = SiteSettings.objects.get()
+        self.assertEqual((site.belltower_url, site.belltower_api_key, site.belltower_username),
+                         ('http://tasks.local:8001', 'bt_secret', 'townhall'))
+        page = self.client.get(reverse('console_settings_backend'))
+        self.assertContains(page, 'Acting as townhall')
+        self.assertNotContains(page, 'bt_secret')
+
+        self.client.post(reverse('console_belltower_disconnect'))
+        self.assertTrue(self.fake.revoked)
+        self.assertEqual(SiteSettings.objects.get().belltower_api_key, '')
+
+    def test_callback_rejects_wrong_state(self):
+        self.client.post(reverse('console_belltower_connect'), {'belltower_url': 'tasks.local:8001'})
+        self.client.get(reverse('console_belltower_callback'), {'code': 'good-code', 'state': 'forged'})
+        self.assertEqual(SiteSettings.objects.get().belltower_api_key, '')
+        self.assertIn('good-code', self.fake.codes)  # never redeemed
+
+    def test_callback_cancelled(self):
+        self.client.post(reverse('console_belltower_connect'), {'belltower_url': 'tasks.local:8001'})
+        state = self.client.session['belltower_connect']['state']
+        response = self.client.get(reverse('console_belltower_callback'), {'error': 'access_denied', 'state': state}, follow=True)
+        self.assertContains(response, 'connection cancelled')
+        self.assertEqual(SiteSettings.objects.get().belltower_api_key, '')
+
+    def test_connect_to_something_else(self):
+        from base.belltower import BellTowerError
+        with patch('base.belltower._http', side_effect=BellTowerError('Bell Tower returned 404: nope', 404)):
+            response = self.client.post(reverse('console_belltower_connect'), {'belltower_url': 'example.org'}, follow=True)
+        self.assertContains(response, 'find Bell Tower there')
+        self.assertNotIn('belltower_connect', self.client.session)
+
+
+class EventTasksTests(ConsoleFixture):
+    def setUp(self):
+        cache.clear()
+        self.client.force_login(self.staff)
+        self.fake = FakeBellTower()
+        patcher = patch('base.belltower._http', self.fake)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        site = SiteSettings.get_settings()
+        site.belltower_url, site.belltower_api_key, site.belltower_username = FakeBellTower.BASE, 'bt_secret', 'townhall'
+        site.belltower_endpoints = self.fake('GET', FakeBellTower.BASE + '/.well-known/belltower')
+        site.save()
+        start = timezone.now() + timedelta(days=3)
+        self.event = make_event('Gala', start, start + timedelta(hours=4))
+        EventRoleSlot.objects.create(event=self.event, role=self.role, start_time=start, end_time=start + timedelta(hours=2), required_qty=2).signups.add(self.vol)
+
+    def tearDown(self):
+        cache.clear()
+
+    def url(self, name, *args):
+        return reverse(name, args=[self.event.pk, *args])
+
+    def test_not_connected(self):
+        site = SiteSettings.get_settings()
+        site.belltower_api_key = ''
+        site.save()
+        self.assertContains(self.client.get(self.url('console_event_tasks')), 'Connect Bell Tower to plan with tasks')
+
+    def test_planning_list_created_on_first_visit(self):
+        page = self.client.get(self.url('console_event_tasks'))
+        self.assertContains(page, 'Start the planning list')
+        self.assertContains(page, '<option value="admin@example.com">')  # staff
+        self.assertContains(page, '<option value="vol@example.com">')  # signed up for this event
+        self.assertNotContains(page, 'mate@example.com')  # neither
+        response = self.client.post(self.url('console_task_list_create'), {'kind': 'planning'}, **HTMX)
+        self.assertContains(response, 'No tasks yet')
+        planning = EventTaskList.objects.get(event=self.event, kind='planning')
+        remote = self.fake.lists[planning.belltower_id]
+        self.assertEqual(remote['name'], 'Gala: Planning')
+        self.assertTrue(remote['persistent'])
+        # A second request (double click, two tabs) reuses it.
+        self.client.post(self.url('console_task_list_create'), {'kind': 'planning'}, **HTMX)
+        self.assertEqual(EventTaskList.objects.filter(kind='planning').count(), 1)
+        self.assertNotContains(self.client.get(self.url('console_event_tasks')), 'Start the planning list')
+
+    def test_tasks_flow(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'Kitchen'}, **HTMX)
+        task_list = EventTaskList.objects.get(name='Kitchen')
+        for title in ('Order food', 'Buy napkins', 'Wash trays'):
+            response = self.client.post(self.url('console_task_add', task_list.pk), {'title': title}, **HTMX)
+        self.assertContains(response, 'Wash trays')  # third task comes from the second page
+        self.assertContains(response, '0 of 3 done')
+
+        task_id = next(t['id'] for t in self.fake.tasks.values() if t['title'] == 'Order food')
+        response = self.client.post(self.url('console_task_toggle', task_list.pk, task_id), **HTMX)
+        self.assertTrue(self.fake.tasks[task_id]['completed'])
+        self.assertContains(response, '1 of 3 done')
+        self.assertContains(response, 'Done (1)')
+
+        self.client.post(self.url('console_task_delete', task_list.pk, task_id), **HTMX)
+        self.assertNotIn(task_id, self.fake.tasks)
+
+    def test_cannot_touch_tasks_of_other_lists(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'A'}, **HTMX)
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'B'}, **HTMX)
+        a, b = EventTaskList.objects.order_by('name')
+        self.client.post(self.url('console_task_add', b.pk), {'title': 'Secret'}, **HTMX)
+        task_id = next(iter(self.fake.tasks))
+        response = self.client.post(self.url('console_task_toggle', a.pk, task_id), **HTMX)
+        self.assertContains(response, 'not in this list')
+        self.assertFalse(self.fake.tasks[task_id]['completed'])
+
+    def test_sharing_by_email(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'Setup'}, **HTMX)
+        task_list = EventTaskList.objects.get()
+        share = self.url('console_task_list_share', task_list.pk)
+        response = self.client.post(share, {'email': 'VOL@example.com'}, **HTMX)
+        self.assertContains(response, 'vol@example.com')
+        remote = self.fake.lists[task_list.belltower_id]
+        self.assertEqual((remote['users'], remote['admins']), (['townhall', 'carol'], ['townhall']))
+
+        # Role toggle, by username.
+        self.client.post(share, {'role': 'carol', 'admin': '1'}, **HTMX)
+        self.assertIn('carol', remote['admins'])
+        self.client.post(share, {'role': 'carol'}, **HTMX)
+        self.assertNotIn('carol', remote['admins'])
+
+        response = self.client.post(share, {'email': 'nobody@example.org'}, **HTMX)
+        self.assertContains(response, 'No Bell Tower account uses nobody@example.org')
+
+        # Town Hall's own account can't be demoted or removed from here.
+        self.client.post(share, {'role': 'townhall'}, **HTMX)
+        self.client.post(share, {'remove': 'townhall'}, **HTMX)
+        response = self.client.post(share, {'email': 'hall@example.org'}, **HTMX)
+        self.assertContains(response, 'remove your own admin role')
+        self.assertIn('townhall', remote['admins'])
+
+        self.client.post(share, {'remove': 'carol'}, **HTMX)
+        self.assertEqual(remote['users'], ['townhall'])
+
+    def test_task_details_and_editing(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'Kitchen'}, **HTMX)
+        task_list = EventTaskList.objects.get()
+        self.client.post(self.url('console_task_list_share', task_list.pk), {'email': 'pager@example.org'}, **HTMX)
+        response = self.client.post(self.url('console_task_add', task_list.pk), {
+            'title': 'Order food', 'description': 'Vegetarian options', 'expires_at': '2030-01-02T15:30', 'assignee': 'pager1',
+        }, **HTMX)
+        self.assertContains(response, 'Vegetarian options')
+        self.assertContains(response, 'Jan 2, 15:30')
+        task_id, task = next(iter(self.fake.tasks.items()))
+        self.assertEqual(task['assignee'], 'pager1')
+        sent = timezone.datetime.fromisoformat(task['expires_at'])
+        self.assertEqual(timezone.localtime(sent).strftime('%Y-%m-%d %H:%M'), '2030-01-02 15:30')
+
+        form = self.client.get(self.url('console_task_edit', task_list.pk, task_id), **HTMX)
+        self.assertContains(form, 'value="Order food"')
+        self.assertContains(form, 'value="2030-01-02T15:30"')
+        self.assertContains(form, '<option value="pager1" selected>')
+
+        self.client.post(self.url('console_task_edit', task_list.pk, task_id),
+                         {'title': 'Order pizza', 'description': '', 'expires_at': '', 'assignee': ''}, **HTMX)
+        self.assertEqual((task['title'], task['description'], task['expires_at'], task['assignee']), ('Order pizza', '', None, None))
+
+    def test_planning_hides_once_event_starts(self):
+        page = self.client.get(self.url('console_event_tasks'))
+        self.assertContains(page, 'Start the planning list')
+        self.assertNotContains(page, 'planning-hidden')
+
+        # Staff can hide it before the event...
+        self.client.get(self.url('console_event_tasks') + '?planning=hide')
+        page = self.client.get(self.url('console_event_tasks'))
+        self.assertContains(page, 'planning-hidden')
+        self.assertContains(page, 'Show planning')
+
+        # ...and it's hidden by default once the event is under way.
+        self.event = self.live
+        page = self.client.get(self.url('console_event_tasks'))
+        self.assertContains(page, 'planning-hidden')
+        self.assertNotContains(page, 'Start the planning list')
+        self.client.get(self.url('console_event_tasks') + '?planning=show')
+        self.assertContains(self.client.get(self.url('console_event_tasks')), 'Start the planning list')
+
+    def make_lists(self, *names):
+        for name in names:
+            self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': name}, **HTMX)
+        return [EventTaskList.objects.get(name=name) for name in names]
+
+    def test_quick_expiry(self):
+        (task_list,) = self.make_lists('Cleanup')
+        before = timezone.now()
+        self.client.post(self.url('console_task_add', task_list.pk), {'title': 'Bins', 'expires_in': '15'}, **HTMX)
+        self.client.post(self.url('console_task_add', task_list.pk),
+                         {'title': 'Report', 'expires_in': 'custom', 'expires_at': '2030-01-02T08:00'}, **HTMX)
+        self.client.post(self.url('console_task_add', task_list.pk), {'title': 'Sweep', 'expires_in': ''}, **HTMX)
+        bins, report, sweep = self.fake.tasks.values()
+        delta = timezone.datetime.fromisoformat(bins['expires_at']) - before
+        self.assertTrue(timedelta(minutes=14) < delta < timedelta(minutes=16))
+        self.assertEqual(timezone.localtime(timezone.datetime.fromisoformat(report['expires_at'])).hour, 8)
+        self.assertIsNone(sweep['expires_at'])
+        # Editing a task with an expiry starts on "Pick" with its date filled in.
+        form = self.client.get(self.url('console_task_edit', task_list.pk, report['id']), **HTMX)
+        self.assertContains(form, 'value="custom" checked')
+        self.assertContains(form, 'value="2030-01-02T08:00"')
+
+    def test_rename(self):
+        (task_list,) = self.make_lists('Kitchen')
+        self.assertContains(self.client.get(self.url('console_task_list', task_list.pk) + '?rename=1', **HTMX), 'name="name"')
+        response = self.client.post(self.url('console_task_list_rename', task_list.pk), {'name': 'Food'}, **HTMX)
+        self.assertContains(response, 'Food')
+        self.assertEqual(self.fake.lists[task_list.belltower_id]['name'], 'Gala: Food')
+        task_list.refresh_from_db()
+        self.assertEqual(task_list.name, 'Food')
+
+    def test_renamed_in_belltower_is_picked_up(self):
+        (task_list,) = self.make_lists('Kitchen')
+        self.fake.lists[task_list.belltower_id]['name'] = 'Gala: Catering'
+        self.client.get(self.url('console_task_list', task_list.pk), **HTMX)
+        task_list.refresh_from_db()
+        self.assertEqual(task_list.name, 'Catering')
+
+    def test_merge_lists(self):
+        kitchen, setup = self.make_lists('Kitchen', 'Setup')
+        self.client.post(self.url('console_task_add', setup.pk), {'title': 'Chairs'}, **HTMX)
+        response = self.client.post(self.url('console_task_list_merge', kitchen.pk), {'source': setup.pk}, **HTMX)
+        self.assertContains(response, 'Kitchen &amp; Setup')
+        self.assertContains(response, 'Chairs')
+        self.assertContains(response, f'id="task-list-{setup.pk}" hx-swap-oob="delete"')
+        self.assertEqual(self.fake.lists[kitchen.belltower_id]['name'], 'Gala: Kitchen & Setup')
+        self.assertNotIn(setup.belltower_id, self.fake.lists)
+        self.assertEqual(list(EventTaskList.objects.values_list('name', flat=True)), ['Kitchen & Setup'])
+
+    def test_planning_cannot_be_merged(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'planning'}, **HTMX)
+        (kitchen,) = self.make_lists('Kitchen')
+        planning = EventTaskList.objects.get(kind='planning')
+        response = self.client.post(self.url('console_task_list_merge', kitchen.pk), {'source': planning.pk}, **HTMX)
+        self.assertContains(response, "planning list can")
+        self.assertEqual(EventTaskList.objects.count(), 2)
+
+    def test_move_task(self):
+        kitchen, setup = self.make_lists('Kitchen', 'Setup')
+        self.client.post(self.url('console_task_add', setup.pk), {'title': 'Chairs'}, **HTMX)
+        task_id = next(iter(self.fake.tasks))
+        response = self.client.post(self.url('console_task_move', kitchen.pk), {'task': task_id, 'source': setup.pk}, **HTMX)
+        self.assertEqual(self.fake.tasks[task_id]['list'], kitchen.belltower_id)
+        html = response.content.decode()
+        self.assertIn(f'id="task-list-{kitchen.pk}"', html)
+        self.assertIn(f'id="task-list-{setup.pk}"', html)  # source card re-rendered out of band
+        self.assertIn('hx-swap-oob="true"', html)
+        # A task that isn't in the claimed source list isn't moved.
+        response = self.client.post(self.url('console_task_move', setup.pk), {'task': task_id, 'source': setup.pk}, **HTMX)
+        self.assertContains(response, 'not in this list')
+        self.assertEqual(self.fake.tasks[task_id]['list'], kitchen.belltower_id)
+
+    def test_list_deleted_in_belltower_is_forgotten(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'Gone'}, **HTMX)
+        task_list = EventTaskList.objects.get()
+        self.fake.lists.clear()
+        response = self.client.get(self.url('console_task_list', task_list.pk), **HTMX)
+        self.assertEqual(response.content, b'')
+        self.assertFalse(EventTaskList.objects.exists())
+
+    def test_delete_list(self):
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'Temp'}, **HTMX)
+        task_list = EventTaskList.objects.get()
+        self.client.post(self.url('console_task_list_delete', task_list.pk), **HTMX)
+        self.assertFalse(EventTaskList.objects.exists())
+        self.assertEqual(self.fake.lists, {})
+
+    def test_belltower_down_shows_error_in_card(self):
+        from base.belltower import BellTowerError
+        self.client.post(self.url('console_task_list_create'), {'kind': 'event', 'name': 'Setup'}, **HTMX)
+        task_list = EventTaskList.objects.get()
+        with patch('base.belltower._http', side_effect=BellTowerError('Bell Tower unreachable at tasks.local:8001: refused')):
+            response = self.client.get(self.url('console_task_list', task_list.pk), **HTMX)
+        self.assertContains(response, 'unreachable')
+        self.assertTrue(EventTaskList.objects.exists())
+
+    def test_lists_from_another_server_are_hidden(self):
+        EventTaskList.objects.create(event=self.event, kind='event', name='Old server list', belltower_url='http://old.local', belltower_id=99)
+        self.assertNotContains(self.client.get(self.url('console_event_tasks')), 'Old server list')
+
+
+@override_settings(BELLTOWER_RUN_INLINE=True)
+class BellTowerPeopleTests(ConsoleFixture):
+    """Role lists, linking Town Hall users to Bell Tower accounts, and sign-in links."""
+
+    def setUp(self):
+        cache.clear()
+        self.fake = FakeBellTower()
+        patcher = patch('base.belltower._http', self.fake)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        site = SiteSettings.get_settings()
+        site.belltower_url, site.belltower_api_key, site.belltower_username = FakeBellTower.BASE, 'bt_secret', 'townhall'
+        site.belltower_endpoints = self.fake('GET', FakeBellTower.BASE + '/.well-known/belltower')
+        site.save()
+        start = timezone.now() + timedelta(days=3)
+        self.event = make_event('Gala', start, start + timedelta(hours=4))
+        self.start = start
+
+    def tearDown(self):
+        cache.clear()
+
+    def add_slot(self, role=None):
+        with self.captureOnCommitCallbacks(execute=True):
+            return EventRoleSlot.objects.create(event=self.event, role=role or self.role, start_time=self.start,
+                                                end_time=self.start + timedelta(hours=2), required_qty=3)
+
+    def role_list(self):
+        task_list = EventTaskList.objects.get(event=self.event, roles=self.role)
+        return task_list, self.fake.lists[task_list.belltower_id]
+
+    def test_new_user_is_linked_to_existing_account_by_email(self):
+        with self.captureOnCommitCallbacks(execute=True):
+            user = User.objects.create_user('pagerperson', 'PAGER@example.org', 'pw')
+        self.assertEqual(user.belltower_links.get().username, 'pager1')
+
+    def test_new_user_gets_an_account_created(self):
+        with self.captureOnCommitCallbacks(execute=True):
+            user = User.objects.create_user('newbie', 'newbie@example.org', 'pw')
+        self.assertEqual(user.belltower_links.get().username, 'newbie')
+        self.assertEqual(self.fake.users['newbie'], 'newbie@example.org')
+
+    def test_users_without_email_are_skipped(self):
+        with self.captureOnCommitCallbacks(execute=True):
+            user = User.objects.create_user('noemail', '', 'pw')
+        self.assertFalse(user.belltower_links.exists())
+
+    def test_role_list_made_when_slot_added_and_signups_join(self):
+        slot = self.add_slot()
+        task_list, remote = self.role_list()
+        self.assertEqual((task_list.name, remote['name']), ('Greeter tasks', 'Gala: Greeter tasks'))
+        self.assertEqual(remote['users'], ['townhall'])
+
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.add_signup(self.vol)  # vol@example.com is "carol" in Bell Tower
+        self.assertEqual(remote['users'], ['townhall', 'carol'])
+        self.assertNotIn('carol', remote['admins'])  # members complete and take tasks
+
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.signups.remove(self.vol)
+        self.assertEqual(remote['users'], ['townhall'])
+
+    def test_second_slot_of_same_role_keeps_membership(self):
+        first, second = self.add_slot(), self.add_slot()
+        with self.captureOnCommitCallbacks(execute=True):
+            first.signups.add(self.vol)
+            second.signups.add(self.vol)
+        with self.captureOnCommitCallbacks(execute=True):
+            first.signups.remove(self.vol)
+        _, remote = self.role_list()
+        self.assertIn('carol', remote['users'])  # still on the second slot
+        self.assertEqual(EventTaskList.objects.filter(roles=self.role).count(), 1)
+
+    def test_staff_promoted_admins_stay(self):
+        slot = self.add_slot()
+        _, remote = self.role_list()
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.signups.add(self.vol)
+        remote['admins'].append('carol')  # staff made them an admin
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.signups.add(self.mate)
+            slot.signups.remove(self.vol)
+        self.assertIn('carol', remote['users'])
+
+    def test_tasks_tab_makes_missing_role_lists_with_existing_signups(self):
+        # Slots and sign-ups from before Bell Tower was connected (no signals ran).
+        slot = EventRoleSlot.objects.create(event=self.event, role=self.role, start_time=self.start,
+                                            end_time=self.start + timedelta(hours=2), required_qty=3)
+        slot.signups.add(self.vol)
+        self.client.force_login(self.staff)
+        page = self.client.get(reverse('console_event_tasks', args=[self.event.pk]))
+        self.assertContains(page, 'Greeter tasks')
+        _, remote = self.role_list()
+        self.assertEqual(remote['users'], ['townhall', 'carol'])
+
+    def test_role_list_cannot_be_deleted(self):
+        self.add_slot()
+        task_list, _ = self.role_list()
+        self.client.force_login(self.staff)
+        response = self.client.post(reverse('console_task_list_delete', args=[self.event.pk, task_list.pk]), **HTMX)
+        self.assertContains(response, "stays while the role is at the event")
+        self.assertNotContains(response, 'task-card-delete')
+        # Its role icon doubles as the drag grip.
+        self.assertContains(response, 'task-drag-handle has-role')
+        self.assertContains(response, 'task-handle-grip')
+
+    def test_role_list_merged_into_another_keeps_its_role(self):
+        slot = self.add_slot()
+        role_list, _ = self.role_list()
+        self.client.force_login(self.staff)
+        self.client.post(reverse('console_task_list_create', args=[self.event.pk]), {'kind': 'event', 'name': 'Setup'}, **HTMX)
+        setup = EventTaskList.objects.get(name='Setup')
+        self.client.post(reverse('console_task_list_merge', args=[self.event.pk, setup.pk]), {'source': role_list.pk}, **HTMX)
+        setup.refresh_from_db()
+        self.assertEqual(setup.name, 'Setup & Greeter tasks')
+        self.assertEqual(list(setup.roles.all()), [self.role])
+        self.assertFalse(EventTaskList.objects.filter(pk=role_list.pk).exists())
+
+        # It isn't recreated, and new sign-ups for the role land on the merged list.
+        self.client.get(reverse('console_event_tasks', args=[self.event.pk]))
+        self.assertEqual(EventTaskList.objects.filter(event=self.event).count(), 1)
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.signups.add(self.vol)
+        self.assertIn('carol', self.fake.lists[setup.belltower_id]['users'])
+        self.assertContains(self.client.get(reverse('console_task_list', args=[self.event.pk, setup.pk]), **HTMX), 'task-drag-handle has-role')
+
+    def test_two_role_lists_merge_into_one(self):
+        other_role = Role.objects.create(name='Cashier', icon='payments')
+        self.add_slot()
+        cashier_slot = self.add_slot(other_role)
+        greeter, _ = self.role_list()
+        cashier = EventTaskList.objects.get(roles=other_role)
+        self.client.force_login(self.staff)
+        self.client.post(reverse('console_task_list_merge', args=[self.event.pk, greeter.pk]), {'source': cashier.pk}, **HTMX)
+        self.assertCountEqual(greeter.roles.all(), [self.role, other_role])
+        with self.captureOnCommitCallbacks(execute=True):
+            cashier_slot.signups.add(self.vol)
+        self.assertIn('carol', self.fake.lists[greeter.belltower_id]['users'])
+        # Leaving their only slot for either role takes them off.
+        with self.captureOnCommitCallbacks(execute=True):
+            cashier_slot.signups.remove(self.vol)
+        self.assertNotIn('carol', self.fake.lists[greeter.belltower_id]['users'])
+
+    def test_volunteer_opens_their_role_list(self):
+        slot = self.add_slot()
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.signups.add(self.vol)
+        task_list, _ = self.role_list()
+        self.client.force_login(self.vol)
+        page = self.client.get(reverse('opportunity_detail', args=[self.event.pk]))
+        self.assertContains(page, f'?list={task_list.pk}')
+        self.assertContains(page, 'Your tasks')
+        response = self.client.get(reverse('open_tasks') + f'?list={task_list.pk}')
+        self.assertRedirects(response, f'{FakeBellTower.BASE}/connect/login/token-for-carol/', fetch_redirect_response=False)
+        self.assertEqual(self.fake.login_links, [('carol', f'/lists/{task_list.belltower_id}/')])
+        self.assertContains(self.client.get(reverse('home')), reverse('open_tasks'))  # "My tasks" in the menu
+
+    def test_staff_bell_tower_accounts_sign_in_themselves(self):
+        self.fake.users['townhall'] = 'admin@example.com'  # the staff user's email is Town Hall's own Bell Tower account
+        self.client.force_login(self.staff)
+        response = self.client.get(reverse('open_tasks'))
+        self.assertRedirects(response, FakeBellTower.BASE + '/', fetch_redirect_response=False)
+
+    def test_backend_card_shows_people_status(self):
+        BellTowerLink = self.vol.belltower_links.model
+        BellTowerLink.objects.create(user=self.vol, belltower_url=FakeBellTower.BASE, username='carol')
+        self.client.force_login(self.staff)
+        page = self.client.get(reverse('console_settings_backend'))
+        self.assertContains(page, '1 of')
+        self.assertContains(page, 'people linked to Bell Tower')
+        self.fake.staff = False
+        self.assertContains(self.client.get(reverse('console_settings_backend')), "isn't Bell Tower staff")
+
+    def test_link_all_users_after_connecting(self):
+        from base import belltower
+        belltower.link_all_users()
+        linked = dict(self.vol.belltower_links.model.objects.values_list('user__username', 'username'))
+        self.assertEqual(linked['vol'], 'carol')
+        self.assertEqual(linked['mate'], 'mate')  # created

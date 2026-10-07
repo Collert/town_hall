@@ -1,0 +1,48 @@
+{% load i18n %}
+{% if editing == task.id %}
+<li class="task-item task-editing">
+    <form class="task-edit" hx-post="{% url 'console_task_edit' event.pk task_list.pk task.id %}" hx-target="closest .task-card" hx-swap="outerHTML">
+        <input type="text" name="title" class="c-input" maxlength="200" required value="{{ task.title }}" aria-label="{% trans 'Task' %}" autofocus>
+        {% include 'console/partials/task_fields.html' %}
+        <div class="task-edit-actions">
+            <button type="button" class="c-btn c-btn-ghost c-btn-sm"
+                    hx-get="{% url 'console_task_list' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML">{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary c-btn-sm">{% trans "Save" %}</button>
+        </div>
+    </form>
+</li>
+{% else %}
+<li class="task-item{% if task.completed %} done{% endif %}" draggable="true" data-task-id="{{ task.id }}"
+    title="{% trans 'Drag onto another list to move it' %}">
+    <button type="button" class="task-check" aria-pressed="{{ task.completed|yesno:'true,false' }}"
+            aria-label="{% if task.completed %}{% trans 'Mark as not done' %}{% else %}{% trans 'Mark as done' %}{% endif %}"
+            hx-post="{% url 'console_task_toggle' event.pk task_list.pk task.id %}" hx-target="closest .task-card" hx-swap="outerHTML">
+        <span class="material-symbols-outlined">{% if task.completed %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+    </button>
+    <button type="button" class="task-text" title="{% trans 'Edit task' %}"
+            hx-get="{% url 'console_task_edit' event.pk task_list.pk task.id %}" hx-target="closest .task-card" hx-swap="outerHTML">
+        <span class="task-title">{{ task.title }}</span>
+        {% if task.description %}<small>{{ task.description }}</small>{% endif %}
+        {% if task.assignee or task.expires %}
+        <span class="task-meta">
+            {% if task.assignee %}<span class="task-meta-item"><span class="material-symbols-outlined">person</span>{{ task.assignee_name|default:task.assignee }}</span>{% endif %}
+            {% if task.expires %}
+            <span class="task-meta-item{% if task.is_expired and not task.completed %} expired{% endif %}">
+                <span class="material-symbols-outlined">schedule</span>
+                {% if task.is_expired %}{% trans "Expired" %}{% else %}{% trans "Expires" %}{% endif %} {{ task.expires|date:"M j, H:i" }}
+            </span>
+            {% endif %}
+        </span>
+        {% endif %}
+    </button>
+    <button type="button" class="c-icon-btn task-delete" aria-label="{% trans 'Delete task' %}"
+            hx-post="{% url 'console_task_delete' event.pk task_list.pk task.id %}" hx-target="closest .task-card" hx-swap="outerHTML">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+    {% if task.children %}
+    <ul class="task-items task-sub">
+        {% for task in task.children %}{% include 'console/partials/task_item.html' %}{% endfor %}
+    </ul>
+    {% endif %}
+</li>
+{% endif %}

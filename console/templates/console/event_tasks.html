@@ -1,0 +1,101 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{{ event.title }} &middot; {% trans "Tasks" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/event_edit.css' %}">
+<link rel="stylesheet" href="{% static 'console/event_tasks.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'console/event_tasks.js' %}"></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_events' %}">{% trans "Events" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<a href="{% url 'console_event_roles' event.pk %}">{{ event.title }}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Tasks" %}</span>
+{% endblock %}
+
+{% block content %}
+{% include 'console/partials/event_tabs.html' %}
+
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Tasks" %}</h1>
+        <p class="page-lead">{% trans "Plan the event and run the day from shared Bell Tower lists. Anyone you share a list with can work through it on their phone, a pager device or an AI agent." %}</p>
+    </div>
+    {% if connected %}
+    <div class="page-actions">
+        <a href="{{ belltower.url }}" class="c-btn c-btn-surface" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span>{% trans "Open Bell Tower" %}</a>
+    </div>
+    {% endif %}
+</header>
+
+{% if not connected %}
+<div class="c-empty">
+    <span class="material-symbols-outlined">checklist</span>
+    <h3>{% trans "Connect Bell Tower to plan with tasks" %}</h3>
+    <p>{% trans "Bell Tower keeps your organization's shared task lists. Once it's connected, every event gets a planning list and lists for the day itself." %}</p>
+    <a href="{% url 'console_settings_backend' %}#belltower" class="c-btn c-btn-primary"><span class="material-symbols-outlined">link</span>{% trans "Connect Bell Tower" %}</a>
+</div>
+{% else %}
+{# Lists are shared by email; Bell Tower finds the account that uses it. #}
+<datalist id="townhall-people">
+    {% for person in suggestions %}<option value="{{ person.email }}">{{ person.get_full_name|default:person.username }}</option>{% endfor %}
+</datalist>
+
+<div class="tasks-layout{% if planning_hidden %} planning-hidden{% endif %}"
+     data-merge-confirm="{% trans 'Merge “%(source)s” into “%(target)s”? Its tasks and people move over and it is deleted.' %}">
+    {% if not planning_hidden %}
+    <section class="tasks-section tasks-planning">
+        <div class="tasks-section-head">
+            <div>
+                <h2 class="c-section-title">{% trans "Planning" %}</h2>
+                <p class="c-help">{% trans "Everything to get done before the day: the venue, food, supplies, outreach." %}</p>
+            </div>
+            <a href="?planning=hide" class="c-btn c-btn-ghost c-btn-sm"><span class="material-symbols-outlined">left_panel_close</span>{% trans "Hide" %}</a>
+        </div>
+        {% if planning %}
+        {% include 'console/partials/task_list_loading.html' with task_list=planning %}
+        {% else %}
+        <div class="task-card task-card-planning is-loading">
+            <button type="button" class="c-btn c-btn-primary" hx-post="{% url 'console_task_list_create' event.pk %}" hx-vals='{"kind": "planning"}'
+                    hx-trigger="load, click" hx-target="closest .task-card" hx-swap="outerHTML">
+                <span class="material-symbols-outlined">playlist_add</span>{% trans "Start the planning list" %}
+            </button>
+        </div>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <section class="tasks-section tasks-day">
+        <div class="tasks-section-head">
+            <div>
+                <h2 class="c-section-title">{% trans "During the event" %}</h2>
+                <p class="c-help">{% trans "Checklists for volunteers and staff on the day, e.g. setup crew, kitchen, registration desk. Drag a task onto another list to move it, or a list by its handle onto another to merge them." %}</p>
+            </div>
+            {% if planning_hidden %}
+            <a href="?planning=show" class="c-btn c-btn-ghost c-btn-sm"
+               title="{% if started %}{% trans 'Planning is hidden because the event has started.' %}{% endif %}">
+                <span class="material-symbols-outlined">left_panel_open</span>{% trans "Show planning" %}
+            </a>
+            {% endif %}
+        </div>
+        <div id="event-lists" class="tasks-grid">
+            {% for task_list in event_lists %}{% include 'console/partials/task_list_loading.html' %}{% endfor %}
+        </div>
+        <form class="task-new-list" hx-post="{% url 'console_task_list_create' event.pk %}" hx-target="#event-lists" hx-swap="beforeend"
+              hx-on::after-request="if (event.detail.successful) this.reset()">
+            <input type="hidden" name="kind" value="event">
+            <input type="text" name="name" class="c-input" maxlength="150" required autocomplete="off"
+                   placeholder="{% trans 'New list name' %}" aria-label="{% trans 'New list name' %}">
+            <button type="submit" class="c-btn c-btn-dark"><span class="material-symbols-outlined">add</span>{% trans "Create list" %}</button>
+        </form>
+    </section>
+</div>
+{% endif %}
+{% endblock %}

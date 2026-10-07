@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    certificates, communication, dashboard, events, roles, settings as settings_views, training, translate, venues,
+    certificates, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
     volunteers,
 )
 
@@ -26,6 +26,18 @@ urlpatterns = [
     path('events/<int:event_id>/monitor/check-in/', events.manual_check_in, name='console_manual_check_in'),
     path('events/<int:event_id>/monitor/export/', events.export_shift_log, name='console_export_shift_log'),
     path('events/<int:event_id>/report/', events.event_report, name='console_event_report'),
+    path('events/<int:event_id>/tasks/', event_tasks.event_tasks, name='console_event_tasks'),
+    path('events/<int:event_id>/tasks/lists/', event_tasks.list_create, name='console_task_list_create'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/', event_tasks.list_card, name='console_task_list'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/delete/', event_tasks.list_delete, name='console_task_list_delete'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/share/', event_tasks.list_share, name='console_task_list_share'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/rename/', event_tasks.list_rename, name='console_task_list_rename'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/merge/', event_tasks.list_merge, name='console_task_list_merge'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/move-task/', event_tasks.task_move, name='console_task_move'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/', event_tasks.task_add, name='console_task_add'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/<int:task_id>/', event_tasks.task_edit, name='console_task_edit'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/<int:task_id>/toggle/', event_tasks.task_toggle, name='console_task_toggle'),
+    path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/<int:task_id>/delete/', event_tasks.task_delete, name='console_task_delete'),
 
     # Roles
     path('roles/', roles.role_list, name='console_roles'),
@@ -96,6 +108,10 @@ urlpatterns = [
     path('settings/points/', settings_views.points_settings, name='console_settings_points'),
     path('settings/backend/test-translation/', settings_views.test_translation, name='console_settings_test_translation'),
     path('settings/backend/test-email/', settings_views.test_email, name='console_settings_test_email'),
+    path('settings/backend/belltower/connect/', settings_views.belltower_connect, name='console_belltower_connect'),
+    path('settings/backend/belltower/callback/', settings_views.belltower_callback, name='console_belltower_callback'),
+    path('settings/backend/belltower/disconnect/', settings_views.belltower_disconnect, name='console_belltower_disconnect'),
+    path('settings/backend/belltower/link-users/', settings_views.belltower_link_users, name='console_belltower_link_users'),
     path('communication/email/', communication.email_settings, name='console_communication_email'),
     path('communication/email/status/', communication.task_status, name='console_listmonk_status'),
     path('communication/email/seed/', communication.seed_missing, name='console_listmonk_seed'),

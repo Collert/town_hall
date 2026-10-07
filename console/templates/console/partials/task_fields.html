@@ -1,0 +1,26 @@
+{% load i18n %}{% comment %}Description, expiry and assignee for a task; `task` is set when editing.
+Expiry: quick choices in minutes from now, or "Pick" for an exact date and time.{% endcomment %}
+<textarea name="description" class="c-input task-description" rows="2" aria-label="{% trans 'Details' %}"
+          placeholder="{% trans 'Details (optional)' %}">{{ task.description|default:"" }}</textarea>
+<div class="task-expiry" role="radiogroup" aria-label="{% trans 'Expires' %}">
+    <span class="material-symbols-outlined task-expiry-icon" title="{% trans 'Expires' %}">schedule</span>
+    <label class="task-chip"><input type="radio" name="expires_in" value=""{% if not task.expires %} checked{% endif %}><span>{% trans "No deadline" %}</span></label>
+    <label class="task-chip"><input type="radio" name="expires_in" value="15"><span>{% trans "15 min" %}</span></label>
+    <label class="task-chip"><input type="radio" name="expires_in" value="60"><span>{% trans "1 hour" %}</span></label>
+    <label class="task-chip"><input type="radio" name="expires_in" value="1440"><span>{% trans "1 day" %}</span></label>
+    <label class="task-chip"><input type="radio" name="expires_in" value="10080"><span>{% trans "1 week" %}</span></label>
+    <label class="task-chip"><input type="radio" name="expires_in" value="custom"{% if task.expires %} checked{% endif %}>
+        <span><span class="material-symbols-outlined">edit_calendar</span>{% trans "Pick" %}</span>
+    </label>
+    <input type="datetime-local" name="expires_at" class="c-input task-expiry-custom" aria-label="{% trans 'Expires at' %}"
+           value="{% if task.expires %}{{ task.expires|date:'Y-m-d\TH:i' }}{% endif %}">
+</div>
+<label class="task-field">
+    <span class="material-symbols-outlined">person</span>
+    <select name="assignee" class="c-select" title="{% trans 'Assigned to' %}" aria-label="{% trans 'Assigned to' %}">
+        <option value="">{% trans "Unassigned" %}</option>
+        {% for username, label in assignees %}
+        <option value="{{ username }}"{% if task.assignee == username %} selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+</label>

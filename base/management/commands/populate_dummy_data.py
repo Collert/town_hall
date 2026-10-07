@@ -8,8 +8,13 @@ live right now (check-in monitor); a multi-day event in progress; upcoming event
 understaffed, full, invite-only or unpublished; permanent roles with kiosk shifts; training in
 progress, finished and expired; certificates verified, pending, rejected and expired; points
 adjustments, staff notes, notifications, venue notices and API keys.
+
+With --belltower URL --belltower-token TOKEN (a Bell Tower staff account's API token) it also
+connects Bell Tower, links every demo person to a Bell Tower account, and gives each event that
+hasn't ended a planning list, a list per role with its volunteers, and realistic tasks.
 """
 import io
+import os
 import random
 from collections import defaultdict
 from datetime import date, datetime, time, timedelta
@@ -23,12 +28,13 @@ from django.urls import reverse
 from django.utils import timezone, translation
 
 from api.models import APIKey, ShiftHeartbeat
-from base import points
+from base import belltower, points
 from base.models import (AdminFeedback, Endorsement, HeroSection, Level, Notification, OperatingHour,
                          PointsEntry, PointsRules, SiteSettings, Venue, VenueFeature, VenueNote)
 from education.models import (ExternalCertificate, Quiz, QuizQuestion, Skill, TrainingLesson, TrainingModule,
                               TrainingModuleCompletion, TrainingTopic, UserCertification, UserCertificationFile)
-from events.models import Event, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite, SlotSignup
+from events import belltower_sync
+from events.models import Event, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
 from jobs.models import Role, RoleTrainingRequirement, Shift
 
 User = get_user_model()
@@ -660,6 +666,100 @@ ADMIN_NOTES = [
 ]
 
 
+# ---------------------------------------------------------------- Bell Tower tasks (--belltower)
+
+# Planning list for every event that hasn't ended: (title, details, days before the start).
+# Deadlines are 09:00 that day; most tasks whose deadline has passed are done.
+PLANNING_TASKS = [
+    ('Confirm the booking with the parish office', 'Check the date against the parish calendar and ask for the side door key.', 21),
+    ('Post the event in the Sunday bulletin', 'Send the blurb and a photo to the bulletin editor by Wednesday noon.', 14),
+    ('Fill the open volunteer roles', 'Check Roles & Staffing and personally invite people for anything under half full.', 7),
+    ('Order food for the volunteers', 'Pizza or sandwiches from Royal Deli; order for the sign-up count plus 10%.', 3),
+    ('Print sign-in sheets and name tags', '', 2),
+    ('Send the reminder email to volunteers', 'Include parking, the side entrance, and the check-in time.', 1),
+]
+EVENT_PLANNING_TASKS = {
+    'Fall Perogy Bee': [
+        ("Buy 50 kg of potatoes and the farmer's cheese", 'Costco business centre; the parish card is in the office safe.', 4),
+        ('Book the walk-in freezer for the finished perogies', 'Ask Bohdan for the Saturday afternoon slot.', 6),
+    ],
+    'Thanksgiving Community Dinner': [
+        ('Pick up the turkeys', 'Twelve birds, prepaid at Save-On Foods on 6th Street. Bring the cooler bags.', 2),
+        ('Call the seniors who need a ride', 'List is in the shared folder; two drivers have offered.', 3),
+        ('Print bilingual menu cards', 'Ukrainian and English, one per table.', 2),
+    ],
+    'Christmas Bazaar': [
+        ('Collect consignment from the embroidery group', 'Count and price every piece with Halyna.', 10),
+        ('Get the cash floats from the treasurer', 'Two boxes, $200 each in small bills.', 2),
+        ('Rent 20 extra tables', 'Party Rentals on Columbia; delivery the evening before.', 14),
+    ],
+    'Holodomor Remembrance Vigil': [
+        ('Order 300 candles in jars', 'Same supplier as last year; the invoice is in the office.', 12),
+        ('Confirm the reader for the list of names', 'Ask Father Taras who is reading this year.', 7),
+    ],
+    'Newcomer Orientation & Settlement Clinic': [
+        ('Print the MSP and SIN forms in Ukrainian', 'Thirty of each, plus the school registration checklist.', 2),
+        ('Confirm the bank representative', 'Coast Capital said they could send someone for two hours.', 5),
+    ],
+    'Thanksgiving Hamper Packing Night': [
+        ('Confirm the turkey voucher count with Superstore', '140 vouchers; pick up at the customer service desk.', 2),
+    ],
+}
+
+# Tasks for each role's list: (title, details, minutes after the event starts it's due, or None).
+ROLE_TASKS = {
+    'kitchen': [
+        ('Hairnets and aprons on, hands washed', '', 0),
+        ('Set up the dough station', 'Flour bins on the left, rolling pins and cutters on the long table.', 15),
+        ('Label and date every tray before it goes in the freezer', 'Use the masking tape and black marker by the fridge.', None),
+        ('Wipe down the counters and run the dishwasher', 'Last load on the sanitize cycle.', 'end'),
+    ],
+    'setup': [
+        ('Set out the tables in rows of six', 'Leave a wide aisle down the middle for wheelchairs.', -30),
+        ('Hang the welcome banner at the front door', 'It is in the storage room, top shelf.', -15),
+        ('Stack the chairs and sweep the hall', '', 'end'),
+    ],
+    'greeter': [
+        ('Open the registration table', 'Sign-in sheets, pens and name tags are in the blue bin.', -10),
+        ('Count attendees for the impact report', 'Tally at the door; enter the number in Town Hall afterwards.', 'end'),
+    ],
+    'cashier': [
+        ('Get the cash float from the office', 'Sign it out in the binder.', -15),
+        ('Count the float with a second person', '', 0),
+        ('Reconcile the till and seal the deposit bag', 'Two signatures on the slip, then into the office safe.', 'end'),
+    ],
+    'interpreter': [
+        ("Check in with the settlement navigator for today's families", '', 0),
+        ('Help families with the MSP application', 'Bring them to table 3; the navigator reviews before it is mailed.', None),
+    ],
+    'packer': [
+        ('Set up the packing stations', 'Five stations: canned goods, vegetables, protein, treats, card.', 0),
+        ('Tape and label the finished hampers', 'Family size goes on the label; large hampers by the door.', None),
+        ('Break down the empty boxes for recycling', '', 'end'),
+    ],
+    'kids': [
+        ('Set up the craft table', 'Paper, glue sticks and crayons; no scissors for the little ones.', -15),
+        ('Head count every 30 minutes', 'Write it on the clipboard by the door.', None),
+    ],
+    'photographer': [
+        ('Shoot the opening and a wide shot of the hall', 'Check the no-photo list at registration first.', 15),
+        ('Upload the photos to the shared drive', 'Folder for this event, by Monday noon.', None),
+    ],
+}
+GENERIC_ROLE_TASKS = [('Check in with the event lead', 'Find out where you are needed first.', 0)]
+
+# The live event also gets urgent tasks (due in minutes from now) and a closing checklist.
+LIVE_URGENT_TASKS = {
+    'packer': [('Restock the carrots at station 2', 'Two crates are by the loading door.', 15)],
+    'greeter': [('Bring more name tags to the door', 'The spare box is in the office.', 60)],
+}
+CLOSING_CHECKLIST = [
+    ('Turn off the urn and the hall lights', ''),
+    ('Take the garbage and recycling to the bins', 'Recycling goes in the blue bins behind the hall.'),
+    ('Lock the side door and return the key', 'Key goes in the drop box at the parish office.'),
+]
+
+
 def at(day, clock):
     """Aware datetime `day` (a date) at 'HH:MM' local time."""
     hours, minutes = map(int, clock.split(':'))
@@ -671,6 +771,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--password', default='password123', help='Password for every demo volunteer (default password123; admin is admin/admin)')
+        parser.add_argument('--belltower', default=os.environ.get('BELLTOWER_URL', ''), metavar='URL',
+                            help='Also seed task lists in this Bell Tower server (or set BELLTOWER_URL). '
+                                 'Creates new lists there on every run.')
+        parser.add_argument('--belltower-token', default=os.environ.get('BELLTOWER_TOKEN', ''), metavar='TOKEN',
+                            help="API token of a Bell Tower staff account, from its account page (or set BELLTOWER_TOKEN). "
+                                 'Staff, so demo people can be given Bell Tower accounts.')
 
     def handle(self, *args, **options):
         if User.objects.exists():
@@ -690,6 +796,10 @@ class Command(BaseCommand):
         self.stdout.write('Scoring shifts...')
         with transaction.atomic():
             points.rebuild()
+        if options['belltower'] and options['belltower_token']:
+            self.seed_tasks(options['belltower'], options['belltower_token'])
+        else:
+            self.stdout.write('Skipping task lists: pass --belltower URL --belltower-token TOKEN to seed them in Bell Tower.')
         self.summary()
 
     def day(self, offset):
@@ -991,7 +1101,8 @@ class Command(BaseCommand):
                 self.sign_up(slot, user, when=slot.start_time + timedelta(minutes=random.randint(5, 40)))
                 start = slot.start_time + timedelta(minutes=random.randint(15, 60))
                 self.make_shift(user, start, slot.end_time + timedelta(minutes=random.randint(-10, 10)), slot=slot, clutched=True)
-                self.attended[event.pk].append(user)
+                if user not in self.attended[event.pk]:  # may already be on another of the event's slots
+                    self.attended[event.pk].append(user)
 
     def staff_future(self, slots):
         for slot, fill, *named in slots:
@@ -1477,6 +1588,91 @@ class Command(BaseCommand):
         APIKey.objects.create(name='Parish hall kiosk iPad', expires_at=self.now + timedelta(days=300))
         old = APIKey.objects.create(name='2025 festival tablet (retired)', expires_at=self.now - timedelta(days=30))
         APIKey.objects.filter(pk=old.pk).update(created_at=self.now - timedelta(days=420))
+
+    # ------------------------------------------------------------ Bell Tower tasks
+
+    def seed_tasks(self, url, token):
+        """Connect to Bell Tower with a staff token, link every demo person to an account, and
+        give each event that hasn't ended a planning list, its role lists and their tasks."""
+        self.stdout.write('Bell Tower task lists...')
+        try:
+            base_url = belltower.normalize_url(url)
+            endpoints = belltower.discover(base_url)
+            me = belltower.api('GET', 'me/', cfg={'url': base_url, 'api_key': token, 'username': '', 'endpoints': endpoints})
+        except (ValueError, belltower.BellTowerError) as exc:
+            self.stderr.write(self.style.ERROR(f'Skipping task lists: {exc}'))
+            return
+        belltower.save_connection(base_url, endpoints, token, me['username'])
+        self.belltower_user = me['username']
+        self.task_count = 0
+        if me['is_staff']:
+            self.stdout.write('  Linking people to Bell Tower accounts...')
+            belltower.link_all_users()
+            add_people = mock.patch.object(belltower_sync, '_add_person', belltower_sync._add_person)
+        else:
+            self.stderr.write(self.style.WARNING(
+                f'  {me["username"]} is not Bell Tower staff, so people are not linked or added to lists.'))
+            add_people = mock.patch.object(belltower_sync, '_add_person', lambda task_list, user: None)
+        role_keys = {role.pk: key for key, role in self.roles.items()}
+        events = list(Event.objects.filter(end_date__gte=self.now).order_by('start_date'))
+        try:
+            with add_people:
+                for event in events:
+                    self.seed_event_tasks(event, role_keys)
+        except belltower.BellTowerError as exc:
+            self.stderr.write(self.style.ERROR(f'  Stopped seeding task lists: {exc}'))
+            return
+        self.stdout.write(f'  {EventTaskList.objects.count()} lists and {self.task_count} tasks for {len(events)} events.')
+
+    def add_task(self, task_list, title, details='', due=None, done=False, assignee=None):
+        task = belltower.create_task(task_list.belltower_id, title, details, expires_at=due, assignee=assignee)
+        if done:
+            belltower.update_task(task['id'], completed=True)
+        self.task_count += 1
+
+    def seed_event_tasks(self, event, role_keys):
+        started = event.start_date <= self.now
+
+        # Planning: deadlines count back from the start; most of the ones already past are done.
+        remote = belltower.create_list(belltower_sync.remote_name(event, 'Planning'))
+        planning = EventTaskList.objects.create(event=event, kind=EventTaskList.PLANNING, name='Planning',
+                                                belltower_url=belltower.config()['url'], belltower_id=remote['id'])
+        start_day = timezone.localdate(event.start_date)
+        for title, details, days_before in PLANNING_TASKS + EVENT_PLANNING_TASKS.get(event.title, []):
+            due = at(start_day - timedelta(days=days_before), '09:00')
+            self.add_task(planning, title, details, due, done=due < self.now and random.random() < 0.85)
+
+        # A list per role with the signed-up volunteers on it; every other task is assigned.
+        belltower_sync.sync_event(event)
+        for task_list in event.task_lists.filter(roles__isnull=False).prefetch_related('roles').distinct():
+            key = role_keys.get(task_list.roles.all()[0].pk)
+            members = [m['username'] for m in belltower.get_list(task_list.belltower_id)['members']
+                       if m['username'] != self.belltower_user]
+            for index, (title, details, offset) in enumerate(ROLE_TASKS.get(key, GENERIC_ROLE_TASKS)):
+                if offset == 'end':
+                    due = event.end_date
+                else:
+                    due = event.start_date + timedelta(minutes=offset) if offset is not None else None
+                assignee = members[index // 2 % len(members)] if members and index % 2 == 0 else None
+                self.add_task(task_list, title, details, due, done=started and due is not None and due < self.now,
+                              assignee=assignee)
+            if started:
+                for title, details, minutes in LIVE_URGENT_TASKS.get(key, []):
+                    self.add_task(task_list, title, details, self.now + timedelta(minutes=minutes),
+                                  assignee=members[0] if members else None)
+
+        # Events under way also have a list of their own for closing up, shared with the coordinators.
+        if started:
+            name = 'Closing checklist'
+            remote = belltower.create_list(belltower_sync.remote_name(event, name))
+            closing = EventTaskList.objects.create(event=event, kind=EventTaskList.EVENT_DAY, name=name,
+                                                   belltower_url=belltower.config()['url'], belltower_id=remote['id'])
+            for title, details in CLOSING_CHECKLIST:
+                self.add_task(closing, title, details, event.end_date)
+            for coordinator in event.coordinators.all():
+                username = belltower.linked_username(coordinator, create=False)
+                if username:
+                    belltower.add_member(closing.belltower_id, username=username, admin=True)
 
     # ------------------------------------------------------------ report
 

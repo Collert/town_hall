@@ -102,6 +102,14 @@ def event_detail(request, event_id):
             first_slot.multiple_slots = True
             first_slot.all_fully_staffed = first_slot.all_fully_staffed and slot.is_fully_staffed()
 
+    # Volunteers signed up for a role can open its Bell Tower list ("Your tasks").
+    if any(s.user_signed_up_any for s in unique_role_slots):
+        from .belltower_sync import role_lists_for
+        role_lists = role_lists_for(event)
+        for slot in unique_role_slots:
+            task_list = role_lists.get(slot.role_id) if slot.user_signed_up_any else None
+            slot.task_list_id = task_list.pk if task_list else None
+
     completed_modules = set(
         TrainingModuleCompletion.objects.filter(user=user).values_list('training_module', flat=True)
     ) if user.is_authenticated else set()

@@ -115,6 +115,11 @@
                             <a href="{% url 'profile_view' user.username %}" class="user-menu-item" role="menuitem">
                                 <span class="material-symbols-outlined">person</span>{% trans "My profile" %}
                             </a>
+                            {% if site_settings.belltower_api_key %}
+                            <a href="{% url 'open_tasks' %}" class="user-menu-item" role="menuitem" target="_blank" rel="noopener">
+                                <span class="material-symbols-outlined">checklist</span>{% trans "My tasks" %}
+                            </a>
+                            {% endif %}
                             <a href="{% url 'edit_profile' %}" class="user-menu-item" role="menuitem">
                                 <span class="material-symbols-outlined">settings</span>{% trans "Account settings" %}
                             </a>

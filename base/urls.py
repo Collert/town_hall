@@ -30,4 +30,5 @@ urlpatterns = [
     path('endorsements/give/', give_endorsement, name='give_endorsement'),
     path('endorsements/people/', endorse_people_search, name='endorse_people_search'),
     path('endorsements/quick/', quick_endorse, name='quick_endorse'),
+    path('tasks/open/', open_tasks, name='open_tasks'),
 ]

@@ -122,6 +122,11 @@
                                 <p class="role-time">{{ slot.start_time|time:"TIME_FORMAT" }} - {{ slot.end_time|time:"TIME_FORMAT" }}</p>
                                 {% endif %}
                             </div>
+                            {% if slot.task_list_id %}
+                            <a href="{% url 'open_tasks' %}?list={{ slot.task_list_id }}" class="btn btn-outline btn-rounded role-tasks-btn" target="_blank" rel="noopener">
+                                <span class="material-symbols-outlined">checklist</span>{% trans "Your tasks" %}
+                            </a>
+                            {% endif %}
                             {% if not slot.all_fully_staffed %}
                             <button class="btn btn-accent btn-rounded role-select-btn"
                                     data-slot-id="{{ slot.pk }}"

@@ -661,3 +661,34 @@ def impact_record(request, username):
         'record_url': record_url,
         'issued': now,
     })
+
+
+@login_required
+def open_tasks(request):
+    """Open Bell Tower signed in as the user's linked account (made if needed), on a list
+    when ``?list=<EventTaskList id>`` is given. Uses a one-time sign-in link, so nobody
+    needs a Bell Tower password. Staff accounts in Bell Tower can't get links: they're
+    sent to Bell Tower to sign in themselves."""
+    from events.models import EventTaskList
+    from . import belltower
+
+    cfg = belltower.config()
+    back = request.META.get('HTTP_REFERER') or reverse('home')
+    if not url_has_allowed_host_and_scheme(back, allowed_hosts={request.get_host()}):
+        back = reverse('home')
+    if not belltower.is_connected(cfg):
+        messages.error(request, _('Task lists are not set up yet.'))
+        return redirect(back)
+    task_list = EventTaskList.objects.filter(pk=request.GET.get('list') or 0, belltower_url=cfg['url']).first()
+    next_path = f'/lists/{task_list.belltower_id}/' if task_list else '/'
+    try:
+        username = belltower.linked_username(request.user)
+        if not username:
+            messages.error(request, _('Add an email address to your account to use task lists.'))
+            return redirect('edit_profile')
+        return redirect(belltower.login_link(username, next_path))
+    except belltower.BellTowerError as exc:
+        if exc.status == 403:  # a staff account in Bell Tower: sign in there directly
+            return redirect(belltower.list_web_url(task_list.belltower_id, cfg) if task_list else cfg['url'] + '/')
+        messages.error(request, _("Couldn't open your tasks right now: %(error)s") % {'error': exc})
+        return redirect(back)

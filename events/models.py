@@ -6,6 +6,8 @@ import uuid
 
 from django.db import models
 from django.db.models import Q
+from django.db.models.signals import m2m_changed, post_save
+from django.dispatch import receiver
 import math
 
 def generate_token():
@@ -295,6 +297,43 @@ class EventSlotInvite(models.Model):
         return self.event_role_slot.event
 
 
+class EventTaskList(models.Model):
+    """A Bell Tower task list attached to an event (base/belltower.py holds the tasks).
+
+    Each event gets one planning list (prep work for organizers) and any number of
+    lists for the day itself (volunteers, staff, pager devices). `belltower_url` records
+    which server the list lives on, so reconnecting to another server hides old lists.
+    """
+    PLANNING = 'planning'
+    EVENT_DAY = 'event'
+    KIND_CHOICES = [(PLANNING, 'Planning'), (EVENT_DAY, 'During the event')]
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='task_lists')
+    kind = models.CharField(max_length=10, choices=KIND_CHOICES, default=EVENT_DAY)
+    # The roles whose sign-ups join this list (events/belltower_sync.py). Each role at the
+    # event starts with its own "<Role> tasks" list; merging lists combines their roles.
+    roles = models.ManyToManyField('jobs.Role', blank=True, related_name='event_task_lists')
+    name = models.CharField(max_length=200)
+    belltower_url = models.URLField()
+    belltower_id = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at', 'id']
+        constraints = [
+            models.UniqueConstraint(fields=['belltower_url', 'belltower_id'], name='unique_belltower_list'),
+        ]
+
+    def __str__(self):
+        return f'{self.name} ({self.event})'
+
+    @property
+    def role_icon(self):
+        """The icon shown on a role list's card (its first role's); '' for other lists."""
+        role = next(iter(self.roles.all()), None)
+        return (role.icon or 'badge') if role else ''
+
+
 class EventFeedback(models.Model):
     """A volunteer's post-event survey response."""
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='feedback')
@@ -309,3 +348,27 @@ class EventFeedback(models.Model):
 
     def __str__(self):
         return f"{self.user.username} rated {self.event.title} {self.rating}/5"
+
+
+# Bell Tower: role lists and their members follow slots and sign-ups (events/belltower_sync.py).
+# The work runs after the transaction commits, in the background.
+
+@receiver(post_save, sender=EventRoleSlot)
+def queue_role_list(sender, instance, created, **kwargs):
+    from base import belltower
+    if created and belltower.is_connected():
+        from . import belltower_sync
+        belltower.run_after_commit(belltower_sync.role_slot_added, instance.event_id, instance.role_id)
+
+
+@receiver(m2m_changed, sender=EventRoleSlot.signups.through)
+def queue_role_list_members(sender, instance, action, reverse, pk_set, **kwargs):
+    if action not in ('post_add', 'post_remove') or not pk_set:
+        return
+    from base import belltower
+    if not belltower.is_connected():
+        return
+    from . import belltower_sync
+    # slot.signups.add(user) or user.commitments.add(slot): either side can be the instance.
+    slot_ids, user_ids = (list(pk_set), [instance.pk]) if reverse else ([instance.pk], list(pk_set))
+    belltower.run_after_commit(belltower_sync.signups_changed, slot_ids, user_ids, action == 'post_add')

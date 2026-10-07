@@ -249,3 +249,58 @@
         animation: none;
     }
 }
+
+/* ---------- Bell Tower ---------- */
+.belltower-connection {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.belltower-connection > .material-symbols-outlined {
+    color: var(--color-success);
+}
+
+.belltower-connection strong {
+    display: block;
+    color: var(--color-text-primary);
+    overflow-wrap: anywhere;
+}
+
+.belltower-connection small {
+    font-size: 0.8125rem;
+    color: var(--color-text-tertiary);
+}
+
+.belltower-error {
+    margin-top: 1rem;
+}
+
+.belltower-disconnect:hover {
+    color: var(--color-error);
+}
+
+.belltower-dialog {
+    width: min(34rem, calc(100vw - 2rem));
+}
+
+.belltower-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-left: 1.25rem;
+    list-style: decimal;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.belltower-people {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 1rem;
+}

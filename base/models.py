@@ -402,6 +402,30 @@ def sync_user_to_listmonk(sender, instance, created, update_fields=None, **kwarg
     from . import listmonk
     listmonk.queue_sync(instance)
 
+
+class BellTowerLink(models.Model):
+    """The Bell Tower account a Town Hall user acts as (base/belltower.py), matched by email
+    and created there when missing. Scoped to a server, so reconnecting Town Hall to
+    another Bell Tower links everyone afresh."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='belltower_links')
+    belltower_url = models.URLField()
+    username = models.CharField(max_length=150)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['user', 'belltower_url'], name='unique_belltower_link')]
+
+    def __str__(self):
+        return f'{self.user} -> {self.username} @ {self.belltower_url}'
+
+
+@receiver(post_save, sender=User)
+def link_new_user_to_belltower(sender, instance, created, **kwargs):
+    if created:
+        from . import belltower
+        belltower.queue_link(instance)
+
+
 class Level(models.Model):
     name = models.CharField(max_length=20)
     numeric_name = models.PositiveIntegerField(help_text='Numeric representation of the level for ordering (e.g., Level 1, Level 2)', unique=True)
@@ -601,6 +625,13 @@ class SiteSettings(models.Model):
     listmonk_logo_source = models.CharField(max_length=255, blank=True, default='', help_text='Logo file the listmonk copy was made from')
     listmonk_brand = models.JSONField(default=dict, blank=True)
     default_from_email = models.CharField(max_length=200, blank=True, default='', help_text='Sender, e.g. "Town Hall <hello@example.org>". Blank uses listmonk\'s default.')
+    # Bell Tower: shared task lists (base/belltower.py). Set by the connect flow in
+    # Organization > Backend, never typed in: the API key is issued by Bell Tower.
+    belltower_url = models.URLField(blank=True, default='', help_text='Bell Tower server, e.g. https://tasks.example.org')
+    belltower_api_key = models.CharField(max_length=200, blank=True, default='')
+    belltower_username = models.CharField(max_length=150, blank=True, default='', help_text='Bell Tower account Town Hall acts as')
+    belltower_endpoints = models.JSONField(default=dict, blank=True, help_text='From /.well-known/belltower')
+    belltower_connected_at = models.DateTimeField(null=True, blank=True)
 
     kiosk_idle_timeout_seconds = models.PositiveSmallIntegerField(
         default=30,

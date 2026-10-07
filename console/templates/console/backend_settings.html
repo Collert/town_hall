@@ -19,7 +19,7 @@
     <header class="page-header">
         <div>
             <h1 class="page-title">{% trans "Backend Settings" %}</h1>
-            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation and email. Values saved here take priority over server environment variables." %}</p>
+            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation, email and task lists. Values saved here take priority over server environment variables." %}</p>
         </div>
         <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
     </header>
@@ -95,6 +95,44 @@
                     <span class="c-help">{% blocktrans with email=user.email|default:_("your account email") %}Sends to {{ email }} using the saved settings.{% endblocktrans %}</span>
                 </div>
             </section>
+
+            <section class="c-card" id="belltower">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">checklist</span>{% trans "Tasks (Bell Tower)" %}</h2>
+                <p class="c-muted backend-intro">{% trans "Bell Tower keeps your organization's shared task lists. Once connected, every event gets a Tasks tab with a planning list and lists for the day, which people can work through on their phones, pager devices or AI agents." %}</p>
+                {% if belltower_connected %}
+                <div class="belltower-connection">
+                    <span class="material-symbols-outlined">{% if belltower_error %}link_off{% else %}link{% endif %}</span>
+                    <div>
+                        <strong>{{ belltower.url }}</strong>
+                        <small>{% blocktrans with user=belltower.username when=belltower_connected_at|date:"DATE_FORMAT" %}Acting as {{ user }} &middot; connected {{ when }}{% endblocktrans %}</small>
+                    </div>
+                </div>
+                {% if belltower_error %}<p class="backend-status error belltower-error"><span class="material-symbols-outlined">error</span>{{ belltower_error }}</p>{% endif %}
+                {% if belltower_me %}
+                <div class="belltower-people">
+                    {% if belltower_me.is_staff %}
+                    <p class="backend-status ok"><span class="material-symbols-outlined">group</span>
+                        {% blocktrans with linked=belltower_linked total=belltower_linkable %}{{ linked }} of {{ total }} people linked to Bell Tower{% endblocktrans %}</p>
+                    <p class="c-help">{% trans "Each person is matched to the Bell Tower account with their email, or one is created for them. They open their tasks from Town Hall without a Bell Tower password." %}</p>
+                    {% else %}
+                    <p class="backend-status error"><span class="material-symbols-outlined">warning</span>
+                        {% blocktrans with user=belltower.username %}{{ user }} isn't Bell Tower staff, so Town Hall can't link people's accounts or add volunteers to role lists. Make it staff in Bell Tower's admin, then link accounts.{% endblocktrans %}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="backend-status-actions">
+                    <a href="{{ belltower.url }}" class="c-btn c-btn-surface c-btn-sm" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span>{% trans "Open Bell Tower" %}</a>
+                    <button type="submit" form="belltower-link-users-form" class="c-btn c-btn-ghost c-btn-sm"><span class="material-symbols-outlined">group_add</span>{% trans "Link accounts now" %}</button>
+                    <button type="button" class="c-btn c-btn-ghost c-btn-sm" data-dialog-open="belltower-dialog"><span class="material-symbols-outlined">sync</span>{% trans "Reconnect" %}</button>
+                    <button type="submit" form="belltower-disconnect-form" class="c-btn c-btn-ghost c-btn-sm belltower-disconnect"
+                            onclick="return confirm('{% trans "Disconnect Bell Tower? Event task lists stay in Bell Tower but won't show here until you reconnect." %}')">
+                        <span class="material-symbols-outlined">link_off</span>{% trans "Disconnect" %}
+                    </button>
+                </div>
+                {% else %}
+                <button type="button" class="c-btn c-btn-dark" data-dialog-open="belltower-dialog"><span class="material-symbols-outlined">link</span>{% trans "Connect to Bell Tower" %}</button>
+                {% endif %}
+            </section>
         </div>
 
         <aside class="c-stack">
@@ -141,4 +179,34 @@
         </aside>
     </div>
 </form>
+
+{# Outside the settings form: these post to their own views. #}
+<form id="belltower-disconnect-form" method="post" action="{% url 'console_belltower_disconnect' %}">{% csrf_token %}</form>
+<form id="belltower-link-users-form" method="post" action="{% url 'console_belltower_link_users' %}">{% csrf_token %}</form>
+<dialog class="c-dialog belltower-dialog" id="belltower-dialog">
+    <form method="post" action="{% url 'console_belltower_connect' %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Connect to Bell Tower" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body">
+            <div class="c-field">
+                <label class="c-label" for="belltower-url">{% trans "Bell Tower address" %}</label>
+                <input type="text" id="belltower-url" name="belltower_url" class="c-input" required autocomplete="url"
+                       inputmode="url" placeholder="https://tasks.example.org" value="{{ belltower.url }}">
+                <span class="c-help">{% trans "Just the server's address; anything after it is ignored." %}</span>
+            </div>
+            <ol class="belltower-steps">
+                <li>{% trans "You'll go to Bell Tower and sign in, if you aren't already." %}</li>
+                <li>{% trans "Approve access for Town Hall. Town Hall will act as the Bell Tower account you approve with." %}</li>
+                <li>{% trans "You'll come straight back here, connected." %}</li>
+            </ol>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">arrow_forward</span>{% trans "Continue to Bell Tower" %}</button>
+        </div>
+    </form>
+</dialog>
 {% endblock %}

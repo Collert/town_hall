@@ -3,6 +3,7 @@
 <nav class="c-tabs c-tabs-lg event-tabs" aria-label="{% trans 'Event sections' %}">
     <a href="{% url 'console_event_edit' event.pk %}" class="c-tab {% if url_name == 'console_event_edit' %}active{% endif %}">{% trans "Overview" %}</a>
     <a href="{% url 'console_event_roles' event.pk %}" class="c-tab {% if url_name == 'console_event_roles' or url_name == 'console_event_invite' %}active{% endif %}">{% trans "Roles & Staffing" %}</a>
+    <a href="{% url 'console_event_tasks' event.pk %}" class="c-tab {% if url_name == 'console_event_tasks' %}active{% endif %}">{% trans "Tasks" %}</a>
     <a href="{% url 'console_event_monitor' event.pk %}" class="c-tab {% if url_name == 'console_event_monitor' %}active{% endif %}">{% if event.is_live %}<span class="c-badge c-badge-danger c-badge-live">{% trans "Live" %}</span>{% endif %} {% trans "Check-in Monitor" %}</a>
     <a href="{% url 'console_event_report' event.pk %}" class="c-tab {% if url_name == 'console_event_report' %}active{% endif %}">{% trans "Impact Report" %}</a>
 </nav>

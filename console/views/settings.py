@@ -1,18 +1,22 @@
 import math
 import os
+import secrets
 
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.utils.translation import gettext as _, gettext_lazy
 
-from base import listmonk
+from base import belltower, listmonk
 from django.db import transaction
 
 from base import points
-from base.models import HeroSection, Level, PointsRules, Profile, SiteSettings
+from django.contrib.auth.models import User
+
+from base.models import BellTowerLink, HeroSection, Level, PointsRules, Profile, SiteSettings
 
 from ..decorators import staff_required
 from .. import auto_translate
@@ -210,6 +214,13 @@ def backend_settings(request):
     ]
     listmonk_cfg = listmonk.config()
     listmonk_error = None
+    belltower_cfg = belltower.config()
+    belltower_error = belltower_me = None
+    if belltower.is_connected(belltower_cfg):
+        try:
+            belltower_me = belltower.me()  # proves the key still works, and says if it's staff
+        except belltower.BellTowerError as exc:
+            belltower_error = str(exc)
     if listmonk.is_configured(listmonk_cfg):
         try:
             listmonk.get_lists()  # cheapest authenticated call: proves the URL and token work
@@ -226,6 +237,13 @@ def backend_settings(request):
         'listmonk_task': listmonk.current_task(),
         'listmonk_task_error': listmonk.last_error(),
         'listmonk_admin_url': listmonk_cfg['url'] + '/admin' if listmonk_cfg['url'] else '',
+        'belltower': belltower_cfg,
+        'belltower_connected': belltower.is_connected(belltower_cfg),
+        'belltower_error': belltower_error,
+        'belltower_connected_at': site.belltower_connected_at,
+        'belltower_me': belltower_me,
+        'belltower_linked': BellTowerLink.objects.filter(belltower_url=belltower_cfg['url']).count() if belltower_me else 0,
+        'belltower_linkable': User.objects.filter(is_active=True).exclude(email='').count() if belltower_me else 0,
         'env_overrides': {
             name: bool(os.environ.get(env)) for name, env in (
                 ('libretranslate_url', 'LIBRETRANSLATE_URL'), ('google_translate_api_key', 'GOOGLE_TRANSLATE_API_KEY'),
@@ -269,3 +287,76 @@ def test_email(request):
         messages.success(request, _('Test email sent to %(email)s.') % {'email': request.user.email})
     return HttpResponse(status=204)
 
+
+# ---------------------------------------------------------------------------
+# Bell Tower (see base/belltower.py for the handshake)
+# ---------------------------------------------------------------------------
+
+BELLTOWER_SESSION_KEY = 'belltower_connect'
+
+
+@staff_required
+@require_POST
+def belltower_connect(request):
+    """Find the Bell Tower server at the address typed in, then send the browser to
+    its authorize page. The state and callback URL wait in the session for the reply."""
+    try:
+        base_url = belltower.normalize_url(request.POST.get('belltower_url', ''))
+        endpoints = belltower.discover(base_url)
+    except ValueError as exc:
+        messages.error(request, str(exc))
+        return redirect('console_settings_backend')
+    except belltower.BellTowerError as exc:
+        messages.error(request, _("Couldn't find Bell Tower there: %(error)s") % {'error': exc})
+        return redirect('console_settings_backend')
+    state = secrets.token_urlsafe(32)
+    redirect_uri = request.build_absolute_uri(reverse('console_belltower_callback'))
+    request.session[BELLTOWER_SESSION_KEY] = {
+        'state': state, 'url': base_url, 'endpoints': endpoints, 'redirect_uri': redirect_uri,
+    }
+    return redirect(belltower.authorize_url(endpoints, redirect_uri, state))
+
+
+@staff_required
+def belltower_callback(request):
+    """Bell Tower sends the browser back here with ?code=…&state=… (or ?error=…)."""
+    pending = request.session.pop(BELLTOWER_SESSION_KEY, None)
+    state = request.GET.get('state', '')
+    if not pending or not state or not secrets.compare_digest(state, pending['state']):
+        messages.error(request, _("This connection request expired or didn't start here. Please connect again."))
+    elif request.GET.get('error') or not request.GET.get('code'):
+        messages.warning(request, _('Bell Tower connection cancelled.'))
+    else:
+        try:
+            result = belltower.exchange_code(pending['endpoints'], request.GET['code'], pending['redirect_uri'])
+        except belltower.BellTowerError as exc:
+            messages.error(request, _("Bell Tower didn't accept the connection: %(error)s") % {'error': exc})
+        else:
+            belltower.save_connection(pending['url'], pending['endpoints'], result['api_key'], result['username'])
+            messages.success(request, _('Connected to Bell Tower as %(user)s.') % {'user': result['username']})
+            # Link everyone to their Bell Tower account (matched by email, created if missing).
+            belltower.run_after_commit(belltower.link_all_users)
+    return redirect('console_settings_backend')
+
+
+@staff_required
+@require_POST
+def belltower_link_users(request):
+    """Link every user to their Bell Tower account again (e.g. after making Town Hall's
+    Bell Tower account staff). Runs in the background."""
+    belltower.run_after_commit(belltower.link_all_users)
+    messages.success(request, _('Linking accounts with Bell Tower in the background. Reload this page in a minute to see the count.'))
+    return redirect('console_settings_backend')
+
+
+@staff_required
+@require_POST
+def belltower_disconnect(request):
+    if belltower.disconnect():
+        messages.success(request, _('Disconnected from Bell Tower.'))
+    else:
+        messages.warning(request, _(
+            "Disconnected. Bell Tower couldn't be reached to revoke Town Hall's key; "
+            "you can remove it under Connected apps on your Bell Tower account page."
+        ))
+    return redirect('console_settings_backend')

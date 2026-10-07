@@ -1,0 +1,146 @@
+{% load i18n %}
+{% comment %}data-* attributes drive drag and drop (console/event_tasks.js): any card takes dropped
+tasks; day-of cards can also be dragged by their handle onto each other to merge.{% endcomment %}
+<article class="task-card{% if task_list.kind == 'planning' %} task-card-planning{% endif %}" id="task-list-{{ task_list.pk }}"
+         data-list-id="{{ task_list.pk }}" data-list-name="{{ task_list.name }}"
+         data-move-url="{% url 'console_task_move' event.pk task_list.pk %}"
+         {% if task_list.kind != 'planning' %}data-merge-url="{% url 'console_task_list_merge' event.pk task_list.pk %}"{% endif %}
+         {% if oob %}hx-swap-oob="true"{% endif %}>
+    <header class="task-card-head">
+        {% if task_list.kind != 'planning' %}
+        {% with icon=task_list.role_icon %}
+        {# A role list shows its role's icon, which turns into the drag grip while the card is hovered. #}
+        <span class="task-drag-handle{% if icon %} has-role{% endif %}" draggable="true" data-list-handle aria-hidden="true"
+              title="{% if icon %}{% trans 'Everyone signed up for this role is on this list. Drag onto another list to merge them.' %}{% else %}{% trans 'Drag onto another list to merge them' %}{% endif %}">
+            {% if icon %}<span class="material-symbols-outlined task-handle-role">{{ icon }}</span>{% endif %}
+            <span class="material-symbols-outlined task-handle-grip">drag_indicator</span>
+        </span>
+        {% endwith %}
+        {% endif %}
+        <div class="task-card-heading">
+            {% if renaming %}
+            <form class="task-rename" hx-post="{% url 'console_task_list_rename' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML">
+                <input type="text" name="name" class="c-input" maxlength="150" required value="{{ task_list.name }}" aria-label="{% trans 'List name' %}" autofocus>
+                <button type="submit" class="c-icon-btn" aria-label="{% trans 'Save name' %}" title="{% trans 'Save name' %}"><span class="material-symbols-outlined">check</span></button>
+                <button type="button" class="c-icon-btn" aria-label="{% trans 'Cancel' %}" title="{% trans 'Cancel' %}"
+                        hx-get="{% url 'console_task_list' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </form>
+            {% else %}
+            <h3>
+                <button type="button" class="task-card-title" title="{% trans 'Rename' %}"
+                        hx-get="{% url 'console_task_list' event.pk task_list.pk %}?rename=1" hx-target="closest .task-card" hx-swap="outerHTML">
+                    {{ task_list.name }}<span class="material-symbols-outlined">edit</span>
+                </button>
+            </h3>
+            {% endif %}
+            <span class="task-card-meta">
+                {% if error and not total %}{% trans "Couldn't load tasks" %}
+                {% elif total %}{% blocktrans with done=done total=total %}{{ done }} of {{ total }} done{% endblocktrans %}
+                {% else %}{% trans "No tasks yet" %}{% endif %}
+                {% if task_list.role_icon %}&middot; {% trans "Role list" %}{% endif %}
+                &middot; {% blocktrans with id=task_list.belltower_id %}Bell Tower list #{{ id }}{% endblocktrans %}
+            </span>
+        </div>
+        <div class="task-card-actions">
+            <button type="button" class="c-icon-btn" aria-label="{% trans 'Refresh' %}" title="{% trans 'Refresh' %}"
+                    hx-get="{% url 'console_task_list' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML">
+                <span class="material-symbols-outlined">refresh</span>
+            </button>
+            {% if web_url %}
+            <a href="{{ web_url }}" class="c-icon-btn" target="_blank" rel="noopener" aria-label="{% trans 'Open in Bell Tower' %}" title="{% trans 'Open in Bell Tower' %}">
+                <span class="material-symbols-outlined">open_in_new</span>
+            </a>
+            {% endif %}
+            {% if task_list.kind != 'planning' and not task_list.role_icon %}
+            <button type="button" class="c-icon-btn task-card-delete" aria-label="{% trans 'Delete list' %}" title="{% trans 'Delete list' %}"
+                    hx-post="{% url 'console_task_list_delete' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML"
+                    hx-confirm="{% blocktrans with name=task_list.name %}Delete “{{ name }}” and all of its tasks, in Bell Tower too?{% endblocktrans %}">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+            {% endif %}
+        </div>
+    </header>
+
+    {% if total %}<div class="c-progress thin"><span style="width: {{ progress }}%"></span></div>{% endif %}
+    {% if error %}<p class="task-error"><span class="material-symbols-outlined">error</span>{{ error }}</p>{% endif %}
+
+    {% if open_tasks %}
+    <ul class="task-items">
+        {% for task in open_tasks %}{% include 'console/partials/task_item.html' %}{% endfor %}
+    </ul>
+    {% elif total %}
+    <p class="task-all-done"><span class="material-symbols-outlined">celebration</span>{% trans "Everything's done." %}</p>
+    {% endif %}
+
+    {% if not error or total %}
+    {# Details, expiry and assignee open up once you start typing a task. #}
+    <form class="task-add" hx-post="{% url 'console_task_add' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML">
+        <div class="task-add-main">
+            <input type="text" name="title" class="c-input task-add-title" maxlength="200" required autocomplete="off"
+                   placeholder="{% if task_list.kind == 'planning' %}{% trans 'Add a task, e.g. Confirm the venue booking' %}{% else %}{% trans 'Add a task' %}{% endif %}"
+                   aria-label="{% trans 'New task' %}">
+            <button type="submit" class="c-btn c-btn-primary c-btn-sm"><span class="material-symbols-outlined">add</span>{% trans "Add" %}</button>
+        </div>
+        <div class="task-add-more">{% include 'console/partials/task_fields.html' with task=None %}</div>
+    </form>
+    {% endif %}
+
+    {% if done_tasks %}
+    <details class="task-done">
+        <summary>{% blocktrans with n=done_tasks|length %}Done ({{ n }}){% endblocktrans %}</summary>
+        <ul class="task-items">
+            {% for task in done_tasks %}{% include 'console/partials/task_item.html' %}{% endfor %}
+        </ul>
+    </details>
+    {% endif %}
+
+    {% if not error or total %}
+    <footer class="task-share">
+        <span class="task-share-label"><span class="material-symbols-outlined">group</span>{% trans "Shared with" %}</span>
+        {% if members %}
+        <ul class="task-members">
+            {% for member in members %}
+            <li class="task-member">
+                <span class="task-member-name">
+                    <strong>{{ member.name|default:member.email|default:member.username }}</strong>
+                    {% if member.name and member.email %}<small>{{ member.email }}</small>{% endif %}
+                </span>
+                <button type="button" class="task-role{% if member.admin %} is-admin{% endif %}"
+                        title="{% if member.admin %}{% trans 'Can add and assign tasks. Click to make a member.' %}{% else %}{% trans 'Can complete and take tasks. Click to let them add and assign tasks.' %}{% endif %}"
+                        hx-post="{% url 'console_task_list_share' event.pk task_list.pk %}"
+                        hx-vals='{"role": "{{ member.username|escapejs }}"{% if not member.admin %}, "admin": "1"{% endif %}}'
+                        hx-target="closest .task-card" hx-swap="outerHTML">
+                    {% if member.admin %}{% trans "Admin" %}{% else %}{% trans "Member" %}{% endif %}
+                </button>
+                <button type="button" class="c-icon-btn task-member-remove" aria-label="{% blocktrans with who=member.email|default:member.username %}Stop sharing with {{ who }}{% endblocktrans %}"
+                        hx-post="{% url 'console_task_list_share' event.pk task_list.pk %}" hx-vals='{"remove": "{{ member.username|escapejs }}"}'
+                        hx-target="closest .task-card" hx-swap="outerHTML">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <span class="task-share-none">{% trans "Only Town Hall so far." %}</span>
+        {% endif %}
+        <form class="task-share-add" hx-post="{% url 'console_task_list_share' event.pk task_list.pk %}" hx-target="closest .task-card" hx-swap="outerHTML">
+            <label class="task-share-input">
+                <span class="material-symbols-outlined">alternate_email</span>
+                <input type="email" name="email" list="townhall-people" required autocomplete="off"
+                       placeholder="{% trans 'Share by email' %}" aria-label="{% trans 'Share with (email)' %}">
+            </label>
+            <div class="task-share-role" role="radiogroup" aria-label="{% trans 'Role' %}">
+                <label title="{% trans 'Can complete tasks and take them on' %}">
+                    <input type="radio" name="admin" value="" checked><span>{% trans "Member" %}</span>
+                </label>
+                <label title="{% trans 'Can also add, edit and assign tasks' %}">
+                    <input type="radio" name="admin" value="1"><span>{% trans "Admin" %}</span>
+                </label>
+            </div>
+            <button type="submit" class="task-share-submit" aria-label="{% trans 'Share' %}" title="{% trans 'Share' %}"><span class="material-symbols-outlined">person_add</span></button>
+        </form>
+    </footer>
+    {% endif %}
+</article>

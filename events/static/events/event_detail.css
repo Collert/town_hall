@@ -1114,3 +1114,15 @@ Since the background is already primary-light usually, let's keep it that way fo
     font-size: 1.1rem;
     color: var(--color-accent);
 }
+
+/* "Your tasks": opens the role's Bell Tower list for people signed up for it. */
+.role-tasks-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+}
+
+.role-tasks-btn .material-symbols-outlined {
+    font-size: 1.1rem;
+}
