@@ -534,6 +534,9 @@ class AutoTranslateTests(ConsoleFixture):
         self.assertContains(response, 'hx-swap-oob="true"')
         self.assertContains(response, '[fr] Greeter')
         self.assertContains(response, '[uk] Say hello.')
+        self.assertContains(response, 'id="field-name_zh_hant"')  # hyphenated code -> modeltranslation's column name
+        self.assertContains(response, '[zh-hant] Greeter')
+        self.assertContains(response, '[tl] Greeter')
         self.assertNotContains(response, 'id="field-name_es"')
         self.assertIn('toasts', response['HX-Trigger'])
 
@@ -750,6 +753,85 @@ class BackendSettingsTests(ConsoleFixture):
         with patch('base.listmonk.run_in_background') as job:
             self.client.post(reverse('console_settings'), data)  # nothing brand-related changed
         job.assert_not_called()
+
+
+class RegionSettingsTests(ConsoleFixture):
+    def setUp(self):
+        cache.clear()  # SiteSettings.get_settings() caches the row across tests
+        self.client.force_login(self.staff)
+
+    def test_page_lists_every_supported_language(self):
+        response = self.client.get(reverse('console_settings_region'))
+        self.assertEqual(response.status_code, 200)
+        for code in ('en', 'es', 'fr', 'uk'):
+            self.assertContains(response, f'name="languages" value="{code}"')
+        self.assertNotContains(response, 'Restart Town Hall to apply')
+
+    def test_save_stores_choice_and_asks_for_restart(self):
+        response = self.client.post(reverse('console_settings_region'), {
+            'languages': ['es', 'uk'], 'default_language': 'uk', 'time_zone': 'Europe/Kyiv',
+        }, follow=True)
+        site = SiteSettings.objects.get(pk=1)
+        self.assertEqual((site.languages, site.default_language, site.time_zone), ('es,uk', 'uk', 'Europe/Kyiv'))
+        self.assertContains(response, 'Restart Town Hall to apply them.')
+        self.assertContains(response, 'Restart Town Hall to apply your changes')
+
+    def test_default_language_must_be_switched_on(self):
+        response = self.client.post(reverse('console_settings_region'), {
+            'languages': ['en', 'es'], 'default_language': 'fr', 'time_zone': 'UTC',
+        })
+        self.assertContains(response, 'The default language has to be switched on.')
+        self.assertFalse(SiteSettings.objects.exclude(languages='').exists())
+
+    def test_resolve_puts_default_first_and_falls_back(self):
+        from town_hall import site_config
+        languages, default, zone = site_config.resolve(['uk', 'en', 'xx'], 'uk', 'Europe/Kyiv')
+        self.assertEqual(([c for c, _n in languages], default, zone), (['uk', 'en'], 'uk', 'Europe/Kyiv'))
+        languages, default, zone = site_config.resolve([], '', 'Not/AZone')
+        self.assertEqual([c for c, _n in languages], ['en', 'es', 'fr', 'uk', 'zh-hant', 'tl'])
+        self.assertEqual((default, zone), ('en', 'America/Vancouver'))
+
+    def test_apply_switches_languages_and_time_zone(self):
+        from town_hall import site_config
+        from django.conf import settings
+        # Naming the settings makes override_settings reset Django's language and time zone caches on exit.
+        with override_settings(LANGUAGES=settings.LANGUAGES, LANGUAGE_CODE=settings.LANGUAGE_CODE, TIME_ZONE=settings.TIME_ZONE):
+            site_config.apply(*site_config.resolve(['fr', 'en'], 'fr', 'Europe/Paris'))
+            self.assertEqual(list(translation.trans_real.get_languages()), ['fr', 'en'])
+            self.assertEqual(str(timezone.get_default_timezone()), 'Europe/Paris')
+            self.assertEqual(settings.MODELTRANSLATION_FALLBACK_LANGUAGES, ('fr', 'en', 'es', 'uk', 'zh-hant', 'tl'))
+
+    def test_new_languages_have_urls_and_flags(self):
+        for prefix, flag in (('zh-hant', 'fi-hk'), ('tl', 'fi-ph')):
+            response = self.client.get(f'/{prefix}/')
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, flag)
+
+    def test_restart_without_a_supported_server(self):
+        self.assertNotContains(self.client.get(reverse('console_settings_region')), 'Restart Now')
+        response = self.client.post(reverse('console_restart'), **HTMX)
+        self.assertEqual(response.status_code, 204)
+        self.assertIn("can't restart itself", response['HX-Trigger'])
+
+    def test_restart_schedules_and_polls(self):
+        from town_hall import site_config
+        with patch.object(site_config, 'restart_method', return_value='runserver'):
+            self.assertContains(self.client.get(reverse('console_settings_region')), 'Restart Now')
+            with patch.object(site_config, 'restart') as restart:
+                response = self.client.post(reverse('console_restart'), **HTMX)
+        restart.assert_called_once_with('runserver')
+        self.assertContains(response, 'Restarting')
+        status = reverse('console_restart_status')
+        self.assertEqual(self.client.get(status, {'boot': site_config.BOOT_ID}, **HTMX).status_code, 204)
+        self.assertEqual(self.client.get(status, {'boot': 'an-older-process'}, **HTMX)['HX-Refresh'], 'true')
+
+    def test_provider_codes_for_new_languages(self):
+        from console import auto_translate
+        cfg = {'libretranslate_url': '', 'libretranslate_api_key': '', 'google_translate_api_key': 'key',
+               'deepl_api_key': '', 'mymemory_email': ''}
+        with patch.object(auto_translate, 'config', return_value=cfg),                 patch.object(auto_translate, '_translate_cloud', return_value=['x']) as cloud:
+            auto_translate.translate_texts(['Hi'], 'en', 'zh-hant')
+        self.assertEqual(cloud.call_args.args[1:3], ('en', 'zh-TW'))
 
 
 class FakeListmonk:

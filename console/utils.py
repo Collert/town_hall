@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, F, Sum
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from modeltranslation.utils import build_localized_fieldname
 
 from base.models import Endorsement
 from education.models import TrainingModuleCompletion
@@ -36,7 +37,12 @@ CERTIFICATE_ICONS = [
 
 def translated_fields(*names):
     """Per-language modeltranslation field names, e.g. title_en, title_es..."""
-    return [f'{name}_{code}' for name in names for code in LANGUAGE_CODES]
+    return [lang_field(name, code) for name in names for code in LANGUAGE_CODES]
+
+
+def lang_field(name, code):
+    """One language's modeltranslation field: ('title', 'zh-hant') -> 'title_zh_hant'."""
+    return build_localized_fieldname(name, code)
 
 
 def with_custom_icon(data):

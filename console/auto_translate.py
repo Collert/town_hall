@@ -23,7 +23,11 @@ import urllib.request
 CLOUD_URL = 'https://translation.googleapis.com/language/translate/v2'
 GOOGLE_BLOCK_SECONDS = 60 * 60
 MYMEMORY_MAX_CHARS = 450  # The service rejects more than 500 per request
-MYMEMORY_LOCALES = {'en': 'en-GB', 'es': 'es-ES', 'fr': 'fr-FR', 'uk': 'uk-UA'}
+MYMEMORY_LOCALES = {'en': 'en-GB', 'es': 'es-ES', 'fr': 'fr-FR', 'uk': 'uk-UA', 'zh-hant': 'zh-TW', 'tl': 'tl-PH'}
+# Our language codes -> each provider's, where they differ.
+LIBRETRANSLATE_CODES = {'zh-hant': 'zt'}
+GOOGLE_CODES = {'zh-hant': 'zh-TW'}
+DEEPL_UNSUPPORTED = {'zh-hant', 'tl'}  # deep-translator only offers DeepL's Simplified Chinese, and DeepL has no Tagalog
 
 _google_blocked_until = 0.0
 
@@ -58,18 +62,23 @@ def translate_with_provider(texts, source, target):
     cfg = config()
     if cfg['libretranslate_url']:
         try:
-            return _translate_libre(texts, source, target, cfg['libretranslate_url'], cfg['libretranslate_api_key']), 'LibreTranslate'
+            return _translate_libre(
+                texts, LIBRETRANSLATE_CODES.get(source, source), LIBRETRANSLATE_CODES.get(target, target),
+                cfg['libretranslate_url'], cfg['libretranslate_api_key'],
+            ), 'LibreTranslate'
         except TranslationError as exc:
             print(f'[auto-translate] LibreTranslate failed ({exc}); falling back to other providers.')
     if cfg['google_translate_api_key']:
-        return _translate_cloud(texts, source, target, cfg['google_translate_api_key']), 'Google Cloud Translation'
-    if cfg['deepl_api_key']:
+        return _translate_cloud(
+            texts, GOOGLE_CODES.get(source, source), GOOGLE_CODES.get(target, target), cfg['google_translate_api_key'],
+        ), 'Google Cloud Translation'
+    if cfg['deepl_api_key'] and not {source, target} & DEEPL_UNSUPPORTED:
         return _translate_deepl(texts, source, target, cfg['deepl_api_key']), 'DeepL'
 
     global _google_blocked_until
     if time.time() >= _google_blocked_until:
         try:
-            return _translate_google_free(texts, source, target), 'Google Translate (free)'
+            return _translate_google_free(texts, GOOGLE_CODES.get(source, source), GOOGLE_CODES.get(target, target)), 'Google Translate (free)'
         except GoogleBlocked:
             _google_blocked_until = time.time() + GOOGLE_BLOCK_SECONDS
             print('[auto-translate] Google is blocking this network; using MyMemory for the next hour.')

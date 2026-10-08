@@ -638,6 +638,11 @@ class SiteSettings(models.Model):
         help_text='Idle time in seconds before kiosk sessions are automatically logged out'
     )
 
+    # Console > Organization > Region. Applied at startup (town_hall/site_config.py); empty uses the settings file.
+    languages = models.CharField(max_length=100, blank=True, default='', help_text='Comma-separated language codes that are switched on')
+    default_language = models.CharField(max_length=10, blank=True, default='')
+    time_zone = models.CharField(max_length=64, blank=True, default='')
+
     class Meta:
         verbose_name = 'Site Settings'
         verbose_name_plural = 'Site Settings'
@@ -655,6 +660,9 @@ class SiteSettings(models.Model):
     def delete(self, *args, **kwargs):
         # Prevent deletion of the singleton
         pass
+
+    def language_codes(self):
+        return [code for code in self.languages.split(',') if code]
 
     def backend_value(self, field, env_var):
         """A backend setting saved in the console, falling back to the environment variable."""

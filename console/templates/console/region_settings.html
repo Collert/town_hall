@@ -1,0 +1,105 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n language_tags %}
+
+{% block title %}{% trans "Region Settings" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css">
+<link rel="stylesheet" href="{% static 'console/region_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Region" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" data-unsaved-warning>
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Region Settings" %}</h1>
+            <p class="page-lead">{% trans "Choose the languages volunteers can use and the time zone your events run in." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
+    </header>
+
+    {% include 'console/partials/settings_tabs.html' %}
+
+    {% if restart_pending %}
+    <div class="region-banner region-banner-pending" role="status">
+        <span class="material-symbols-outlined">restart_alt</span>
+        <div>
+            <strong>{% trans "Restart Town Hall to apply your changes" %}</strong>
+            <p>{% blocktrans with languages=running_languages|join:", " default=running_default zone=running_zone %}Until then the site keeps running with {{ languages }} (default {{ default }}) in {{ zone }}.{% endblocktrans %}</p>
+        </div>
+        {% if can_restart %}{% include 'console/partials/restart_button.html' %}{% endif %}
+    </div>
+    {% endif %}
+    <div class="region-banner" role="status" data-dirty-notice hidden>
+        <span class="material-symbols-outlined">warning</span>
+        <div>
+            <strong>{% trans "These changes need a restart" %}</strong>
+            <p>{% trans "After you save, nothing changes for visitors until Town Hall is restarted." %}</p>
+        </div>
+    </div>
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">translate</span>{% trans "Languages" %}</h2>
+                <p class="c-muted region-intro">{% trans "Switched-off languages disappear from the language menu and the editors. Their translations are kept, so switching one back on brings them back." %}</p>
+                <ul class="c-list region-languages">
+                    {% for lang in languages %}
+                    <li class="c-list-item{% if not lang.on %} is-off{% endif %}">
+                        <label class="c-toggle" title="{% trans 'Switched on' %}">
+                            <input type="checkbox" name="languages" value="{{ lang.code }}"{% if lang.on %} checked{% endif %} aria-label="{% blocktrans with name=lang.name %}Switch on {{ name }}{% endblocktrans %}">
+                            <span></span>
+                        </label>
+                        <span class="{{ lang.code|lang_flag }} region-flag" aria-hidden="true"></span>
+                        <div class="c-list-item-main">
+                            <strong>{{ lang.name_local }}</strong>
+                            <small>{{ lang.name }} · {{ lang.code }}{% if not lang.live %} · {% trans "not running yet" %}{% endif %}</small>
+                        </div>
+                        <label class="region-default">
+                            <input type="radio" name="default_language" value="{{ lang.code }}"{% if lang.default %} checked{% endif %}>
+                            <span>{% trans "Default" %}</span>
+                        </label>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% for error in form.languages.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                {% for error in form.default_language.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+            </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">schedule</span>{% trans "Time Zone" %}</h2>
+                {% include 'console/partials/field.html' with field=form.time_zone %}
+                <p class="c-help region-clock">{% blocktrans with time=local_time|time:"H:i" zone=running_zone %}It's {{ time }} in {{ zone }}, the time zone the site is running in now.{% endblocktrans %}</p>
+            </section>
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">restart_alt</span>{% trans "Restart" %}</h2>
+                {% if can_restart %}
+                <p class="c-muted region-restart-text">{% trans "Applies the saved settings. Visitors may see an error for a few seconds while Town Hall comes back." %}</p>
+                <div id="restart-status">{% include 'console/partials/restart_button.html' %}</div>
+                {% else %}
+                <p class="c-muted region-restart-text">{% trans "Town Hall can't restart itself on this server. Restart it from your hosting dashboard to apply saved settings." %}</p>
+                {% endif %}
+            </section>
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">info</span>{% trans "Good to Know" %}</h2>
+                <ul class="region-notes">
+                    <li>{% trans "Language and time zone are read when Town Hall starts, so saving here takes effect after a restart." %}</li>
+                    <li>{% trans "The default language is the one editors fill in first and Auto-translate translates from." %}</li>
+                    <li>{% trans "After switching a language on, open Communication > Email to add its email templates." %}</li>
+                    <li>{% trans "Changing the time zone doesn't move existing events. They keep the same moment, shown in the new zone's local time." %}</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+</form>
+{% endblock %}

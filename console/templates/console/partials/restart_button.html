@@ -1,0 +1,7 @@
+{% load i18n %}
+<button type="button" class="c-btn c-btn-dark region-restart-btn"
+        hx-post="{% url 'console_restart' %}" hx-target="#restart-status" hx-swap="innerHTML"
+        hx-disabled-elt="this"
+        hx-confirm="{% trans 'Restart Town Hall now? Visitors may see an error for a few seconds. Unsaved changes on this page are not applied.' %}">
+    <span class="material-symbols-outlined">restart_alt</span>{% trans "Restart Now" %}
+</button>

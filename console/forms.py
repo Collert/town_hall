@@ -1,7 +1,9 @@
 import re
+import zoneinfo
 from datetime import timedelta
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
@@ -11,8 +13,9 @@ from base.models import EmailTemplate, EmailTrigger, HeroSection, Level, Operati
 from education.models import ExternalCertificate, Quiz, QuizQuestion, TrainingLesson, TrainingModule
 from events.models import Event, EventCategory
 from jobs.models import Role
+from town_hall import site_config
 
-from .utils import LANGUAGE_CODES, translated_fields
+from .utils import LANGUAGE_CODES, lang_field, translated_fields
 
 DEFAULT_LANGUAGE = LANGUAGE_CODES[0]
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M'
@@ -31,14 +34,14 @@ class TranslatedFormMixin:
         for name in self.translated:
             if name in self.optional_translated:
                 continue
-            field = self.fields.get(f'{name}_{DEFAULT_LANGUAGE}')
+            field = self.fields.get(lang_field(name, DEFAULT_LANGUAGE))
             if field is not None:
                 field.required = True
 
     def translated_groups(self):
         """[(lang_code, [bound fields for that language]), ...]"""
         return [
-            (code, [self[f'{name}_{code}'] for name in self.translated if f'{name}_{code}' in self.fields])
+            (code, [self[lang_field(name, code)] for name in self.translated if lang_field(name, code) in self.fields])
             for code in LANGUAGE_CODES
         ]
 
@@ -104,7 +107,7 @@ class EventForm(TranslatedFormMixin, forms.ModelForm):
         if event.venue_id:
             # The venue is the location now; don't keep a stale one-off address in any language.
             for code in LANGUAGE_CODES:
-                setattr(event, f'location_{code}', '')
+                setattr(event, lang_field('location', code), '')
         if {'venue', 'location_en'} & set(self.changed_data):
             event.latitude = event.longitude = None  # re-derived in Event.save()
         return super().save(commit)
@@ -149,7 +152,7 @@ class VenueForm(TranslatedFormMixin, forms.ModelForm):
             'phone_number': forms.TextInput(attrs={'type': 'tel'}),
             'address': forms.TextInput(attrs={'placeholder': _('Street address, city')}),
         }
-        widgets.update({f'description_{code}': forms.Textarea(attrs={'rows': 4}) for code in LANGUAGE_CODES})
+        widgets.update({lang_field('description', code): forms.Textarea(attrs={'rows': 4}) for code in LANGUAGE_CODES})
         labels = {
             'phone_number': _('Phone'),
             'capacity': _('Capacity'),
@@ -167,11 +170,11 @@ class HeroSectionForm(TranslatedFormMixin, forms.ModelForm):
     class Meta:
         model = HeroSection
         fields = translated_fields('title', 'subtitle', 'button_1_text', 'button_2_text') + ['image', 'button_1_url', 'button_2_url']
-        widgets = {f'subtitle_{code}': forms.Textarea(attrs={'rows': 3}) for code in LANGUAGE_CODES}
+        widgets = {lang_field('subtitle', code): forms.Textarea(attrs={'rows': 3}) for code in LANGUAGE_CODES}
         labels = {
             'button_1_url': _('Main button link'), 'button_2_url': _('Second link'),
-            **{f'button_1_text_{code}': _('Main button text') for code in LANGUAGE_CODES},
-            **{f'button_2_text_{code}': _('Second link text') for code in LANGUAGE_CODES},
+            **{lang_field('button_1_text', code): _('Main button text') for code in LANGUAGE_CODES},
+            **{lang_field('button_2_text', code): _('Second link text') for code in LANGUAGE_CODES},
         }
 
 
@@ -321,7 +324,7 @@ class QuizQuestionForm(TranslatedFormMixin, forms.ModelForm):
             'correct_option': forms.RadioSelect,
         }
         for code in LANGUAGE_CODES:
-            widgets[f'question_text_{code}'] = forms.Textarea(attrs={'rows': 3})
+            widgets[lang_field('question_text', code)] = forms.Textarea(attrs={'rows': 3})
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -581,6 +584,42 @@ class BackendSettingsForm(forms.ModelForm):
 
     def saved_secrets(self):
         return {name: bool(getattr(self.instance, name)) for name in self.SECRET_FIELDS}
+
+
+class RegionSettingsForm(forms.Form):
+    """Organization > Region: the languages switched on, the default one, and the time zone.
+    Saved to SiteSettings and applied when the app restarts (town_hall/site_config.py)."""
+
+    languages = forms.MultipleChoiceField(
+        choices=settings.SUPPORTED_LANGUAGES, widget=forms.CheckboxSelectMultiple,
+        error_messages={'required': _('Switch on at least one language.')},
+    )
+    default_language = forms.ChoiceField(choices=settings.SUPPORTED_LANGUAGES, label=_('Default language'))
+    time_zone = forms.ChoiceField(
+        label=_('Time zone'), help_text=_('Event times are entered and shown in this time zone.'),
+    )
+
+    def __init__(self, *args, site, **kwargs):
+        languages, default, time_zone = site_config.saved(site)
+        kwargs.setdefault('initial', {
+            'languages': [code for code, _name in languages], 'default_language': default, 'time_zone': time_zone,
+        })
+        super().__init__(*args, **kwargs)
+        self.site = site
+        self.fields['time_zone'].choices = [(name, name.replace('_', ' ')) for name in sorted(zoneinfo.available_timezones())]
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get('languages') and cleaned.get('default_language') not in cleaned['languages']:
+            self.add_error('default_language', _('The default language has to be switched on.'))
+        return cleaned
+
+    def save(self):
+        self.site.languages = ','.join(self.cleaned_data['languages'])
+        self.site.default_language = self.cleaned_data['default_language']
+        self.site.time_zone = self.cleaned_data['time_zone']
+        self.site.save()
+        return self.site
 
 
 class EmailSettingsForm(forms.Form):

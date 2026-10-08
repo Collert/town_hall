@@ -10,7 +10,7 @@ from base.models import Venue, VenueFeature, VenueNote
 
 from ..decorators import staff_required
 from ..forms import VenueFeatureForm, VenueForm, VenueHoursForm, VenueNoteForm
-from ..utils import LANGUAGE_CODES
+from ..utils import LANGUAGE_CODES, lang_field
 
 
 def feature_groups():
@@ -97,8 +97,8 @@ def venue_delete(request, venue_id):
         # Events keep their location as a typed address instead of losing it.
         for event in venue.events.all():
             for code in LANGUAGE_CODES:
-                name = getattr(venue, f'name_{code}') or venue.name
-                setattr(event, f'location_{code}', ', '.join(part for part in (name, venue.address) if part))
+                name = getattr(venue, lang_field('name', code)) or venue.name
+                setattr(event, lang_field('location', code), ', '.join(part for part in (name, venue.address) if part))
             event.venue = None
             event.save()
         venue.delete()
@@ -119,7 +119,7 @@ def venue_feature_add(request):
             feature = form.save(commit=False)
             feature.order = (VenueFeature.objects.order_by('-order').values_list('order', flat=True).first() or 0) + 1
             for code in LANGUAGE_CODES:  # same name everywhere until someone translates it
-                setattr(feature, f'name_{code}', getattr(feature, f'name_{code}') or name)
+                setattr(feature, lang_field('name', code), getattr(feature, lang_field('name', code)) or name)
             feature.save()
             messages.success(request, _('Feature "%(name)s" added.') % {'name': feature.name})
         selected.append(feature.pk)

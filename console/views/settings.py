@@ -2,12 +2,14 @@ import math
 import os
 import secrets
 
+from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from django.utils import timezone, translation
 from django.utils.translation import gettext as _, gettext_lazy
 
 from base import belltower, listmonk
@@ -17,10 +19,11 @@ from base import points
 from django.contrib.auth.models import User
 
 from base.models import BellTowerLink, HeroSection, Level, PointsRules, Profile, SiteSettings
+from town_hall import site_config
 
 from ..decorators import staff_required
 from .. import auto_translate
-from ..forms import BackendSettingsForm, HeroSectionForm, LevelFormSet, OrganizationForm, PointsRulesForm
+from ..forms import BackendSettingsForm, HeroSectionForm, LevelFormSet, OrganizationForm, PointsRulesForm, RegionSettingsForm
 
 # (field, CSS variable it previews live, label) grouped for the template.
 # Dark-mode fields have no live preview variable.
@@ -171,6 +174,65 @@ def points_settings(request):
         'total': round(rules.points_per_hour * 3 * weight * (1 + reach / 100) * (1 + rules.off_hours_bonus_percent / 100)),
     }
     return render(request, 'console/points_settings.html', {'form': form, 'rules': rules, 'example': example})
+
+
+@staff_required
+def region_settings(request):
+    site = SiteSettings.get_settings()
+    if request.method == 'POST':
+        form = RegionSettingsForm(request.POST, site=site)
+        if form.is_valid():
+            form.save()
+            if not site_config.restart_pending(site):
+                messages.success(request, _('Region settings saved.'))
+            else:
+                messages.warning(request, _('Region settings saved. Restart Town Hall to apply them.'))
+            return redirect('console_settings_region')
+        messages.error(request, _('Please fix the highlighted fields.'))
+    else:
+        form = RegionSettingsForm(site=site)
+
+    running_languages, running_default, running_zone = site_config.running()
+    checked = set(form['languages'].value() or [])
+    default = form['default_language'].value()
+    languages = []
+    for code, name in settings.SUPPORTED_LANGUAGES:
+        info = translation.get_language_info(code)
+        languages.append({
+            'code': code, 'name': name, 'name_local': info['name_local'].capitalize(),
+            'on': code in checked, 'default': code == default,
+            'live': code in dict(running_languages),
+        })
+    return render(request, 'console/region_settings.html', {
+        'form': form,
+        'languages': languages,
+        'restart_pending': site_config.restart_pending(site),
+        'running_languages': [name for _code, name in running_languages],
+        'running_default': dict(running_languages)[running_default],
+        'running_zone': running_zone,
+        'local_time': timezone.localtime(),
+        'can_restart': bool(site_config.restart_method(request)),
+    })
+
+
+@staff_required
+@require_POST
+def restart_app(request):
+    """HTMX: restart Town Hall, then show a notice that polls until the new process answers."""
+    method = site_config.restart_method(request)
+    if not method:
+        messages.error(request, _("Town Hall can't restart itself on this server. Restart it from your hosting dashboard."))
+        return HttpResponse(status=204)
+    site_config.restart(method)
+    return render(request, 'console/partials/restart_status.html', {'boot_id': site_config.BOOT_ID})
+
+
+@staff_required
+def restart_status(request):
+    """HTMX poll: reload the page once a process other than ?boot= answers."""
+    if request.GET.get('boot') != site_config.BOOT_ID:
+        return HttpResponse(headers={'HX-Refresh': 'true'})
+    return HttpResponse(status=204)
 
 
 def _connect_listmonk(request):

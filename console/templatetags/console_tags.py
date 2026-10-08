@@ -1,6 +1,7 @@
 import re
 
 from django import template
+from django.conf import settings
 
 from education.models import UserCertification
 
@@ -33,8 +34,12 @@ def strip_lang(label):
 
 @register.filter
 def base_field(name):
-    """'content_es' -> 'content' (strip the modeltranslation language suffix)."""
-    return re.sub(r'_[a-z]{2}$', '', str(name))
+    """'content_es' -> 'content', 'content_zh_hant' -> 'content' (strip the modeltranslation language suffix)."""
+    for code in settings.MODELTRANSLATION_LANGUAGES:
+        suffix = '_' + code.replace('-', '_')
+        if str(name).endswith(suffix):
+            return str(name)[:-len(suffix)]
+    return str(name)
 
 
 @register.filter

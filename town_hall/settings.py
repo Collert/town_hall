@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
+from django.conf.locale import LANG_INFO
 from django.utils.translation import gettext_lazy as _
 import dotenv
 
@@ -41,6 +42,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'town_hall.site_config.SiteConfig',  # applies the console's language/time zone choice; must run first
     'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -154,13 +156,23 @@ USE_TZ = True
 # Per-language date/time format overrides (town_hall/formats/<lang>/formats.py).
 FORMAT_MODULE_PATH = ['town_hall.formats']
 
-# Available languages for the site
-LANGUAGES = [
+# Every language the app is built for. Each has translated model columns (modeltranslation)
+# and a locale folder, so adding one here needs makemigrations and makemessages.
+SUPPORTED_LANGUAGES = [
     ('en', _('English')),
     ('es', _('Spanish')),
     ('fr', _('French')),
     ('uk', _('Ukrainian')),
+    ('zh-hant', _('Traditional Chinese')),
+    ('tl', _('Tagalog')),
 ]
+# Django doesn't know Tagalog; get_language_info() needs it.
+LANG_INFO.setdefault('tl', {'bidi': False, 'code': 'tl', 'name': 'Tagalog', 'name_local': 'Tagalog'})
+MODELTRANSLATION_LANGUAGES = [code for code, _name in SUPPORTED_LANGUAGES]
+
+# Which of them are switched on, which is the default, and TIME_ZONE are chosen at
+# Console > Organization > Region and applied at startup (town_hall/site_config.py).
+LANGUAGES = list(SUPPORTED_LANGUAGES)
 
 # Path where Django will look for translation files
 LOCALE_PATHS = [

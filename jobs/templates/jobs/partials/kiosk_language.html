@@ -11,7 +11,7 @@
     <nav class="kiosk-lang-menu">
         {% for lang in languages %}
         <a href="{% url_in_language lang.code %}" lang="{{ lang.code }}" hreflang="{{ lang.code }}" {% if lang.code == current_language %}aria-current="true"{% endif %}>
-            <span class="fi fi-{% if lang.code == 'en' %}ca{% elif lang.code == 'uk' %}ua{% else %}{{ lang.code }}{% endif %}"></span>
+            <span class="{{ lang.code|lang_flag }}"></span>
             {{ lang.name_local|capfirst }}
             {% if lang.code == current_language %}<span class="material-symbols-outlined">check</span>{% endif %}
         </a>

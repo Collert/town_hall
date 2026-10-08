@@ -1,0 +1,128 @@
+.region-intro {
+    margin: -0.5rem 0 1.25rem;
+}
+
+.region-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: rgba(from var(--color-warning) r g b / 0.14);
+    color: var(--color-text-primary);
+}
+
+.region-banner[hidden] {
+    display: none;
+}
+
+.region-banner .material-symbols-outlined {
+    color: var(--color-warning);
+}
+
+.region-banner strong {
+    display: block;
+    font-family: 'Manrope', sans-serif;
+}
+
+.region-banner p {
+    margin: 0.2rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.region-languages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.region-languages .is-off .c-list-item-main {
+    opacity: 0.6;
+}
+
+.region-flag {
+    flex-shrink: 0;
+    width: 1.75rem;
+    line-height: 1.3rem;
+    border-radius: 0.3rem;
+    box-shadow: 0 0 0 1px rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.region-languages .is-off .region-flag {
+    filter: grayscale(1);
+    opacity: 0.6;
+}
+
+.region-default {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.region-default input {
+    accent-color: var(--color-primary-vivid);
+}
+
+.region-clock {
+    display: block;
+    margin-top: 0.75rem;
+}
+
+.region-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+}
+
+.region-banner > div {
+    flex: 1;
+}
+
+.region-banner .region-restart-btn {
+    align-self: center;
+    flex-shrink: 0;
+}
+
+.region-restart-text {
+    margin: -0.5rem 0 1.25rem;
+    font-size: 0.875rem;
+}
+
+.region-restarting {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.region-spin {
+    color: var(--color-primary-vivid);
+    animation: region-spin 1s linear infinite;
+}
+
+@keyframes region-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+    .region-banner {
+        flex-wrap: wrap;
+    }
+}
+
+.region-banner .region-restart-btn .material-symbols-outlined {
+    color: inherit;
+}

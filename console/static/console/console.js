@@ -95,11 +95,14 @@
     // Unsaved-changes guard: <form data-unsaved-warning>. Editing it, or a successful
     // HTMX request from a [data-marks-dirty] control inside it (auto-translate), marks
     // it dirty; submitting it, or clicking a [data-discard] link, clears it. Leaving
-    // the page while a form is dirty asks the browser to confirm first.
+    // the page while a form is dirty asks the browser to confirm first, and any
+    // [data-dirty-notice] inside it is shown.
     const dirtyForms = new Set();
     const markDirty = (el) => {
         const form = el.closest && el.closest('form[data-unsaved-warning]');
-        if (form) dirtyForms.add(form);
+        if (!form) return;
+        dirtyForms.add(form);
+        form.querySelectorAll('[data-dirty-notice]').forEach((notice) => { notice.hidden = false; });
     };
     document.addEventListener('input', (e) => markDirty(e.target));
     document.addEventListener('change', (e) => markDirty(e.target));

@@ -1,0 +1,6 @@
+{% load i18n %}
+<div class="region-restarting" role="status"
+     hx-get="{% url 'console_restart_status' %}?boot={{ boot_id }}" hx-trigger="every 2s">
+    <span class="material-symbols-outlined region-spin">progress_activity</span>
+    <span>{% trans "Restarting… This page reloads when Town Hall is back." %}</span>
+</div>

@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load avatar_tags %}
+{% load language_tags %}
 
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="{{ LANGUAGE_CODE }}">
@@ -44,7 +45,7 @@
                         <button type="button" class="custom-select-trigger" aria-haspopup="listbox" aria-expanded="false">
                             {% for lang_code, lang_name in LANGUAGES %}
                                 {% if lang_code == LANGUAGE_CODE %}
-                                <span class="fi fi-{% if lang_code == 'en' %}ca{% elif lang_code == 'uk' %}ua{% else %}{{ lang_code }}{% endif %}"></span>
+                                <span class="{{ lang_code|lang_flag }}"></span>
                                 <span class="lang-name">{{ lang_name }}</span>
                                 {% endif %}
                             {% endfor %}
@@ -53,7 +54,7 @@
                         <ul class="custom-select-options" role="listbox">
                             {% for lang_code, lang_name in LANGUAGES %}
                             <li role="option" data-value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}aria-selected="true"{% endif %}>
-                                <span class="fi fi-{% if lang_code == 'en' %}ca{% elif lang_code == 'uk' %}ua{% else %}{{ lang_code }}{% endif %}"></span>
+                                <span class="{{ lang_code|lang_flag }}"></span>
                                 <span class="lang-name">{{ lang_name }}</span>
                             </li>
                             {% endfor %}

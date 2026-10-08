@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from .. import forms
 from ..auto_translate import TranslationError, translate_texts
 from ..decorators import staff_required
-from ..utils import LANGUAGE_CODES
+from ..utils import LANGUAGE_CODES, lang_field
 
 TRANSLATABLE_FORMS = {
     form.translation_key: form
@@ -35,12 +35,12 @@ def auto_translate(request):
         for target in targets:
             names = [
                 name for name in form_class.translated
-                if data.get(f'{name}_{source}', '').strip() and not data.get(f'{name}_{target}', '').strip()
+                if data.get(lang_field(name, source), '').strip() and not data.get(lang_field(name, target), '').strip()
             ]
-            translations = translate_texts([data[f'{name}_{source}'] for name in names], source, target)
+            translations = translate_texts([data[lang_field(name, source)] for name in names], source, target)
             for name, text in zip(names, translations):
-                data[f'{name}_{target}'] = text
-                filled.append(f'{name}_{target}')
+                data[lang_field(name, target)] = text
+                filled.append(lang_field(name, target))
     except TranslationError as exc:
         failed = True
         messages.error(request, _('Auto-translate failed: %(error)s') % {'error': exc})
