@@ -109,3 +109,51 @@
     font-size: 1.05rem;
     color: var(--color-text-tertiary);
 }
+
+/* Categories and general coordinators: pill pickers on their own surface, with a real
+   heading instead of the small uppercase label, so they don't blend into the card. */
+.event-pick-group {
+    gap: 0.75rem;
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+    background: var(--color-surface);
+}
+
+.event-pick-group > .c-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: normal;
+    text-transform: none;
+    color: var(--color-text-primary);
+}
+
+.event-pick-group > .c-label::before {
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.3rem;
+    font-weight: normal;
+    line-height: 1;
+    color: var(--color-accent);
+}
+
+.event-pick-group.is-categories > .c-label::before {
+    content: 'category';
+}
+
+.event-pick-group.is-coordinators > .c-label::before {
+    content: 'shield_person';
+}
+
+.event-pick-group > .c-help {
+    padding-left: 0;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.event-pick-group div[id] > div > label {
+    background: var(--color-bg-secondary);
+}

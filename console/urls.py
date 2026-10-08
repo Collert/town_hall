@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    certificates, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
+    certificates, chain, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
     volunteers,
 )
 
@@ -17,6 +17,14 @@ urlpatterns = [
     path('events/<int:event_id>/roles/add/', events.add_role_slots, name='console_add_role_slots'),
     path('events/<int:event_id>/roles/slot-row/', events.slot_row, name='console_slot_row'),
     path('events/<int:event_id>/slots/<int:slot_id>/delete/', events.delete_slot, name='console_delete_slot'),
+    path('events/<int:event_id>/slots/<int:slot_id>/edit/', chain.slot_edit, name='console_slot_edit'),
+    path('events/<int:event_id>/chain/', chain.chain_toggle, name='console_chain_toggle'),
+    path('events/<int:event_id>/areas/new/', chain.area_edit, name='console_area_create'),
+    path('events/<int:event_id>/areas/<int:area_id>/', chain.area_edit, name='console_area_edit'),
+    path('events/<int:event_id>/areas/<int:area_id>/delete/', chain.area_delete, name='console_area_delete'),
+    path('events/<int:event_id>/areas/<int:area_id>/leads/new/', chain.area_lead_edit, name='console_area_lead_create'),
+    path('events/<int:event_id>/areas/<int:area_id>/leads/<int:lead_id>/', chain.area_lead_edit, name='console_area_lead_edit'),
+    path('events/<int:event_id>/areas/<int:area_id>/leads/<int:lead_id>/delete/', chain.area_lead_delete, name='console_area_lead_delete'),
     path('events/<int:event_id>/publish/', events.toggle_publish, name='console_event_publish'),
     path('events/<int:event_id>/message/', events.message_volunteers, name='console_event_message'),
     path('events/<int:event_id>/invite/', events.invite_volunteers, name='console_event_invite'),

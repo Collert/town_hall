@@ -1126,3 +1126,261 @@ Since the background is already primary-light usually, let's keep it that way fo
 .role-tasks-btn .material-symbols-outlined {
     font-size: 1.1rem;
 }
+
+/* ---------- Coordinators and area leads ---------- */
+.coordinator-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.coordinator-list .coordinator-row {
+    margin-bottom: 0;
+    padding: 0.5rem;
+    border-radius: 1.25rem;
+}
+
+.coordinator-row.is-mine {
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid);
+}
+
+.coordinator-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.coordinator-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.coordinator-title .material-symbols-outlined {
+    font-size: 1rem;
+    color: var(--color-accent);
+}
+
+.coordinator-hours {
+    flex-basis: 100%;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.coordinator-badge {
+    display: inline-block;
+    margin-top: 0.3rem;
+    padding: 0.1rem 0.55rem;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.coordinator-contact {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    transition: background-color 200ms ease;
+}
+
+.coordinator-contact:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.coordinator-contact .material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+/* ---------- My team(s) ---------- */
+.team-shift,
+.team-summary-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.team-shift {
+    margin-bottom: 1rem;
+}
+
+.team-shift strong,
+.team-summary-text strong {
+    font-family: 'Manrope', sans-serif;
+    color: var(--color-text-primary);
+}
+
+.team-shift small,
+.team-summary-text small {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.team-accordion {
+    border-radius: 1.25rem;
+    background: var(--color-surface);
+}
+
+.team-accordion + .team-accordion {
+    margin-top: 0.6rem;
+}
+
+.team-accordion summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+.team-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.team-accordion summary > .material-symbols-outlined:first-child {
+    color: var(--color-accent);
+}
+
+.team-summary-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.team-chevron {
+    color: var(--color-text-tertiary);
+    transition: transform 200ms ease;
+}
+
+.team-accordion[open] .team-chevron {
+    transform: rotate(180deg);
+}
+
+.team-accordion .team-body {
+    padding: 0 1rem 1rem;
+}
+
+.team-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.team-lead {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 9999px;
+    background: var(--color-bg-primary);
+}
+
+.team-lead > span:not(.avatar) {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.team-lead strong {
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+.team-lead small {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+.team-lead.is-area {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.team-you-lead {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-accent) r g b / 0.12);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--color-text-primary);
+}
+
+.team-you-lead .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: var(--color-accent);
+}
+
+.team-members {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+}
+
+.team-members li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+.team-member-role {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.timeslot-area {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    vertical-align: middle;
+}
+
+/* ---------- "Try your lead first" ---------- */
+.lead-redirect {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.lead-redirect-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+}
+
+.lead-redirect .team-lead {
+    padding: 0.6rem 0.6rem 0.6rem 0.75rem;
+}
+
+.lead-redirect-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.lead-redirect-btn .material-symbols-outlined {
+    font-size: 1.1rem;
+}

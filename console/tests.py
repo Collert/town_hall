@@ -21,7 +21,7 @@ from education.models import (
     ExternalCertificate, Quiz, QuizQuestion, Skill, TrainingLesson, TrainingModule,
     TrainingModuleCompletion, UserCertification, UserCertificationFile,
 )
-from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList
+from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
 from jobs.models import Role, RoleTrainingRequirement, Shift
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -2028,3 +2028,404 @@ class BellTowerPeopleTests(ConsoleFixture):
         linked = dict(self.vol.belltower_links.model.objects.values_list('user__username', 'username'))
         self.assertEqual(linked['vol'], 'carol')
         self.assertEqual(linked['mate'], 'mate')  # created
+
+
+class ChainOfCommandFixture(ConsoleFixture):
+    def setUp(self):
+        # Keep the request-driven 48-hour pass out of the way; tests call it directly.
+        cache.set('leadership_due_check', True, 3600)
+        self.client.login(username='admin', password='pw-admin-123')
+        self.start = (timezone.now() + timedelta(days=5)).replace(second=0, microsecond=0)
+        self.event = make_event('Harvest Fair', self.start, self.start + timedelta(hours=8))
+        self.event.coordinators.add(self.staff)
+        self.cleaner = Role.objects.create(name='Cleaner', icon='cleaning_services')
+        Profile.objects.filter(user=self.vol).update(impact_points=10)
+        Profile.objects.filter(user=self.mate).update(impact_points=50)
+
+    def tearDown(self):
+        cache.clear()
+
+    def make_slot(self, role=None, hours=(0, 4), qty=3, area=None, event=None):
+        event = event or self.event
+        return EventRoleSlot.objects.create(
+            event=event, role=role or self.cleaner, area=area, required_qty=qty,
+            start_time=event.start_date + timedelta(hours=hours[0]), end_time=event.start_date + timedelta(hours=hours[1]),
+        )
+
+    def enable_chain(self):
+        self.event.chain_of_command = True
+        Event.objects.filter(pk=self.event.pk).update(chain_of_command=True)
+
+    def area(self, name):
+        from events.models import EventArea
+        return EventArea.objects.create(event=self.event, name=name, icon='restaurant')
+
+
+class ChainOfCommandConsoleTests(ChainOfCommandFixture):
+    def roles_page(self):
+        return self.client.get(reverse('console_event_roles', args=[self.event.pk]))
+
+    def test_chain_suggested_past_twenty_volunteers_but_always_available(self):
+        self.make_slot(qty=5)
+        page = self.roles_page()
+        self.assertFalse(page.context['suggest_chain'])
+        self.assertContains(page, 'Set Up Chain of Command')  # the sidebar button is always there
+        self.make_slot(qty=16, hours=(4, 8))
+        page = self.roles_page()
+        self.assertTrue(page.context['suggest_chain'])
+        self.assertContains(page, 'This event needs 21 volunteers.')
+
+    def test_crossing_the_threshold_while_adding_roles_suggests_a_chain(self):
+        response = self.client.post(reverse('console_add_role_slots', args=[self.event.pk]), {
+            'role': self.cleaner.pk, 'slot_date': timezone.localtime(self.start).date().isoformat(),
+            'slot_start': '08:00', 'slot_end': '12:00', 'slot_qty': '25', 'slot_over': '0', 'is_public': 'on',
+        }, follow=True)
+        self.assertContains(response, 'Consider setting up a chain of command')
+
+    def test_areas_wrap_roles_and_the_same_role_can_be_in_two_areas(self):
+        self.client.post(reverse('console_chain_toggle', args=[self.event.pk]), {'enable': '1'})
+        self.event.refresh_from_db()
+        self.assertTrue(self.event.chain_of_command)
+        self.client.post(reverse('console_area_create', args=[self.event.pk]), {'name': 'Kitchen', 'icon': 'restaurant'})
+        self.client.post(reverse('console_area_create', args=[self.event.pk]), {'name': 'Kids Zone', 'icon': 'child_care'})
+        kitchen, kids = self.event.areas.order_by('pk')
+
+        dialog = self.client.get(reverse('console_add_role_slots', args=[self.event.pk]) + f'?area={kitchen.pk}')
+        self.assertContains(dialog, 'Add Role to Kitchen')
+        for area in (kitchen, kids):
+            self.client.post(reverse('console_add_role_slots', args=[self.event.pk]), {
+                'role': self.cleaner.pk, 'area': area.pk, 'slot_date': timezone.localtime(self.start).date().isoformat(),
+                'slot_start': '08:00', 'slot_end': '12:00', 'slot_qty': '2', 'slot_over': '0', 'is_public': 'on',
+            })
+        self.assertEqual(sorted(s.area.name for s in self.event.role_slots.all()), ['Kids Zone', 'Kitchen'])
+
+        page = self.roles_page()
+        self.assertContains(page, 'Add role to Kitchen')
+        self.assertContains(page, 'Add role to Kids Zone')
+        self.assertContains(page, 'Assign area lead')
+        self.assertEqual([len(group['staffing']) for group in page.context['areas']], [1, 1])
+
+    def lead_shifts(self, area):
+        return EventRoleSlot.objects.filter(area=area, role__system_key=Role.AREA_LEAD).order_by('start_time')
+
+    def test_area_leads_sign_up_for_an_area_lead_shift(self):
+        self.enable_chain()
+        food = self.area('Food Court')
+        self.make_slot(area=food, hours=(0, 4))
+        self.make_slot(area=food, hours=(4, 8))
+        lead_url = reverse('console_area_lead_create', args=[self.event.pk, food.pk])
+        local = lambda h: timezone.localtime(self.start + timedelta(hours=h)).strftime('%Y-%m-%dT%H:%M')
+        self.client.post(lead_url, {'user': self.mate.pk, 'start': local(0), 'end': local(4)})
+        shift = self.lead_shifts(food).get()
+        self.assertEqual(shift.role, Role.area_lead())
+        self.assertEqual(list(shift.signups.all()), [self.mate])
+        self.assertEqual((shift.start_time, shift.end_time, shift.is_public), (self.start, self.start + timedelta(hours=4), False))
+        self.assertTrue(SlotSignup.objects.filter(slot=shift, user=self.mate).exists())
+        self.assertTrue(Notification.objects.filter(user=self.mate, message__contains='area lead for Food Court').exists())
+
+        page = self.roles_page()
+        group = page.context['areas'][0]
+        self.assertEqual([e['role'] for e in group['staffing']], [self.cleaner])  # the lead shift isn't a role card
+        self.assertEqual(group['gaps'], [(self.start + timedelta(hours=4), self.start + timedelta(hours=8))])
+        self.assertContains(page, 'Assign another area lead')
+        self.assertFalse(page.context['lead_positions'] and any(
+            s.lead_position for e in group['staffing'] for s in e['slots'] if s.is_area_lead))
+
+        self.client.post(lead_url, {'user': self.vol.pk, 'start': local(4), 'end': local(8)})
+        self.assertEqual(self.roles_page().context['areas'][0]['gaps'], [])
+
+        # Swapping the person keeps the shift; removing the lead deletes it.
+        edit = reverse('console_area_lead_edit', args=[self.event.pk, food.pk, shift.pk])
+        self.client.post(edit, {'user': self.staff.pk, 'start': local(0), 'end': local(4)})
+        self.assertEqual(list(self.lead_shifts(food).first().signups.all()), [self.staff])
+        self.client.post(reverse('console_area_lead_delete', args=[self.event.pk, food.pk, shift.pk]), **HTMX)
+        self.assertEqual(self.lead_shifts(food).count(), 1)
+
+    def test_area_lead_shifts_go_with_their_area(self):
+        from events.leadership import assign_area_lead
+        self.enable_chain()
+        food = self.area('Food Court')
+        assign_area_lead(food, self.mate, self.start, self.start + timedelta(hours=4))
+        self.client.post(reverse('console_area_delete', args=[self.event.pk, food.pk]), **HTMX)
+        self.assertFalse(EventRoleSlot.objects.filter(role__system_key=Role.AREA_LEAD).exists())
+
+    def test_only_the_general_coordinator_assigns_area_leads(self):
+        self.enable_chain()
+        food = self.area('Food Court')
+        User.objects.create_user('other', 'other@example.com', 'pw-other-123', is_staff=True)
+        self.client.login(username='other', password='pw-other-123')
+        page = self.roles_page()
+        self.assertFalse(page.context['can_manage_leads'])
+        self.assertContains(page, 'Area lead needed')
+        self.client.post(reverse('console_area_lead_create', args=[self.event.pk, food.pk]), {
+            'user': self.mate.pk, 'start': '2030-01-01T08:00', 'end': '2030-01-01T12:00'})
+        self.assertFalse(self.lead_shifts(food).exists())
+
+    def test_area_lead_role_is_built_in(self):
+        role = Role.area_lead()
+        self.assertEqual(Role.objects.filter(system_key=Role.AREA_LEAD).count(), 1)  # made by migration
+        directory = self.client.get(reverse('console_roles'))
+        self.assertNotIn(role, directory.context['roles'])
+        self.assertNotContains(self.client.get(reverse('console_add_role_slots', args=[self.event.pk])), 'Area lead')
+        self.assertEqual(self.client.get(reverse('console_role_edit', args=[role.pk])).status_code, 404)
+        self.assertEqual(self.client.post(reverse('console_role_delete', args=[role.pk])).status_code, 404)
+        with self.assertRaises(ValueError):
+            role.delete()
+        self.assertTrue(Role.objects.filter(pk=role.pk).exists())
+
+    def test_event_editor_says_general_coordinators(self):
+        page = self.client.get(reverse('console_event_edit', args=[self.event.pk]))
+        self.assertContains(page, 'General coordinators')
+        self.assertContains(page, 'event-pick-group is-coordinators')
+
+    def test_shift_lead_positions(self):
+        from events.leadership import has_lead_position
+        small, busy = self.make_slot(qty=5), self.make_slot(qty=4, hours=(4, 8))
+        busy.allowed_overstaffing_qty = 2
+        busy.save()
+        self.assertFalse(has_lead_position(small))
+        self.assertTrue(has_lead_position(busy))  # more than 5 people can sign up
+        self.enable_chain()
+        small.event.chain_of_command = True
+        self.assertTrue(has_lead_position(small))  # every shift has a lead with a chain of command
+
+    def test_edit_slot_and_pick_its_lead(self):
+        slot = self.make_slot(qty=6)
+        slot.signups.add(self.vol, self.mate)
+        dialog = self.client.get(reverse('console_slot_edit', args=[self.event.pk, slot.pk]))
+        self.assertContains(dialog, 'Top pick')
+        self.assertEqual(dialog.context['candidates'][0], self.mate)  # most impact points first
+        local = lambda h: timezone.localtime(self.start + timedelta(hours=h)).strftime('%Y-%m-%dT%H:%M')
+        self.client.post(reverse('console_slot_edit', args=[self.event.pk, slot.pk]), {
+            'start': local(1), 'end': local(5), 'qty': '7', 'over': '1', 'is_public': 'on', 'lead': self.vol.pk,
+        })
+        slot.refresh_from_db()
+        self.assertEqual((slot.lead, slot.required_qty, slot.allowed_overstaffing_qty), (self.vol, 7, 1))
+        self.assertEqual(slot.start_time, self.start + timedelta(hours=1))
+        self.assertFalse(slot.lead_auto_assigned)
+        self.assertTrue(Notification.objects.filter(user=self.vol, message__contains='shift lead for Cleaner').exists())
+        self.assertContains(self.roles_page(), 'Shift lead')
+
+    def test_slot_cannot_shrink_below_its_signups(self):
+        slot = self.make_slot(qty=2)
+        slot.signups.add(self.vol, self.mate)
+        local = lambda h: timezone.localtime(self.start + timedelta(hours=h)).strftime('%Y-%m-%dT%H:%M')
+        self.client.post(reverse('console_slot_edit', args=[self.event.pk, slot.pk]), {
+            'start': local(0), 'end': local(4), 'qty': '1', 'over': '0'})
+        slot.refresh_from_db()
+        self.assertEqual(slot.required_qty, 2)
+
+    def test_leads_are_picked_48_hours_ahead_and_coordinators_reminded(self):
+        from events.leadership import run_due_assignments
+        slot = self.make_slot(qty=6)
+        slot.signups.add(self.vol, self.mate)
+        self.assertEqual(run_due_assignments(), 0)  # five days out: still open
+
+        Event.objects.filter(pk=self.event.pk).update(start_date=timezone.now() + timedelta(hours=30))
+        self.assertEqual(run_due_assignments(), 1)
+        slot.refresh_from_db()
+        self.assertEqual(slot.lead, self.mate)
+        self.assertTrue(slot.lead_auto_assigned)
+        reminder = Notification.objects.filter(user=self.staff, message__contains='picked automatically')
+        self.assertEqual(reminder.count(), 1)
+
+        later = self.make_slot(qty=6, hours=(4, 8))
+        later.signups.add(self.vol)
+        self.assertEqual(run_due_assignments(), 1)
+        self.assertEqual(reminder.count(), 1)  # one reminder per event
+
+    def test_management_command(self):
+        from django.core.management import call_command
+        from io import StringIO
+        out = StringIO()
+        call_command('assign_shift_leads', stdout=out)
+        self.assertIn('shift lead(s) assigned', out.getvalue())
+
+    def test_leads_lock_a_day_ahead_unless_nobody_holds_the_position(self):
+        Event.objects.filter(pk=self.event.pk).update(start_date=timezone.now() + timedelta(hours=10))
+        self.event.refresh_from_db()
+        led, open_slot = self.make_slot(qty=6), self.make_slot(qty=6, hours=(4, 8))
+        for slot in (led, open_slot):
+            slot.signups.add(self.vol, self.mate)
+        EventRoleSlot.objects.filter(pk=led.pk).update(lead=self.vol)
+        local = lambda dt: timezone.localtime(dt).strftime('%Y-%m-%dT%H:%M')
+        for slot in (led, open_slot):
+            slot.refresh_from_db()
+            self.client.post(reverse('console_slot_edit', args=[self.event.pk, slot.pk]), {
+                'start': local(slot.start_time), 'end': local(slot.end_time), 'qty': '6', 'over': '0', 'lead': self.mate.pk})
+        led.refresh_from_db()
+        open_slot.refresh_from_db()
+        self.assertEqual(led.lead, self.vol)  # locked
+        self.assertEqual(open_slot.lead, self.mate)  # empty positions can still be filled
+
+    def test_leaving_a_slot_gives_up_leading_it(self):
+        slot = self.make_slot(qty=6)
+        slot.signups.add(self.vol, self.mate)
+        EventRoleSlot.objects.filter(pk=slot.pk).update(lead=self.mate)
+        slot.signups.remove(self.mate)
+        slot.refresh_from_db()
+        self.assertIsNone(slot.lead)
+
+    def test_removing_the_chain_deletes_areas_but_keeps_roles(self):
+        self.enable_chain()
+        food = self.area('Food Court')
+        slot = self.make_slot(area=food, qty=2)
+        slot.signups.add(self.vol)
+        EventRoleSlot.objects.filter(pk=slot.pk).update(lead=self.vol)
+        self.client.post(reverse('console_chain_toggle', args=[self.event.pk]), {'enable': '0'})
+        self.event.refresh_from_db()
+        slot.refresh_from_db()
+        self.assertFalse(self.event.chain_of_command)
+        self.assertFalse(self.event.areas.exists())
+        self.assertIsNone(slot.area)
+        self.assertIsNone(slot.lead)  # 2 people: no lead position without a chain
+        self.assertTrue(slot.signups.filter(pk=self.vol.pk).exists())
+
+
+class ChainOfCommandVolunteerTests(ChainOfCommandFixture):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username='vol', password='pw-vol-123')
+
+    def page(self):
+        return self.client.get(reverse('opportunity_detail', args=[self.event.pk]))
+
+    def test_my_team_lists_the_others_on_my_shift(self):
+        slot = self.make_slot(qty=6)
+        slot.signups.add(self.vol, self.mate)
+        EventRoleSlot.objects.filter(pk=slot.pk).update(lead=self.mate)
+        page = self.page()
+        self.assertContains(page, 'My Team')
+        self.assertNotContains(page, 'My Teams')
+        self.assertContains(page, 'Your shift lead')
+        self.assertEqual(page.context['teams'][0]['teammates'], [self.mate])
+
+    def test_several_shifts_become_my_teams_accordion(self):
+        self.make_slot(hours=(0, 2)).signups.add(self.vol, self.mate)
+        self.make_slot(role=self.role, hours=(3, 5)).signups.add(self.vol)
+        page = self.page()
+        self.assertContains(page, 'My Teams')
+        self.assertContains(page, 'class="team-accordion"', count=2)
+        self.assertContains(page, 'Nobody else has signed up for this shift yet.')
+
+    def test_no_team_card_before_signing_up(self):
+        self.make_slot()
+        self.assertNotContains(self.page(), 'My Team')
+
+    def test_area_leads_join_the_coordinators_and_others_point_to_them(self):
+        from events.leadership import assign_area_lead
+        self.enable_chain()
+        kitchen = self.area('Kitchen')
+        slot = self.make_slot(area=kitchen, hours=(0, 4))
+        slot.signups.add(self.vol)
+        lead_user = User.objects.create_user('lena', 'lena@example.com', 'pw', first_name='Lena')
+        assign_area_lead(kitchen, lead_user, self.start, self.start + timedelta(hours=8))
+        stage = self.area('Stage')
+        other = User.objects.create_user('omar', 'omar@example.com', 'pw', first_name='Omar')
+        assign_area_lead(stage, other, self.start, self.start + timedelta(hours=8))
+
+        page = self.page()
+        self.assertContains(page, 'Event Coordinators')
+        self.assertContains(page, 'General coordinator')
+        self.assertContains(page, 'Kitchen lead')
+        self.assertContains(page, 'Your lead')
+        entries = {e['user'].username: e for e in page.context['coordinators']}
+        self.assertFalse(entries['lena']['redirect'])
+        self.assertTrue(entries['admin']['redirect'])
+        self.assertTrue(entries['omar']['redirect'])
+        self.assertContains(page, 'Try your lead first')
+        self.assertContains(page, 'data-lead-check data-name', count=2)
+
+    def test_area_lead_sees_their_shift_leads_and_is_not_offered_the_role(self):
+        from events.leadership import assign_area_lead
+        self.enable_chain()
+        kitchen = self.area('Kitchen')
+        slot = self.make_slot(area=kitchen, hours=(0, 4), qty=6)
+        slot.signups.add(self.mate)
+        EventRoleSlot.objects.filter(pk=slot.pk).update(lead=self.mate)
+        assign_area_lead(kitchen, self.vol, self.start, self.start + timedelta(hours=8))
+        page = self.page()
+        self.assertContains(page, 'You lead Kitchen.')
+        self.assertEqual(page.context['teams'][0]['shift_leads'], [EventRoleSlot.objects.get(pk=slot.pk)])
+        self.assertEqual([s.role for s in page.context['role_slots']], [self.cleaner])
+        self.assertContains(self.client.get(reverse('my_events')), 'Harvest Fair')
+
+    def test_no_redirect_without_an_area_lead(self):
+        self.make_slot().signups.add(self.vol)
+        page = self.page()
+        self.assertNotContains(page, 'data-lead-check data-name')
+        self.assertNotContains(page, 'Try your lead first')
+
+
+@override_settings(BELLTOWER_RUN_INLINE=True)
+class ChainOfCommandBellTowerTests(ChainOfCommandFixture):
+    def setUp(self):
+        super().setUp()
+        self.fake = FakeBellTower()
+        patcher = patch('base.belltower._http', self.fake)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        site = SiteSettings.get_settings()
+        site.belltower_url, site.belltower_api_key, site.belltower_username = FakeBellTower.BASE, 'bt_secret', 'townhall'
+        site.belltower_endpoints = self.fake('GET', FakeBellTower.BASE + '/.well-known/belltower')
+        site.save()
+        self.enable_chain()
+        self.kitchen, self.kids = self.area('Kitchen'), self.area('Kids Zone')
+
+    def add_slot(self, area, **kwargs):
+        with self.captureOnCommitCallbacks(execute=True):
+            return self.make_slot(area=area, **kwargs)
+
+    def remote(self, area):
+        task_list = EventTaskList.objects.get(event=self.event, roles=self.cleaner, area=area)
+        return task_list, self.fake.lists[task_list.belltower_id]
+
+    def test_each_area_gets_its_own_role_list(self):
+        self.add_slot(self.kitchen)
+        self.add_slot(self.kids)
+        kitchen, kitchen_remote = self.remote(self.kitchen)
+        kids, _ = self.remote(self.kids)
+        self.assertNotEqual(kitchen.pk, kids.pk)
+        self.assertEqual(kitchen.name, 'Cleaner tasks · Kitchen')
+        self.assertEqual(kitchen_remote['name'], 'Harvest Fair: Cleaner tasks · Kitchen')
+
+    def test_shift_and_area_leads_are_list_admins(self):
+        from events.leadership import set_slot_lead
+        slot = self.add_slot(self.kitchen, qty=6)
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.signups.add(self.vol, self.mate)
+        with self.captureOnCommitCallbacks(execute=True):
+            set_slot_lead(slot, self.vol)
+        _, remote = self.remote(self.kitchen)
+        self.assertIn('carol', remote['admins'])  # vol's Bell Tower account
+        with self.captureOnCommitCallbacks(execute=True):
+            set_slot_lead(slot, self.mate)
+        _, remote = self.remote(self.kitchen)
+        self.assertIn('mate', remote['admins'])
+        self.assertNotIn('carol', remote['admins'])
+        self.assertIn('carol', remote['users'])  # still on the team
+
+        local = lambda h: timezone.localtime(self.start + timedelta(hours=h)).strftime('%Y-%m-%dT%H:%M')
+        lead = User.objects.create_user('lena', 'lena@example.com', 'pw')
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(reverse('console_area_lead_create', args=[self.event.pk, self.kitchen.pk]),
+                             {'user': lead.pk, 'start': local(0), 'end': local(8)})
+        _, remote = self.remote(self.kitchen)
+        self.assertIn('lena', remote['admins'])
+        self.assertFalse(EventTaskList.objects.filter(roles__system_key=Role.AREA_LEAD).exists())  # no list of its own
+
+        shift = EventRoleSlot.objects.get(area=self.kitchen, role__system_key=Role.AREA_LEAD)
+        with self.captureOnCommitCallbacks(execute=True):
+            self.client.post(reverse('console_area_lead_delete', args=[self.event.pk, self.kitchen.pk, shift.pk]), **HTMX)
+        _, remote = self.remote(self.kitchen)
+        self.assertNotIn('lena', remote['users'])
+
+    def test_lists_from_different_areas_dont_merge(self):
+        self.add_slot(self.kitchen)
+        self.add_slot(self.kids)
+        kitchen, _ = self.remote(self.kitchen)
+        kids, _ = self.remote(self.kids)
+        response = self.client.post(reverse('console_task_list_merge', args=[self.event.pk, kitchen.pk]),
+                                    {'source': kids.pk}, **HTMX)
+        self.assertContains(response, 'different areas')
+        self.assertTrue(EventTaskList.objects.filter(pk=kids.pk).exists())

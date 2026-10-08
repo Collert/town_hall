@@ -2,8 +2,9 @@
 <dialog class="c-dialog add-role-dialog" data-autoshow>
     <form method="post" action="{% url 'console_add_role_slots' event.pk %}">
         {% csrf_token %}
+        {% if area %}<input type="hidden" name="area" value="{{ area.pk }}">{% endif %}
         <div class="c-dialog-head">
-            <h2>{% trans "Add Role to Event" %}</h2>
+            <h2>{% if area %}{% blocktrans with area=area.name %}Add Role to {{ area }}{% endblocktrans %}{% else %}{% trans "Add Role to Event" %}{% endif %}</h2>
             <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
         </div>
 
@@ -43,7 +44,7 @@
         <div class="c-dialog-foot">
             <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
             <button type="submit" name="next" value="invite" class="c-btn c-btn-outline">{% trans "Add & Invite Volunteers" %}</button>
-            <button type="submit" class="c-btn c-btn-primary">{% trans "Add Role to Event" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% if area %}{% blocktrans with area=area.name %}Add Role to {{ area }}{% endblocktrans %}{% else %}{% trans "Add Role to Event" %}{% endif %}</button>
         </div>
     </form>
 </dialog>

@@ -71,6 +71,7 @@ class EventForm(TranslatedFormMixin, forms.ModelForm):
             'location_en': _('Address'),
             'report_to_location': _('Check-in point'),
             'attendees': _('Expected attendees'),
+            'coordinators': _('General coordinators'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -87,6 +88,7 @@ class EventForm(TranslatedFormMixin, forms.ModelForm):
         self.fields['coordinators'].queryset = User.objects.filter(is_active=True).filter(
             Q(is_staff=True) | Q(pk__in=coordinator_ids)).order_by('first_name', 'username')
         self.fields['coordinators'].label_from_instance = lambda u: u.get_full_name() or u.username
+        self.fields['coordinators'].help_text = _('Top of the chain of command: they assign area and shift leads.')
 
     def clean(self):
         cleaned = super().clean()

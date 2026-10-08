@@ -95,8 +95,8 @@
                 {% trans "Highlight on the home page" as featured_hint %}
                 {% include 'console/partials/toggle.html' with field=form.featured title=_("Featured") hint=featured_hint %}
                 {% include 'console/partials/field.html' with field=form.attendees %}
-                {% if form.category.field.queryset.exists %}{% include 'console/partials/field.html' with field=form.category label=_("Categories") %}{% endif %}
-                {% include 'console/partials/field.html' with field=form.coordinators %}
+                {% if form.category.field.queryset.exists %}{% include 'console/partials/field.html' with field=form.category label=_("Categories") field_class="event-pick-group is-categories" %}{% endif %}
+                {% include 'console/partials/field.html' with field=form.coordinators field_class="event-pick-group is-coordinators" %}
             </div>
         </section>
 

@@ -34,7 +34,8 @@ from base.models import (AdminFeedback, Endorsement, HeroSection, Level, Notific
 from education.models import (ExternalCertificate, Quiz, QuizQuestion, Skill, TrainingLesson, TrainingModule,
                               TrainingModuleCompletion, TrainingTopic, UserCertification, UserCertificationFile)
 from events import belltower_sync
-from events.models import Event, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
+from events.models import (Event, EventArea, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList,
+                           SlotSignup)
 from jobs.models import Role, RoleTrainingRequirement, Shift
 
 User = get_user_model()
@@ -526,6 +527,9 @@ ROLES = {
     'parking': ('Parking & Traffic Marshal', 'traffic', 'Direct cars in the lot and on Fourth Avenue, keep the accessible '
                 'spots and fire lane clear. High-visibility vest provided.',
                 False, [], None, [('orient', True)], ['Driving']),
+    'cleaner': ('Cleaning Crew', 'cleaning_services', 'Wipe tables, empty bins, restock napkins and soap, and keep '
+                'washrooms and play areas tidy. Gloves and supplies provided.',
+                False, [], None, [('orient', True)], ['Event Setup']),
     'packer': ('Food Hamper Packer', 'inventory_2', 'Sort donations and pack hampers for families from the pantry list.',
                False, [], None, [('orient', True), ('food', False)], ['Food Handling']),
     'frontdesk': ('Welcome Centre Front Desk', 'support_agent', 'Greet drop-in visitors, book navigator appointments and '
@@ -1024,7 +1028,7 @@ class Command(BaseCommand):
             return False
         if not user.is_active and user.pk not in self.left:
             return False
-        for module in self.required[slot.role_id]:
+        for module in self.required.get(slot.role_id, []):
             done = self.trained.get((user.pk, module))
             if not done or done > slot.start_time:
                 return False
@@ -1349,6 +1353,8 @@ class Command(BaseCommand):
                            (self.add_slot(e, 'kids', at(d(7), '16:00'), at(d(7), '19:00'), 2), 0),
                            (self.add_slot(e, 'interpreter', at(d(7), '16:00'), at(d(7), '20:00'), 1), 1)])
 
+        self.seed_festival()
+
         e = self.create_event(
             "Bishop's Pastoral Visit & Reception", at(d(19), '11:00'), at(d(19), '14:00'), 'cathedral',
             'Bishop Ken will celebrate Divine Liturgy and meet parishioners at a reception in the hall afterwards.',
@@ -1408,6 +1414,84 @@ class Command(BaseCommand):
         self.add_slot(e, 'greeter', at(d(103), '17:30'), at(d(103), '20:00'), 3)
         self.add_slot(e, 'setup', at(d(103), '14:00'), at(d(103), '18:00'), 6)
         self.add_slot(e, 'setup', at(d(103), '23:30'), at(d(104), '01:30'), 4)
+
+    def seed_festival(self):
+        """A large event run with a chain of command: areas with area leads (shifts in the
+        built-in "Area lead" role), and shift leads under them. Some lead positions are left
+        open, and the Main Stage lead only covers the morning, so the console shows both."""
+        d = self.day
+        day = d(12)
+        e = self.create_event(
+            'Ukrainian Heritage Festival', at(day, '09:00'), at(day, '18:00'), 'park',
+            'A day of Ukrainian music, dance and food in the park: hopak and bandura on the main stage, '
+            'varenyky and borshch in the food court, and pysanka and vinok workshops in the kids zone. '
+            'Free admission, everyone welcome.',
+            ['Cultural Heritage', 'Fundraiser', 'Youth & Family'], ['mykola.petrenko', 'admin'],
+            attendees=1500, featured=True, report_to='Volunteer tent next to the main stage')
+        Event.objects.filter(pk=e.pk).update(chain_of_command=True)
+        e.chain_of_command = True
+
+        areas = {}
+        for order, (key, name, icon) in enumerate([
+            ('food', 'Food Court', 'restaurant'),
+            ('stage', 'Main Stage', 'theater_comedy'),
+            ('kids', 'Kids Zone', 'child_care'),
+            ('welcome', 'Welcome & Safety', 'how_to_reg'),
+        ]):
+            areas[key] = EventArea.objects.create(event=e, name=name, icon=icon, order=order)
+
+        def slot(area, role, start, end, required, extra=0):
+            new = self.add_slot(e, role, at(day, start), at(day, end), required, extra)
+            EventRoleSlot.objects.filter(pk=new.pk).update(area=areas[area])
+            new.area = areas[area]
+            return new
+
+        # Area leads first, so volunteer sign-ups work around their shifts.
+        area_lead = Role.area_lead()
+        for area, username, start, end in [
+            ('food', 'andriy.kovalenko', '08:30', '18:00'),
+            ('stage', 'oksana.lysenko', '08:00', '13:00'),  # the afternoon still needs a lead
+            ('kids', 'iryna.tkachenko', '10:00', '17:00'),
+            ('welcome', 'halyna.boyko', '08:30', '18:00'),
+        ]:
+            lead_slot = EventRoleSlot.objects.create(
+                event=e, role=area_lead, area=areas[area], start_time=at(day, start), end_time=at(day, end),
+                required_qty=1, allowed_overstaffing_qty=0, is_public=False)
+            self.sign_up(lead_slot, self.people[username])
+
+        food_am = slot('food', 'kitchen', '09:00', '13:30', 6, 1)
+        food_pm = slot('food', 'kitchen', '13:30', '18:00', 6, 1)
+        cash_am = slot('food', 'cashier', '10:00', '14:00', 2)
+        cash_pm = slot('food', 'cashier', '14:00', '18:00', 2)
+        food_clean = slot('food', 'cleaner', '11:00', '15:00', 3)
+        stage_setup = slot('stage', 'setup', '08:00', '10:00', 5)
+        stage_photo = slot('stage', 'photographer', '10:00', '18:00', 2)
+        stage_down = slot('stage', 'setup', '17:30', '19:30', 4)
+        kids_am = slot('kids', 'kids', '10:00', '13:30', 4)
+        kids_pm = slot('kids', 'kids', '13:30', '17:00', 4)
+        kids_clean = slot('kids', 'cleaner', '14:00', '17:00', 2)
+        greet_am = slot('welcome', 'greeter', '09:30', '13:30', 3)
+        greet_pm = slot('welcome', 'greeter', '13:30', '18:00', 3)
+        first_aid = slot('welcome', 'firstaid', '09:30', '18:00', 2)
+        parking = slot('welcome', 'parking', '08:30', '12:00', 3)
+
+        # sofia.melnyk has two shifts in two areas ("My Teams", and an area lead for each).
+        # Named shifts go first, so the automatic picks work around them.
+        self.staff_future([
+            (food_am, 6, ['vira.danylyuk', 'sofia.melnyk']), (kids_clean, 2, ['sofia.melnyk']),
+            (food_pm, 4), (cash_am, 2), (cash_pm, 1),
+            (food_clean, 2), (stage_setup, 4), (stage_photo, 1), (stage_down, 2),
+            (kids_am, 3), (kids_pm, 2),
+            (greet_am, 3), (greet_pm, 1), (first_aid, 2), (parking, 2),
+        ])
+
+        # A few shift leads picked by the coordinator; the rest stay open until 48 hours before.
+        for lead_slot, username in [(food_am, 'vira.danylyuk'), (kids_clean, 'sofia.melnyk')]:
+            EventRoleSlot.objects.filter(pk=lead_slot.pk).update(lead=self.people[username])
+        for lead_slot in (stage_setup, greet_am, first_aid):
+            first = lead_slot.signups.order_by('pk').first()
+            if first:
+                EventRoleSlot.objects.filter(pk=lead_slot.pk).update(lead=first)
 
     def invite(self, slot, usernames, accepted):
         for username in usernames:
@@ -1612,7 +1696,7 @@ class Command(BaseCommand):
         else:
             self.stderr.write(self.style.WARNING(
                 f'  {me["username"]} is not Bell Tower staff, so people are not linked or added to lists.'))
-            add_people = mock.patch.object(belltower_sync, '_add_person', lambda task_list, user: None)
+            add_people = mock.patch.object(belltower_sync, '_add_person', lambda *args, **kwargs: None)
         role_keys = {role.pk: key for key, role in self.roles.items()}
         events = list(Event.objects.filter(end_date__gte=self.now).order_by('start_date'))
         try:
@@ -1681,7 +1765,7 @@ class Command(BaseCommand):
         rows = [
             ('admin / admin', 'Olena Kovalchuk, superuser: console, approvals, everything'),
             ('mykola.petrenko', 'Events coordinator (staff, not superuser)'),
-            ('sofia.melnyk', 'Veteran volunteer: top level, endorsements, many shifts'),
+            ('sofia.melnyk', 'Veteran volunteer: top level, endorsements, many shifts, two teams at the Heritage Festival'),
             ('taras.shevchuk', 'Permanent front desk, checked in at the Welcome Centre kiosk right now'),
             ('emily.thompson', 'New-ish: Food Safety half done, signed up for Thanksgiving dinner'),
             ('olha.marchenko', 'Trauma-informed module in progress'),
@@ -1696,5 +1780,8 @@ class Command(BaseCommand):
         codes = ', '.join(f'{u.username} {u.profile.id_code}' for u in User.objects.filter(
             username__in=['taras.shevchuk', 'emily.thompson', 'daniel.chen', 'sofia.melnyk']).select_related('profile'))
         self.stdout.write(f'\nKiosk codes: {codes}')
+        festival = Event.objects.filter(chain_of_command=True).first()
+        if festival:
+            self.stdout.write(f'Chain of command: #{festival.pk} {festival.title} (areas, area leads and shift leads)')
         live = Event.objects.filter(start_date__lte=self.now, end_date__gte=self.now).values_list('pk', 'title')
         self.stdout.write('Live now: ' + '; '.join(f'#{pk} {title}' for pk, title in live))

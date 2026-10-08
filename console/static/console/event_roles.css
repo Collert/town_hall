@@ -387,3 +387,407 @@
     text-decoration-color: rgba(from var(--color-text-tertiary) r g b / 0.4);
     text-underline-offset: 3px;
 }
+
+/* ---------- Slot chips with their shift lead ---------- */
+.role-slot-list li.slot-chip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.6rem 0.5rem 0.6rem 0.9rem;
+    border-radius: 1.25rem;
+}
+
+.slot-chip-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.slot-chip-lead {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 1rem;
+    background: var(--color-surface);
+}
+
+.slot-chip-lead-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+    line-height: 1.25;
+}
+
+.slot-chip-lead-text strong {
+    font-size: 0.8125rem;
+    color: var(--color-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.slot-chip-lead-text small {
+    font-size: 0.72rem;
+    color: var(--color-text-tertiary);
+}
+
+.slot-chip-lead-empty {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 2px dashed rgba(from var(--color-text-tertiary) r g b / 0.4);
+    color: var(--color-text-tertiary);
+}
+
+.role-slot-list .slot-chip-lead-empty .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.slot-chip-lock,
+.area-lead-lock {
+    color: var(--color-text-tertiary);
+}
+
+/* ---------- Areas (chain of command) ---------- */
+.area-board {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.area-block {
+    padding: 1.75rem;
+    border-radius: 2rem;
+    background: var(--color-bg-secondary);
+}
+
+.area-block.is-unassigned {
+    background: transparent;
+    box-shadow: inset 0 0 0 2px rgba(from var(--color-text-tertiary) r g b / 0.15);
+}
+
+.area-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.area-head-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.area-head-text h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+}
+
+.area-head-text small {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.area-head-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.area-leads {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.area-lead-card,
+.area-lead-slot {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    min-height: 4rem;
+    padding: 0.7rem 0.8rem 0.7rem 0.9rem;
+    border-radius: 9999px;
+    text-align: left;
+    font: inherit;
+}
+
+.area-lead-card {
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+}
+
+.area-lead-slot {
+    border: 2px dashed rgba(from var(--color-text-tertiary) r g b / 0.4);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+.area-lead-slot:hover {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+}
+
+.area-lead-slot.is-static {
+    cursor: default;
+}
+
+.area-lead-slot.is-static:hover {
+    background: transparent;
+}
+
+.area-lead-slot > .material-symbols-outlined {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--color-bg-tertiary);
+}
+
+.area-lead-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.3;
+}
+
+.area-lead-text strong {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.area-lead-text small {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.area-block .c-add-tile {
+    min-height: 10rem;
+    background: rgba(from var(--color-surface) r g b / 0.5);
+}
+
+.area-add {
+    min-height: 4rem;
+}
+
+/* ---------- Chain of command suggestion + sidebar ---------- */
+.chain-suggest {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 1.75rem;
+    background: rgba(from var(--color-accent) r g b / 0.1);
+}
+
+.chain-suggest-text {
+    flex: 1;
+    min-width: 14rem;
+}
+
+.chain-suggest-text strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.1rem;
+    color: var(--color-text-primary);
+}
+
+.chain-suggest-text p {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.chain-ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 1.25rem;
+}
+
+.chain-ladder li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+
+.chain-ladder li:nth-child(2) { padding-left: 0.9rem; }
+.chain-ladder li:nth-child(3) { padding-left: 1.8rem; }
+.chain-ladder li:nth-child(4) { padding-left: 2.7rem; }
+
+.chain-ladder .material-symbols-outlined {
+    font-size: 1.15rem;
+    color: var(--color-accent);
+}
+
+.chain-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.chain-timeline > div {
+    padding: 0.7rem 0.9rem;
+    border-radius: 1rem;
+    background: var(--color-surface);
+    opacity: 0.7;
+}
+
+.chain-timeline > div.is-current {
+    opacity: 1;
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid);
+}
+
+.chain-timeline dt {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-primary);
+}
+
+.chain-timeline dd {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    line-height: 1.45;
+}
+
+.chain-card .c-btn-block {
+    justify-content: center;
+}
+
+.chain-note {
+    margin-top: 0.75rem;
+}
+
+/* ---------- Lead / slot dialogs ---------- */
+.lead-dialog,
+.slot-edit-dialog {
+    width: min(40rem, calc(100vw - 2rem));
+}
+
+.lead-dialog-intro {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+.lead-dialog-step {
+    margin-top: 1.75rem;
+}
+
+.lead-dialog-times {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.person-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    max-height: 18rem;
+    overflow-y: auto;
+    padding: 0.2rem;
+}
+
+.person-option {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.person-option input {
+    position: absolute;
+    opacity: 0;
+}
+
+.person-option-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    transition: box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.person-option input:checked + .person-option-card {
+    background: rgba(from var(--color-primary-light) r g b / 0.18);
+    box-shadow: inset 0 0 0 3px var(--color-primary-vivid);
+}
+
+.person-option input:focus-visible + .person-option-card {
+    box-shadow: inset 0 0 0 3px var(--color-primary-light);
+}
+
+.person-option-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.person-option-text strong {
+    color: var(--color-text-primary);
+}
+
+.person-option-text small {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.person-options-empty {
+    padding: 1rem;
+}
+
+.slot-edit-public {
+    background: var(--color-bg-secondary);
+}
+
+.slot-edit-lead h3 {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.slot-edit-lock {
+    font-size: 1rem;
+    vertical-align: -0.15em;
+    margin-right: 0.3rem;
+}
+
+@media (max-width: 640px) {
+    .area-block {
+        padding: 1.25rem;
+    }
+
+    .lead-dialog-times {
+        grid-template-columns: 1fr;
+    }
+
+    .area-lead-card,
+    .area-lead-slot {
+        border-radius: 1.5rem;
+    }
+}

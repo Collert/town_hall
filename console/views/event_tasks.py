@@ -225,13 +225,18 @@ def list_merge(request, event_id, list_id):
     source = get_object_or_404(_lists(event, cfg).exclude(pk=target.pk), pk=request.POST.get('source') or 0)
     if EventTaskList.PLANNING in (target.kind, source.kind):
         return _render_card(request, event, target, cfg, error=_('The planning list can\'t be merged.'))
+    target_roles, source_roles = target.roles.exists(), source.roles.exists()
+    if target_roles and source_roles and target.area_id != source.area_id:
+        return _render_card(request, event, target, cfg, error=_('Lists from different areas can\'t be merged.'))
     name = f'{target.name} & {source.name}'[:150]
     try:
         belltower.merge_lists(target.belltower_id, source.belltower_id, name=_remote_name(event, name))
     except belltower.BellTowerError as exc:
         return _render_card(request, event, target, cfg, error=str(exc))
     target.name = name
-    target.save(update_fields=['name'])
+    if source_roles and not target_roles:
+        target.area_id = source.area_id
+    target.save(update_fields=['name', 'area'])
     # The merged list serves the source's roles too, so their sign-ups land here from now on.
     target.roles.add(*source.roles.all())
     source_pk = source.pk

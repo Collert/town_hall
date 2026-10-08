@@ -16,6 +16,7 @@ from base.utils import qr_svg, short_datetime
 from education.models import TrainingModule, TrainingModuleCompletion
 from jobs.models import RoleTrainingRequirement, Shift
 
+from . import leadership
 from .models import Event, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite
 
 User = get_user_model()
@@ -81,7 +82,9 @@ def event_detail(request, event_id):
         cache.set(cache_key, 1, timeout=60 * 60 * 3)  # Cache for 3 hours
 
     user = request.user
-    all_role_slots = list(_visible_slots(event, user).order_by('start_time'))
+    # Area lead shifts are assigned by coordinators, so they're not offered as roles.
+    all_role_slots = list(_visible_slots(event, user).filter(role__system_key__isnull=True)
+                          .select_related('area').order_by('start_time'))
 
     # One card per role; the first slot of each role stands in for the group.
     unique_role_slots = []
@@ -102,12 +105,21 @@ def event_detail(request, event_id):
             first_slot.multiple_slots = True
             first_slot.all_fully_staffed = first_slot.all_fully_staffed and slot.is_fully_staffed()
 
+    my_slots = list(
+        event.role_slots.filter(signups=user).select_related('role', 'area', 'lead__profile')
+        .prefetch_related('signups__profile').order_by('start_time')
+    ) if user.is_authenticated else []
+
     # Volunteers signed up for a role can open its Bell Tower list ("Your tasks").
     if any(s.user_signed_up_any for s in unique_role_slots):
         from .belltower_sync import role_lists_for
         role_lists = role_lists_for(event)
+        mine_by_role = {}
+        for mine in my_slots:
+            mine_by_role.setdefault(mine.role_id, mine)
         for slot in unique_role_slots:
-            task_list = role_lists.get(slot.role_id) if slot.user_signed_up_any else None
+            mine = mine_by_role.get(slot.role_id)
+            task_list = role_lists.get((slot.role_id, mine.area_id)) if mine else None
             slot.task_list_id = task_list.pk if task_list else None
 
     completed_modules = set(
@@ -124,6 +136,7 @@ def event_detail(request, event_id):
             'available': s.available_slots(),
             'is_full': s.is_fully_staffed(),
             'is_selected': s.pk == slot.pk,
+            'area': s.area.name if event.chain_of_command and s.area_id else '',
             'user_signed_up': s.user_signed_up(user) if user.is_authenticated else False,
         } for s in same_role]
 
@@ -162,7 +175,48 @@ def event_detail(request, event_id):
         'role_slots': unique_role_slots,
         'role_slots_data': role_slots_data,
         'event_volunteers': event.volunteers(),
+        **_chain_context(event, user, my_slots),
     })
+
+
+def _chain_context(event, user, my_slots):
+    """Sidebar cards for the chain of command: the coordinators (with area leads when the
+    event has areas), the volunteer's team for each of their shifts, and the leads they
+    should contact first."""
+    teams = []
+    lead_slots_by_area = {}
+    if event.chain_of_command:
+        for area in event.areas.all():
+            lead_slots_by_area[area.pk] = [s for s in area.lead_slots().select_related('area') if s.person]
+    for slot in my_slots:
+        if slot.is_area_lead:  # leading an area: their team is the area's shift leads
+            teams.append({'slot': slot, 'leads_area': True, 'shift_leads': leadership.area_team(slot)})
+            continue
+        area_leads = leadership.area_leads_for_slot(slot, lead_slots_by_area.get(slot.area_id, []))
+        lead = slot.lead if leadership.has_lead_position(slot, event) else None
+        teammates = sorted((p for p in slot.signups.all() if p.pk != user.pk),
+                           key=lambda p: (p.pk != slot.lead_id, (p.get_full_name() or p.username).lower()))
+        teams.append({
+            'slot': slot, 'lead': lead, 'i_lead': lead is not None and lead.pk == user.pk,
+            'teammates': teammates, 'area_leads': [l for l in area_leads if l.person.pk != user.pk],
+        })
+
+    my_leads = leadership.my_area_leads(event, user)
+    my_lead_ids = {lead.person.pk for lead in my_leads}
+    coordinators = [{'user': c, 'general': True} for c in event.coordinators.select_related('profile')]
+    if event.chain_of_command:
+        for area in event.areas.all():
+            for lead_slot in lead_slots_by_area.get(area.pk, []):
+                coordinators.append({'user': lead_slot.person, 'area': area, 'lead': lead_slot})
+    for entry in coordinators:
+        entry['mine'] = entry['user'].pk in my_lead_ids
+        # Contacting someone above your own lead asks whether to go to your lead first.
+        entry['redirect'] = bool(my_leads) and not entry['mine'] and entry['user'].pk != user.pk
+    return {
+        'coordinators': coordinators,
+        'teams': teams,
+        'my_leads': my_leads,
+    }
 
 
 def _confirm_signup(request, slot):

@@ -1,0 +1,17 @@
+{% load i18n avatar_tags %}
+<div class="person-options" id="lead-candidates" role="radiogroup">
+    {% for person in candidates %}
+    <label class="person-option">
+        <input type="radio" name="user" value="{{ person.pk }}" required {% if person.pk == selected %}checked{% endif %}>
+        <span class="person-option-card">
+            {% avatar person 'sm' %}
+            <span class="person-option-text">
+                <strong>{{ person|display_name }}</strong>
+                <small>{% if person.profile.level %}{{ person.profile.level.name }} &middot; {% endif %}{% blocktrans with n=person.profile.impact_points %}{{ n }} impact points{% endblocktrans %}</small>
+            </span>
+        </span>
+    </label>
+    {% empty %}
+    <p class="c-muted person-options-empty">{% trans "Nobody matches that search." %}</p>
+    {% endfor %}
+</div>

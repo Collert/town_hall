@@ -1,0 +1,23 @@
+{% load i18n %}
+<dialog class="c-dialog area-dialog" data-autoshow>
+    <form method="post" action="{% if area %}{% url 'console_area_edit' event.pk area.pk %}{% else %}{% url 'console_area_create' event.pk %}{% endif %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% if area %}{% trans "Edit Area" %}{% else %}{% trans "New Area" %}{% endif %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-stack">
+            <div class="c-field">
+                <label class="c-label" for="area-name">{% trans "Name" %}</label>
+                <input type="text" id="area-name" name="name" maxlength="100" required value="{{ area.name|default:'' }}"
+                       placeholder="{% trans 'e.g. Kitchen, Stage, Kids Zone' %}">
+                <span class="c-help">{% trans "A place at the event or an area of responsibility. Each area gets its own leads and task lists." %}</span>
+            </div>
+            {% include 'console/partials/icon_picker.html' with icons=icons current=current_icon %}
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% if area %}{% trans "Save Area" %}{% else %}{% trans "Create Area" %}{% endif %}</button>
+        </div>
+    </form>
+</dialog>

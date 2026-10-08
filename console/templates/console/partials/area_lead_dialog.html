@@ -1,0 +1,43 @@
+{% load i18n chain_tags %}
+<dialog class="c-dialog lead-dialog" data-autoshow>
+    <form method="post" action="{% if lead %}{% url 'console_area_lead_edit' event.pk area.pk lead.pk %}{% else %}{% url 'console_area_lead_create' event.pk area.pk %}{% endif %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% blocktrans with area=area.name %}{{ area }} Lead{% endblocktrans %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body">
+            <p class="lead-dialog-intro">
+                {% blocktrans with span=coverage.start|timespan:coverage.end %}The area is active {{ span }}, from its earliest shift to its latest. Area leads report to you and pass direction to the area's shift leads.{% endblocktrans %}
+            </p>
+
+            <div class="c-step"><span class="c-step-num">1</span>{% trans "Choose the lead" %}</div>
+            <div class="c-input-icon">
+                <span class="material-symbols-outlined">search</span>
+                <input type="search" name="q" class="c-input" placeholder="{% trans 'Search people...' %}" autocomplete="off"
+                       hx-get="{% if lead %}{% url 'console_area_lead_edit' event.pk area.pk lead.pk %}{% else %}{% url 'console_area_lead_create' event.pk area.pk %}{% endif %}?partial=candidates"
+                       hx-trigger="input changed delay:250ms, search" hx-target="#lead-candidates" hx-swap="outerHTML">
+            </div>
+            {% include 'console/partials/area_lead_candidates.html' %}
+
+            <div class="c-step lead-dialog-step"><span class="c-step-num">2</span>{% trans "Their shift" %}</div>
+            <div class="lead-dialog-times">
+                <div class="c-field">
+                    <label class="c-label" for="lead-start">{% trans "Starts" %}</label>
+                    <input type="datetime-local" id="lead-start" name="start" value="{{ start }}" required>
+                </div>
+                <div class="c-field">
+                    <label class="c-label" for="lead-end">{% trans "Ends" %}</label>
+                    <input type="datetime-local" id="lead-end" name="end" value="{{ end }}" required>
+                </div>
+            </div>
+            {% if coverage.gaps|length > 1 or lead %}
+            <p class="c-help">{% trans "If one lead can't cover the whole area, add another for the rest." %}</p>
+            {% endif %}
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% trans "Assign Lead" %}</button>
+        </div>
+    </form>
+</dialog>

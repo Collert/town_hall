@@ -1,0 +1,87 @@
+{% load i18n avatar_tags %}
+<dialog class="c-dialog slot-edit-dialog" data-autoshow>
+    <form method="post" action="{% url 'console_slot_edit' event.pk slot.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% blocktrans with role=slot.role.name %}Edit {{ role }} Shift{% endblocktrans %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-stack">
+            <div class="lead-dialog-times">
+                <div class="c-field">
+                    <label class="c-label" for="slot-start">{% trans "Starts" %}</label>
+                    <input type="datetime-local" id="slot-start" name="start" value="{{ start }}" required>
+                </div>
+                <div class="c-field">
+                    <label class="c-label" for="slot-end">{% trans "Ends" %}</label>
+                    <input type="datetime-local" id="slot-end" name="end" value="{{ end }}" required>
+                </div>
+            </div>
+
+            <div class="slot-row-qty">
+                <label class="slot-row-qty-label" for="slot-qty"><span class="material-symbols-outlined">groups</span>{% trans "Volunteers Needed" %}</label>
+                <input type="number" id="slot-qty" name="qty" value="{{ slot.required_qty }}" min="1" max="500" class="c-input slot-row-number">
+                <label class="slot-row-qty-label slot-row-over" for="slot-over">{% trans "Extra allowed" %}</label>
+                <input type="number" id="slot-over" name="over" value="{{ slot.allowed_overstaffing_qty }}" min="0" max="100" class="c-input slot-row-number">
+            </div>
+
+            {% if areas %}
+            <div class="c-field">
+                <label class="c-label" for="slot-area">{% trans "Area" %}</label>
+                <select id="slot-area" name="area">
+                    <option value="">{% trans "Not in an area" %}</option>
+                    {% for area in areas %}<option value="{{ area.pk }}" {% if area.pk == slot.area_id %}selected{% endif %}>{{ area.name }}</option>{% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <label class="c-setting slot-edit-public">
+                <span>
+                    <strong>{% trans "Open sign-up" %}</strong>
+                    <small>{% trans "Turn off to make this slot invite-only." %}</small>
+                </span>
+                <span class="c-toggle"><input type="checkbox" name="is_public" {% if slot.is_public %}checked{% endif %}><span></span></span>
+            </label>
+
+            <section class="slot-edit-lead">
+                <h3 class="c-label">{% trans "Shift lead" %}</h3>
+                {% if not lead_position %}
+                <p class="c-help">{% blocktrans with n=lead_min %}Shifts get a lead when more than {{ n }} people can sign up, or when the event has a chain of command.{% endblocktrans %}</p>
+                {% elif not can_manage %}
+                <p class="c-help">{% if slot.lead %}{% blocktrans with name=slot.lead|display_name %}{{ name }} leads this shift.{% endblocktrans %} {% endif %}{% trans "Shift leads are assigned by the event's general coordinator." %}</p>
+                {% elif not lead_open %}
+                <p class="c-help"><span class="material-symbols-outlined slot-edit-lock">lock</span>{% blocktrans with name=slot.lead|display_name %}{{ name }} leads this shift. Leads are locked 24 hours before the event so volunteers know who they report to.{% endblocktrans %}</p>
+                {% elif not candidates %}
+                <p class="c-help">{% blocktrans with when=auto_assign_at|date:"M j, H:i" %}Nobody has signed up yet. Once people do, the one with the most impact points is picked on {{ when }} unless you choose someone.{% endblocktrans %}</p>
+                {% else %}
+                <p class="c-help">{% blocktrans with when=auto_assign_at|date:"M j, H:i" locked=lock_at|date:"M j, H:i" %}Left open, the volunteer with the most impact points is picked on {{ when }}. Leads lock on {{ locked }}.{% endblocktrans %}</p>
+                <div class="person-options">
+                    <label class="person-option">
+                        <input type="radio" name="lead" value="" {% if not slot.lead_id %}checked{% endif %}>
+                        <span class="person-option-card">
+                            <span class="slot-chip-lead-empty"><span class="material-symbols-outlined">schedule</span></span>
+                            <span class="person-option-text"><strong>{% trans "Leave open" %}</strong><small>{% trans "Pick automatically 48 h before" %}</small></span>
+                        </span>
+                    </label>
+                    {% for person in candidates %}
+                    <label class="person-option">
+                        <input type="radio" name="lead" value="{{ person.pk }}" {% if person.pk == slot.lead_id %}checked{% endif %}>
+                        <span class="person-option-card">
+                            {% avatar person 'sm' %}
+                            <span class="person-option-text">
+                                <strong>{{ person|display_name }}{% if forloop.first %} <span class="c-badge">{% trans "Top pick" %}</span>{% endif %}</strong>
+                                <small>{% if person.profile.level %}{{ person.profile.level.name }} &middot; {% endif %}{% blocktrans with n=person.profile.impact_points %}{{ n }} impact points{% endblocktrans %}</small>
+                            </span>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </section>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary">{% trans "Save Shift" %}</button>
+        </div>
+    </form>
+</dialog>

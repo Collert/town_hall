@@ -1,0 +1,70 @@
+{% load i18n avatar_tags %}
+<article class="role-card">
+    <div class="role-card-top">
+        <span class="c-icon-tile round mint"><span class="material-symbols-outlined">{{ entry.role.icon|default:"badge" }}</span></span>
+        <span class="c-badge">{% if entry.role.training_modules.exists %}{% trans "Training required" %}{% else %}{% trans "Open role" %}{% endif %}</span>
+    </div>
+    <h3>{{ entry.role.name }}</h3>
+    {% if entry.role.description %}<p class="role-card-desc">{{ entry.role.description|truncatechars:110 }}</p>{% endif %}
+
+    <ul class="role-slot-list">
+        {% for slot in entry.slots %}
+        <li class="slot-chip">
+            <div class="slot-chip-main">
+                <span class="material-symbols-outlined">schedule</span>
+                <span class="role-slot-time">{{ slot.start_time|date:"M j" }}, {{ slot.start_time|time }}&ndash;{{ slot.end_time|time }}</span>
+                <span class="role-slot-count">{{ slot.signup_count }}/{{ slot.required_qty }}</span>
+                {% if not slot.is_public %}<span class="material-symbols-outlined role-slot-private" title="{% trans 'Invite only' %}">lock</span>{% endif %}
+                <button type="button" class="c-icon-btn" aria-label="{% trans 'Edit time slot' %}" title="{% trans 'Edit time slot' %}"
+                        hx-get="{% url 'console_slot_edit' event.pk slot.pk %}" hx-target="#dialog-slot">
+                    <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button type="button" class="c-icon-btn danger" aria-label="{% trans 'Remove time slot' %}"
+                        hx-post="{% url 'console_delete_slot' event.pk slot.pk %}" hx-target="#role-cards" hx-swap="outerHTML"
+                        hx-confirm="{% if slot.signup_count %}{% blocktrans with n=slot.signup_count %}{{ n }} volunteer(s) are signed up for this slot. Remove it anyway?{% endblocktrans %}{% else %}{% trans 'Remove this time slot?' %}{% endif %}">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </div>
+            {% if slot.lead_position %}
+            <div class="slot-chip-lead">
+                {% if slot.lead %}
+                {% avatar slot.lead 'sm' %}
+                <span class="slot-chip-lead-text">
+                    <strong>{{ slot.lead|display_name }}</strong>
+                    <small>{% trans "Shift lead" %}{% if slot.lead_auto_assigned %} &middot; {% trans "picked automatically" %}{% endif %}</small>
+                </span>
+                {% if slot.lead_locked %}<span class="material-symbols-outlined slot-chip-lock" title="{% trans 'Locked: the event is less than 24 hours away' %}">lock</span>{% endif %}
+                {% else %}
+                <span class="slot-chip-lead-empty"><span class="material-symbols-outlined">person_search</span></span>
+                <span class="slot-chip-lead-text">
+                    <strong>{% trans "Shift lead open" %}</strong>
+                    <small>{% if slot.suggested_lead %}{% blocktrans with name=slot.suggested_lead|display_name %}Suggested: {{ name }}{% endblocktrans %}{% else %}{% trans "Picked from sign-ups 48 h before" %}{% endif %}</small>
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="role-card-foot">
+        <div class="role-card-progress">
+            <div class="c-progress-head">
+                <span>{% blocktrans with f=entry.filled r=entry.required %}{{ f }}/{{ r }} filled{% endblocktrans %}</span>
+                <span class="role-status role-status-{{ entry.status }}">
+                    {% if entry.status == 'filled' %}{% trans "Filled" %}{% elif entry.status == 'critical' %}{% trans "Critical" %}{% else %}{% trans "Understaffed" %}{% endif %}
+                </span>
+            </div>
+            <div class="c-progress {% if entry.status != 'filled' %}accent{% endif %}"><span style="width: {{ entry.percent }}%"></span></div>
+        </div>
+        <div class="role-card-actions">
+            <button type="button" class="c-btn c-btn-sm c-btn-surface" title="{% trans 'Add another time slot' %}"
+                    hx-get="{% url 'console_add_role_slots' event.pk %}?role={{ entry.role.pk }}{% if area %}&area={{ area.pk }}{% endif %}" hx-target="#dialog-slot">
+                <span class="material-symbols-outlined">more_time</span>
+            </button>
+            <a href="{% url 'console_event_invite' event.pk %}?slot={{ entry.slots.0.pk }}" class="c-btn c-btn-sm c-btn-surface">
+                <span class="material-symbols-outlined">person_add</span>{% trans "Invite" %}
+            </a>
+        </div>
+    </div>
+</article>

@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'base.middleware.HtmxMessagesMiddleware',
     'base.middleware.RememberLanguageMiddleware',
+    'events.middleware.LeadDeadlineMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

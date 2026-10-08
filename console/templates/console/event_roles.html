@@ -35,6 +35,19 @@
 
 <div class="c-split">
     <div>
+        {% if suggest_chain %}
+        <div class="chain-suggest">
+            <span class="c-icon-tile round dark"><span class="material-symbols-outlined">account_tree</span></span>
+            <div class="chain-suggest-text">
+                <strong>{% blocktrans with n=volunteers_needed %}This event needs {{ n }} volunteers.{% endblocktrans %}</strong>
+                <p>{% blocktrans with n=chain_threshold %}Past {{ n }} people, one coordinator can't answer everyone. Group roles into areas, give each area a lead, and let shift leads handle questions on the ground.{% endblocktrans %}</p>
+            </div>
+            <form method="post" action="{% url 'console_chain_toggle' event.pk %}">
+                {% csrf_token %}<input type="hidden" name="enable" value="1">
+                <button type="submit" class="c-btn c-btn-primary">{% trans "Set Up Chain of Command" %}</button>
+            </form>
+        </div>
+        {% endif %}
         {% include 'console/partials/event_role_cards.html' %}
     </div>
 
@@ -78,6 +91,45 @@
                 <p class="staffing-warning">{% trans "Every role is fully staffed." %}</p>
                 {% endif %}
             </div>
+        </section>
+
+        <section class="c-card c-card-tonal chain-card">
+            <h2 class="c-label roles-side-label">{% trans "Chain of Command" %}</h2>
+            <ol class="chain-ladder">
+                <li><span class="material-symbols-outlined">shield_person</span>{% trans "General coordinator" %}</li>
+                {% if event.chain_of_command %}<li><span class="material-symbols-outlined">location_on</span>{% blocktrans count counter=areas|length %}{{ counter }} area lead group{% plural %}{{ counter }} area lead groups{% endblocktrans %}</li>{% endif %}
+                <li><span class="material-symbols-outlined">supervisor_account</span>{% trans "Shift leads" %}</li>
+                <li><span class="material-symbols-outlined">groups</span>{% trans "Volunteers" %}</li>
+            </ol>
+            {% if lead_positions %}
+            <dl class="chain-timeline">
+                <div class="{% if lead_phase == 'open' %}is-current{% endif %}">
+                    <dt>{% trans "Open" %}</dt>
+                    <dd>{% blocktrans with when=auto_assign_at|date:"M j, H:i" %}Assign shift leads any time until {{ when }}.{% endblocktrans %}</dd>
+                </div>
+                <div class="{% if lead_phase == 'review' %}is-current{% endif %}">
+                    <dt>{% trans "Review" %}</dt>
+                    <dd>{% trans "Open positions are filled with the signed-up volunteer who has the most impact points, and you get a reminder to look them over." %}</dd>
+                </div>
+                <div class="{% if lead_phase == 'locked' %}is-current{% endif %}">
+                    <dt>{% trans "Locked" %}</dt>
+                    <dd>{% blocktrans with when=lock_at|date:"M j, H:i" %}From {{ when }} leads can't change, so everyone knows who they report to.{% endblocktrans %}</dd>
+                </div>
+            </dl>
+            {% else %}
+            <p class="c-help">{% trans "Shifts that more than 5 people can sign up for get a shift lead." %}</p>
+            {% endif %}
+            {% trans "Remove the chain of command? Areas and area leads are deleted; roles and sign-ups stay." as remove_chain_confirm %}
+            <form method="post" action="{% url 'console_chain_toggle' event.pk %}"
+                  {% if event.chain_of_command %}onsubmit="return confirm('{{ remove_chain_confirm|escapejs }}')"{% endif %}>
+                {% csrf_token %}
+                <input type="hidden" name="enable" value="{% if event.chain_of_command %}0{% else %}1{% endif %}">
+                <button type="submit" class="c-btn c-btn-block {% if event.chain_of_command %}c-btn-ghost{% else %}c-btn-dark{% endif %}">
+                    <span class="material-symbols-outlined">account_tree</span>
+                    {% if event.chain_of_command %}{% trans "Remove Chain of Command" %}{% else %}{% trans "Set Up Chain of Command" %}{% endif %}
+                </button>
+            </form>
+            {% if not can_manage_leads %}<p class="c-help chain-note">{% trans "Only the event's general coordinators assign leads." %}</p>{% endif %}
         </section>
 
         <a class="location-hub" target="_blank" rel="noopener" href="{{ event.map_url }}">

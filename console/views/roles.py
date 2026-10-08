@@ -20,7 +20,7 @@ DIFFICULTY_LABELS = {
 
 @staff_required
 def role_list(request):
-    roles = Role.objects.annotate(
+    roles = Role.objects.filter(system_key__isnull=True).annotate(
         module_count=Count('training_modules', filter=Q(roletrainingrequirement__mandatory=True), distinct=True),
         slot_count=Count('opportunities', distinct=True),
     ).prefetch_related('preferred_skills', 'venue').order_by('name')
@@ -51,8 +51,8 @@ def role_list(request):
         'kind': kind,
         'difficulty': difficulty,
         'difficulties': DIFFICULTY_LABELS.items(),
-        'total_roles': Role.objects.count(),
-        'untrained_roles': Role.objects.filter(training_modules__isnull=True).count(),
+        'total_roles': Role.objects.filter(system_key__isnull=True).count(),
+        'untrained_roles': Role.objects.filter(system_key__isnull=True, training_modules__isnull=True).count(),
     }
     if request.headers.get('HX-Request') == 'true':
         return render(request, 'console/partials/role_grid.html', context)
@@ -61,7 +61,8 @@ def role_list(request):
 
 @staff_required
 def role_edit(request, role_id=None):
-    role = get_object_or_404(Role, pk=role_id) if role_id else None
+    # Built-in roles (e.g. "Area lead") aren't in the directory and can't be edited here.
+    role = get_object_or_404(Role, pk=role_id, system_key__isnull=True) if role_id else None
 
     if request.method == 'POST':
         form = RoleForm(with_custom_icon(request.POST), instance=role)
@@ -105,14 +106,14 @@ def role_edit(request, role_id=None):
         'selected_skills': selected_skills,
         'suggestions': suggestions,
         'requirements': requirements,
-        'total_roles': Role.objects.count(),
+        'total_roles': Role.objects.filter(system_key__isnull=True).count(),
     })
 
 
 @staff_required
 @require_POST
 def role_delete(request, role_id):
-    role = get_object_or_404(Role, pk=role_id)
+    role = get_object_or_404(Role, pk=role_id, system_key__isnull=True)  # built-in roles stay
     if role.opportunities.exists() or role.shifts.exists():
         messages.error(request, _('"%(name)s" is used by events or logged shifts, so it can\'t be deleted.') % {'name': role.name})
         return redirect('console_role_edit', role_id=role.pk)

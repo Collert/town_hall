@@ -4,6 +4,8 @@ from education.models import TrainingModule, TrainingModuleCompletion
 from django.utils import timezone
 
 class Role(models.Model):
+    AREA_LEAD = 'area_lead'
+
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     icon = models.CharField(max_length=50, help_text='Icon name from Google Material Icons')
@@ -14,9 +16,31 @@ class Role(models.Model):
     points_weight = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True,
                                         help_text='Impact points multiplier. Leave empty to set it from training length.')
     preferred_skills = models.ManyToManyField('education.Skill', related_name='preferred_for_roles', blank=True, help_text='Non-mandatory skills that improve volunteer matching')
+    # Built-in roles the app relies on (e.g. AREA_LEAD). They can't be deleted and stay out
+    # of the role directory and the "Add role" picker.
+    system_key = models.CharField(max_length=30, blank=True, null=True, unique=True, editable=False)
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_system(self):
+        return bool(self.system_key)
+
+    def delete(self, *args, **kwargs):
+        if self.system_key:
+            raise ValueError(f'"{self.name}" is a built-in role and cannot be deleted.')
+        return super().delete(*args, **kwargs)
+
+    @classmethod
+    def area_lead(cls):
+        """The built-in "Area lead" role: area leads are signed up to a slot in it
+        (events/leadership.py), so their shift counts like any other."""
+        role, _created = cls.objects.get_or_create(system_key=cls.AREA_LEAD, defaults={
+            'name': 'Area lead', 'icon': 'shield_person',
+            'description': 'Leads an area of an event: takes direction from the general coordinator and passes it on to the shift leads.',
+        })
+        return role
     
     @property
     def complexity_level(self):

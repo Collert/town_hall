@@ -3,6 +3,7 @@
 {% load static %}
 {% load humanize %}
 {% load md_extras %}
+{% load avatar_tags chain_tags %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'events/event_detail.css' %}">
@@ -172,26 +173,94 @@
 
         <!-- Sidebar -->
         <aside class="event-sidebar">
-            <!-- Coordinators -->
-            {% if event.coordinators.exists %}
+            <!-- Coordinators (general coordinators, then area leads when the event has a chain of command) -->
+            {% if coordinators %}
             <div class="sidebar-card">
-                <h3 class="sidebar-card-label">{% trans "Event Coordinator" %}</h3>
-                {% for coordinator in event.coordinators.all %}
-                <div class="coordinator-row">
-                    {% if coordinator.profile and coordinator.profile.avatar %}
-                    <div class="coordinator-avatar">
-                        <img src="{{ coordinator.profile.avatar.url }}" alt="{% trans 'Coordinator avatar' %}" class="coordinator-avatar-img" />
-                    </div>
+                <h3 class="sidebar-card-label">{% blocktranslate count counter=coordinators|length %}Event Coordinator{% plural %}Event Coordinators{% endblocktranslate %}</h3>
+                <ul class="coordinator-list">
+                    {% for entry in coordinators %}
+                    <li class="coordinator-row{% if entry.mine %} is-mine{% endif %}">
+                        {% avatar entry.user 'lg' %}
+                        <div class="coordinator-info">
+                            <p class="coordinator-name">{{ entry.user|display_name }}</p>
+                            <p class="coordinator-title">
+                                {% if entry.general %}{% if event.chain_of_command %}{% trans "General coordinator" %}{% else %}{% trans "Coordinator" %}{% endif %}
+                                {% else %}<span class="material-symbols-outlined">{{ entry.area.icon|default:"location_on" }}</span>{% blocktranslate with area=entry.area.name %}{{ area }} lead{% endblocktranslate %}
+                                <span class="coordinator-hours">{{ entry.lead.start_time|timespan:entry.lead.end_time }}</span>{% endif %}
+                            </p>
+                            {% if entry.mine %}<span class="coordinator-badge">{% trans "Your lead" %}</span>{% endif %}
+                        </div>
+                        {% if entry.user.email and entry.user != request.user %}
+                        <a href="mailto:{{ entry.user.email }}?subject={{ event.title|urlencode }}" class="coordinator-contact"
+                           aria-label="{% blocktranslate with name=entry.user|display_name %}Message {{ name }}{% endblocktranslate %}"
+                           {% if entry.redirect %}data-lead-check data-name="{{ entry.user|display_name }}"{% endif %}>
+                            <span class="material-symbols-outlined">mail</span>
+                        </a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- My team(s): the people on the same shift, with its shift lead -->
+            {% if teams %}
+            <div class="sidebar-card team-card">
+                <h3 class="sidebar-card-label">{% if teams|length > 1 %}{% trans "My Teams" %}{% else %}{% trans "My Team" %}{% endif %}</h3>
+                {% for team in teams %}
+                {% if teams|length > 1 %}<details class="team-accordion">
+                <summary>
+                    <span class="material-symbols-outlined">{{ team.slot.role.icon|default:"badge" }}</span>
+                    <span class="team-summary-text">
+                        <strong>{{ team.slot.role.name }}{% if team.slot.area %} &middot; {{ team.slot.area.name }}{% endif %}</strong>
+                        <small>{{ team.slot.start_time|timespan:team.slot.end_time }}</small>
+                    </span>
+                    <span class="material-symbols-outlined team-chevron">expand_more</span>
+                </summary>
+                {% else %}
+                <p class="team-shift">
+                    <strong>{{ team.slot.role.name }}{% if team.slot.area %} &middot; {{ team.slot.area.name }}{% endif %}</strong>
+                    <small>{{ team.slot.start_time|timespan:team.slot.end_time }}</small>
+                </p>
+                {% endif %}
+                <div class="team-body">
+                    {% if team.leads_area %}
+                    <p class="team-you-lead"><span class="material-symbols-outlined">shield_person</span>{% blocktranslate with area=team.slot.area.name %}You lead {{ area }}. Pass direction from the general coordinator to these shift leads.{% endblocktranslate %}</p>
+                    {% if team.shift_leads %}
+                    <ul class="team-members">
+                        {% for shift in team.shift_leads %}
+                        <li>{% avatar shift.lead 'xs' %}<span>{{ shift.lead|display_name }} <small class="team-member-role">{{ shift.role.name }} &middot; {{ shift.start_time|time }}&ndash;{{ shift.end_time|time }}</small></span></li>
+                        {% endfor %}
+                    </ul>
                     {% else %}
-                    <div class="coordinator-avatar">
-                        <span class="material-symbols-outlined">person</span>
+                    <p class="sidebar-card-text">{% trans "No shift leads have been picked in your area yet." %}</p>
+                    {% endif %}
+                    {% elif team.i_lead %}
+                    <p class="team-you-lead"><span class="material-symbols-outlined">star</span>{% trans "You lead this shift. Pass direction on to your team, and bring what you can't answer to your area lead." %}</p>
+                    {% elif team.lead %}
+                    <div class="team-lead">
+                        {% avatar team.lead 'sm' %}
+                        <span><strong>{{ team.lead|display_name }}</strong><small>{% trans "Your shift lead" %}</small></span>
+                        {% if team.lead.email %}<a href="mailto:{{ team.lead.email }}?subject={{ event.title|urlencode }}" class="coordinator-contact" aria-label="{% trans 'Message your shift lead' %}"><span class="material-symbols-outlined">mail</span></a>{% endif %}
                     </div>
                     {% endif %}
-                    <div class="coordinator-info">
-                        <p class="coordinator-name">{{ coordinator.get_full_name|default:coordinator.username }}</p>
+                    {% for area_lead in team.area_leads %}
+                    <div class="team-lead is-area">
+                        {% avatar area_lead.person 'sm' %}
+                        <span><strong>{{ area_lead.person|display_name }}</strong><small>{% blocktranslate with area=team.slot.area.name %}{{ area }} lead{% endblocktranslate %}</small></span>
                     </div>
+                    {% endfor %}
+                    {% if team.teammates %}
+                    <ul class="team-members">
+                        {% for mate in team.teammates %}{% if mate != team.lead %}
+                        <li>{% avatar mate 'xs' %}<span>{{ mate|display_name }}</span></li>
+                        {% endif %}{% endfor %}
+                    </ul>
+                    {% elif not team.leads_area and not team.lead or team.i_lead %}
+                    <p class="sidebar-card-text">{% trans "Nobody else has signed up for this shift yet." %}</p>
+                    {% endif %}
                 </div>
-                <a href="mailto:{{ coordinator.email }}?subject={{ event.title }}" class="btn btn-outline btn-rounded email-button"><span class="material-symbols-outlined">email</span> Message coordinator</a>
+                {% if teams|length > 1 %}</details>{% endif %}
                 {% endfor %}
             </div>
             {% endif %}
@@ -363,7 +432,7 @@
                                 {% if ts.is_full and not ts.user_signed_up %}style="pointer-events:none;"{% endif %}>
                                 <input type="radio" name="slot_id" value="{{ ts.id }}" {% if ts.is_selected %}checked{% endif %} {% if ts.is_full and not ts.user_signed_up %}disabled{% endif %} style="display:none;">
                                 <div class="timeslot-content">
-                                    <div class="timeslot-time">{{ ts.start_time|time:"TIME_FORMAT" }} - {{ ts.end_time|time:"TIME_FORMAT" }}</div>
+                                    <div class="timeslot-time">{{ ts.start_time|time:"TIME_FORMAT" }} - {{ ts.end_time|time:"TIME_FORMAT" }}{% if ts.area %} <span class="timeslot-area">{{ ts.area }}</span>{% endif %}</div>
                                     <div class="timeslot-info">
                                         {% if ts.user_signed_up %}
                                             <span style="color: var(--color-success); font-weight: 600;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size:1.25rem;">check_circle</span> {% trans "Signed up" %}</span>
@@ -404,8 +473,52 @@
 </dialog>
 {% endfor %}
 
+{% if my_leads %}
+<dialog class="modal-dialog lead-redirect-dialog" id="lead-redirect-dialog">
+    <div class="lead-redirect">
+        <header class="modal-header">
+            <div>
+                <h2 class="modal-title">{% trans "Try your lead first" %}</h2>
+                <p class="modal-subtitle">{{ event.title }}</p>
+            </div>
+            <form method="dialog"><button class="modal-close" type="submit"><span class="material-symbols-outlined">close</span></button></form>
+        </header>
+        <div class="modal-body">
+            <p class="lead-redirect-text">
+                {% blocktranslate count counter=my_leads|length %}Your area lead is the person to ask first. They can answer most questions and bring anything bigger to the coordinators.{% plural %}Your area leads are the people to ask first. They can answer most questions and bring anything bigger to the coordinators.{% endblocktranslate %}
+            </p>
+            {% for lead in my_leads %}
+            <div class="team-lead is-area">
+                {% avatar lead.person 'md' %}
+                <span><strong>{{ lead.person|display_name }}</strong><small>{% blocktranslate with area=lead.area.name %}{{ area }} lead{% endblocktranslate %} &middot; {{ lead.start_time|timespan:lead.end_time }}</small></span>
+                {% if lead.person.email %}<a href="mailto:{{ lead.person.email }}?subject={{ event.title|urlencode }}" class="btn btn-accent btn-rounded lead-redirect-btn"><span class="material-symbols-outlined">mail</span>{% trans "Message" %}</a>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <footer class="modal-footer">
+            <a href="#" class="btn btn-outline btn-lg btn-rounded" id="lead-redirect-anyway" data-label="{% blocktranslate with name='__NAME__' %}Contact {{ name }} anyway{% endblocktranslate %}">{% trans "Contact them anyway" %}</a>
+        </footer>
+    </div>
+</dialog>
+{% endif %}
+
 <script>
 (function() {
+    // Contacting someone above your own area lead: suggest the lead first.
+    const leadDialog = document.getElementById('lead-redirect-dialog');
+    if (leadDialog) {
+        const anyway = document.getElementById('lead-redirect-anyway');
+        document.querySelectorAll('a[data-lead-check]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                anyway.href = link.href;
+                anyway.textContent = anyway.dataset.label.replace('__NAME__', link.dataset.name);
+                leadDialog.showModal();
+            });
+        });
+        anyway.addEventListener('click', () => leadDialog.close());
+    }
+
     // Open Dialog
     document.querySelectorAll('.role-select-btn').forEach(btn => {
         btn.addEventListener('click', () => {

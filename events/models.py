@@ -42,6 +42,11 @@ class Event(models.Model):
     category = models.ManyToManyField('EventCategory', related_name='events', blank=True)
     attendees = models.IntegerField(default=0, help_text='Number of attendees (for calculating impact points)')
     published = models.BooleanField(default=True, help_text='Unpublished events are hidden from volunteers')
+    # Chain of command (events/leadership.py): slots are grouped into areas, each area has
+    # leads who report to the coordinators, and every slot has a shift lead.
+    chain_of_command = models.BooleanField(default=False, help_text='Group roles into areas with area and shift leads')
+    leads_auto_assigned_at = models.DateTimeField(blank=True, null=True, editable=False,
+                                                  help_text='When open shift lead positions were filled automatically')
 
     def __str__(self):
         return self.title
@@ -215,9 +220,46 @@ class EventCategory(models.Model):
     def __str__(self):
         return self.name
 
+class EventArea(models.Model):
+    """A physical place or area of responsibility at an event with a chain of command
+    (kitchen, stage, cleaning...). It groups role slots. Its area leads are the people
+    signed up for its slots in the built-in "Area lead" role (``lead_slots``)."""
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='areas')
+    name = models.CharField(max_length=100)
+    icon = models.CharField(max_length=50, blank=True, default='', help_text='Icon name from Google Material Symbols')
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'pk']
+
+    def __str__(self):
+        return f'{self.name} ({self.event})'
+
+    def work_slots(self):
+        """The area's volunteer shifts (everything but its area lead shifts)."""
+        return self.slots.exclude(role__system_key='area_lead')
+
+    def lead_slots(self):
+        """The area's area lead shifts, earliest first, with the lead on each."""
+        return (self.slots.filter(role__system_key='area_lead').order_by('start_time', 'pk')
+                .prefetch_related('signups__profile'))
+
+    def window(self):
+        """(start, end) the area is active: its earliest shift start to its latest shift
+        end, or the whole event while it has no shifts."""
+        bounds = self.work_slots().aggregate(start=models.Min('start_time'), end=models.Max('end_time'))
+        if bounds['start'] is None:
+            return self.event.start_date, self.event.end_date
+        return bounds['start'], bounds['end']
+
+
 class EventRoleSlot(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='role_slots')
     role = models.ForeignKey('jobs.Role', related_name='opportunities', on_delete=models.CASCADE)
+    area = models.ForeignKey(EventArea, on_delete=models.SET_NULL, blank=True, null=True, related_name='slots')
+    # One of the slot's sign-ups; picked by a coordinator or automatically (events/leadership.py).
+    lead = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, related_name='led_slots')
+    lead_auto_assigned = models.BooleanField(default=False)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     required_qty = models.PositiveIntegerField(default=1)
@@ -227,6 +269,16 @@ class EventRoleSlot(models.Model):
 
     def __str__(self):
         return f"{self.role.name} for {self.event.title} at {self.start_time.strftime('%Y-%m-%d %H:%M')}"
+
+    @property
+    def is_area_lead(self):
+        """An area lead's shift (the built-in "Area lead" role), not a volunteer shift."""
+        return self.role.system_key == 'area_lead'
+
+    @property
+    def person(self):
+        """Whoever holds a one-person slot such as an area lead shift (uses prefetched signups)."""
+        return next(iter(self.signups.all()), None)
 
     def is_fully_staffed(self):
         return self.signups.count() >= self.required_qty
@@ -263,9 +315,6 @@ class EventRoleSlot(models.Model):
         # Ensure end_time is after start_time
         if self.end_time <= self.start_time:
             raise ValueError("End time must be after start time.")
-        # Ensure there are enough slots left for a new sign up
-        if self.pk and self.signups.count() >= (self.required_qty + self.allowed_overstaffing_qty):
-            raise ValueError("No more slots available.")
         super().save(*args, **kwargs)
     
 class SlotSignup(models.Model):
@@ -313,6 +362,9 @@ class EventTaskList(models.Model):
     # The roles whose sign-ups join this list (events/belltower_sync.py). Each role at the
     # event starts with its own "<Role> tasks" list; merging lists combines their roles.
     roles = models.ManyToManyField('jobs.Role', blank=True, related_name='event_task_lists')
+    # With a chain of command, role lists are per area too, so kitchen cleaners and kids
+    # zone cleaners get separate lists. Only lists of the same area merge.
+    area = models.ForeignKey('EventArea', on_delete=models.SET_NULL, blank=True, null=True, related_name='task_lists')
     name = models.CharField(max_length=200)
     belltower_url = models.URLField()
     belltower_id = models.PositiveIntegerField()
@@ -358,13 +410,17 @@ def queue_role_list(sender, instance, created, **kwargs):
     from base import belltower
     if created and belltower.is_connected():
         from . import belltower_sync
-        belltower.run_after_commit(belltower_sync.role_slot_added, instance.event_id, instance.role_id)
+        belltower.run_after_commit(belltower_sync.role_slot_added, instance.event_id, instance.role_id, instance.area_id)
 
 
 @receiver(m2m_changed, sender=EventRoleSlot.signups.through)
 def queue_role_list_members(sender, instance, action, reverse, pk_set, **kwargs):
     if action not in ('post_add', 'post_remove') or not pk_set:
         return
+    if action == 'post_remove':  # someone who leaves a slot stops leading it
+        from .leadership import drop_lead_if_gone
+        slot_ids, user_ids = (list(pk_set), [instance.pk]) if reverse else ([instance.pk], list(pk_set))
+        drop_lead_if_gone(slot_ids, user_ids)
     from base import belltower
     if not belltower.is_connected():
         return

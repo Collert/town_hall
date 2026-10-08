@@ -16,7 +16,8 @@ from base.email import announce_event, notify, text_to_html
 from base.models import Notification
 from base.utils import short_datetime
 from education.models import TrainingModuleCompletion
-from events.models import Event, EventRoleSlot, EventSlotInvite
+from events import leadership
+from events.models import Event, EventArea, EventRoleSlot, EventSlotInvite
 from jobs.models import Role, Shift
 
 from ..decorators import staff_required
@@ -104,25 +105,68 @@ def event_edit(request, event_id=None):
 # Roles & staffing
 # ---------------------------------------------------------------------------
 
-def _roles_context(event):
-    staffing = role_staffing(event)
+def _decorate_slots(event, slots, now):
+    """Shift lead state for each slot's chip: position, lock, and who'd be picked."""
+    for slot in slots:
+        slot.lead_position = leadership.has_lead_position(slot, event)
+        slot.lead_locked = slot.lead_position and not leadership.can_change_lead(event, slot.lead_id, now)
+        slot.suggested_lead = leadership.suggested_lead(slot) if slot.lead_position and not slot.lead_id else None
+
+
+def _roles_context(event, user):
+    now = timezone.now()
+    all_slots = list(slots_with_counts(
+        event.role_slots.select_related('role', 'area', 'lead__profile').prefetch_related('signups__profile')
+        .order_by('start_time')
+    ))
+    # Area lead shifts show in their area's lead strip, not as role cards.
+    lead_slots = [s for s in all_slots if s.is_area_lead]
+    slots = [s for s in all_slots if not s.is_area_lead]
+    _decorate_slots(event, slots, now)
+    staffing = role_staffing(event, slots)
     required = sum(r['required'] for r in staffing)
     filled = sum(min(r['filled'], r['required']) for r in staffing)
     critical = [r for r in staffing if r['status'] == 'critical']
+
+    areas, unassigned = [], []
+    if event.chain_of_command:
+        for area in event.areas.all():
+            area_slots = [s for s in slots if s.area_id == area.pk]
+            leads = [s for s in lead_slots if s.area_id == area.pk and s.person]
+            for lead in leads:
+                lead.locked = not leadership.can_change_lead(event, lead.person.pk if lead.person else None, now)
+            start = min((s.start_time for s in area_slots), default=event.start_date)
+            end = max((s.end_time for s in area_slots), default=event.end_date)
+            areas.append({
+                'area': area, 'staffing': role_staffing(event, area_slots), 'leads': leads, 'start': start, 'end': end,
+                'gaps': leadership.gaps(start, end, [(l.start_time, l.end_time) for l in leads]),
+            })
+        unassigned = role_staffing(event, [s for s in slots if s.area_id is None])
+
     return {
         'event': event,
         'staffing': staffing,
+        'areas': areas,
+        'unassigned': unassigned,
         'overall_percent': round(filled / required * 100) if required else 0,
         'shortfall': sum(r['missing'] for r in staffing),
         'critical': critical,
         'volunteer_count': event.volunteers().count(),
+        'volunteers_needed': required,
+        'suggest_chain': leadership.suggests_chain(event),
+        'chain_threshold': leadership.SUGGEST_CHAIN_AT,
+        'lead_positions': any(s.lead_position for s in slots),
+        'lead_phase': leadership.phase(event, now),
+        'auto_assign_at': leadership.auto_assign_at(event),
+        'lock_at': leadership.lock_at(event),
+        'can_manage_leads': leadership.can_manage_leads(user, event),
     }
 
 
 @staff_required
 def event_roles(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    return render(request, 'console/event_roles.html', _roles_context(event))
+    return render(request, 'console/event_roles.html', _roles_context(event, request.user))
 
 
 @staff_required
@@ -131,7 +175,7 @@ def delete_slot(request, event_id, slot_id):
     slot = get_object_or_404(EventRoleSlot, pk=slot_id, event_id=event_id)
     slot.delete()
     messages.success(request, _('Time slot removed.'))
-    return render(request, 'console/partials/event_role_cards.html', _roles_context(slot.event))
+    return render(request, 'console/partials/event_role_cards.html', _roles_context(slot.event, request.user))
 
 
 def _announce_event(request, event):
@@ -214,7 +258,8 @@ def _parse_slot_rows(request, event):
 
 
 def _role_options(query=''):
-    roles = Role.objects.annotate(module_count=Count('training_modules', distinct=True)).order_by('permanent', 'name')
+    roles = (Role.objects.filter(system_key__isnull=True)
+             .annotate(module_count=Count('training_modules', distinct=True)).order_by('permanent', 'name'))
     if query:
         roles = roles.filter(Q(name__icontains=query) | Q(description__icontains=query))
     return roles
@@ -225,7 +270,7 @@ def add_role_slots(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
 
     if request.method == 'POST':
-        role = Role.objects.filter(pk=request.POST.get('role')).first()
+        role = Role.objects.filter(pk=request.POST.get('role'), system_key__isnull=True).first()
         slots, errors = _parse_slot_rows(request, event)
         if not role:
             errors.insert(0, _('Select a role first.'))
@@ -234,11 +279,17 @@ def add_role_slots(request, event_id):
                 messages.error(request, error)
             return redirect('console_event_roles', event_id=event.pk)
         is_public = request.POST.get('is_public') == 'on'
+        area = event.areas.filter(pk=request.POST.get('area') or 0).first() if event.chain_of_command else None
+        suggested_before = leadership.suggests_chain(event)
         for slot in slots:
             slot.role = role
+            slot.area = area
             slot.is_public = is_public
             slot.save()
         messages.success(request, _('Added %(role)s with %(count)d time slot(s).') % {'role': role.name, 'count': len(slots)})
+        if not suggested_before and leadership.suggests_chain(event):
+            messages.info(request, _('This event now needs more than %(n)d volunteers. Consider setting up a chain of command with areas and leads.')
+                          % {'n': leadership.SUGGEST_CHAIN_AT})
         if request.POST.get('next') == 'invite':
             return redirect(f"{reverse('console_event_invite', args=[event.pk])}?slot={slots[0].pk}")
         return redirect('console_event_roles', event_id=event.pk)
@@ -252,6 +303,7 @@ def add_role_slots(request, event_id):
     end = timezone.localtime(event.end_date)
     return render(request, 'console/partials/add_role_dialog.html', {
         'event': event,
+        'area': event.areas.filter(pk=request.GET.get('area') or 0).first() if event.chain_of_command else None,
         'roles': _role_options(),
         'preselected': request.GET.get('role'),
         'default_slot': {

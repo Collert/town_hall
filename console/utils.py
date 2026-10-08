@@ -20,6 +20,10 @@ ROLE_ICONS = [
     'sports_soccer', 'event', 'local_shipping', 'point_of_sale', 'menu_book', 'computer',
     'groups', 'child_care', 'volunteer_activism', 'construction',
 ]
+AREA_ICONS = [
+    'restaurant', 'soup_kitchen', 'theater_comedy', 'child_care', 'cleaning_services', 'local_parking',
+    'storefront', 'medical_services', 'how_to_reg', 'inventory_2', 'music_note', 'park',
+]
 MODULE_ICONS = [
     'school', 'health_and_safety', 'local_fire_department', 'psychology', 'diversity_3',
     'handshake', 'gavel', 'menu_book', 'emergency', 'accessibility_new', 'record_voice_over', 'eco',
@@ -79,10 +83,13 @@ def slots_with_counts(queryset):
     return queryset.annotate(signup_count=Count('signups', distinct=True))
 
 
-def role_staffing(event):
-    """Aggregate an event's slots by role: required, filled, and slot list."""
+def role_staffing(event, slots=None):
+    """Aggregate an event's slots (or just ``slots``, annotated with signup_count) by role:
+    required, filled, and slot list."""
+    if slots is None:
+        slots = slots_with_counts(event.role_slots.select_related('role').order_by('start_time'))
     roles = {}
-    for slot in slots_with_counts(event.role_slots.select_related('role').order_by('start_time')):
+    for slot in slots:
         entry = roles.setdefault(slot.role_id, {
             'role': slot.role, 'required': 0, 'filled': 0, 'slots': [],
         })
