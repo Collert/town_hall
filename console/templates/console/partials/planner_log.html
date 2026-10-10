@@ -1,0 +1,31 @@
+{% load i18n console_tags %}
+<div id="planner-log" class="planner-log" data-busy="{{ chat.busy|yesno:'true,false' }}" data-changes="{{ chat.changes }}"
+     {% if chat.busy %}hx-get="{% url 'console_planner_chat' event.pk %}" hx-trigger="load delay:1500ms" hx-swap="outerHTML"{% endif %}
+     aria-live="polite">
+    {% for item in items %}
+    {% if item.kind == 'assistant' %}
+    <div class="planner-msg is-assistant">{{ item.text|chat_markdown }}</div>
+    {% elif item.kind == 'user' %}
+    <div class="planner-msg is-user">{{ item.text|linebreaksbr }}</div>
+    {% else %}
+    <div class="planner-activity{% if item.failed %} is-failed{% endif %}">
+        <span class="material-symbols-outlined">{% if item.failed %}error{% else %}{{ item.icon }}{% endif %}</span>{{ item.text }}
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    {% if chat.busy %}
+    <div class="planner-typing" aria-label="{% trans 'The assistant is working' %}"><span></span><span></span><span></span></div>
+    {% endif %}
+    {% if chat.error %}
+    <p class="planner-error"><span class="material-symbols-outlined">error</span>{{ chat.error }}</p>
+    {% endif %}
+    {% if replies %}
+    <div class="planner-replies">
+        {% for reply in replies %}
+        <button type="button" class="planner-reply" hx-post="{% url 'console_planner_send' event.pk %}" hx-target="#planner-log" hx-swap="outerHTML"
+                hx-vals='{"message": "{{ reply|escapejs }}"}'>{{ reply }}</button>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

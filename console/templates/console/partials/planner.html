@@ -1,0 +1,98 @@
+{% load i18n static console_tags %}
+{% comment %}
+"Help me plan": the AI planning assistant on an event's console pages (console/planner.py).
+A small button in the corner opens a chat panel. With AI features off it explains how to
+turn them on instead. Its × hides it for this staff member (Organization > Backend brings it back).
+{% endcomment %}
+{% if not user.profile.ai_planner_hidden %}
+{% ai_enabled as ai_on %}
+<link rel="stylesheet" href="{% static 'console/planner.css' %}">
+<div class="planner" id="planner">
+    <div class="planner-launch">
+        {% if ai_on %}
+        <button type="button" class="planner-launch-btn" data-planner-open
+                hx-get="{% url 'console_planner_chat' event.pk %}" hx-target="#planner-log" hx-swap="outerHTML" hx-trigger="planner-load once">
+            <span class="material-symbols-outlined">auto_awesome</span>{% trans "Help me plan" %}
+        </button>
+        {% else %}
+        <button type="button" class="planner-launch-btn" data-dialog-open="planner-off-dialog">
+            <span class="material-symbols-outlined">auto_awesome</span>{% trans "Help me plan" %}
+        </button>
+        {% endif %}
+        <button type="button" class="planner-launch-dismiss" data-dialog-open="planner-dismiss-dialog" title="{% trans 'Hide this button' %}" aria-label="{% trans 'Hide this button' %}">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+
+    {% if ai_on %}
+    <section class="planner-panel" id="planner-panel" hidden aria-label="{% trans 'Planning assistant' %}">
+        <header class="planner-head">
+            <span class="planner-head-icon material-symbols-outlined">auto_awesome</span>
+            <div class="planner-head-text">
+                <strong>{% trans "Planning assistant" %}</strong>
+                <small>{{ event.title }}</small>
+            </div>
+            <button type="button" class="c-icon-btn" title="{% trans 'Start over' %}" aria-label="{% trans 'Start over' %}"
+                    hx-post="{% url 'console_planner_reset' event.pk %}" hx-target="#planner-log" hx-swap="outerHTML"
+                    hx-confirm="{% trans 'Start a new conversation? This one will be cleared. Nothing it changed is undone.' %}">
+                <span class="material-symbols-outlined">restart_alt</span>
+            </button>
+            <button type="button" class="c-icon-btn" data-planner-close title="{% trans 'Close' %}" aria-label="{% trans 'Close' %}">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </header>
+        <div class="planner-reload" hidden>
+            <span class="material-symbols-outlined">sync</span>
+            <span>{% trans "The assistant changed this event." %}</span>
+            <button type="button" class="c-btn c-btn-surface c-btn-sm" onclick="location.reload()">{% trans "Reload page" %}</button>
+        </div>
+        <div id="planner-log" class="planner-log" data-busy="true">
+            <div class="planner-typing"><span></span><span></span><span></span></div>
+        </div>
+        <form class="planner-compose" hx-post="{% url 'console_planner_send' event.pk %}" hx-target="#planner-log" hx-swap="outerHTML"
+              hx-on::after-request="if (event.detail.successful) this.reset()">
+            <textarea name="message" rows="1" class="planner-input" placeholder="{% trans 'Message the assistant…' %}"
+                      aria-label="{% trans 'Message the assistant' %}" maxlength="4000" required></textarea>
+            <button type="submit" class="planner-send" aria-label="{% trans 'Send' %}" disabled>
+                <span class="material-symbols-outlined">arrow_upward</span>
+            </button>
+        </form>
+        <p class="planner-note">{% trans "AI can make mistakes. It changes this event directly; check its work." %}</p>
+    </section>
+    {% endif %}
+
+    <dialog class="c-dialog planner-dialog" id="planner-off-dialog">
+        <div class="c-dialog-head">
+            <h2>{% trans "AI features are off" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body">
+            <p>{% trans "The planning assistant reads this event, looks at similar past events, and helps you write the description, build a preparation plan, and set up roles and shifts." %}</p>
+            <p>{% trans "To use it, turn on AI features and add an Anthropic API key in Organization > Backend." %}</p>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Not now" %}</button>
+            <a href="{% url 'console_settings_backend' %}#ai" class="c-btn c-btn-primary">
+                <span class="material-symbols-outlined">settings</span>{% trans "Set up AI features" %}
+            </a>
+        </div>
+    </dialog>
+
+    <dialog class="c-dialog planner-dialog" id="planner-dismiss-dialog">
+        <div class="c-dialog-head">
+            <h2>{% trans "Hide “Help me plan”?" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body">
+            <p>{% trans "The button will no longer appear on your event pages. If you set up AI features later, you can bring it back in Organization > Backend." %}</p>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Keep it" %}</button>
+            <button type="button" class="c-btn c-btn-dark" hx-post="{% url 'console_planner_dismiss' %}" hx-target="#planner" hx-swap="outerHTML">
+                <span class="material-symbols-outlined">visibility_off</span>{% trans "Hide it" %}
+            </button>
+        </div>
+    </dialog>
+</div>
+<script src="{% static 'console/planner.js' %}" defer></script>
+{% endif %}

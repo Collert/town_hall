@@ -72,6 +72,7 @@ class Profile(models.Model):
     id_code = models.CharField(max_length=6, unique=True, editable=False, help_text='Unique identifier for the user (e.g., employee ID, volunteer ID)')
     admin_notes = models.TextField(blank=True, default='', help_text='Internal notes visible to staff only')
     language = models.CharField(max_length=10, blank=True, default='', help_text='Language the user last browsed in; emails use it')
+    ai_planner_hidden = models.BooleanField(default=False, help_text='Dismissed the "Help me plan" button on event pages')
 
     @property
     def level(self):
@@ -632,6 +633,11 @@ class SiteSettings(models.Model):
     belltower_username = models.CharField(max_length=150, blank=True, default='', help_text='Bell Tower account Town Hall acts as')
     belltower_endpoints = models.JSONField(default=dict, blank=True, help_text='From /.well-known/belltower')
     belltower_connected_at = models.DateTimeField(null=True, blank=True)
+
+    # AI features (base/ai.py): the event planning assistant. Off until staff switch it on.
+    ai_enabled = models.BooleanField(default=False, help_text='Turn on AI features such as the event planning assistant')
+    anthropic_api_key = models.CharField(max_length=200, blank=True, default='', help_text='Anthropic API key')
+    ai_model = models.CharField(max_length=50, blank=True, default='claude-opus-5-5', help_text='Claude model the assistant uses')
 
     kiosk_idle_timeout_seconds = models.PositiveSmallIntegerField(
         default=30,

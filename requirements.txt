@@ -9,3 +9,4 @@ deep-translator
 dotenv
 dj-database-url
 gunicorn
+anthropic

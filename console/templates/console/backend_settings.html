@@ -19,7 +19,7 @@
     <header class="page-header">
         <div>
             <h1 class="page-title">{% trans "Backend Settings" %}</h1>
-            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation, email and task lists. Values saved here take priority over server environment variables." %}</p>
+            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation, email, task lists and optional AI features. Values saved here take priority over server environment variables." %}</p>
         </div>
         <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
     </header>
@@ -133,6 +133,29 @@
                 <button type="button" class="c-btn c-btn-dark" data-dialog-open="belltower-dialog"><span class="material-symbols-outlined">link</span>{% trans "Connect to Bell Tower" %}</button>
                 {% endif %}
             </section>
+
+            <section class="c-card" id="ai">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">auto_awesome</span>{% trans "AI features" %}</h2>
+                <p class="c-muted backend-intro">{% trans "Optional. When switched on, event pages get a “Help me plan” assistant that reads the event, looks at similar past events, and helps write the description, build a preparation plan in the planning task list, and set up roles and shifts. It uses Claude from Anthropic, billed to your API key." %}</p>
+                {% trans "Show the planning assistant on event pages" as ai_hint %}
+                {% include 'console/partials/toggle.html' with field=form.ai_enabled hint=ai_hint %}
+                <div class="c-grid-2 backend-ai-fields">
+                    {% include 'console/partials/secret_field.html' with field=form.anthropic_api_key saved=secrets.anthropic_api_key env=env_overrides.anthropic_api_key %}
+                    {% include 'console/partials/field.html' with field=form.ai_model %}
+                </div>
+                <details class="backend-howto">
+                    <summary>{% trans "How to get an API key" %}</summary>
+                    <p>{% trans "Sign in at console.anthropic.com, open API Keys, and create a key. Usage is billed to that account; setting a monthly spend limit there is a good idea." %}</p>
+                    <p>{% trans "Claude Opus 5.5 plans best. Claude Sonnet 5.5 costs about half as much." %}</p>
+                </details>
+                {% if ai_enabled_without_key %}<p class="backend-status error"><span class="material-symbols-outlined">warning</span>{% trans "AI features are switched on but there's no API key, so the assistant can't run." %}</p>{% endif %}
+                {% if planner_hidden %}
+                <div class="backend-status-actions">
+                    <p class="c-help">{% trans "You hid the “Help me plan” button on event pages." %}</p>
+                    <button type="submit" form="planner-show-form" class="c-btn c-btn-ghost c-btn-sm"><span class="material-symbols-outlined">visibility</span>{% trans "Show it again" %}</button>
+                </div>
+                {% endif %}
+            </section>
         </div>
 
         <aside class="c-stack">
@@ -183,6 +206,7 @@
 {# Outside the settings form: these post to their own views. #}
 <form id="belltower-disconnect-form" method="post" action="{% url 'console_belltower_disconnect' %}">{% csrf_token %}</form>
 <form id="belltower-link-users-form" method="post" action="{% url 'console_belltower_link_users' %}">{% csrf_token %}</form>
+<form id="planner-show-form" method="post" action="{% url 'console_planner_show' %}">{% csrf_token %}</form>
 <dialog class="c-dialog belltower-dialog" id="belltower-dialog">
     <form method="post" action="{% url 'console_belltower_connect' %}">
         {% csrf_token %}

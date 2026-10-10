@@ -375,6 +375,27 @@ def _recipients(slot, query=''):
     return ranked
 
 
+def send_invites(slot, users, subject, body, absolute_url):
+    """Invite ``users`` to ``slot``: a notification and an 'invitation' email each, with
+    [Name] in ``body`` replaced. ``absolute_url(path)`` builds the link. Returns the count."""
+    sent = 0
+    for user in users:
+        invite = EventSlotInvite.objects.filter(event_role_slot=slot, user=user, accepted=False).first()
+        if not invite:
+            invite = EventSlotInvite.objects.create(event_role_slot=slot, user=user)
+        link = absolute_url(reverse('respond_to_invite', args=[invite.token]))
+        name = user.first_name or user.username
+        Notification.objects.create(user=user, message=subject[:255], link=link)
+        message = body.replace('[Name]', name)
+        notify('invitation', user, {
+            'subject': subject, 'link': link, 'event': slot.event.title, 'role': slot.role.name,
+            'date': short_datetime(slot.start_time, user.profile.language),
+            'message': message, 'message_html': text_to_html(message),
+        })
+        sent += 1
+    return sent
+
+
 @staff_required
 def invite_volunteers(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
@@ -390,21 +411,7 @@ def invite_volunteers(request, event_id):
         subject = request.POST.get('subject', '').strip() or _('You are invited to %(event)s') % {'event': event.title}
         body = request.POST.get('body', '').strip()
         users = User.objects.filter(pk__in=user_ids, is_active=True)
-        sent = 0
-        for user in users:
-            invite = EventSlotInvite.objects.filter(event_role_slot=slot, user=user, accepted=False).first()
-            if not invite:
-                invite = EventSlotInvite.objects.create(event_role_slot=slot, user=user)
-            link = request.build_absolute_uri(reverse('respond_to_invite', args=[invite.token]))
-            name = user.first_name or user.username
-            Notification.objects.create(user=user, message=subject[:255], link=link)
-            message = body.replace('[Name]', name)
-            notify('invitation', user, {
-                'subject': subject, 'link': link, 'event': event.title, 'role': slot.role.name,
-                'date': short_datetime(slot.start_time, user.profile.language),
-                'message': message, 'message_html': text_to_html(message),
-            })
-            sent += 1
+        sent = send_invites(slot, users, subject, body, request.build_absolute_uri)
         if sent:
             messages.success(request, _('Sent %(count)d invitation(s) for %(role)s.') % {'count': sent, 'role': slot.role.name})
         else:

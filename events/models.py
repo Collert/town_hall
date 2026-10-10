@@ -386,6 +386,26 @@ class EventTaskList(models.Model):
         return (role.icon or 'badge') if role else ''
 
 
+class PlanningChat(models.Model):
+    """A staff member's conversation with the AI planning assistant about one event
+    (console/planner.py). ``messages`` is the Claude API transcript, kept as sent so it
+    can be replayed; ``busy`` is set while the assistant works in the background."""
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='planning_chats')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='planning_chats')
+    messages = models.JSONField(default=list, blank=True)
+    busy = models.BooleanField(default=False)
+    error = models.TextField(blank=True, default='')
+    # Bumped whenever a tool changes the event, so the open page can offer a reload.
+    changes = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['event', 'user'], name='unique_planning_chat')]
+
+    def __str__(self):
+        return f'Planning chat: {self.event} / {self.user}'
+
+
 class EventFeedback(models.Model):
     """A volunteer's post-event survey response."""
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='feedback')

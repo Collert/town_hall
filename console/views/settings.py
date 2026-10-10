@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from django.utils import timezone, translation
 from django.utils.translation import gettext as _, gettext_lazy
 
-from base import belltower, listmonk
+from base import ai, belltower, listmonk
 from django.db import transaction
 
 from base import points
@@ -306,12 +306,14 @@ def backend_settings(request):
         'belltower_me': belltower_me,
         'belltower_linked': BellTowerLink.objects.filter(belltower_url=belltower_cfg['url']).count() if belltower_me else 0,
         'belltower_linkable': User.objects.filter(is_active=True).exclude(email='').count() if belltower_me else 0,
+        'ai_enabled_without_key': site.ai_enabled and not ai.config()['api_key'],
+        'planner_hidden': request.user.profile.ai_planner_hidden,
         'env_overrides': {
             name: bool(os.environ.get(env)) for name, env in (
                 ('libretranslate_url', 'LIBRETRANSLATE_URL'), ('google_translate_api_key', 'GOOGLE_TRANSLATE_API_KEY'),
                 ('deepl_api_key', 'DEEPL_API_KEY'), ('mymemory_email', 'MYMEMORY_EMAIL'),
                 ('listmonk_url', 'LISTMONK_URL'), ('listmonk_api_user', 'LISTMONK_API_USER'),
-                ('listmonk_api_token', 'LISTMONK_API_TOKEN'),
+                ('listmonk_api_token', 'LISTMONK_API_TOKEN'), ('anthropic_api_key', 'ANTHROPIC_API_KEY'),
             )
         },
     })

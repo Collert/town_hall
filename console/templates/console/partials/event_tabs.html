@@ -8,3 +8,4 @@
     <a href="{% url 'console_event_report' event.pk %}" class="c-tab {% if url_name == 'console_event_report' %}active{% endif %}">{% trans "Impact Report" %}</a>
 </nav>
 {% endwith %}
+{% include 'console/partials/planner.html' %}

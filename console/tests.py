@@ -2511,3 +2511,268 @@ class ChainOfCommandBellTowerTests(ChainOfCommandFixture):
                                     {'source': kids.pk}, **HTMX)
         self.assertContains(response, 'different areas')
         self.assertTrue(EventTaskList.objects.filter(pk=kids.pk).exists())
+
+
+class FakeClaude:
+    """Stands in for the Anthropic client (base.ai.client). Each entry of ``script`` is
+    (stop_reason, [blocks]) for one model call, blocks as plain dicts, or an exception to
+    raise; every request's keyword arguments are kept in ``requests``."""
+
+    def __init__(self, *script):
+        from types import SimpleNamespace
+        self.script, self.requests = list(script), []
+        self.beta = SimpleNamespace(messages=SimpleNamespace(create=self.create))
+
+    def create(self, **kwargs):
+        import copy
+        from types import SimpleNamespace
+        from anthropic.types.beta import BetaTextBlock, BetaToolUseBlock
+        self.requests.append(copy.deepcopy(kwargs))
+        item = self.script.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        stop, blocks = item
+        content = [BetaTextBlock(type='text', text=b['text']) if b['type'] == 'text'
+                   else BetaToolUseBlock(type='tool_use', id=b['id'], name=b['name'], input=b['input']) for b in blocks]
+        return SimpleNamespace(stop_reason=stop, content=content)
+
+
+def say(text):
+    return ('end_turn', [{'type': 'text', 'text': text}])
+
+
+def call(tool, tool_id='t1', text=None, **tool_input):
+    blocks = [{'type': 'text', 'text': text}] if text else []
+    return ('tool_use', blocks + [{'type': 'tool_use', 'id': tool_id, 'name': tool, 'input': tool_input}])
+
+
+@override_settings(AI_RUN_INLINE=True)
+class PlannerTests(ConsoleFixture):
+    def setUp(self):
+        cache.clear()
+        self.client.force_login(self.staff)
+        start = (timezone.localtime() + timedelta(days=30)).replace(hour=10, minute=0, second=0, microsecond=0)
+        self.event = make_event('Harvest Supper', start, start + timedelta(hours=4))
+        self.event.description = ''
+        self.event.save()
+
+    def tearDown(self):
+        cache.clear()
+
+    def enable_ai(self):
+        site = SiteSettings.get_settings()
+        site.ai_enabled, site.anthropic_api_key = True, 'sk-ant-test'
+        site.save()
+
+    def run_with(self, fake, method, name, data=None):
+        """Make the request, let the assistant's turn run (in the commit hook), and
+        return the chat log as it is afterwards."""
+        url = reverse(name, args=[self.event.pk])
+        with patch('base.ai.client', return_value=fake), self.captureOnCommitCallbacks(execute=True):
+            if method == 'post':
+                self.client.post(url, data or {}, **HTMX)
+            else:
+                self.client.get(url, **HTMX)
+        return self.client.get(reverse('console_planner_chat', args=[self.event.pk]), **HTMX)
+
+    def test_button_without_ai_explains_how_to_turn_it_on(self):
+        page = self.client.get(reverse('console_event_edit', args=[self.event.pk]))
+        self.assertContains(page, 'Help me plan')
+        self.assertContains(page, 'AI features are off')
+        self.assertContains(page, reverse('console_settings_backend') + '#ai')
+        self.assertNotContains(page, 'planner-panel')
+        self.assertEqual(self.client.get(reverse('console_planner_chat', args=[self.event.pk])).status_code, 204)
+
+    def test_dismiss_hides_button_until_shown_again(self):
+        response = self.client.post(reverse('console_planner_dismiss'), **HTMX)
+        self.assertIn('closeDialog', response['HX-Trigger'])
+        self.assertIn('bring it back in Organization', response['HX-Trigger'])
+        self.assertTrue(Profile.objects.get(user=self.staff).ai_planner_hidden)
+        self.assertNotContains(self.client.get(reverse('console_event_roles', args=[self.event.pk])), 'Help me plan')
+        self.assertContains(self.client.get(reverse('console_settings_backend')), 'Show it again')
+
+        self.client.post(reverse('console_planner_show'))
+        self.assertFalse(Profile.objects.get(user=self.staff).ai_planner_hidden)
+        self.assertContains(self.client.get(reverse('console_event_roles', args=[self.event.pk])), 'Help me plan')
+
+    def test_backend_settings_save_ai_key_write_only(self):
+        form = self.client.get(reverse('console_settings_backend')).context['form']
+        data = {name: form[name].value() or '' for name in form.fields if name not in form.SECRET_FIELDS}
+        data.update({'ai_enabled': 'on', 'anthropic_api_key': 'sk-ant-secret1234', 'ai_model': 'claude-sonnet-5-5'})
+        self.client.post(reverse('console_settings_backend'), data)
+        site = SiteSettings.objects.get()
+        self.assertEqual((site.ai_enabled, site.anthropic_api_key, site.ai_model), (True, 'sk-ant-secret1234', 'claude-sonnet-5-5'))
+        self.assertNotContains(self.client.get(reverse('console_settings_backend')), 'sk-ant-secret1234')
+        data['anthropic_api_key'] = ''
+        self.client.post(reverse('console_settings_backend'), data)
+        self.assertEqual(SiteSettings.objects.get().anthropic_api_key, 'sk-ant-secret1234')  # blank keeps it
+
+    def test_opening_greets_with_event_context_and_quick_replies(self):
+        self.enable_ai()
+        self.assertContains(self.client.get(reverse('console_event_edit', args=[self.event.pk])), 'planner-panel')
+        fake = FakeClaude(
+            call('find_similar_events', query='supper festival'),
+            say('Hi Ada! **Harvest Supper** sounds like a community meal. It has no description yet. '
+                'Can I ask a few questions?\n\n[[Sure, ask away]]\n[[Not now]]'),
+        )
+        log = self.run_with(fake, 'get', 'console_planner_chat')
+        self.assertContains(log, '<strong>Harvest Supper</strong>')
+        self.assertContains(log, 'Looked for similar events')
+        self.assertContains(log, 'class="planner-reply"', count=2)
+        self.assertContains(log, '>Sure, ask away</button>')
+        self.assertNotContains(log, '[[')
+        self.assertNotContains(log, 'Automatic message')  # the kickoff stays hidden
+
+        first = fake.requests[0]
+        kickoff = first['messages'][0]['content']
+        self.assertIn('Harvest Supper', kickoff)
+        self.assertIn('description (none yet)', kickoff)
+        self.assertEqual(first['model'], 'claude-opus-5-5')
+        self.assertIn('update_event', [t['name'] for t in first['tools']])
+        self.assertEqual(first['fallbacks'], 'default')
+        self.assertEqual(first['thinking'], {'type': 'adaptive', 'display': 'updates'})
+        similar = fake.requests[1]['messages'][-1]['content'][0]
+        self.assertEqual(similar['tool_use_id'], 't1')
+        self.assertIn('Fall Festival', similar['content'])
+        self.assertNotIn('"title": "Harvest Supper"', similar['content'])
+        self.assertFalse(self.event.planning_chats.get().busy)
+
+    def test_tools_change_the_event(self):
+        self.enable_ai()
+        fake = FakeClaude(
+            say('Hello!'),
+            call('update_event', description='A shared meal to celebrate the harvest.', attendees=120),
+            call('create_role', tool_id='t2', name='Server', description='Brings food to tables.', icon='restaurant'),
+            say('Done.'),
+        )
+        self.run_with(fake, 'get', 'console_planner_chat')
+        log = self.run_with(fake, 'post', 'console_planner_send', {'message': 'Write the description please'})
+        self.event.refresh_from_db()
+        self.assertEqual(self.event.description, 'A shared meal to celebrate the harvest.')
+        self.assertEqual(self.event.attendees, 120)
+        self.assertContains(log, 'Write the description please')
+        self.assertContains(log, 'Updated the event: description, attendees')
+        self.assertContains(log, 'Created the role')
+        self.assertContains(log, 'data-changes="1"')
+
+        server = Role.objects.get(name='Server')
+        day = timezone.localtime(self.event.start_date).strftime('%Y-%m-%d')
+        fake.script = [
+            call('add_role_slots', tool_id='t3', role_id=server.pk,
+                 slots=[{'start': f'{day}T10:00', 'end': f'{day}T12:00', 'required': 4}]),
+            call('add_role_slots', tool_id='t4', role_id=server.pk, slots=[{'start': f'{day}T12:00', 'end': f'{day}T11:00', 'required': 1}]),
+            say('Added.'),
+        ]
+        log = self.run_with(fake, 'post', 'console_planner_send', {'message': 'Add servers'})
+        slot = self.event.role_slots.get()
+        self.assertEqual((slot.role, slot.required_qty), (server, 4))
+        self.assertContains(log, 'is-failed')  # the second call was rejected
+        result = fake.requests[-1]['messages'][-1]['content'][0]
+        self.assertTrue(result['is_error'])
+        self.assertIn('must end after it starts', result['content'])
+
+    def test_invites_go_out_for_the_events_slot(self):
+        self.enable_ai()
+        start = self.event.start_date
+        slot = EventRoleSlot.objects.create(event=self.event, role=self.role, start_time=start, end_time=start + timedelta(hours=2), required_qty=2)
+        fake = FakeClaude(say('Hi'), call('find_volunteers', slot_id=slot.pk),
+                          call('invite_volunteers', tool_id='t2', slot_id=slot.pk, user_ids=[self.vol.pk]), say('Invited Val.'))
+        self.run_with(fake, 'get', 'console_planner_chat')
+        self.run_with(fake, 'post', 'console_planner_send', {'message': 'Invite the best fit'})
+        found = fake.requests[2]['messages'][-1]['content'][0]['content']
+        self.assertIn(f'"user_id": {self.vol.pk}', found)
+        invite = EventSlotInvite.objects.get(event_role_slot=slot, user=self.vol)
+        link = 'http://testserver' + reverse('respond_to_invite', args=[invite.token])
+        self.assertTrue(Notification.objects.filter(user=self.vol, link=link).exists())
+
+    def test_planning_tasks_in_bell_tower(self):
+        self.enable_ai()
+        fake_tower = FakeBellTower()
+        patcher = patch('base.belltower._http', fake_tower)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        site = SiteSettings.get_settings()
+        site.belltower_url, site.belltower_api_key, site.belltower_username = FakeBellTower.BASE, 'bt_secret', 'townhall'
+        site.save()
+        due = (timezone.localtime() + timedelta(days=7)).strftime('%Y-%m-%dT09:00')
+        fake = FakeClaude(say('Hi'), call('add_planning_tasks', tasks=[
+            {'title': 'Book the hall', 'due': due, 'subtasks': ['Call the venue', 'Pay the deposit']},
+            {'title': 'Order food'},
+        ]), call('get_planning_tasks', tool_id='t2'), say('Plan is in the Tasks tab.'))
+        self.run_with(fake, 'get', 'console_planner_chat')
+        log = self.run_with(fake, 'post', 'console_planner_send', {'message': 'Make a plan'})
+        planning = EventTaskList.objects.get(event=self.event, kind='planning')
+        tasks = [t for t in fake_tower.tasks.values() if t['list'] == planning.belltower_id]
+        self.assertEqual(sorted(t['title'] for t in tasks), ['Book the hall', 'Call the venue', 'Order food', 'Pay the deposit'])
+        hall = next(t for t in tasks if t['title'] == 'Book the hall')
+        self.assertTrue(hall['expires_at'])
+        self.assertEqual({t['parent'] for t in tasks if t['title'].startswith(('Call', 'Pay'))}, {hall['id']})
+        self.assertContains(log, 'Added 2 planning task(s)')
+        self.assertIn('Pay the deposit', fake.requests[-1]['messages'][-1]['content'][0]['content'])
+
+    def test_api_error_is_shown_and_conversation_recovers(self):
+        import anthropic
+        import httpx2
+        self.enable_ai()
+        request = httpx2.Request('POST', 'https://api.anthropic.com/v1/messages')
+        error = anthropic.AuthenticationError('bad key', response=httpx2.Response(401, request=request), body=None)
+        fake = FakeClaude(say('Hi'), call('get_event_details'), error, say('Back.'))
+        self.run_with(fake, 'get', 'console_planner_chat')
+        log = self.run_with(fake, 'post', 'console_planner_send', {'message': 'What is missing?'})
+        self.assertContains(log, 'API key was rejected')
+        self.assertFalse(self.event.planning_chats.get().busy)
+        log = self.run_with(fake, 'post', 'console_planner_send', {'message': 'Try again'})
+        self.assertContains(log, 'Back.')
+        roles = [m['role'] for m in fake.requests[-1]['messages'] if m['role'] != 'system']
+        self.assertEqual(roles[-3:], ['assistant', 'user', 'user'])  # tool results, then the new message
+
+    def test_open_tool_calls_are_closed_before_a_new_message(self):
+        from console import planner
+        chat = self.event.planning_chats.create(user=self.staff, messages=[
+            {'role': 'user', 'content': 'kickoff'},
+            {'role': 'assistant', 'content': [{'type': 'tool_use', 'id': 'x', 'name': 'list_roles', 'input': {}}]},
+        ])
+        planner.add_user_message(chat, 'hello')
+        self.assertEqual(chat.messages[2]['content'][0]['tool_use_id'], 'x')
+        self.assertEqual(chat.messages[3], {'role': 'user', 'content': 'hello'})
+        self.assertEqual(chat.messages[4]['role'], 'system')  # "Today is ..." (the kickoff didn't say)
+        planner.add_user_message(chat, 'again')  # no reply came: the unanswered note moves after it
+        self.assertEqual([m['role'] for m in chat.messages[3:]], ['user', 'user', 'system'])
+
+    def test_turn_without_reply_shows_its_progress_note(self):
+        # Opus 5.5 turns text written between tool calls into progress notes; if the turn
+        # then ends without a reply, the last note is shown rather than nothing.
+        from console import planner
+        chat = self.event.planning_chats.create(user=self.staff, messages=[
+            {'role': 'user', 'content': 'kickoff'},
+            {'role': 'assistant', 'content': [
+                {'type': 'thinking', 'thinking': 'Checking past dinners.', 'signature': 's1'},
+                {'type': 'tool_use', 'id': 'a', 'name': 'list_roles', 'input': {}},
+            ]},
+            {'role': 'user', 'content': [{'type': 'tool_result', 'tool_use_id': 'a', 'content': '[]'}]},
+            {'role': 'assistant', 'content': [{'type': 'thinking', 'thinking': 'Welcome! Shall we start with the description?', 'signature': 's2'}]},
+        ])
+        items, _replies = planner.transcript(chat)
+        self.assertEqual([i['kind'] for i in items], ['activity', 'assistant'])
+        self.assertEqual(items[-1]['text'], 'Welcome! Shall we start with the description?')
+        chat.messages.append({'role': 'user', 'content': 'Yes'})
+        chat.messages.append({'role': 'assistant', 'content': [{'type': 'text', 'text': 'Great.'}]})
+        items, _replies = planner.transcript(chat)
+        self.assertEqual([i['text'] for i in items if i['kind'] != 'activity'],
+                         ['Welcome! Shall we start with the description?', 'Yes', 'Great.'])
+
+    def test_reset_starts_over(self):
+        self.enable_ai()
+        fake = FakeClaude(say('First hello'), say('Second hello'))
+        self.run_with(fake, 'get', 'console_planner_chat')
+        log = self.run_with(fake, 'post', 'console_planner_reset')
+        self.assertContains(log, 'Second hello')
+        self.assertNotContains(log, 'First hello')
+
+    def test_chat_markdown_escapes_html(self):
+        from console.templatetags.console_tags import chat_markdown
+        html = chat_markdown('**Hi** <script>x</script> [a](javascript:alert(1)) [b](https://example.org)')
+        self.assertIn('<strong>Hi</strong>', html)
+        self.assertNotIn('<script>', html)
+        self.assertNotIn('href="javascript', html)
+        self.assertIn('href="https://example.org"', html)

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    certificates, chain, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
+    certificates, chain, communication, dashboard, event_tasks, events, planner, roles, settings as settings_views, training, translate, venues,
     volunteers,
 )
 
@@ -46,6 +46,11 @@ urlpatterns = [
     path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/<int:task_id>/', event_tasks.task_edit, name='console_task_edit'),
     path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/<int:task_id>/toggle/', event_tasks.task_toggle, name='console_task_toggle'),
     path('events/<int:event_id>/tasks/lists/<int:list_id>/tasks/<int:task_id>/delete/', event_tasks.task_delete, name='console_task_delete'),
+    path('events/<int:event_id>/planner/', planner.planner_chat, name='console_planner_chat'),
+    path('events/<int:event_id>/planner/send/', planner.planner_send, name='console_planner_send'),
+    path('events/<int:event_id>/planner/reset/', planner.planner_reset, name='console_planner_reset'),
+    path('planner/dismiss/', planner.planner_dismiss, name='console_planner_dismiss'),
+    path('planner/show/', planner.planner_show, name='console_planner_show'),
 
     # Roles
     path('roles/', roles.role_list, name='console_roles'),

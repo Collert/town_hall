@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from base import email_templates, triggers
+from base import ai, email_templates, triggers
 from base.models import EmailTemplate, EmailTrigger, HeroSection, Level, OperatingHour, PointsRules, Profile, SiteSettings, Venue, VenueFeature, VenueNote
 from education.models import ExternalCertificate, Quiz, QuizQuestion, TrainingLesson, TrainingModule
 from events.models import Event, EventCategory
@@ -533,13 +533,14 @@ LevelFormSet = forms.modelformset_factory(Level, form=LevelForm, formset=BaseLev
 
 class BackendSettingsForm(forms.ModelForm):
     """Integration keys and URLs. Secrets are write-only: blank keeps the saved value."""
-    SECRET_FIELDS = ('libretranslate_api_key', 'google_translate_api_key', 'deepl_api_key', 'listmonk_api_token')
+    SECRET_FIELDS = ('libretranslate_api_key', 'google_translate_api_key', 'deepl_api_key', 'listmonk_api_token', 'anthropic_api_key')
 
     class Meta:
         model = SiteSettings
         fields = [
             'libretranslate_url', 'libretranslate_api_key', 'google_translate_api_key', 'deepl_api_key',
             'mymemory_email', 'listmonk_url', 'listmonk_api_user', 'listmonk_api_token', 'default_from_email',
+            'ai_enabled', 'anthropic_api_key', 'ai_model',
         ]
         labels = {
             'libretranslate_url': _('LibreTranslate URL'),
@@ -551,7 +552,11 @@ class BackendSettingsForm(forms.ModelForm):
             'listmonk_api_user': _('API user'),
             'listmonk_api_token': _('API token'),
             'default_from_email': _('From address'),
+            'ai_enabled': _('AI features'),
+            'anthropic_api_key': _('Anthropic API key'),
+            'ai_model': _('Model'),
         }
+        widgets = {'ai_model': forms.Select(choices=ai.MODELS)}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -58,3 +58,21 @@ def hours(value):
     except (TypeError, ValueError):
         return value
     return int(value) if value == int(value) else value
+
+
+@register.simple_tag
+def ai_enabled():
+    """AI features are switched on and have an API key (base/ai.py)."""
+    from base import ai
+    return ai.is_enabled()
+
+
+@register.filter
+def chat_markdown(text):
+    """The planning assistant's Markdown, with any HTML in it escaped and only web links kept."""
+    import markdown
+    from django.utils.html import escape
+    from django.utils.safestring import mark_safe
+    html = markdown.markdown(escape(text))
+    html = re.sub(r'<a href="(?!https?://)[^"]*"', '<a', html)
+    return mark_safe(html.replace('<a href=', '<a target="_blank" rel="noopener" href='))
