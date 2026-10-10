@@ -1,0 +1,65 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% trans "Connect an AI app" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mcp_server/authorize.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="connect">
+    <section class="connect-card">
+        <header class="connect-head">
+            <span class="connect-mark">
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<span class="material-symbols-outlined">architecture</span>{% endif %}
+            </span>
+            <span class="material-symbols-outlined connect-link-icon">sync_alt</span>
+            <span class="connect-mark connect-mark-app"><span class="material-symbols-outlined">smart_toy</span></span>
+        </header>
+
+        <h1 class="connect-title">{% blocktrans with app=client_name %}Connect {{ app }} to {{ company_name }}{% endblocktrans %}</h1>
+        <p class="connect-lead">{% blocktrans %}It will work in Town Hall as you, so it can help you plan events.{% endblocktrans %}</p>
+
+        <div class="connect-account">
+            {% avatar user 'sm' %}
+            <span><small>{% trans "Signed in as" %}</small><strong>{{ user|display_name }}</strong></span>
+        </div>
+
+        <div class="connect-lists">
+            <div class="connect-list is-can">
+                <h2><span class="material-symbols-outlined">check_circle</span>{% trans "It can" %}</h2>
+                <ul>
+                    <li>{% trans "Create and edit events, and add roles and shifts to them" %}</li>
+                    <li>{% trans "Build planning and event-day task lists" %}</li>
+                    <li>{% trans "Create role templates and attach existing training" %}</li>
+                    <li>{% trans "Write quizzes based on your training lessons" %}</li>
+                    <li>{% trans "Invite volunteers to shifts (they choose whether to accept)" %}</li>
+                    <li>{% trans "Read profiles, endorsements and feedback" %}</li>
+                </ul>
+            </div>
+            <div class="connect-list is-cannot">
+                <h2><span class="material-symbols-outlined">block</span>{% trans "It can't" %}</h2>
+                <ul>
+                    <li>{% trans "Delete anything" %}</li>
+                    <li>{% trans "Change anyone's profile" %}</li>
+                    <li>{% trans "Write or change training lessons" %}</li>
+                    <li>{% trans "Change organization settings" %}</li>
+                </ul>
+            </div>
+        </div>
+
+        <form method="post" class="connect-actions">
+            {% csrf_token %}
+            {% for name, value in fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+            <button type="submit" name="decision" value="deny" class="connect-btn">{% trans "Cancel" %}</button>
+            <button type="submit" name="decision" value="allow" class="connect-btn connect-btn-primary">
+                <span class="material-symbols-outlined">link</span>{% trans "Allow" %}
+            </button>
+        </form>
+        <p class="connect-foot">
+            {% blocktrans with host=redirect_host %}You'll go back to {{ host }}. You can disconnect any time in Organization &gt; Backend.{% endblocktrans %}
+        </p>
+    </section>
+</main>
+{% endblock %}

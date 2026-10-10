@@ -31,7 +31,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('APP_ORIGIN', '127.0.0.1').rstrip('/')]
+# APP_ORIGIN: the site's host name(s), comma-separated, e.g. "townhall.example.org" or "abc.trycloudflare.com,127.0.0.1".
+ALLOWED_HOSTS = [origin.strip().rstrip('/') for origin in os.environ.get('APP_ORIGIN', '127.0.0.1').split(',')]
+
+# Behind the host's HTTPS proxy: trust its X-Forwarded-Proto so absolute URLs (the MCP
+# connector's OAuth metadata, invitation links) use https.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CSRF_TRUSTED_ORIGINS = [
     f"{scheme}://{origin.strip().rstrip('/')}"
@@ -57,6 +62,7 @@ INSTALLED_APPS = [
     'education',
     'jobs',
     'console',
+    'mcp_server',
 ]
 
 MIDDLEWARE = [

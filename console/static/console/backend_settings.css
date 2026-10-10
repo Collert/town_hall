@@ -304,3 +304,57 @@
     gap: 0.4rem;
     margin-top: 1rem;
 }
+
+.mcp-url {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.mcp-url .c-input {
+    flex: 1;
+    min-width: 0;
+    font-family: ui-monospace, monospace;
+}
+
+.mcp-steps {
+    margin: 0.5rem 0;
+    padding-left: 1.2rem;
+}
+
+.mcp-steps li + li {
+    margin-top: 0.3rem;
+}
+
+.mcp-connections {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mcp-connections li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.mcp-connections .material-symbols-outlined:first-child {
+    color: var(--color-text-tertiary);
+}
+
+.mcp-connection-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.mcp-connection-text small {
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+}

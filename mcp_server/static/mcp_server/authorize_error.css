@@ -1,0 +1,18 @@
+/* "Can't connect" page (mcp_server/authorize_error.html); layout comes from authorize.css. */
+
+.connect-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+}
+
+.connect-error-icon {
+    font-size: 2.5rem;
+    color: var(--color-text-tertiary);
+}
+
+.connect-error .connect-btn {
+    margin-top: 1rem;
+}

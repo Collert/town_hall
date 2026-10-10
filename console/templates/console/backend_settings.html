@@ -1,5 +1,5 @@
 {% extends 'console/console_layout.html' %}
-{% load static i18n console_tags %}
+{% load static i18n console_tags avatar_tags %}
 
 {% block title %}{% trans "Backend Settings" %}{% endblock %}
 
@@ -19,7 +19,7 @@
     <header class="page-header">
         <div>
             <h1 class="page-title">{% trans "Backend Settings" %}</h1>
-            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation, email and task lists. Values saved here take priority over server environment variables." %}</p>
+            <p class="page-lead">{% trans "Connect the services Town Hall relies on: machine translation, email, task lists and AI apps. Values saved here take priority over server environment variables." %}</p>
         </div>
         <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
     </header>
@@ -133,6 +133,47 @@
                 <button type="button" class="c-btn c-btn-dark" data-dialog-open="belltower-dialog"><span class="material-symbols-outlined">link</span>{% trans "Connect to Bell Tower" %}</button>
                 {% endif %}
             </section>
+
+            <section class="c-card" id="mcp">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">smart_toy</span>{% trans "Claude connector (MCP)" %}</h2>
+                <p class="c-muted backend-intro">{% trans "Let an AI app such as Claude help you plan events: create and edit events, add roles and shifts, build task lists, set up role templates and write training quizzes. It works as the staff member who connects it, can't delete anything, and only reads people's profiles." %}</p>
+                <div class="c-field">
+                    <label class="c-label" for="mcp-url">{% trans "Connector URL" %}</label>
+                    <div class="mcp-url">
+                        <input type="text" id="mcp-url" class="c-input" value="{{ mcp_url }}" readonly onclick="this.select()">
+                        <button type="button" class="c-btn c-btn-surface" onclick="navigator.clipboard.writeText(document.getElementById('mcp-url').value); this.querySelector('span:last-child').textContent = '{% trans "Copied" %}'">
+                            <span class="material-symbols-outlined">content_copy</span><span>{% trans "Copy" %}</span>
+                        </button>
+                    </div>
+                </div>
+                <details class="backend-howto">
+                    <summary>{% trans "How to connect Claude" %}</summary>
+                    <ol class="mcp-steps">
+                        <li>{% trans "In Claude, open Settings > Connectors and choose Add custom connector." %}</li>
+                        <li>{% trans "Name it after your organization and paste the connector URL above." %}</li>
+                        <li>{% trans "Choose Connect. Sign in to Town Hall with a staff account if asked, and approve." %}</li>
+                    </ol>
+                    <p>{% trans "Town Hall must be reachable from the internet over https for this to work." %}</p>
+                </details>
+                {% if mcp_connections %}
+                <h3 class="backend-subhead">{% trans "Connected apps" %}</h3>
+                <ul class="mcp-connections">
+                    {% for token in mcp_connections %}
+                    <li>
+                        <span class="material-symbols-outlined">smart_toy</span>
+                        <span class="mcp-connection-text">
+                            <strong>{{ token.client.name|default:_("AI app") }}</strong>
+                            <small>{% blocktrans with person=token.user|display_name when=token.created_at|date:"DATE_FORMAT" %}As {{ person }} · connected {{ when }}{% endblocktrans %}{% if token.last_used_at %} · {% blocktrans with ago=token.last_used_at|timesince %}used {{ ago }} ago{% endblocktrans %}{% endif %}</small>
+                        </span>
+                        <button type="submit" form="mcp-disconnect-{{ token.pk }}" class="c-btn c-btn-ghost c-btn-sm"
+                                onclick="return confirm('{% trans "Disconnect this app? It will have to be approved again to reconnect." %}')">
+                            <span class="material-symbols-outlined">link_off</span>{% trans "Disconnect" %}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </section>
         </div>
 
         <aside class="c-stack">
@@ -183,6 +224,7 @@
 {# Outside the settings form: these post to their own views. #}
 <form id="belltower-disconnect-form" method="post" action="{% url 'console_belltower_disconnect' %}">{% csrf_token %}</form>
 <form id="belltower-link-users-form" method="post" action="{% url 'console_belltower_link_users' %}">{% csrf_token %}</form>
+{% for token in mcp_connections %}<form id="mcp-disconnect-{{ token.pk }}" method="post" action="{% url 'console_mcp_disconnect' token.pk %}">{% csrf_token %}</form>{% endfor %}
 <dialog class="c-dialog belltower-dialog" id="belltower-dialog">
     <form method="post" action="{% url 'console_belltower_connect' %}">
         {% csrf_token %}

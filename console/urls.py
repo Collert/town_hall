@@ -123,6 +123,7 @@ urlpatterns = [
     path('settings/backend/belltower/connect/', settings_views.belltower_connect, name='console_belltower_connect'),
     path('settings/backend/belltower/callback/', settings_views.belltower_callback, name='console_belltower_callback'),
     path('settings/backend/belltower/disconnect/', settings_views.belltower_disconnect, name='console_belltower_disconnect'),
+    path('settings/backend/mcp/<int:token_id>/disconnect/', settings_views.mcp_disconnect, name='console_mcp_disconnect'),
     path('settings/backend/belltower/link-users/', settings_views.belltower_link_users, name='console_belltower_link_users'),
     path('communication/email/', communication.email_settings, name='console_communication_email'),
     path('communication/email/status/', communication.task_status, name='console_listmonk_status'),

@@ -1,0 +1,20 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Can't connect" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mcp_server/authorize.css' %}">
+<link rel="stylesheet" href="{% static 'mcp_server/authorize_error.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="connect">
+    <section class="connect-card connect-error">
+        <span class="material-symbols-outlined connect-error-icon">link_off</span>
+        <h1 class="connect-title">{% trans "Can't connect" %}</h1>
+        <p class="connect-lead">{{ message }}</p>
+        <a href="{% url 'home' %}" class="connect-btn">{% trans "Go to Town Hall" %}</a>
+    </section>
+</main>
+{% endblock %}

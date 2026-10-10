@@ -23,6 +23,8 @@ from django.views.static import serve
 urlpatterns = [
     # URL for switching language
     path('i18n/', include('django.conf.urls.i18n')),
+    # Claude connector (MCP) and its OAuth endpoints: fixed paths, no language prefix
+    path('', include('mcp_server.urls')),
 ]
 
 # URLs that should be prefixed with language code

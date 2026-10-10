@@ -249,6 +249,32 @@ def _connect_listmonk(request):
     ) % {'name': listmonk.USERS_LIST_NAME})
 
 
+def _mcp_connections():
+    """AI apps connected through the MCP connector: one row per app and person, newest first."""
+    from mcp_server.models import AccessToken
+    rows, seen = [], set()
+    tokens = (AccessToken.objects.filter(revoked=False, refresh_expires_at__gt=timezone.now())
+              .select_related('client', 'user').order_by('-created_at'))
+    for token in tokens:
+        key = (token.client_id, token.user_id)
+        if key not in seen:
+            seen.add(key)
+            rows.append(token)
+    return rows
+
+
+@staff_required
+@require_POST
+def mcp_disconnect(request, token_id):
+    """Sign an AI app out: every token it holds for that person stops working."""
+    from mcp_server.models import AccessToken
+    token = AccessToken.objects.filter(pk=token_id).select_related('client').first()
+    if token:
+        AccessToken.objects.filter(client=token.client, user=token.user_id).update(revoked=True)
+        messages.success(request, _('%(app)s is disconnected.') % {'app': token.client.name or _('The app')})
+    return redirect(reverse('console_settings_backend') + '#mcp')
+
+
 @staff_required
 def backend_settings(request):
     site = SiteSettings.get_settings()
@@ -306,6 +332,8 @@ def backend_settings(request):
         'belltower_me': belltower_me,
         'belltower_linked': BellTowerLink.objects.filter(belltower_url=belltower_cfg['url']).count() if belltower_me else 0,
         'belltower_linkable': User.objects.filter(is_active=True).exclude(email='').count() if belltower_me else 0,
+        'mcp_url': request.build_absolute_uri('/mcp'),
+        'mcp_connections': _mcp_connections(),
         'env_overrides': {
             name: bool(os.environ.get(env)) for name, env in (
                 ('libretranslate_url', 'LIBRETRANSLATE_URL'), ('google_translate_api_key', 'GOOGLE_TRANSLATE_API_KEY'),

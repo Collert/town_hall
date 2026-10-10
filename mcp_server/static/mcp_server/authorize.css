@@ -1,0 +1,195 @@
+/* Consent screen for connecting an AI app (mcp_server/authorize.html). */
+
+body.bare {
+    background: var(--color-bg-primary);
+}
+
+.connect {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 2rem 1rem;
+}
+
+.connect-card {
+    width: min(34rem, 100%);
+    padding: 2.25rem;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    box-shadow: 0 32px 64px rgba(from var(--color-text-primary) r g b / 0.08);
+}
+
+.connect-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.connect-mark {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1.1rem;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    overflow: hidden;
+}
+
+.connect-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.connect-mark .material-symbols-outlined {
+    font-size: 1.8rem;
+}
+
+.connect-mark-app {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+}
+
+.connect-link-icon {
+    color: var(--color-text-tertiary);
+}
+
+.connect-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-align: center;
+    color: var(--color-text-primary);
+}
+
+.connect-lead {
+    margin-top: 0.5rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+.connect-account {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.connect-account span {
+    display: flex;
+    flex-direction: column;
+}
+
+.connect-account small {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+}
+
+.connect-lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.connect-list h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.connect-list h2 .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.connect-list.is-can h2 .material-symbols-outlined {
+    color: var(--color-success);
+}
+
+.connect-list.is-cannot h2 .material-symbols-outlined {
+    color: var(--color-text-tertiary);
+}
+
+.connect-list ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--color-text-primary);
+}
+
+.connect-list li + li {
+    margin-top: 0.35rem;
+}
+
+.connect-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+
+.connect-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.75rem 1.4rem;
+    border: none;
+    border-radius: 999px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font: 600 0.95rem 'Inter', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.connect-btn:hover {
+    background: var(--color-bg-tertiary);
+}
+
+.connect-btn-primary {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+    color: var(--color-accent-contrast);
+}
+
+.connect-btn-primary:hover {
+    background: var(--color-accent);
+}
+
+.connect-btn .material-symbols-outlined {
+    font-size: 1.15rem;
+}
+
+.connect-foot {
+    margin-top: 1.25rem;
+    font-size: 0.8rem;
+    text-align: center;
+    color: var(--color-text-tertiary);
+}
+
+@media (max-width: 540px) {
+    .connect-card {
+        padding: 1.5rem;
+    }
+
+    .connect-lists {
+        grid-template-columns: 1fr;
+    }
+
+    .connect-actions .connect-btn {
+        flex: 1;
+    }
+}
