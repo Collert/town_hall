@@ -119,11 +119,12 @@ def discover(base_url):
         raise BellTowerError(_('No Bell Tower server answered at that address.'))
     # The code and key are sent to these endpoints, so they must stay on the server the
     # user named. Any that point elsewhere (e.g. Bell Tower behind a proxy that doesn't
-    # know its public host) are rebuilt on that server.
-    origin = urllib.parse.urlsplit(base_url).netloc
+    # know its public host, or that terminates TLS and advertises http://) are rebuilt
+    # on that server.
+    base = urllib.parse.urlsplit(base_url)
     for key in (*ENDPOINT_KEYS, 'revoke_url', 'list_url', 'mcp_url'):
         parts = urllib.parse.urlsplit(data.get(key) or '')
-        if parts.netloc and parts.netloc != origin:
+        if parts.netloc and (parts.netloc, parts.scheme) != (base.netloc, base.scheme):
             data[key] = base_url + parts.path + (f'?{parts.query}' if parts.query else '')
     return {key: data.get(key, '') for key in (*ENDPOINT_KEYS, 'revoke_url', 'list_url', 'mcp_url')}
 
