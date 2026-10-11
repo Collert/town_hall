@@ -1993,6 +1993,16 @@ class BellTowerPeopleTests(ConsoleFixture):
             slot.signups.remove(self.vol)
         self.assertEqual(remote['users'], ['townhall'])
 
+    def test_stale_link_is_relinked_when_bell_tower_forgot_the_account(self):
+        # Bell Tower's accounts were reset: the stored "oldcarol" no longer exists there.
+        self.vol.belltower_links.create(belltower_url=FakeBellTower.BASE, username='oldcarol')
+        slot = self.add_slot()
+        _task_list, remote = self.role_list()
+        with self.captureOnCommitCallbacks(execute=True):
+            slot.add_signup(self.vol)
+        self.assertEqual(remote['users'], ['townhall', 'carol'])
+        self.assertEqual(self.vol.belltower_links.get().username, 'carol')
+
     def test_second_slot_of_same_role_keeps_membership(self):
         first, second = self.add_slot(), self.add_slot()
         with self.captureOnCommitCallbacks(execute=True):
@@ -2110,6 +2120,12 @@ class BellTowerPeopleTests(ConsoleFixture):
         linked = dict(self.vol.belltower_links.model.objects.values_list('user__username', 'username'))
         self.assertEqual(linked['vol'], 'carol')
         self.assertEqual(linked['mate'], 'mate')  # created
+
+    def test_link_all_users_replaces_stale_links(self):
+        from base import belltower
+        self.vol.belltower_links.create(belltower_url=FakeBellTower.BASE, username='oldcarol')
+        belltower.link_all_users()
+        self.assertEqual(self.vol.belltower_links.get().username, 'carol')
 
 
 class ChainOfCommandFixture(ConsoleFixture):

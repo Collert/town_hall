@@ -336,22 +336,41 @@ def me():
     return api('GET', 'me/')
 
 
-def linked_username(user, create=True):
+def linked_username(user, create=True, refresh=False):
     """``user``'s Bell Tower username, linking (and, in Bell Tower, creating) the account
-    by email when it isn't linked yet. None without a connection or an email."""
+    by email when it isn't linked yet. ``refresh`` asks Bell Tower again even when a link
+    is stored. None without a connection or an email."""
     from .models import BellTowerLink
 
     cfg = config()
     if not is_connected(cfg) or not user.email:
         return None
     link = BellTowerLink.objects.filter(user=user, belltower_url=cfg['url']).first()
-    if link or not create:
+    if (link and not refresh) or not create:
         return link.username if link else None
     data = api('POST', 'users/link/', {'email': user.email, 'first_name': user.first_name, 'last_name': user.last_name}, cfg=cfg)
     link, _created = BellTowerLink.objects.update_or_create(
         user=user, belltower_url=cfg['url'], defaults={'username': data['username']},
     )
     return link.username
+
+
+def as_linked(user, call):
+    """``call(username)`` with ``user``'s Bell Tower username. If Bell Tower no longer has
+    that account (its database was reset, or the account was renamed), link again by
+    email and retry once. None when the user can't be linked."""
+    username = linked_username(user)
+    if not username:
+        return None
+    try:
+        return call(username)
+    except BellTowerError as exc:
+        if exc.status != 404:
+            raise
+        fresh = linked_username(user, refresh=True)
+        if fresh == username:
+            raise  # the account is fine; something else (e.g. the list) is missing
+        return call(fresh)
 
 
 def queue_link(user):
@@ -369,12 +388,14 @@ def _link_user_id(user_pk):
 
 
 def link_all_users():
-    """Link every active user with an email (run in the background after connecting)."""
+    """Link every active user with an email (run in the background after connecting).
+    Stored links are checked again, since reconnecting to the same URL may mean a Bell
+    Tower whose accounts were reset."""
     from django.contrib.auth.models import User
 
     for user in User.objects.filter(is_active=True).exclude(email='').order_by('pk'):
         try:
-            linked_username(user)
+            linked_username(user, refresh=True)
         except BellTowerError as exc:
             if exc.status == 403:
                 raise  # not a staff key: every other user would fail the same way

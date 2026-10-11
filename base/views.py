@@ -683,11 +683,11 @@ def open_tasks(request):
     task_list = EventTaskList.objects.filter(pk=request.GET.get('list') or 0, belltower_url=cfg['url']).first()
     next_path = f'/lists/{task_list.belltower_id}/' if task_list else '/'
     try:
-        username = belltower.linked_username(request.user)
-        if not username:
+        url = belltower.as_linked(request.user, lambda username: belltower.login_link(username, next_path))
+        if not url:
             messages.error(request, _('Add an email address to your account to use task lists.'))
             return redirect('edit_profile')
-        return redirect(belltower.login_link(username, next_path))
+        return redirect(url)
     except belltower.BellTowerError as exc:
         if exc.status == 403:  # a staff account in Bell Tower: sign in there directly
             return redirect(belltower.list_web_url(task_list.belltower_id, cfg) if task_list else cfg['url'] + '/')

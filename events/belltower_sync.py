@@ -46,9 +46,8 @@ def _role_list(event, role, url, area_id=None):
 
 
 def _add_person(task_list, user, admin=None):
-    username = belltower.linked_username(user)
-    if username:
-        belltower.add_member(task_list.belltower_id, username=username, admin=admin)  # None keeps an admin an admin
+    belltower.as_linked(user, lambda username: belltower.add_member(
+        task_list.belltower_id, username=username, admin=admin))  # None keeps an admin an admin
 
 
 def _list_leads(task_list):
