@@ -28,6 +28,7 @@
     display: grid;
     place-items: center;
     color: var(--color-primary-light);
+    overflow: hidden;
 }
 
 .live-card-image > .material-symbols-outlined {
@@ -35,6 +36,8 @@
 }
 
 .live-card-image img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -108,9 +111,12 @@
     display: grid;
     place-items: center;
     color: var(--color-text-tertiary);
+    overflow: hidden;
 }
 
 .upcoming-card-image img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
