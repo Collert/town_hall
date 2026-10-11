@@ -97,8 +97,8 @@
                     <div class="user-menu" id="user-menu">
                         <button type="button" class="user-avatar user-menu-trigger" aria-haspopup="menu" aria-expanded="false"
                                 aria-controls="user-menu-panel" aria-label="{% trans 'Account menu' %}">
-                            {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}" alt="">
+                            {% if user.profile.avatar_image %}
+                                <img src="{{ user.profile.avatar_image }}" alt="">
                             {% else %}
                                 {% with display_name=user.get_full_name|default:user.username %}
                                 <span class="avatar-initials" style="background-color: {{ display_name|avatar_color }}">{{ display_name|initials }}</span>
@@ -243,8 +243,8 @@
                             </div>
                         </a>
                         <a href="{% url 'profile_view' user.username %}" class="mobile-user-profile">
-                            {% if user.profile.avatar %}
-                                <img src="{{ user.profile.avatar.url }}" alt="Profile" class="mobile-avatar">
+                            {% if user.profile.avatar_image %}
+                                <img src="{{ user.profile.avatar_image }}" alt="Profile" class="mobile-avatar">
                             {% else %}
                                 {% with display_name=user.get_full_name|default:user.username %}
                                 <span class="avatar-initials mobile-avatar" style="background-color: {{ display_name|avatar_color }}" aria-label="{{ display_name }}">{{ display_name|initials }}</span>

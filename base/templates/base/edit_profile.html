@@ -24,8 +24,8 @@
                     {% csrf_token %}
                     <input type="hidden" name="action" value="save">
                     <div class="account-avatar-wrap">
-                        {% if profile.avatar %}
-                            <img id="avatar-preview" src="{{ profile.avatar.url }}" alt="{{ user.get_full_name }}">
+                        {% if profile.avatar_image %}
+                            <img id="avatar-preview" src="{{ profile.avatar_image }}" alt="{{ user.get_full_name }}">
                         {% else %}
                             {% with display_name=user.get_full_name|default:user.username %}
                             <div class="avatar-placeholder" id="avatar-preview-placeholder" style="background-color: {{ display_name|avatar_color }}; color: #fff; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 2rem; letter-spacing: 0.04em;">
@@ -38,6 +38,27 @@
                         </button>
                         <input type="file" id="avatar-input" name="avatar" accept="image/*" style="display:none;">
                     </div>
+                </form>
+                <form method="POST" action="{% url 'edit_profile' %}" class="account-gravatar-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="gravatar">
+                    {% if profile.use_gravatar %}
+                        <input type="hidden" name="use" value="0">
+                        <p class="account-gravatar-note">
+                            {% trans "Showing your Gravatar." %}
+                            <a href="https://gravatar.com/profile" target="_blank" rel="noopener">{% trans "Change it on gravatar.com" %}</a>
+                        </p>
+                        <button type="submit" class="account-gravatar-btn">
+                            <span class="material-symbols-outlined">{% if profile.avatar %}image{% else %}person_off{% endif %}</span>
+                            {% if profile.avatar %}{% trans "Use my uploaded photo" %}{% else %}{% trans "Stop using Gravatar" %}{% endif %}
+                        </button>
+                    {% else %}
+                        <input type="hidden" name="use" value="1">
+                        <button type="submit" class="account-gravatar-btn" {% if not user.email %}disabled title="{% trans 'Add an email address first' %}"{% endif %}>
+                            <span class="material-symbols-outlined">account_circle</span>
+                            {% trans "Use my Gravatar" %}
+                        </button>
+                    {% endif %}
                 </form>
                 <h3>{{ user.get_full_name|default:user.username }}</h3>
                 {% if profile.location %}<p class="account-location">{{ profile.location }}</p>{% endif %}

@@ -270,8 +270,8 @@
                 <h3 class="sidebar-card-label">{% trans "Volunteer Crew" %}</h3>
                 <div class="volunteer-crew-faces">
                     {% for volunteer in event_volunteers|slice:":5" %}
-                    {% if volunteer.profile and volunteer.profile.avatar %}
-                    <img src="{{ volunteer.profile.avatar.url }}" alt="{% trans 'Volunteer avatar' %}" class="volunteer-avatar" />
+                    {% if volunteer.profile.avatar_image %}
+                    <img src="{{ volunteer.profile.avatar_image }}" alt="{% trans 'Volunteer avatar' %}" class="volunteer-avatar" />
                     {% else %}
                     <div class="volunteer-avatar-count">
                         {{ volunteer.first_name|make_list|first|default:volunteer.username|make_list|first|upper }}

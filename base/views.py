@@ -21,7 +21,7 @@ from jobs.models import Shift
 
 from .email import notify, send_welcome_email
 from .models import AdminFeedback, Endorsement, HeroSection, Notification, PointsEntry, SiteSettings, Venue
-from .utils import qr_svg
+from .utils import gravatar_exists, qr_svg
 
 
 def _safe_next(request, fallback='home'):
@@ -201,6 +201,9 @@ def _skills_context(profile):
 def edit_profile(request):
     profile = request.user.profile
 
+    if request.method == 'POST' and request.POST.get('action') == 'gravatar':
+        return _set_gravatar(request, profile, request.POST.get('use') == '1')
+
     if request.method == 'POST':
         first_name = request.POST.get('first_name', '').strip()
         last_name = request.POST.get('last_name', '').strip()
@@ -222,11 +225,30 @@ def edit_profile(request):
         profile.bio = request.POST.get('bio', '').strip()
         if 'avatar' in request.FILES:
             profile.avatar = request.FILES['avatar']
+            profile.use_gravatar = False
         profile.save()
         messages.success(request, _('Profile updated successfully!'))
         return redirect('edit_profile')
 
     return render(request, 'base/edit_profile.html', {'profile': profile, **_skills_context(profile)})
+
+
+def _set_gravatar(request, profile, use):
+    """Switch the profile picture between the Gravatar for the account email and the uploaded photo."""
+    email = request.user.email
+    if use:
+        if not email:
+            messages.error(request, _('Add an email address to your profile before using Gravatar.'))
+            return redirect('edit_profile')
+        if gravatar_exists(email) is False:
+            messages.error(request, _('There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try again.') % {'email': email})
+            return redirect('edit_profile')
+        messages.success(request, _('Your profile picture now comes from Gravatar.'))
+    else:
+        messages.success(request, _('Gravatar turned off.'))
+    profile.use_gravatar = use
+    profile.save(update_fields=['use_gravatar'])
+    return redirect('edit_profile')
 
 
 @login_required

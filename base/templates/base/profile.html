@@ -20,8 +20,8 @@
 
       <!-- Avatar -->
       <div class="profile-avatar-block">
-        {% if profile.avatar %}
-          <img src="{{ profile.avatar.url }}"
+        {% if profile.avatar_image %}
+          <img src="{{ profile.avatar_image }}"
                alt="{{ viewed_user.get_full_name|default:viewed_user.username }}">
         {% else %}
           <div class="profile-avatar-fallback"
@@ -156,8 +156,8 @@
           {% for endorser in recent_endorsers %}
           <div class="endorser-avatar-item"
                title="{{ endorser.get_full_name|default:endorser.username }}">
-            {% if endorser.profile.avatar %}
-              <img src="{{ endorser.profile.avatar.url }}"
+            {% if endorser.profile.avatar_image %}
+              <img src="{{ endorser.profile.avatar_image }}"
                    alt="{{ endorser.get_full_name|default:endorser.username }}">
             {% else %}
               <div class="endorser-avatar-fallback"
@@ -359,8 +359,8 @@
         <article class="feedback-item">
           <div class="feedback-item-header">
             <div class="feedback-avatar">
-              {% if endorsement.endorser.profile.avatar %}
-                <img src="{{ endorsement.endorser.profile.avatar.url }}"
+              {% if endorsement.endorser.profile.avatar_image %}
+                <img src="{{ endorsement.endorser.profile.avatar_image }}"
                      alt="{{ endorsement.endorser.get_full_name|default:endorsement.endorser.username }}">
               {% else %}
                 <div class="feedback-avatar-fallback"

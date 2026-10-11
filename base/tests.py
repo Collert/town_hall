@@ -140,3 +140,34 @@ class PointsTests(TestCase):
         data['points_per_hour'] = 12
         self.client.post(reverse('console_settings_points'), data)
         self.assertEqual(PointsRules.get().points_per_hour, 12)
+
+
+class GravatarTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('ana', email=' Ana@Example.com ', password='pw')
+        self.client.force_login(self.user)
+
+    def test_avatar_url_uses_gravatar_hash_of_normalized_email(self):
+        import hashlib
+        profile = self.user.profile
+        self.assertIsNone(profile.avatar_url())
+        profile.use_gravatar = True
+        digest = hashlib.sha256(b'ana@example.com').hexdigest()
+        self.assertEqual(profile.avatar_url(64), f'https://gravatar.com/avatar/{digest}?s=64&d=mp')
+
+    def test_turning_on_checks_gravatar_exists(self):
+        from unittest import mock
+        with mock.patch('base.views.gravatar_exists', return_value=False):
+            self.client.post(reverse('edit_profile'), {'action': 'gravatar', 'use': '1'})
+        self.user.profile.refresh_from_db()
+        self.assertFalse(self.user.profile.use_gravatar)
+
+        with mock.patch('base.views.gravatar_exists', return_value=True):
+            self.client.post(reverse('edit_profile'), {'action': 'gravatar', 'use': '1'})
+        self.user.profile.refresh_from_db()
+        self.assertTrue(self.user.profile.use_gravatar)
+        self.assertContains(self.client.get(reverse('edit_profile')), 'gravatar.com/avatar/')
+
+        self.client.post(reverse('edit_profile'), {'action': 'gravatar', 'use': '0'})
+        self.user.profile.refresh_from_db()
+        self.assertFalse(self.user.profile.use_gravatar)

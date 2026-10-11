@@ -30,15 +30,19 @@ def display_name(user):
     return user.get_full_name() or user.username
 
 
+# Pixel size requested from Gravatar per avatar size (2x the CSS size, for sharp images on hi-dpi screens).
+GRAVATAR_PIXELS = {'xs': 56, 'sm': 72, 'md': 96, 'lg': 128, 'xl': 224}
+
+
 @register.inclusion_tag('base/partials/avatar.html')
 def avatar(user, size='md'):
-    """Render a user's avatar image, or colored initials when they have none.
+    """Render a user's avatar (Gravatar or upload), or colored initials when they have none.
 
     Sizes: xs, sm, md, lg, xl (see `.avatar-*` in base/styles.css).
     """
     profile = getattr(user, 'profile', None)
     return {
         'name': user.get_full_name() or user.username,
-        'image': profile.avatar.url if profile and profile.avatar else None,
+        'image': profile.avatar_url(GRAVATAR_PIXELS.get(size, 96)) if profile else None,
         'size': size,
     }

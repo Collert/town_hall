@@ -389,6 +389,12 @@ class VolunteerProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['permanent_roles'].queryset = Role.objects.filter(permanent=True).order_by('name')
 
+    def save(self, commit=True):
+        # A newly uploaded photo replaces the Gravatar, as it does on the volunteer's own profile page.
+        if 'avatar' in self.changed_data and self.cleaned_data.get('avatar'):
+            self.instance.use_gravatar = False
+        return super().save(commit)
+
 
 class NewVolunteerForm(forms.Form):
     first_name = forms.CharField(label=_('First name'), max_length=150)

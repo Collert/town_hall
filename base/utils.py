@@ -1,4 +1,8 @@
+import hashlib
+import urllib.error
+import urllib.request
 from contextlib import nullcontext
+from urllib.parse import urlencode
 
 from django.utils import formats, timezone, translation
 
@@ -37,3 +41,21 @@ def qr_svg(data):
     svg = re.sub(r'\s(?:width|height|fill_color|back_color)="[^"]*"', '', svg, count=4)
     svg = svg.replace(' id="qr-path"', '').replace('fill="#000000"', 'fill="currentColor"')
     return svg.replace('<svg ', '<svg aria-hidden="true" ', 1)
+
+
+def gravatar_url(email, size=160, default='mp'):
+    """Gravatar image URL for an email address (SHA-256 hash, per Gravatar's current API)."""
+    digest = hashlib.sha256(email.strip().lower().encode('utf-8')).hexdigest()
+    return f'https://gravatar.com/avatar/{digest}?{urlencode({"s": size, "d": default})}'
+
+
+def gravatar_exists(email):
+    """True if the email has a Gravatar; None if Gravatar couldn't be reached."""
+    request = urllib.request.Request(gravatar_url(email, size=1, default='404'), method='HEAD')
+    try:
+        with urllib.request.urlopen(request, timeout=5):
+            return True
+    except urllib.error.HTTPError as e:
+        return False if e.code == 404 else None
+    except (urllib.error.URLError, OSError):
+        return None

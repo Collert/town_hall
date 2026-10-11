@@ -31,9 +31,9 @@
             <section class="c-card">
                 <div class="ve-identity">
                     <label class="ve-photo" title="{% trans 'Change photo' %}">
-                        <span class="c-image-drop ve-photo-drop {% if profile.avatar %}has-image{% endif %}" id="avatar-drop"
-                              {% if profile.avatar %}style="background-image: url('{{ profile.avatar.url }}')"{% endif %}>
-                            {% if not profile.avatar %}{% avatar volunteer 'xl' %}{% endif %}
+                        <span class="c-image-drop ve-photo-drop {% if profile.avatar_image %}has-image{% endif %}" id="avatar-drop"
+                              {% if profile.avatar_image %}style="background-image: url('{{ profile.avatar_image }}')"{% endif %}>
+                            {% if not profile.avatar_image %}{% avatar volunteer 'xl' %}{% endif %}
                         </span>
                         <input type="file" name="profile-avatar" accept="image/*" data-image-preview="avatar-drop" class="ve-photo-input">
                         <span class="ve-photo-edit"><span class="material-symbols-outlined">edit</span></span>

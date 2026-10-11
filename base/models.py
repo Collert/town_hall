@@ -62,6 +62,7 @@ class EmailTemplate(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    use_gravatar = models.BooleanField(default=False, help_text='Show the Gravatar for the account email instead of the uploaded photo')
     last_viewed_training_module = models.ForeignKey('education.TrainingModule', on_delete=models.SET_NULL, blank=True, null=True, related_name='viewed_by_profiles')
     impact_points = models.IntegerField(default=0)
     permanent_roles = models.ManyToManyField('jobs.Role', blank=True, related_name='staff')
@@ -72,6 +73,17 @@ class Profile(models.Model):
     id_code = models.CharField(max_length=6, unique=True, editable=False, help_text='Unique identifier for the user (e.g., employee ID, volunteer ID)')
     admin_notes = models.TextField(blank=True, default='', help_text='Internal notes visible to staff only')
     language = models.CharField(max_length=10, blank=True, default='', help_text='Language the user last browsed in; emails use it')
+
+    def avatar_url(self, size=192):
+        """URL of the picture to show: the Gravatar if chosen, else the upload, else None (initials)."""
+        if self.use_gravatar and self.user.email:
+            from .utils import gravatar_url
+            return gravatar_url(self.user.email, size)
+        return self.avatar.url if self.avatar else None
+
+    @property
+    def avatar_image(self):
+        return self.avatar_url()
 
     @property
     def level(self):
