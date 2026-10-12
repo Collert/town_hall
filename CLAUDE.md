@@ -53,7 +53,7 @@ All app URLs are wrapped in `i18n_patterns` with `prefix_default_language=True`,
 - Kiosk: `/jobs/kiosk/` (staff picker) → `/jobs/kiosk/event/<id>/` or `/jobs/kiosk/venue/<id>/`. The kiosk stores the volunteer in `session['kiosk_user_id']`; it never logs them into the site.
 - Outside the language prefix (from `mcp_server/urls.py`): `/mcp`, `/oauth/{register,authorize,token,revoke}`, `/.well-known/oauth-protected-resource[/mcp]`, `/.well-known/oauth-authorization-server`. AI clients build these from the metadata, so they must stay fixed.
 - `api` has views but **no URL routes yet**. `base/api_views.py` is not routed either.
-- Media is served by Django's `serve` view in all environments.
+- Media: in production (`environment=production`, so `DEBUG` is off) uploads go to a self-hosted RustFS bucket through django-storages (`S3_ENDPOINT_URL`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, optional `S3_REGION` / `S3_PUBLIC_URL`; links are presigned unless `S3_PUBLIC_URL` is set) and the `/media/` route is off. In development (and always under `manage.py test`), `MEDIA_ROOT` is served by Django's `serve` view. Always go through the storage API (`field.url`, `field.open()`), never filesystem paths. Static files stay on WhiteNoise.
 
 ## Conventions
 

@@ -39,7 +39,8 @@ urlpatterns += i18n_patterns(
     prefix_default_language=True,
 )
 
-# Serve media files (using Django's static serve view for production in this low-traffic scenario)
-urlpatterns += [
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-]
+# Serve local media files; with S3_BUCKET set, uploads are served from the bucket instead.
+if not settings.USE_S3_MEDIA:
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    ]

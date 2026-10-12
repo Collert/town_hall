@@ -8,4 +8,5 @@ whitenoise
 deep-translator
 dotenv
 dj-database-url
+django-storages[s3]
 gunicorn

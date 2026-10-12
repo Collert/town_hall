@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 import dj_database_url
 from django.conf.locale import LANG_INFO
@@ -29,7 +30,7 @@ dotenv.load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('environment', 'development') != 'production'
 
 # APP_ORIGIN: the site's host name(s), comma-separated, e.g. "townhall.example.org" or "abc.trycloudflare.com,127.0.0.1".
 ALLOWED_HOSTS = [origin.strip().rstrip('/') for origin in os.environ.get('APP_ORIGIN', '127.0.0.1').split(',')]
@@ -193,12 +194,51 @@ LOCALE_PATHS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 # Media files (user uploaded content)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# In production uploads go to an S3-compatible bucket (self-hosted RustFS); in development to
+# MEDIA_ROOT, which town_hall/urls.py serves. Static files always stay on WhiteNoise.
+#   S3_ENDPOINT_URL  e.g. http://rustfs:9000 (the API port, reachable from this server)
+#   S3_BUCKET, S3_ACCESS_KEY, S3_SECRET_KEY, S3_REGION (default us-east-1)
+#   S3_PUBLIC_URL    optional, e.g. https://files.example.org/town-hall: the bucket's public
+#                    address when it allows anonymous reads. Without it, links are presigned.
+USE_S3_MEDIA = not DEBUG and sys.argv[1:2] != ['test']  # tests write to a temp MEDIA_ROOT
+S3_BUCKET = os.environ.get('S3_BUCKET', '')
+
+STORAGES = {
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage' if DEBUG
+        else 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+
+if USE_S3_MEDIA:
+    from urllib.parse import urlsplit
+
+    _s3_options = {
+        'bucket_name': S3_BUCKET,
+        'endpoint_url': os.environ.get('S3_ENDPOINT_URL') or None,
+        'access_key': os.environ.get('S3_ACCESS_KEY', ''),
+        'secret_key': os.environ.get('S3_SECRET_KEY', ''),
+        'region_name': os.environ.get('S3_REGION', 'us-east-1'),
+        'signature_version': 's3v4',
+        'addressing_style': 'path',  # RustFS/MinIO serve buckets at <endpoint>/<bucket>/
+        'default_acl': None,
+        'file_overwrite': False,  # same as FileSystemStorage: add a suffix instead of replacing
+        'querystring_expire': 3600,
+    }
+    _public_url = os.environ.get('S3_PUBLIC_URL', '').rstrip('/')
+    if _public_url:
+        _parts = urlsplit(_public_url)
+        _s3_options.update(
+            custom_domain=_parts.netloc + _parts.path,
+            url_protocol=f'{_parts.scheme}:',
+            querystring_auth=False,
+        )
+    STORAGES['default'] = {'BACKEND': 'storages.backends.s3.S3Storage', 'OPTIONS': _s3_options}
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
