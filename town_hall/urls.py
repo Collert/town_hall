@@ -20,11 +20,16 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.views.static import serve
 
+from base import views as base_views
+
 urlpatterns = [
     # URL for switching language
     path('i18n/', include('django.conf.urls.i18n')),
     # Claude connector (MCP) and its OAuth endpoints: fixed paths, no language prefix
     path('', include('mcp_server.urls')),
+    # Icons browsers and home screens fetch from the site root
+    path('favicon.ico', base_views.favicon, name='favicon'),
+    path('site.webmanifest', base_views.web_manifest, name='web_manifest'),
 ]
 
 # URLs that should be prefixed with language code

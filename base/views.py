@@ -9,8 +9,9 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Count, Q
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -163,6 +164,31 @@ def signup_view(request):
             return redirect(_safe_next(request))
 
     return render(request, 'base/signup.html', _auth_page_context(request))
+
+
+def favicon(request):
+    """Browsers ask for /favicon.ico at the site root; send them to the (hashed) static file."""
+    return redirect(static('base/favicon/favicon.ico'), permanent=False)
+
+
+def web_manifest(request):
+    """The PWA manifest, built here so icon URLs go through static storage and the name follows SiteSettings."""
+    site = SiteSettings.get_settings()
+    icons = [
+        {'src': static(f'base/favicon/web-app-manifest-{size}x{size}.png'), 'sizes': f'{size}x{size}',
+         'type': 'image/png', 'purpose': 'maskable'}
+        for size in (192, 512)
+    ]
+    manifest = {
+        'name': site.company_name,
+        'short_name': site.company_name,
+        'icons': icons,
+        'start_url': '/',
+        'theme_color': site.color_primary,
+        'background_color': site.color_bg_primary,
+        'display': 'standalone',
+    }
+    return JsonResponse(manifest, content_type='application/manifest+json')
 
 
 def first_run_setup(request):
