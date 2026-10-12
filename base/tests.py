@@ -171,3 +171,80 @@ class GravatarTests(TestCase):
         self.client.post(reverse('edit_profile'), {'action': 'gravatar', 'use': '0'})
         self.user.profile.refresh_from_db()
         self.assertFalse(self.user.profile.use_gravatar)
+
+
+class FirstRunSetupTests(TestCase):
+    def setUp(self):
+        from base.middleware import FirstRunMiddleware
+        cache.clear()  # SiteSettings is cached
+        self.had_users = FirstRunMiddleware.has_users
+        FirstRunMiddleware.has_users = False
+
+    def tearDown(self):
+        from base.middleware import FirstRunMiddleware
+        FirstRunMiddleware.has_users = self.had_users
+        cache.clear()
+
+    def post_setup(self, **overrides):
+        data = {'company_name': 'Riverside Parish', 'first_name': 'Ada', 'last_name': 'Admin', 'email': 'ada@example.org',
+                'password': 'a-Long-pass-123', 'password_confirm': 'a-Long-pass-123', **overrides}
+        return self.client.post(reverse('first_run_setup'), data)
+
+    def test_empty_database_redirects_to_setup(self):
+        response = self.client.get(reverse('training_directory'))
+        self.assertRedirects(response, reverse('first_run_setup'))
+        self.assertEqual(self.client.get(reverse('first_run_setup')).status_code, 200)
+
+    def test_setup_creates_superuser_and_admin_guide(self):
+        from base.models import SiteSettings
+        from base.onboarding import admin_guide
+
+        response = self.post_setup()
+        user = User.objects.get()
+        self.assertTrue(user.is_superuser and user.is_staff)
+        self.assertEqual((user.email, user.first_name), ('ada@example.org', 'Ada'))
+        self.assertEqual(SiteSettings.get_settings().company_name, 'Riverside Parish')
+        guide = admin_guide()
+        self.assertTrue(guide.staff_only and guide.published)
+        self.assertGreater(guide.lessons.count(), 10)
+        self.assertEqual(guide.quizzes.get().questions.count(), 5)
+        self.assertRedirects(response, reverse('module_overview', args=[guide.pk]))
+        self.assertEqual(int(self.client.session['_auth_user_id']), user.pk)
+
+    def test_setup_rejects_mismatched_or_weak_passwords(self):
+        self.post_setup(password_confirm='something-else-9')
+        self.post_setup(password='123', password_confirm='123')
+        self.assertFalse(User.objects.exists())
+
+    def test_setup_closes_once_a_user_exists(self):
+        User.objects.create_user('someone', 'someone@example.org', 'pw')
+        self.assertEqual(self.client.get(reverse('first_run_setup')).status_code, 404)
+        self.assertEqual(self.post_setup().status_code, 404)
+        self.assertEqual(self.client.get(reverse('training_directory')).status_code, 200)
+
+
+class StaffOnlyModuleTests(TestCase):
+    def setUp(self):
+        from base.onboarding import ensure_admin_guide
+        self.guide = ensure_admin_guide()
+        self.vol = User.objects.create_user('vol', 'vol@example.com', 'pw')
+        self.staff = User.objects.create_user('boss', 'boss@example.com', 'pw', is_staff=True)
+
+    def test_hidden_from_volunteers(self):
+        self.client.force_login(self.vol)
+        self.assertNotContains(self.client.get(reverse('training_directory')), self.guide.title)
+        self.assertEqual(self.client.get(reverse('module_overview', args=[self.guide.pk])).status_code, 404)
+        lesson = self.guide.lessons.first()
+        self.assertEqual(self.client.get(reverse('lesson_detail', args=[self.guide.pk, lesson.pk])).status_code, 404)
+
+    def test_visible_to_staff_without_points(self):
+        self.client.force_login(self.staff)
+        self.assertContains(self.client.get(reverse('training_directory')), self.guide.title)
+        self.assertEqual(self.client.get(reverse('module_overview', args=[self.guide.pk])).status_code, 200)
+        TrainingModuleCompletion.objects.create(training_module=self.guide, user=self.staff)
+        self.assertFalse(PointsEntry.objects.filter(user=self.staff).exists())
+
+    def test_guide_is_created_once(self):
+        from base.onboarding import ensure_admin_guide
+        self.assertEqual(ensure_admin_guide(), self.guide)
+        self.assertEqual(TrainingModule.objects.filter(system_key='admin_guide').count(), 1)

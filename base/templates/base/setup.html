@@ -1,0 +1,100 @@
+{% extends "base/bare_layout.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Set Up Town Hall" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/auth.css' %}">
+<link rel="stylesheet" href="{% static 'base/setup.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="auth-wrapper setup-wrapper">
+    <div class="auth-container-wide">
+        <div class="auth-info">
+            <div class="subtitle">{% trans "Welcome to Town Hall" %}</div>
+            <h1>{% trans "Let's set up your organization." %}</h1>
+            <p>{% trans "This site has no accounts yet. The account you create here is the administrator, with full access to everything." %}</p>
+            <ol class="setup-steps">
+                <li>
+                    <span class="material-symbols-outlined">admin_panel_settings</span>
+                    <div>
+                        <strong>{% trans "Create your admin account" %}</strong>
+                        <p>{% trans "You can invite co-organizers and make them staff later." %}</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="material-symbols-outlined">school</span>
+                    <div>
+                        <strong>{% trans "Take the admin guide" %}</strong>
+                        <p>{% trans "A training module that walks through events, roles, training, check-in and settings. Only staff can see it." %}</p>
+                    </div>
+                </li>
+                <li>
+                    <span class="material-symbols-outlined">event</span>
+                    <div>
+                        <strong>{% trans "Plan your first event" %}</strong>
+                        <p>{% trans "Add venues and roles, then publish an event for volunteers to join." %}</p>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <div class="auth-card">
+            <h2>{% trans "Create Admin Account" %}</h2>
+            <p>{% trans "This only appears once, on a brand new site." %}</p>
+
+            {% if form.non_field_errors %}
+            <div class="setup-error-box">{% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}</div>
+            {% endif %}
+
+            <form method="POST" action="" novalidate>
+                {% csrf_token %}
+                <div class="auth-form-group has-icon{% if form.company_name.errors %} has-error{% endif %}">
+                    <label for="company_name">{{ form.company_name.label }}</label>
+                    <span class="material-symbols-outlined">apartment</span>
+                    <input type="text" id="company_name" name="company_name" value="{{ form.company_name.value|default:'' }}" maxlength="30" required autofocus>
+                    {% for error in form.company_name.errors %}<small class="setup-error">{{ error }}</small>{% endfor %}
+                </div>
+
+                <div class="form-row">
+                    <div class="auth-form-group{% if form.first_name.errors %} has-error{% endif %}">
+                        <label for="first_name">{{ form.first_name.label }}</label>
+                        <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" autocomplete="given-name" required>
+                        {% for error in form.first_name.errors %}<small class="setup-error">{{ error }}</small>{% endfor %}
+                    </div>
+                    <div class="auth-form-group">
+                        <label for="last_name">{{ form.last_name.label }}</label>
+                        <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" autocomplete="family-name">
+                    </div>
+                </div>
+
+                <div class="auth-form-group has-icon{% if form.email.errors %} has-error{% endif %}">
+                    <label for="email">{{ form.email.label }}</label>
+                    <span class="material-symbols-outlined">mail</span>
+                    <input type="email" id="email" name="email" value="{{ form.email.value|default:'' }}" autocomplete="email" required>
+                    {% for error in form.email.errors %}<small class="setup-error">{{ error }}</small>{% endfor %}
+                </div>
+
+                <div class="auth-form-group has-icon{% if form.password.errors %} has-error{% endif %}">
+                    <label for="password">{{ form.password.label }}</label>
+                    <span class="material-symbols-outlined">lock</span>
+                    <input type="password" id="password" name="password" autocomplete="new-password" required>
+                    {% for error in form.password.errors %}<small class="setup-error">{{ error }}</small>{% empty %}<small>{% trans "At least 8 characters, not entirely numbers or a common password." %}</small>{% endfor %}
+                </div>
+
+                <div class="auth-form-group has-icon{% if form.password_confirm.errors %} has-error{% endif %}">
+                    <label for="password_confirm">{{ form.password_confirm.label }}</label>
+                    <span class="material-symbols-outlined">lock</span>
+                    <input type="password" id="password_confirm" name="password_confirm" autocomplete="new-password" required>
+                    {% for error in form.password_confirm.errors %}<small class="setup-error">{{ error }}</small>{% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-accent btn-rounded auth-submit-btn">
+                    {% trans "Create Account & Start Guide" %} <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

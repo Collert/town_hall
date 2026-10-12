@@ -29,6 +29,7 @@ from django.utils import timezone, translation
 
 from api.models import APIKey, ShiftHeartbeat
 from base import belltower, points
+from base.onboarding import ensure_admin_guide
 from base.models import (AdminFeedback, Endorsement, HeroSection, Level, Notification, OperatingHour,
                          PointsEntry, PointsRules, SiteSettings, Venue, VenueFeature, VenueNote)
 from education.models import (ExternalCertificate, Quiz, QuizQuestion, Skill, TrainingLesson, TrainingModule,
@@ -823,6 +824,7 @@ class Command(BaseCommand):
         self.categories = {name: EventCategory.objects.create(name=name) for name in CATEGORIES}
         self.seed_venues()
         self.seed_training()
+        ensure_admin_guide()  # what a real install gets at first-run setup
         self.seed_roles()
         self.stdout.write('People...')
         self.seed_people()

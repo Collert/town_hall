@@ -154,6 +154,24 @@
     color: var(--color-text-secondary);
 }
 
+.event-new-category {
+    position: relative;
+}
+
+.event-new-category > .material-symbols-outlined {
+    position: absolute;
+    top: 50%;
+    left: 0.9rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+}
+
+.event-new-category > .c-input {
+    padding-left: 2.5rem;
+}
+
 .event-pick-group div[id] > div > label {
     background: var(--color-bg-secondary);
 }

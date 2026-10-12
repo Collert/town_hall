@@ -702,9 +702,11 @@ body.console ol {
     font-family: inherit;
 }
 
+/* Dark mode: a faint tint of the light primary keeps chips readable with the normal text color */
 @media (prefers-color-scheme: dark) {
     .c-chip {
-        color: var(--color-primary-light);
+        background: rgba(from var(--color-primary-light) r g b / 0.14);
+        color: var(--color-text-primary);
     }
 }
 

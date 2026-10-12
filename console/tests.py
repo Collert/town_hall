@@ -1446,6 +1446,17 @@ class VenueTests(ConsoleFixture):
         self.assertIsNone(event.venue)
         self.assertEqual((event.place_name, event.latitude), ('12 Elm St', 10.0))
 
+    def test_add_category_from_event_editor(self, geocode):
+        from events.models import EventCategory
+        existing = EventCategory.objects.create(name='Youth & Family')
+        self.client.post(reverse('console_event_create'), self.event_data(location_en='12 Elm St', new_category=' Food Security '))
+        event = Event.objects.get(title_en='Bake Sale')
+        self.assertEqual([c.name for c in event.category.all()], ['Food Security'])
+        self.client.post(reverse('console_event_edit', args=[event.pk]),
+                         self.event_data(location_en='12 Elm St', new_category='youth & family'))
+        self.assertEqual(list(event.category.all()), [existing])  # matched case-insensitively, not duplicated
+        self.assertEqual(EventCategory.objects.count(), 2)
+
     def test_moving_venue_updates_its_events(self, geocode):
         self.live.venue = self.venue
         self.live.save()

@@ -126,7 +126,8 @@ def role_delete(request, role_id):
 def module_search(request):
     query = request.GET.get('module_q', '').strip()
     exclude = ids_from(request.GET, 'module_ids')
-    modules = TrainingModule.objects.exclude(pk__in=exclude).order_by('title')
+    # Staff-only modules are hidden from volunteers, so they could never meet the requirement.
+    modules = TrainingModule.objects.filter(staff_only=False).exclude(pk__in=exclude).order_by('title')
     if query:
         modules = modules.filter(Q(title__icontains=query) | Q(description__icontains=query))
     return render(request, 'console/partials/module_search_results.html', {

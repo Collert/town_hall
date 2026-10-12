@@ -121,8 +121,10 @@ def training_points(module, rules=None):
 
 
 def award_training(completion):
-    """One-time award for finishing a module."""
+    """One-time award for finishing a module. Staff-only guides aren't volunteer training, so they earn nothing."""
     module = completion.training_module
+    if module.staff_only:
+        return None
     if PointsEntry.objects.filter(user_id=completion.user_id, source=PointsEntry.TRAINING, training_module=module).exists():
         return None
     amount, minutes = training_points(module)

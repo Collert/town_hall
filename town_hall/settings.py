@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'base.middleware.FirstRunMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'base.middleware.HtmxMessagesMiddleware',
     'base.middleware.RememberLanguageMiddleware',

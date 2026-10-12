@@ -37,6 +37,13 @@
     background-position: center;
 }
 
+.module-tile-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.375rem;
+}
+
 .module-topic {
     padding: 0;
     color: var(--color-accent);

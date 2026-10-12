@@ -95,7 +95,16 @@
                 {% trans "Highlight on the home page" as featured_hint %}
                 {% include 'console/partials/toggle.html' with field=form.featured title=_("Featured") hint=featured_hint %}
                 {% include 'console/partials/field.html' with field=form.attendees %}
-                {% if form.category.field.queryset.exists %}{% include 'console/partials/field.html' with field=form.category label=_("Categories") field_class="event-pick-group is-categories" %}{% endif %}
+                <div class="c-field event-pick-group is-categories{% if form.category.errors or form.new_category.errors %} has-error{% endif %}" id="field-category">
+                    <label class="c-label" for="{% if form.category.field.queryset.exists %}{{ form.category.id_for_label }}{% else %}{{ form.new_category.id_for_label }}{% endif %}">{% trans "Categories" %}</label>
+                    {% if form.category.field.queryset.exists %}{{ form.category }}{% endif %}
+                    <div class="event-new-category">
+                        <span class="material-symbols-outlined">add</span>
+                        {{ form.new_category }}
+                    </div>
+                    {% for error in form.category.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                    {% for error in form.new_category.errors %}<span class="c-error">{{ error }}</span>{% endfor %}
+                </div>
                 {% include 'console/partials/field.html' with field=form.coordinators field_class="event-pick-group is-coordinators" %}
             </div>
         </section>

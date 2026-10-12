@@ -4,7 +4,10 @@
     <a href="{% url 'console_module_edit' module.pk %}" class="role-tile module-tile">
         <div class="module-tile-cover" {% if module.photo %}style="background-image: url('{{ module.photo.url }}')"{% endif %}>
             <span class="c-icon-tile dark"><span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span></span>
-            {% if module.published %}<span class="c-badge c-badge-mint">{% trans "Published" %}</span>{% else %}<span class="c-badge c-badge-dark">{% trans "Draft" %}</span>{% endif %}
+            <span class="module-tile-badges">
+                {% if module.staff_only %}<span class="c-badge c-badge-dark">{% trans "Staff only" %}</span>{% endif %}
+                {% if module.published %}<span class="c-badge c-badge-mint">{% trans "Published" %}</span>{% else %}<span class="c-badge c-badge-dark">{% trans "Draft" %}</span>{% endif %}
+            </span>
         </div>
         {% if module.topic %}<span class="c-label module-topic">{{ module.topic.name }}</span>{% endif %}
         <h3>{{ module.title }}</h3>

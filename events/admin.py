@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import *
 
 admin.site.register(Event)
+admin.site.register(EventCategory)
 admin.site.register(EventRoleSlot)
 admin.site.register(EventSlotInvite)
 admin.site.register(EventTaskList)

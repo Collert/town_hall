@@ -77,6 +77,8 @@
                 <div class="c-stack">
                     {% trans "Visible in the training directory" as publish_hint %}
                     {% include 'console/partials/toggle.html' with field=form.published title=_("Published") hint=publish_hint %}
+                    {% trans "Hidden from volunteers, e.g. guides for running Town Hall" as staff_hint %}
+                    {% include 'console/partials/toggle.html' with field=form.staff_only title=_("Staff only") hint=staff_hint %}
                     {% include 'console/partials/field.html' with field=form.expires_after_days %}
                     {% include 'console/partials/field.html' with field=form.complexity_level %}
                 </div>

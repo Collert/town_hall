@@ -61,3 +61,35 @@ class HtmxMessagesMiddleware:
         triggers['toasts'] = {'items': items}
         response['HX-Trigger'] = json.dumps(triggers)
         return response
+
+
+class FirstRunMiddleware:
+    """Send every request to the setup page while the database has no users, so the first person
+    to open a fresh install creates the superuser (base.views.first_run_setup).
+
+    Once a user exists it never checks again in this process.
+    """
+
+    has_users = False
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if FirstRunMiddleware.has_users:
+            return None
+        from django.contrib.auth.models import User
+
+        if User.objects.exists():
+            FirstRunMiddleware.has_users = True
+            return None
+        # The setup page itself, media, the language switcher and the machine-facing MCP/OAuth endpoints.
+        name = request.resolver_match.url_name if request.resolver_match else None
+        if name in ('first_run_setup', 'set_language') or view_func.__module__.startswith(('django.views.static', 'mcp_server')):
+            return None
+        from django.shortcuts import redirect
+
+        return redirect('first_run_setup')

@@ -57,6 +57,10 @@ class EventForm(TranslatedFormMixin, forms.ModelForm):
     translation_key = 'event'
     translated = ('title', 'description')
 
+    new_category = forms.CharField(
+        label=_('Add category'), max_length=50, required=False,
+        widget=forms.TextInput(attrs={'class': 'c-input', 'placeholder': _('Add category')}))
+
     class Meta:
         model = Event
         fields = translated_fields('title', 'description') + [
@@ -110,7 +114,12 @@ class EventForm(TranslatedFormMixin, forms.ModelForm):
                 setattr(event, lang_field('location', code), '')
         if {'venue', 'location_en'} & set(self.changed_data):
             event.latitude = event.longitude = None  # re-derived in Event.save()
-        return super().save(commit)
+        event = super().save(commit)
+        name = self.cleaned_data.get('new_category', '').strip()
+        if name and commit:
+            category = EventCategory.objects.filter(name__iexact=name).first() or EventCategory.objects.create(name=name)
+            event.category.add(category)
+        return event
 
 
 class RoleForm(TranslatedFormMixin, forms.ModelForm):
@@ -268,7 +277,7 @@ class TrainingModuleForm(TranslatedFormMixin, forms.ModelForm):
     class Meta:
         model = TrainingModule
         fields = translated_fields('title', 'description') + [
-            'icon', 'topic', 'photo', 'expires_after_days', 'complexity_level', 'published',
+            'icon', 'topic', 'photo', 'expires_after_days', 'complexity_level', 'published', 'staff_only',
         ]
         widgets = {
             'complexity_level': forms.NumberInput(attrs={'min': 0, 'max': 4}),

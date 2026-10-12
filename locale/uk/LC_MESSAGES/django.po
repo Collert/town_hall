@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Town Hall\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 13:04-0700\n"
+"POT-Creation-Date: 2026-10-11 17:15-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
@@ -50,120 +50,151 @@ msgstr ""
 "Ви отримали цей лист, бо маєте обліковий запис у %(org)s. "
 "[Відписатися]({{UnsubscribeURL}})"
 
-#: .\base\models.py:137
+#: .\base\forms.py:9 .\base\triggers.py:80 .\base\triggers.py:101
+msgid "Organization name"
+msgstr "Назва організації"
+
+#: .\base\forms.py:10 .\base\templates\base\edit_profile.html:96
+#: .\base\templates\base\signup.html:49
+msgid "First Name"
+msgstr "Ім’я"
+
+#: .\base\forms.py:11 .\base\templates\base\edit_profile.html:100
+#: .\base\templates\base\signup.html:53
+msgid "Last Name"
+msgstr "Прізвище"
+
+#: .\base\forms.py:12 .\base\templates\base\edit_profile.html:104
+#: .\base\templates\base\login.html:19
+#: .\base\templates\base\password_reset_form.html:19
+#: .\base\templates\base\signup.html:59
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:14
+msgid "Email Address"
+msgstr "Електронна адреса"
+
+#: .\base\forms.py:13 .\base\templates\base\login.html:26
+#: .\base\templates\base\signup.html:65
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:18
+msgid "Password"
+msgstr "Пароль"
+
+#: .\base\forms.py:14
+msgid "Confirm Password"
+msgstr "Підтвердьте пароль"
+
+#: .\base\forms.py:20
+msgid "The passwords don't match."
+msgstr "Паролі не збігаються."
+
+#: .\base\models.py:149
 msgid "Facilities"
 msgstr "Зручності"
 
-#: .\base\models.py:138
+#: .\base\models.py:150
 msgid "Accessibility"
 msgstr "Доступність"
 
-#: .\base\models.py:139
+#: .\base\models.py:151
 msgid "Equipment & tech"
 msgstr "Обладнання та техніка"
 
-#: .\base\models.py:140
+#: .\base\models.py:152
 msgid "Getting there"
 msgstr "Як дістатися"
 
-#: .\base\models.py:241
+#: .\base\models.py:253
 msgid "Monday"
 msgstr "Понеділок"
 
-#: .\base\models.py:241
+#: .\base\models.py:253
 msgid "Tuesday"
 msgstr "Вівторок"
 
-#: .\base\models.py:241
+#: .\base\models.py:253
 msgid "Wednesday"
 msgstr "Середа"
 
-#: .\base\models.py:241
+#: .\base\models.py:253
 msgid "Thursday"
 msgstr "Четвер"
 
-#: .\base\models.py:242
+#: .\base\models.py:254
 msgid "Friday"
 msgstr "П’ятниця"
 
-#: .\base\models.py:242
+#: .\base\models.py:254
 msgid "Saturday"
 msgstr "Субота"
 
-#: .\base\models.py:242
+#: .\base\models.py:254
 msgid "Sunday"
 msgstr "Неділя"
 
-#: .\base\models.py:326 .\base\points.py:175
+#: .\base\models.py:338 .\base\points.py:177
 #: .\console\templates\console\volunteer_detail.html:142
 msgid "Shift"
 msgstr "Зміна"
 
-#: .\base\models.py:327 .\base\templates\base\layout.html:30
+#: .\base\models.py:339 .\base\templates\base\layout.html:30
 #: .\base\templates\base\layout.html:164 .\base\templates\base\layout.html:285
 #: .\base\triggers.py:34 .\console\templates\console\points_settings.html:54
-#| msgid "Ukrainian"
 msgid "Training"
 msgstr "Навчання"
 
-#: .\base\models.py:328
+#: .\base\models.py:340
 msgid "Endorsement"
 msgstr "Рекомендація"
 
-#: .\base\models.py:329 .\base\points.py:183
+#: .\base\models.py:341 .\base\points.py:185
 msgid "Adjustment"
 msgstr "Коригування"
 
-#: .\base\points.py:166
+#: .\base\points.py:168
 msgid "Walk-in cover"
 msgstr "Заміна без запису"
 
-#: .\base\points.py:167
+#: .\base\points.py:169
 msgid "Last-minute sign-up"
 msgstr "Запис в останню хвилину"
 
-#: .\base\points.py:168
+#: .\base\points.py:170
 msgid "Early or late shift"
 msgstr "Рання або пізня зміна"
 
-#: .\base\points.py:177
+#: .\base\points.py:179
 #, python-format
-#| msgid "News about %(event)s"
 msgid "%(role)s at %(event)s"
 msgstr "%(role)s на події «%(event)s»"
 
-#: .\base\points.py:180
+#: .\base\points.py:182
 #, python-format
-#| msgid "You completed %(module)s"
 msgid "Completed %(module)s"
 msgstr "Завершено «%(module)s»"
 
-#: .\base\points.py:180
-#| msgid "Ukrainian"
+#: .\base\points.py:182
 msgid "a training module"
 msgstr "навчальний модуль"
 
-#: .\base\points.py:182
+#: .\base\points.py:184
 #, python-format
-#| msgid "Well done, %(name)s!"
 msgid "Endorsed by %(name)s"
 msgstr "Рекомендація від %(name)s"
 
-#: .\base\points.py:182
+#: .\base\points.py:184
 msgid "a teammate"
 msgstr "колега по команді"
 
-#: .\base\points.py:191
+#: .\base\points.py:193
 #, python-format
 msgid "%(h)s h"
 msgstr "%(h)s год"
 
-#: .\base\points.py:193
+#: .\base\points.py:195
 #, python-format
 msgid "×%(w)s role"
 msgstr "×%(w)s за роль"
 
-#: .\base\points.py:195
+#: .\base\points.py:197
 #, python-format
 msgid "+%(p)s%% reach"
 msgstr "+%(p)s%% за охоплення"
@@ -182,66 +213,72 @@ msgid "Change photo"
 msgstr "Змінити фото"
 
 #: .\base\templates\base\edit_profile.html:48
+msgid "Showing your Gravatar."
+msgstr "Показується ваш Gravatar."
+
+#: .\base\templates\base\edit_profile.html:49
+msgid "Change it on gravatar.com"
+msgstr "Змінити його на gravatar.com"
+
+#: .\base\templates\base\edit_profile.html:53
+msgid "Use my uploaded photo"
+msgstr "Використовувати завантажене фото"
+
+#: .\base\templates\base\edit_profile.html:53
+msgid "Stop using Gravatar"
+msgstr "Не використовувати Gravatar"
+
+#: .\base\templates\base\edit_profile.html:57
+msgid "Add an email address first"
+msgstr "Спершу додайте електронну адресу"
+
+#: .\base\templates\base\edit_profile.html:59
+msgid "Use my Gravatar"
+msgstr "Використовувати мій Gravatar"
+
+#: .\base\templates\base\edit_profile.html:69
 msgid "Security & Login"
 msgstr "Безпека та вхід"
 
-#: .\base\templates\base\edit_profile.html:51
-#: .\base\templates\base\edit_profile.html:121
+#: .\base\templates\base\edit_profile.html:72
+#: .\base\templates\base\edit_profile.html:142
 msgid "Change Password"
 msgstr "Змінити пароль"
 
-#: .\base\templates\base\edit_profile.html:56
-#: .\base\templates\base\edit_profile.html:172
+#: .\base\templates\base\edit_profile.html:77
+#: .\base\templates\base\edit_profile.html:193
 msgid "Deactivate Account"
 msgstr "Деактивувати обліковий запис"
 
-#: .\base\templates\base\edit_profile.html:72
+#: .\base\templates\base\edit_profile.html:93
 msgid "Basic Information"
 msgstr "Основна інформація"
 
-#: .\base\templates\base\edit_profile.html:75
-#: .\base\templates\base\signup.html:49
-msgid "First Name"
-msgstr "Ім’я"
-
-#: .\base\templates\base\edit_profile.html:79
-#: .\base\templates\base\signup.html:53
-msgid "Last Name"
-msgstr "Прізвище"
-
-#: .\base\templates\base\edit_profile.html:83
-#: .\base\templates\base\login.html:19
-#: .\base\templates\base\password_reset_form.html:19
-#: .\base\templates\base\signup.html:59
-#: .\jobs\templates\jobs\kiosk_login_email_password.html:14
-msgid "Email Address"
-msgstr "Електронна адреса"
-
-#: .\base\templates\base\edit_profile.html:87
+#: .\base\templates\base\edit_profile.html:108
 msgid "Phone Number"
 msgstr "Номер телефону"
 
-#: .\base\templates\base\edit_profile.html:91
+#: .\base\templates\base\edit_profile.html:112
 msgid "Location"
 msgstr "Місцезнаходження"
 
-#: .\base\templates\base\edit_profile.html:95
+#: .\base\templates\base\edit_profile.html:116
 msgid "Bio / About Me"
 msgstr "Біографія / Про мене"
 
-#: .\base\templates\base\edit_profile.html:96
+#: .\base\templates\base\edit_profile.html:117
 msgid "Tell us about yourself..."
 msgstr "Розкажіть про себе..."
 
-#: .\base\templates\base\edit_profile.html:103
+#: .\base\templates\base\edit_profile.html:124
 #: .\base\templates\base\volunteer_resume.html:91
 msgid "Skills"
 msgstr "Навички"
 
-#: .\base\templates\base\edit_profile.html:110
-#: .\base\templates\base\edit_profile.html:164
-#: .\base\templates\base\edit_profile.html:198
-#: .\console\templates\console\backend_settings.html:207
+#: .\base\templates\base\edit_profile.html:131
+#: .\base\templates\base\edit_profile.html:185
+#: .\base\templates\base\edit_profile.html:219
+#: .\console\templates\console\backend_settings.html:249
 #: .\console\templates\console\certificate_edit.html:26
 #: .\console\templates\console\event_invite.html:93
 #: .\console\templates\console\event_monitor.html:143
@@ -262,14 +299,15 @@ msgstr "Навички"
 #: .\console\templates\console\volunteer_edit.html:83
 #: .\console\templates\console\volunteer_list.html:91
 #: .\events\templates\events\event_detail.html:468
+#: .\mcp_server\templates\mcp_server\authorize.html:55
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: .\base\templates\base\edit_profile.html:111
+#: .\base\templates\base\edit_profile.html:132
 #: .\console\templates\console\backend_settings.html:24
 #: .\console\templates\console\certificate_edit.html:27
 #: .\console\templates\console\communication_email.html:24
-#: .\console\templates\console\event_edit.html:104
+#: .\console\templates\console\event_edit.html:113
 #: .\console\templates\console\home_page_settings.html:28
 #: .\console\templates\console\home_page_settings.html:71
 #: .\console\templates\console\organization_settings.html:24
@@ -279,34 +317,34 @@ msgstr "Скасувати"
 msgid "Save Changes"
 msgstr "Зберегти зміни"
 
-#: .\base\templates\base\edit_profile.html:129
+#: .\base\templates\base\edit_profile.html:150
 msgid "Update your password to keep your account secure."
 msgstr "Оновіть пароль, щоб захистити свій обліковий запис."
 
-#: .\base\templates\base\edit_profile.html:132
+#: .\base\templates\base\edit_profile.html:153
 msgid "Current Password"
 msgstr "Поточний пароль"
 
-#: .\base\templates\base\edit_profile.html:142
+#: .\base\templates\base\edit_profile.html:163
 #: .\base\templates\base\password_reset_confirm.html:21
 msgid "New Password"
 msgstr "Новий пароль"
 
-#: .\base\templates\base\edit_profile.html:149
+#: .\base\templates\base\edit_profile.html:170
 msgid "Must be at least 8 characters long and include a number and symbol."
 msgstr "Щонайменше 8 символів, з цифрою та символом."
 
-#: .\base\templates\base\edit_profile.html:153
+#: .\base\templates\base\edit_profile.html:174
 #: .\base\templates\base\password_reset_confirm.html:27
 msgid "Confirm New Password"
 msgstr "Підтвердьте новий пароль"
 
-#: .\base\templates\base\edit_profile.html:163
+#: .\base\templates\base\edit_profile.html:184
 #: .\base\templates\base\password_reset_confirm.html:33
 msgid "Update Password"
 msgstr "Оновити пароль"
 
-#: .\base\templates\base\edit_profile.html:182
+#: .\base\templates\base\edit_profile.html:203
 msgid ""
 "This action is permanent and cannot be easily undone. Deactivating your "
 "account will immediately disable your profile, remove you from all active "
@@ -317,15 +355,15 @@ msgstr ""
 "учасників подій, а історію навчання буде назавжди приховано від публічного "
 "перегляду."
 
-#: .\base\templates\base\edit_profile.html:184
+#: .\base\templates\base\edit_profile.html:205
 msgid "Are you absolutely sure you want to proceed?"
 msgstr "Ви абсолютно впевнені, що хочете продовжити?"
 
-#: .\base\templates\base\edit_profile.html:187
+#: .\base\templates\base\edit_profile.html:208
 msgid "Type your password to confirm deactivation"
 msgstr "Введіть пароль, щоб підтвердити деактивацію"
 
-#: .\base\templates\base\edit_profile.html:197
+#: .\base\templates\base\edit_profile.html:218
 msgid "Deactivate My Account"
 msgstr "Деактивувати мій обліковий запис"
 
@@ -767,7 +805,6 @@ msgid "Account menu"
 msgstr "Меню облікового запису"
 
 #: .\base\templates\base\layout.html:117
-#| msgid "View your profile"
 msgid "My profile"
 msgstr "Мій профіль"
 
@@ -812,7 +849,6 @@ msgid "My Dashboard"
 msgstr "Моя панель"
 
 #: .\base\templates\base\layout.html:190
-#| msgid "Ukrainian"
 msgid "My Training"
 msgstr "Моє навчання"
 
@@ -905,7 +941,7 @@ msgstr "Розсилка"
 msgid "Join our list for local updates."
 msgstr "Підпишіться на місцеві новини."
 
-#: .\base\templates\base\layout.html:325 .\console\forms.py:396
+#: .\base\templates\base\layout.html:325 .\console\forms.py:411
 msgid "Email address"
 msgstr "Електронна адреса"
 
@@ -1129,11 +1165,6 @@ msgstr "З поверненням"
 #: .\base\templates\base\login.html:13
 msgid "Sign in to continue building your community."
 msgstr "Увійдіть, щоб і далі будувати свою громаду."
-
-#: .\base\templates\base\login.html:26 .\base\templates\base\signup.html:65
-#: .\jobs\templates\jobs\kiosk_login_email_password.html:18
-msgid "Password"
-msgstr "Пароль"
 
 #: .\base\templates\base\login.html:27
 msgid "Forgot Password?"
@@ -1467,7 +1498,7 @@ msgstr "Безстроково"
 #: .\education\templates\education\completed_module.html:123
 #: .\education\templates\education\printable_certificate.html:53
 #: .\education\templates\education\verify_certificates.html:77
-#: .\education\views.py:458
+#: .\education\views.py:463
 msgid "Verified"
 msgstr "Підтверджено"
 
@@ -1541,6 +1572,73 @@ msgstr "Показати всі"
 msgid "No public feedback yet."
 msgstr "Публічних відгуків ще немає."
 
+#: .\base\templates\base\setup.html:4
+msgid "Set Up Town Hall"
+msgstr "Налаштування Town Hall"
+
+#: .\base\templates\base\setup.html:15
+msgid "Welcome to Town Hall"
+msgstr "Ласкаво просимо до Town Hall"
+
+#: .\base\templates\base\setup.html:16
+msgid "Let's set up your organization."
+msgstr "Налаштуймо вашу організацію."
+
+#: .\base\templates\base\setup.html:17
+msgid ""
+"This site has no accounts yet. The account you create here is the "
+"administrator, with full access to everything."
+msgstr ""
+"На цьому сайті ще немає облікових записів. Обліковий запис, який ви створите"
+" тут, стане адміністратором із повним доступом до всього."
+
+#: .\base\templates\base\setup.html:22
+msgid "Create your admin account"
+msgstr "Створіть обліковий запис адміністратора"
+
+#: .\base\templates\base\setup.html:23
+msgid "You can invite co-organizers and make them staff later."
+msgstr ""
+"Пізніше ви зможете запросити співорганізаторів і додати їх до персоналу."
+
+#: .\base\templates\base\setup.html:29
+msgid "Take the admin guide"
+msgstr "Пройдіть посібник адміністратора"
+
+#: .\base\templates\base\setup.html:30
+msgid ""
+"A training module that walks through events, roles, training, check-in and "
+"settings. Only staff can see it."
+msgstr ""
+"Навчальний модуль, що пояснює події, ролі, навчання, реєстрацію на зміни та "
+"налаштування. Його бачить лише персонал."
+
+#: .\base\templates\base\setup.html:36
+msgid "Plan your first event"
+msgstr "Сплануйте першу подію"
+
+#: .\base\templates\base\setup.html:37
+msgid "Add venues and roles, then publish an event for volunteers to join."
+msgstr ""
+"Додайте заклади й ролі, а потім опублікуйте подію, до якої зможуть "
+"долучитися волонтери."
+
+#: .\base\templates\base\setup.html:44
+msgid "Create Admin Account"
+msgstr "Створити обліковий запис адміністратора"
+
+#: .\base\templates\base\setup.html:45
+msgid "This only appears once, on a brand new site."
+msgstr "Ця сторінка з’являється лише один раз, на зовсім новому сайті."
+
+#: .\base\templates\base\setup.html:83
+msgid "At least 8 characters, not entirely numbers or a common password."
+msgstr "Щонайменше 8 символів, не лише цифри й не поширений пароль."
+
+#: .\base\templates\base\setup.html:94
+msgid "Create Account & Start Guide"
+msgstr "Створити обліковий запис і почати посібник"
+
 #: .\base\templates\base\signup.html:12
 msgid "Join the Movement"
 msgstr "Долучайтеся до руху"
@@ -1604,7 +1702,6 @@ msgstr "Є запитання? Пишіть нам на <a href=\"mailto:%(email
 
 #: .\base\templates\base\venue_detail.html:18
 #: .\console\templates\console\partials\venue_grid.html:9
-#| msgid "Open link"
 msgid "Open now"
 msgstr "Відчинено"
 
@@ -1666,7 +1763,6 @@ msgstr "Години роботи для цього закладу не вста
 
 #: .\base\templates\base\venue_detail.html:140
 #, python-format
-#| msgid "Hi %(name)s,"
 msgid "Map of %(name)s"
 msgstr "Мапа: %(name)s"
 
@@ -1751,12 +1847,10 @@ msgid "References"
 msgstr "Рекомендації"
 
 #: .\base\templates\base\volunteer_resume.html:107
-#| msgid "Certificate verified"
 msgid "Certifications"
 msgstr "Сертифікації"
 
 #: .\base\templates\base\volunteer_resume.html:124
-#| msgid "View certificate"
 msgid "No certifications yet."
 msgstr "Сертифікацій ще немає."
 
@@ -1774,7 +1868,7 @@ msgstr "Години та кваліфікації станом на %(d)s."
 msgid "Accounts"
 msgstr "Облікові записи"
 
-#: .\base\triggers.py:34 .\console\forms.py:151
+#: .\base\triggers.py:34 .\console\forms.py:160
 msgid "People"
 msgstr "Люди"
 
@@ -1970,10 +2064,6 @@ msgstr "Різні"
 msgid "Recipient's first name (or username)"
 msgstr "Ім’я одержувача (або ім’я користувача)"
 
-#: .\base\triggers.py:80 .\base\triggers.py:101
-msgid "Organization name"
-msgstr "Назва організації"
-
 #: .\base\triggers.py:81
 msgid ""
 "Main link of the email: the event page, invitation, profile or certificate"
@@ -2088,158 +2178,191 @@ msgstr "Колір другорядного тексту (колонтитули
 msgid "Divider and border colour"
 msgstr "Колір роздільників і рамок"
 
-#: .\base\views.py:115
+#: .\base\views.py:119
 msgid "Successfully logged in."
 msgstr "Вхід виконано."
 
-#: .\base\views.py:117 .\jobs\views.py:108
+#: .\base\views.py:121 .\jobs\views.py:108
 msgid "Invalid email or password."
 msgstr "Невірна електронна адреса або пароль."
 
-#: .\base\views.py:140
+#: .\base\views.py:144
 msgid "Email and password are required."
 msgstr "Потрібні електронна адреса та пароль."
 
-#: .\base\views.py:142 .\console\forms.py:402
+#: .\base\views.py:146 .\console\forms.py:417
 msgid "An account with that email already exists."
 msgstr "Обліковий запис із такою адресою вже існує."
 
-#: .\base\views.py:158
+#: .\base\views.py:162
 msgid "Account created successfully!"
 msgstr "Обліковий запис створено!"
 
-#: .\base\views.py:212 .\console\forms.py:374
+#: .\base\views.py:197
+msgid "Welcome to Town Hall! Start with this guide to learn your way around."
+msgstr ""
+"Ласкаво просимо до Town Hall! Почніть із цього посібника, щоб "
+"зорієнтуватися."
+
+#: .\base\views.py:253 .\console\forms.py:383
 msgid "That email address is already in use."
 msgstr "Ця електронна адреса вже використовується."
 
-#: .\base\views.py:226
+#: .\base\views.py:268
 msgid "Profile updated successfully!"
 msgstr "Профіль оновлено!"
 
-#: .\base\views.py:241
+#: .\base\views.py:279
+msgid "Add an email address to your profile before using Gravatar."
+msgstr ""
+"Перш ніж використовувати Gravatar, додайте електронну адресу до свого "
+"профілю."
+
+#: .\base\views.py:282
+#, python-format
+msgid ""
+"There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try"
+" again."
+msgstr ""
+"Для %(email)s ще немає Gravatar. Створіть його на gravatar.com і спробуйте "
+"ще раз."
+
+#: .\base\views.py:284
+msgid "Your profile picture now comes from Gravatar."
+msgstr "Тепер фото вашого профілю береться з Gravatar."
+
+#: .\base\views.py:286
+msgid "Gravatar turned off."
+msgstr "Gravatar вимкнено."
+
+#: .\base\views.py:301
 #, python-format
 msgid "You can only add up to %(max)d skills."
 msgstr "Можна додати не більше %(max)d навичок."
 
-#: .\base\views.py:257
+#: .\base\views.py:317
 msgid "Current password is incorrect."
 msgstr "Поточний пароль невірний."
 
-#: .\base\views.py:259
+#: .\base\views.py:319
 msgid "New password must be at least 8 characters."
 msgstr "Новий пароль має містити щонайменше 8 символів."
 
-#: .\base\views.py:261
+#: .\base\views.py:321
 msgid "Passwords do not match."
 msgstr "Паролі не збігаються."
 
-#: .\base\views.py:266
+#: .\base\views.py:326
 msgid "Password updated successfully."
 msgstr "Пароль оновлено."
 
-#: .\base\views.py:277
+#: .\base\views.py:337
 msgid "Your kiosk ID was changed. The old one no longer works."
 msgstr "ID вашого кіоска змінено. Старий більше не діє."
 
-#: .\base\views.py:289
+#: .\base\views.py:349
 msgid "Your account has been deactivated."
 msgstr "Ваш обліковий запис деактивовано."
 
-#: .\base\views.py:292
+#: .\base\views.py:352
 msgid "Incorrect password. Account not deactivated."
 msgstr "Невірний пароль. Обліковий запис не деактивовано."
 
-#: .\base\views.py:478
+#: .\base\views.py:538
 msgid "Choose at least one skill to endorse."
 msgstr "Оберіть принаймні одну навичку для рекомендації."
 
-#: .\base\views.py:488
+#: .\base\views.py:548
 #, python-format
 msgid "%(name)s endorsed you!"
 msgstr "%(name)s рекомендує вас!"
 
-#: .\base\views.py:492
+#: .\base\views.py:552
 #, python-format
 msgid "Endorsement sent to %(name)s."
 msgstr "Рекомендацію надіслано: %(name)s."
 
-#: .\base\views.py:536
+#: .\base\views.py:596
 #, python-format
 msgid "%(name)s endorsed you for %(skill)s!"
 msgstr "%(name)s рекомендує вас за навичку «%(skill)s»!"
 
-#: .\base\views.py:681
+#: .\base\views.py:741
 msgid "Task lists are not set up yet."
 msgstr "Списки завдань ще не налаштовано."
 
-#: .\base\views.py:688
+#: .\base\views.py:748
 msgid "Add an email address to your account to use task lists."
 msgstr ""
 "Додайте електронну адресу до облікового запису, щоб користуватися списками "
 "завдань."
 
-#: .\base\views.py:694
+#: .\base\views.py:754
 #, python-format
 msgid "Couldn't open your tasks right now: %(error)s"
 msgstr "Не вдалося відкрити ваші завдання: %(error)s"
 
-#: .\console\forms.py:73 .\console\templates\console\event_edit.html:45
+#: .\console\forms.py:61 .\console\forms.py:62
+msgid "Add category"
+msgstr "Додати категорію"
+
+#: .\console\forms.py:77 .\console\templates\console\event_edit.html:45
 msgid "Venue"
 msgstr "Заклад"
 
-#: .\console\forms.py:74 .\console\templates\console\event_edit.html:61
+#: .\console\forms.py:78 .\console\templates\console\event_edit.html:61
 #: .\console\templates\console\venue_edit.html:37
 msgid "Address"
 msgstr "Адреса"
 
-#: .\console\forms.py:75
+#: .\console\forms.py:79
 msgid "Check-in point"
 msgstr "Пункт реєстрації"
 
-#: .\console\forms.py:76
+#: .\console\forms.py:80
 msgid "Expected attendees"
 msgstr "Очікувана кількість учасників"
 
-#: .\console\forms.py:77
+#: .\console\forms.py:81
 msgid "General coordinators"
 msgstr "Головні координатори"
 
-#: .\console\forms.py:83
+#: .\console\forms.py:87
 msgid "Somewhere else (type an address)"
 msgstr "Інше місце (введіть адресу)"
 
-#: .\console\forms.py:86 .\console\forms.py:153
+#: .\console\forms.py:90 .\console\forms.py:162
 msgid "Street address, city"
 msgstr "Вулиця, місто"
 
-#: .\console\forms.py:94
+#: .\console\forms.py:98
 msgid "Top of the chain of command: they assign area and shift leads."
 msgstr "Вершина ланцюга командування: вони призначають керівників зон і змін."
 
-#: .\console\forms.py:100
+#: .\console\forms.py:104
 msgid "The event must end after it starts."
 msgstr "Подія має закінчуватися після початку."
 
-#: .\console\forms.py:102
+#: .\console\forms.py:106
 msgid "Choose a venue or type an address."
 msgstr "Оберіть заклад або введіть адресу."
 
-#: .\console\forms.py:126
+#: .\console\forms.py:135
 msgid "Beneficiaries served per hour"
 msgstr "Охоплено бенефіціарів за годину"
 
-#: .\console\forms.py:127
+#: .\console\forms.py:136
 msgid "Points weight"
 msgstr "Вага балів"
 
-#: .\console\forms.py:128 .\console\templates\console\console_layout.html:37
+#: .\console\forms.py:137 .\console\templates\console\console_layout.html:37
 #: .\console\templates\console\role_edit.html:73
 #: .\console\templates\console\venue_edit.html:11
 #: .\console\templates\console\venue_list.html:13
 msgid "Venues"
 msgstr "Заклади"
 
-#: .\console\forms.py:131
+#: .\console\forms.py:140
 msgid ""
 "Where staff in this position can check in. Leave all unticked to allow any "
 "venue."
@@ -2247,7 +2370,7 @@ msgstr ""
 "Де персонал на цій посаді може відмічатися. Не позначайте нічого, щоб "
 "дозволити будь-який заклад."
 
-#: .\console\forms.py:132
+#: .\console\forms.py:141
 msgid ""
 "Multiplies the impact points for every hour in this role, e.g. 1.5. Leave "
 "empty to set it automatically from how long the role's training is."
@@ -2255,117 +2378,116 @@ msgstr ""
 "Множить бали впливу за кожну годину в цій ролі, наприклад 1,5. Залиште "
 "порожнім, щоб визначити автоматично за тривалістю навчання для ролі."
 
-#: .\console\forms.py:134
+#: .\console\forms.py:143
 msgid "Automatic"
 msgstr "Автоматично"
 
-#: .\console\forms.py:157
+#: .\console\forms.py:166
 msgid "Phone"
 msgstr "Телефон"
 
-#: .\console\forms.py:158
+#: .\console\forms.py:167
 msgid "Capacity"
 msgstr "Місткість"
 
-#: .\console\forms.py:175
+#: .\console\forms.py:184
 msgid "Main button link"
 msgstr "Посилання головної кнопки"
 
-#: .\console\forms.py:175
-#| msgid "Open link"
+#: .\console\forms.py:184
 msgid "Second link"
 msgstr "Друге посилання"
 
-#: .\console\forms.py:176
+#: .\console\forms.py:185
 msgid "Main button text"
 msgstr "Текст головної кнопки"
 
-#: .\console\forms.py:177
+#: .\console\forms.py:186
 msgid "Second link text"
 msgstr "Текст другого посилання"
 
-#: .\console\forms.py:191
+#: .\console\forms.py:200
 #, python-format
 msgid "%(day)s opens"
 msgstr "%(day)s: відкривається"
 
-#: .\console\forms.py:194
+#: .\console\forms.py:203
 #, python-format
 msgid "%(day)s closes"
 msgstr "%(day)s: зачиняється"
 
-#: .\console\forms.py:197
+#: .\console\forms.py:206
 #, python-format
 msgid "%(day)s: open to staff outside hours"
 msgstr "%(day)s: відкрито для персоналу поза годинами роботи"
 
-#: .\console\forms.py:210
+#: .\console\forms.py:219
 msgid "Set both times, or neither for closed."
 msgstr "Вкажіть обидва часи або жодного, якщо зачинено."
 
-#: .\console\forms.py:212
+#: .\console\forms.py:221
 msgid "Closing time must be after opening time."
 msgstr "Час закриття має бути пізніше за час відкриття."
 
-#: .\console\forms.py:229
+#: .\console\forms.py:238
 #: .\console\templates\console\partials\task_fields.html:11
 msgid "1 day"
 msgstr "1 день"
 
-#: .\console\forms.py:229
+#: .\console\forms.py:238
 msgid "3 days"
 msgstr "3 дні"
 
-#: .\console\forms.py:229
+#: .\console\forms.py:238
 #: .\console\templates\console\partials\task_fields.html:12
 msgid "1 week"
 msgstr "1 тиждень"
 
-#: .\console\forms.py:229
+#: .\console\forms.py:238
 msgid "2 weeks"
 msgstr "2 тижні"
 
-#: .\console\forms.py:229
+#: .\console\forms.py:238
 msgid "30 days"
 msgstr "30 днів"
 
-#: .\console\forms.py:229
+#: .\console\forms.py:238
 msgid "1 year"
 msgstr "1 рік"
 
-#: .\console\forms.py:231
+#: .\console\forms.py:240
 msgid "Show for"
 msgstr "Показувати протягом"
 
-#: .\console\forms.py:238
+#: .\console\forms.py:247
 msgid "e.g. Side entrance closed for repairs this week"
 msgstr "наприклад: бічний вхід зачинено на ремонт цього тижня"
 
-#: .\console\forms.py:239
+#: .\console\forms.py:248
 msgid "Note"
 msgstr "Примітка"
 
-#: .\console\forms.py:257
+#: .\console\forms.py:266
 msgid "e.g. Piano"
 msgstr "наприклад: піаніно"
 
-#: .\console\forms.py:277
+#: .\console\forms.py:286
 msgid "Certificate valid for (days)"
 msgstr "Сертифікат дійсний (днів)"
 
-#: .\console\forms.py:278
+#: .\console\forms.py:287
 msgid "Complexity (0-4)"
 msgstr "Складність (0–4)"
 
-#: .\console\forms.py:284
+#: .\console\forms.py:293
 msgid "Complexity must be between 0 and 4."
 msgstr "Складність має бути від 0 до 4."
 
-#: .\console\forms.py:295
+#: .\console\forms.py:304
 msgid "Video length (minutes)"
 msgstr "Тривалість відео (хвилин)"
 
-#: .\console\forms.py:296
+#: .\console\forms.py:305
 msgid ""
 "Video length in minutes. Leave blank to detect it automatically from "
 "YouTube."
@@ -2373,151 +2495,151 @@ msgstr ""
 "Тривалість відео в хвилинах. Залиште порожнім, щоб визначити автоматично з "
 "YouTube."
 
-#: .\console\forms.py:299
+#: .\console\forms.py:308
 msgid "Minutes"
 msgstr "Хвилини"
 
-#: .\console\forms.py:311
+#: .\console\forms.py:320
 msgid "Passing score (%)"
 msgstr "Прохідний бал (%)"
 
-#: .\console\forms.py:341
+#: .\console\forms.py:350
 msgid "Choose True or False as the correct answer."
 msgstr "Оберіть «Правда» або «Неправда» як правильну відповідь."
 
-#: .\console\forms.py:345
+#: .\console\forms.py:354
 msgid "Multiple choice questions need at least two options."
 msgstr "Запитання з вибором відповіді потребують щонайменше двох варіантів."
 
-#: .\console\forms.py:348
+#: .\console\forms.py:357
 msgid "The correct answer must be one of the filled-in options."
 msgstr "Правильна відповідь має бути одним із заповнених варіантів."
 
-#: .\console\forms.py:357
+#: .\console\forms.py:366
 msgid "Certificate title"
 msgstr "Назва сертифіката"
 
-#: .\console\forms.py:358
+#: .\console\forms.py:367
 msgid "Issuing authority"
 msgstr "Орган, що видає"
 
-#: .\console\forms.py:359
+#: .\console\forms.py:368
 msgid "Public description"
 msgstr "Публічний опис"
 
-#: .\console\forms.py:360
+#: .\console\forms.py:369
 msgid "Valid for (days)"
 msgstr "Дійсний (днів)"
 
-#: .\console\forms.py:362
+#: .\console\forms.py:371
 msgid "Leave blank if the certificate never expires."
 msgstr "Залиште порожнім, якщо сертифікат не має терміну дії."
 
-#: .\console\forms.py:369 .\console\templates\console\volunteer_edit.html:47
+#: .\console\forms.py:378 .\console\templates\console\volunteer_edit.html:47
 msgid "Account active"
 msgstr "Обліковий запис активний"
 
-#: .\console\forms.py:394
+#: .\console\forms.py:409
 msgid "First name"
 msgstr "Ім’я"
 
-#: .\console\forms.py:395
+#: .\console\forms.py:410
 msgid "Last name"
 msgstr "Прізвище"
 
-#: .\console\forms.py:397
+#: .\console\forms.py:412
 msgid "Temporary password"
 msgstr "Тимчасовий пароль"
 
-#: .\console\forms.py:453
+#: .\console\forms.py:468
 msgid "Enter a hex color like #00434d."
 msgstr "Введіть hex-колір, наприклад #00434d."
 
-#: .\console\forms.py:462
+#: .\console\forms.py:477
 msgid "Level name"
 msgstr "Назва рівня"
 
-#: .\console\forms.py:463
+#: .\console\forms.py:478
 msgid "Minimum points"
 msgstr "Мінімум балів"
 
-#: .\console\forms.py:464
+#: .\console\forms.py:479
 msgid "Benefits"
 msgstr "Переваги"
 
-#: .\console\forms.py:467
+#: .\console\forms.py:482
 msgid "e.g. Community Champion"
 msgstr "наприклад: Чемпіон громади"
 
-#: .\console\forms.py:469
+#: .\console\forms.py:484
 msgid "Comma-separated, e.g. Priority sign-up, Free T-shirt"
 msgstr "Через кому, наприклад: пріоритетний запис, безкоштовна футболка"
 
-#: .\console\forms.py:484
+#: .\console\forms.py:499
 msgid "Points can't be negative."
 msgstr "Бали не можуть бути від’ємними."
 
-#: .\console\forms.py:486
+#: .\console\forms.py:501
 msgid "Two levels can't start at the same number of points."
 msgstr "Два рівні не можуть починатися з однакової кількості балів."
 
-#: .\console\forms.py:495
+#: .\console\forms.py:510
 msgid "Points per hour"
 msgstr "Балів за годину"
 
-#: .\console\forms.py:496
+#: .\console\forms.py:511
 msgid "Top role weight"
 msgstr "Вага найвищої ролі"
 
-#: .\console\forms.py:497
+#: .\console\forms.py:512
 msgid "Reach bonus cap (%)"
 msgstr "Ліміт бонуса за охоплення (%)"
 
-#: .\console\forms.py:498
+#: .\console\forms.py:513
 msgid "Walk-in cover (%)"
 msgstr "Заміна без запису (%)"
 
-#: .\console\forms.py:499
+#: .\console\forms.py:514
 msgid "Last-minute sign-up (%)"
 msgstr "Запис в останню хвилину (%)"
 
-#: .\console\forms.py:500
+#: .\console\forms.py:515
 msgid "Last-minute window (hours)"
 msgstr "Вікно «в останню хвилину» (годин)"
 
-#: .\console\forms.py:501
+#: .\console\forms.py:516
 msgid "Early or late shift (%)"
 msgstr "Рання або пізня зміна (%)"
 
-#: .\console\forms.py:502
+#: .\console\forms.py:517
 msgid "Early: starts before (hour)"
 msgstr "Рання: починається до (години)"
 
-#: .\console\forms.py:503
+#: .\console\forms.py:518
 msgid "Late: ends after (hour)"
 msgstr "Пізня: закінчується після (години)"
 
-#: .\console\forms.py:504
+#: .\console\forms.py:519
 msgid "Points per training minute"
 msgstr "Балів за хвилину навчання"
 
-#: .\console\forms.py:505
+#: .\console\forms.py:520
 msgid "Minimum per module"
 msgstr "Мінімум за модуль"
 
-#: .\console\forms.py:506
+#: .\console\forms.py:521
 msgid "Maximum per module"
 msgstr "Максимум за модуль"
 
-#: .\console\forms.py:507
+#: .\console\forms.py:522
 msgid "Points per endorsement"
 msgstr "Балів за рекомендацію"
 
-#: .\console\forms.py:508
+#: .\console\forms.py:523
 msgid "Endorsement awards per 30 days"
 msgstr "Нагород за рекомендації за 30 днів"
 
-#: .\console\forms.py:511
+#: .\console\forms.py:526
 msgid ""
 "Roles with the longest training get this multiplier; untrained roles get "
 "1.0. A role can set its own weight instead."
@@ -2525,124 +2647,124 @@ msgstr ""
 "Ролі з найдовшим навчанням отримують цей множник; ролі без навчання "
 "отримують 1,0. Роль може мати власну вагу."
 
-#: .\console\forms.py:512
+#: .\console\forms.py:527
 msgid ""
 "Serving more people per volunteer adds 10% per doubling, up to this cap."
 msgstr ""
 "Охоплення більшої кількості людей на одного волонтера додає 10% за кожне "
 "подвоєння, до цього ліміту."
 
-#: .\console\forms.py:513
+#: .\console\forms.py:528
 msgid "Checking in at the kiosk to cover a slot they had not signed up for."
 msgstr ""
 "Відмітка на кіоску, щоб замінити зміну, на яку людина не записувалася."
 
-#: .\console\forms.py:514
+#: .\console\forms.py:529
 msgid ""
 "Signing up for an understaffed slot within the window before it starts."
 msgstr "Запис на зміну з нестачею людей у межах вікна перед її початком."
 
-#: .\console\forms.py:515
+#: .\console\forms.py:530
 msgid "0-23, local time."
 msgstr "0–23, за місцевим часом."
 
-#: .\console\forms.py:516
+#: .\console\forms.py:531
 msgid "0-23, local time. Shifts that run past midnight also count."
 msgstr ""
 "0–23, за місцевим часом. Зміни, що тривають після півночі, також "
 "враховуються."
 
-#: .\console\forms.py:517
+#: .\console\forms.py:532
 msgid ""
 "Given to someone endorsed by a teammate from the same event, once per event."
 msgstr ""
 "Надається тому, кого рекомендує колега з тієї самої події, один раз за "
 "подію."
 
-#: .\console\forms.py:525
+#: .\console\forms.py:540
 msgid "Use an hour from 0 to 23."
 msgstr "Використайте годину від 0 до 23."
 
-#: .\console\forms.py:527
+#: .\console\forms.py:542
 msgid "Use 1.0 or more."
 msgstr "Використайте 1,0 або більше."
 
-#: .\console\forms.py:545
+#: .\console\forms.py:560
 msgid "LibreTranslate URL"
 msgstr "URL LibreTranslate"
 
-#: .\console\forms.py:546
+#: .\console\forms.py:561
 msgid "LibreTranslate API key"
 msgstr "Ключ API LibreTranslate"
 
-#: .\console\forms.py:547
+#: .\console\forms.py:562
 msgid "Google Cloud Translation key"
 msgstr "Ключ Google Cloud Translation"
 
-#: .\console\forms.py:548
+#: .\console\forms.py:563
 msgid "DeepL API key"
 msgstr "Ключ API DeepL"
 
-#: .\console\forms.py:549
+#: .\console\forms.py:564
 msgid "MyMemory contact email"
 msgstr "Контактна адреса MyMemory"
 
-#: .\console\forms.py:550
+#: .\console\forms.py:565
 msgid "listmonk URL"
 msgstr "URL listmonk"
 
-#: .\console\forms.py:551
+#: .\console\forms.py:566
 msgid "API user"
 msgstr "Користувач API"
 
-#: .\console\forms.py:552
+#: .\console\forms.py:567
 msgid "API token"
 msgstr "Токен API"
 
-#: .\console\forms.py:553
+#: .\console\forms.py:568
 msgid "From address"
 msgstr "Адреса відправника"
 
-#: .\console\forms.py:565
+#: .\console\forms.py:580
 #, python-format
 msgid "Saved (ends in %(tail)s). Leave blank to keep."
 msgstr "Збережено (закінчується на %(tail)s). Залиште порожнім, щоб зберегти."
 
-#: .\console\forms.py:565 .\console\forms.py:661
-#: .\console\views\settings.py:268
+#: .\console\forms.py:580 .\console\forms.py:676
+#: .\console\views\settings.py:294
 msgid "Not set"
 msgstr "Не задано"
 
-#: .\console\forms.py:595
+#: .\console\forms.py:610
 msgid "Switch on at least one language."
 msgstr "Увімкніть принаймні одну мову."
 
-#: .\console\forms.py:597
+#: .\console\forms.py:612
 msgid "Default language"
 msgstr "Мова за замовчуванням"
 
-#: .\console\forms.py:599
+#: .\console\forms.py:614
 msgid "Time zone"
 msgstr "Часовий пояс"
 
-#: .\console\forms.py:599
+#: .\console\forms.py:614
 msgid "Event times are entered and shown in this time zone."
 msgstr "Час подій вводиться та показується в цьому часовому поясі."
 
-#: .\console\forms.py:614
+#: .\console\forms.py:629
 msgid "The default language has to be switched on."
 msgstr "Мова за замовчуванням має бути ввімкнена."
 
-#: .\console\forms.py:644
+#: .\console\forms.py:659
 #, python-format
 msgid "Send \"%(label)s\" emails"
 msgstr "Надсилати листи «%(label)s»"
 
-#: .\console\forms.py:660
+#: .\console\forms.py:675
 msgid "listmonk template ID"
 msgstr "ID шаблону listmonk"
 
-#: .\console\forms.py:663
+#: .\console\forms.py:678
 #, python-format
 msgid "#%(id)s (missing in listmonk)"
 msgstr "#%(id)s (відсутній у listmonk)"
@@ -2668,13 +2790,13 @@ msgstr "Бекенд"
 
 #: .\console\templates\console\backend_settings.html:22
 msgid ""
-"Connect the services Town Hall relies on: machine translation, email and "
-"task lists. Values saved here take priority over server environment "
+"Connect the services Town Hall relies on: machine translation, email, task "
+"lists and AI apps. Values saved here take priority over server environment "
 "variables."
 msgstr ""
 "Підключіть сервіси, на які спирається Town Hall: машинний переклад, "
-"електронну пошту та списки завдань. Значення, збережені тут, мають пріоритет"
-" над змінними середовища сервера."
+"електронну пошту, списки завдань і застосунки ШІ. Значення, збережені тут, "
+"мають пріоритет над змінними середовища сервера."
 
 #: .\console\templates\console\backend_settings.html:32
 #: .\console\templates\console\partials\quiz_questions.html:62
@@ -2866,23 +2988,106 @@ msgstr ""
 " не показуватимуться, доки ви не підключитеся знову."
 
 #: .\console\templates\console\backend_settings.html:129
+#: .\console\templates\console\backend_settings.html:170
 msgid "Disconnect"
 msgstr "Відключити"
 
 #: .\console\templates\console\backend_settings.html:133
-#: .\console\templates\console\backend_settings.html:190
+#: .\console\templates\console\backend_settings.html:232
 msgid "Connect to Bell Tower"
 msgstr "Підключити до Bell Tower"
 
-#: .\console\templates\console\backend_settings.html:140
+#: .\console\templates\console\backend_settings.html:138
+msgid "Claude connector (MCP)"
+msgstr "Конектор Claude (MCP)"
+
+#: .\console\templates\console\backend_settings.html:139
+msgid ""
+"Let an AI app such as Claude help you plan events: create and edit events, "
+"add roles and shifts, build task lists, set up role templates and write "
+"training quizzes. It works as the staff member who connects it, can't delete"
+" anything, and only reads people's profiles."
+msgstr ""
+"Дозвольте застосунку ШІ, як-от Claude, допомагати планувати події: "
+"створювати й редагувати події, додавати ролі та зміни, складати списки "
+"завдань, налаштовувати шаблони ролей і писати навчальні тести. Він діє від "
+"імені працівника, який його підключив, нічого не може видаляти, а профілі "
+"людей лише читає."
+
+#: .\console\templates\console\backend_settings.html:141
+msgid "Connector URL"
+msgstr "URL-адреса конектора"
+
+#: .\console\templates\console\backend_settings.html:144
+msgid "Copied"
+msgstr "Скопійовано"
+
+#: .\console\templates\console\backend_settings.html:145
+msgid "Copy"
+msgstr "Копіювати"
+
+#: .\console\templates\console\backend_settings.html:150
+msgid "How to connect Claude"
+msgstr "Як підключити Claude"
+
+#: .\console\templates\console\backend_settings.html:152
+msgid "In Claude, open Settings > Connectors and choose Add custom connector."
+msgstr ""
+"У Claude відкрийте Settings > Connectors і виберіть Add custom connector."
+
+#: .\console\templates\console\backend_settings.html:153
+msgid "Name it after your organization and paste the connector URL above."
+msgstr ""
+"Назвіть його на честь вашої організації та вставте URL-адресу конектора, "
+"наведену вище."
+
+#: .\console\templates\console\backend_settings.html:154
+msgid ""
+"Choose Connect. Sign in to Town Hall with a staff account if asked, and "
+"approve."
+msgstr ""
+"Натисніть Connect. Якщо попросять, увійдіть у Town Hall з обліковим записом "
+"персоналу та схваліть доступ."
+
+#: .\console\templates\console\backend_settings.html:156
+msgid ""
+"Town Hall must be reachable from the internet over https for this to work."
+msgstr ""
+"Щоб це працювало, Town Hall має бути доступним з інтернету через https."
+
+#: .\console\templates\console\backend_settings.html:159
+msgid "Connected apps"
+msgstr "Підключені застосунки"
+
+#: .\console\templates\console\backend_settings.html:165
+msgid "AI app"
+msgstr "Застосунок ШІ"
+
+#: .\console\templates\console\backend_settings.html:166
+#, python-format
+msgid "As %(person)s · connected %(when)s"
+msgstr "Від імені %(person)s · підключено %(when)s"
+
+#: .\console\templates\console\backend_settings.html:166
+#, python-format
+msgid "used %(ago)s ago"
+msgstr "використано %(ago)s тому"
+
+#: .\console\templates\console\backend_settings.html:169
+msgid "Disconnect this app? It will have to be approved again to reconnect."
+msgstr ""
+"Відключити цей застосунок? Щоб підключити його знову, доступ доведеться "
+"схвалити ще раз."
+
+#: .\console\templates\console\backend_settings.html:181
 msgid "Translation status"
 msgstr "Стан перекладу"
 
-#: .\console\templates\console\backend_settings.html:149
+#: .\console\templates\console\backend_settings.html:190
 msgid "First choice"
 msgstr "Перший вибір"
 
-#: .\console\templates\console\backend_settings.html:153
+#: .\console\templates\console\backend_settings.html:194
 msgid ""
 "Tried top to bottom; if one fails, the next is used. Test translation shows "
 "which one answered."
@@ -2890,7 +3095,7 @@ msgstr ""
 "Пробуються зверху вниз; якщо один не спрацьовує, використовується наступний."
 " «Перевірити переклад» показує, який відповів."
 
-#: .\console\templates\console\backend_settings.html:154
+#: .\console\templates\console\backend_settings.html:195
 #, python-format
 msgid ""
 "Google's free endpoint showed a CAPTCHA; it's skipped for another %(m)s min."
@@ -2898,37 +3103,37 @@ msgstr ""
 "Безкоштовна кінцева точка Google показала CAPTCHA; її буде пропущено ще "
 "%(m)s хв."
 
-#: .\console\templates\console\backend_settings.html:158
+#: .\console\templates\console\backend_settings.html:199
 msgid "Email status"
 msgstr "Стан пошти"
 
-#: .\console\templates\console\backend_settings.html:162
+#: .\console\templates\console\backend_settings.html:203
 msgid "Connected to listmonk"
 msgstr "Підключено до listmonk"
 
-#: .\console\templates\console\backend_settings.html:163
+#: .\console\templates\console\backend_settings.html:204
 #, python-format
 msgid "%(task)s… in the background."
 msgstr "%(task)s… у фоновому режимі."
 
-#: .\console\templates\console\backend_settings.html:164
+#: .\console\templates\console\backend_settings.html:205
 #, python-format
 msgid "The last setup step failed: %(error)s"
 msgstr "Останній крок налаштування не вдався: %(error)s"
 
-#: .\console\templates\console\backend_settings.html:167
+#: .\console\templates\console\backend_settings.html:208
 msgid "Set up emails"
 msgstr "Налаштувати листи"
 
-#: .\console\templates\console\backend_settings.html:170
+#: .\console\templates\console\backend_settings.html:211
 msgid "Open listmonk"
 msgstr "Відкрити listmonk"
 
-#: .\console\templates\console\backend_settings.html:174
+#: .\console\templates\console\backend_settings.html:215
 msgid "Console only: emails are printed in the server log, not delivered."
 msgstr "Лише консоль: листи виводяться в журнал сервера й не доставляються."
 
-#: .\console\templates\console\backend_settings.html:178
+#: .\console\templates\console\backend_settings.html:219
 msgid ""
 "Keys and passwords are stored in the database and are never shown again "
 "after saving. Only staff can open this page."
@@ -2936,7 +3141,7 @@ msgstr ""
 "Ключі та паролі зберігаються в базі даних і після збереження більше не "
 "показуються. Цю сторінку може відкрити лише персонал."
 
-#: .\console\templates\console\backend_settings.html:191
+#: .\console\templates\console\backend_settings.html:233
 #: .\console\templates\console\event_monitor.html:120
 #: .\console\templates\console\event_roles.html:151
 #: .\console\templates\console\partials\add_role_dialog.html:8
@@ -2952,19 +3157,19 @@ msgstr ""
 msgid "Close"
 msgstr "Закрити"
 
-#: .\console\templates\console\backend_settings.html:195
+#: .\console\templates\console\backend_settings.html:237
 msgid "Bell Tower address"
 msgstr "Адреса Bell Tower"
 
-#: .\console\templates\console\backend_settings.html:198
+#: .\console\templates\console\backend_settings.html:240
 msgid "Just the server's address; anything after it is ignored."
 msgstr "Лише адреса сервера; усе після неї ігнорується."
 
-#: .\console\templates\console\backend_settings.html:201
+#: .\console\templates\console\backend_settings.html:243
 msgid "You'll go to Bell Tower and sign in, if you aren't already."
 msgstr "Ви перейдете до Bell Tower і увійдете, якщо ще не ввійшли."
 
-#: .\console\templates\console\backend_settings.html:202
+#: .\console\templates\console\backend_settings.html:244
 msgid ""
 "Approve access for Town Hall. Town Hall will act as the Bell Tower account "
 "you approve with."
@@ -2972,11 +3177,11 @@ msgstr ""
 "Підтвердьте доступ для Town Hall. Town Hall діятиме як обліковий запис Bell "
 "Tower, з яким ви підтверджуєте."
 
-#: .\console\templates\console\backend_settings.html:203
+#: .\console\templates\console\backend_settings.html:245
 msgid "You'll come straight back here, connected."
 msgstr "Ви одразу повернетеся сюди вже підключеними."
 
-#: .\console\templates\console\backend_settings.html:208
+#: .\console\templates\console\backend_settings.html:250
 msgid "Continue to Bell Tower"
 msgstr "Перейти до Bell Tower"
 
@@ -3196,7 +3401,6 @@ msgstr ""
 "адміністратора, що публікує."
 
 #: .\console\templates\console\communication_email.html:102
-#| msgid "Town Hall"
 msgid "Town Hall users"
 msgstr "Користувачі Town Hall"
 
@@ -3358,7 +3562,6 @@ msgstr "Каталог ролей"
 #: .\console\templates\console\quiz_edit.html:11
 #: .\console\templates\console\volunteer_detail.html:77
 #: .\console\templates\console\volunteer_detail.html:100
-#| msgid "Ukrainian"
 msgid "Training Modules"
 msgstr "Навчальні модулі"
 
@@ -3474,7 +3677,7 @@ msgstr "Усі події"
 
 #: .\console\templates\console\dashboard.html:78
 #: .\console\templates\console\event_list.html:76
-#: .\console\templates\console\partials\module_grid.html:7
+#: .\console\templates\console\partials\module_grid.html:9
 msgid "Draft"
 msgstr "Чернетка"
 
@@ -3508,7 +3711,7 @@ msgid "Edit Event"
 msgstr "Редагувати подію"
 
 #: .\console\templates\console\event_edit.html:4
-#: .\console\templates\console\event_edit.html:104
+#: .\console\templates\console\event_edit.html:113
 msgid "Create Event"
 msgstr "Створити подію"
 
@@ -3591,7 +3794,7 @@ msgstr "Видима для всіх учасників громади"
 #: .\console\templates\console\event_edit.html:94
 #: .\console\templates\console\module_edit.html:79
 #: .\console\templates\console\module_list.html:34
-#: .\console\templates\console\partials\module_grid.html:7
+#: .\console\templates\console\partials\module_grid.html:9
 msgid "Published"
 msgstr "Опубліковано"
 
@@ -3603,11 +3806,11 @@ msgstr "Показати на головній сторінці"
 msgid "Featured"
 msgstr "Обрана"
 
-#: .\console\templates\console\event_edit.html:98
+#: .\console\templates\console\event_edit.html:99
 msgid "Categories"
 msgstr "Категорії"
 
-#: .\console\templates\console\event_edit.html:107
+#: .\console\templates\console\event_edit.html:116
 #: .\console\templates\console\partials\quiz_questions.html:93
 #: .\console\templates\console\venue_edit.html:98
 msgid "Discard"
@@ -4190,7 +4393,6 @@ msgid "Volunteers"
 msgstr "Волонтери"
 
 #: .\console\templates\console\event_roles.html:107
-#| msgid "Open link"
 msgid "Open"
 msgstr "Відкрито"
 
@@ -4318,7 +4520,6 @@ msgstr ""
 
 #: .\console\templates\console\event_tasks.html:57
 #: .\console\views\event_tasks.py:177
-#| msgid "Ukrainian"
 msgid "Planning"
 msgstr "Планування"
 
@@ -4337,7 +4538,6 @@ msgid "Start the planning list"
 msgstr "Почати список планування"
 
 #: .\console\templates\console\event_tasks.html:78
-#| msgid "View event"
 msgid "During the event"
 msgstr "Під час події"
 
@@ -4548,7 +4748,7 @@ msgstr[3] "%(counter)s активного волонтера"
 
 #: .\console\templates\console\module_edit.html:13
 #: .\console\templates\console\module_list.html:23
-#: .\console\templates\console\partials\module_grid.html:26
+#: .\console\templates\console\partials\module_grid.html:29
 msgid "New Module"
 msgstr "Новий модуль"
 
@@ -4622,36 +4822,45 @@ msgstr "Налаштування модуля"
 msgid "Visible in the training directory"
 msgstr "Видимий у каталозі навчання"
 
-#: .\console\templates\console\module_edit.html:85
+#: .\console\templates\console\module_edit.html:80
+msgid "Hidden from volunteers, e.g. guides for running Town Hall"
+msgstr "Приховано від волонтерів, наприклад посібники з керування Town Hall"
+
+#: .\console\templates\console\module_edit.html:81
+#: .\console\templates\console\partials\module_grid.html:8
+msgid "Staff only"
+msgstr "Лише для персоналу"
+
+#: .\console\templates\console\module_edit.html:87
 msgid "Estimated duration"
 msgstr "Орієнтовна тривалість"
 
-#: .\console\templates\console\module_edit.html:85
+#: .\console\templates\console\module_edit.html:87
 #, python-format
 msgid "%(m)s mins"
 msgstr "%(m)s хв"
 
-#: .\console\templates\console\module_edit.html:86
+#: .\console\templates\console\module_edit.html:88
 msgid "Passing score"
 msgstr "Прохідний бал"
 
-#: .\console\templates\console\module_edit.html:87
+#: .\console\templates\console\module_edit.html:89
 msgid "Learners started"
 msgstr "Розпочали навчання"
 
-#: .\console\templates\console\module_edit.html:88
+#: .\console\templates\console\module_edit.html:90
 msgid "Certificates issued"
 msgstr "Видано сертифікатів"
 
-#: .\console\templates\console\module_edit.html:89
+#: .\console\templates\console\module_edit.html:91
 msgid "Required by roles"
 msgstr "Вимагається ролями"
 
-#: .\console\templates\console\module_edit.html:95
+#: .\console\templates\console\module_edit.html:97
 msgid "Delete this module and all of its lessons and quizzes?"
 msgstr "Видалити цей модуль разом з усіма його уроками й тестами?"
 
-#: .\console\templates\console\module_edit.html:96
+#: .\console\templates\console\module_edit.html:98
 msgid "Delete module"
 msgstr "Видалити модуль"
 
@@ -4914,7 +5123,6 @@ msgstr ""
 "підпорядковуються вам і передають вказівки керівникам змін своєї зони."
 
 #: .\console\templates\console\partials\area_lead_dialog.html:14
-#| msgid "Choose a new password"
 msgid "Choose the lead"
 msgstr "Оберіть керівника"
 
@@ -5037,7 +5245,6 @@ msgstr ""
 "вплив."
 
 #: .\console\templates\console\partials\event_role_card.html:5
-#| msgid "Ukrainian"
 msgid "Training required"
 msgstr "Потрібне навчання"
 
@@ -5287,7 +5494,7 @@ msgstr ""
 "Підтримується Markdown: **жирний**, _курсив_, ## заголовки, - списки, "
 "[посилання](https://...)."
 
-#: .\console\templates\console\partials\module_grid.html:13
+#: .\console\templates\console\partials\module_grid.html:16
 #, python-format
 msgid "%(counter)s lesson"
 msgid_plural "%(counter)s lessons"
@@ -5296,7 +5503,7 @@ msgstr[1] "%(counter)s уроки"
 msgstr[2] "%(counter)s уроків"
 msgstr[3] "%(counter)s уроку"
 
-#: .\console\templates\console\partials\module_grid.html:14
+#: .\console\templates\console\partials\module_grid.html:17
 #, python-format
 msgid "%(counter)s quiz"
 msgid_plural "%(counter)s quizzes"
@@ -5305,7 +5512,7 @@ msgstr[1] "%(counter)s тести"
 msgstr[2] "%(counter)s тестів"
 msgstr[3] "%(counter)s тесту"
 
-#: .\console\templates\console\partials\module_grid.html:15
+#: .\console\templates\console\partials\module_grid.html:18
 #, python-format
 msgid "%(counter)s completion"
 msgid_plural "%(counter)s completions"
@@ -5314,15 +5521,15 @@ msgstr[1] "%(counter)s завершення"
 msgstr[2] "%(counter)s завершень"
 msgstr[3] "%(counter)s завершення"
 
-#: .\console\templates\console\partials\module_grid.html:22
+#: .\console\templates\console\partials\module_grid.html:25
 msgid "No modules match"
 msgstr "Немає відповідних модулів"
 
-#: .\console\templates\console\partials\module_grid.html:24
+#: .\console\templates\console\partials\module_grid.html:27
 msgid "No training modules yet"
 msgstr "Навчальних модулів ще немає"
 
-#: .\console\templates\console\partials\module_grid.html:25
+#: .\console\templates\console\partials\module_grid.html:28
 msgid ""
 "Create a module, add lessons and a quiz, then attach it to the roles that "
 "need it."
@@ -5955,7 +6162,6 @@ msgid "Stop sharing with %(who)s"
 msgstr "Припинити ділитися з %(who)s"
 
 #: .\console\templates\console\partials\task_list_card.html:127
-#| msgid "Town Hall"
 msgid "Only Town Hall so far."
 msgstr "Поки що лише Town Hall."
 
@@ -6340,7 +6546,6 @@ msgstr "Увімкнено"
 
 #: .\console\templates\console\region_settings.html:57
 #, python-format
-#| msgid "Hi %(name)s,"
 msgid "Switch on %(name)s"
 msgstr "Увімкнути: %(name)s"
 
@@ -6606,7 +6811,6 @@ msgstr ""
 "замість введення адреси."
 
 #: .\console\templates\console\venue_edit.html:33
-#| msgid "See event details"
 msgid "Venue Details"
 msgstr "Дані про заклад"
 
@@ -6727,7 +6931,6 @@ msgstr "Видалити заклад"
 
 #: .\console\templates\console\venue_list.html:4
 #: .\console\templates\console\venue_list.html:19
-#| msgid "Ukrainian"
 msgid "Global Venue Directory"
 msgstr "Загальний каталог закладів"
 
@@ -6789,7 +6992,6 @@ msgid "Submitted"
 msgstr "Подано"
 
 #: .\console\templates\console\verification_list.html:46
-#| msgid "Upload documents"
 msgid "Documents"
 msgstr "Документи"
 
@@ -7053,7 +7255,6 @@ msgstr "Скоригувати бали"
 
 #: .\console\templates\console\volunteer_detail.html:177
 #, python-format
-#| msgid "Hi %(name)s,"
 msgid "by %(name)s"
 msgstr "від %(name)s"
 
@@ -7098,7 +7299,6 @@ msgstr "Надіслати"
 
 #: .\console\templates\console\volunteer_detail.html:262
 #, python-format
-#| msgid "Well done, %(name)s!"
 msgid "Access for %(name)s"
 msgstr "Доступ для %(name)s"
 
@@ -7341,7 +7541,7 @@ msgstr "Сертифікат «%(name)s» збережено."
 #: .\console\views\events.py:94 .\console\views\roles.py:83
 #: .\console\views\settings.py:78 .\console\views\settings.py:104
 #: .\console\views\settings.py:131 .\console\views\settings.py:165
-#: .\console\views\settings.py:191 .\console\views\settings.py:263
+#: .\console\views\settings.py:191 .\console\views\settings.py:289
 #: .\console\views\training.py:92 .\console\views\training.py:174
 #: .\console\views\training.py:231 .\console\views\venues.py:67
 #: .\console\views\volunteers.py:298
@@ -7491,7 +7691,6 @@ msgstr "Користувачів синхронізуємо з listmonk у фо�
 
 #: .\console\views\event_tasks.py:70
 #, python-format
-#| msgid "Town Hall"
 msgid "%(name)s (Town Hall)"
 msgstr "%(name)s (Town Hall)"
 
@@ -7629,25 +7828,25 @@ msgstr ""
 "Тепер цій події потрібно понад %(n)d волонтерів. Розгляньте налаштування "
 "ланцюга командування із зонами та керівниками."
 
-#: .\console\views\events.py:383
+#: .\console\views\events.py:404
 msgid "Add a role to this event before inviting volunteers."
 msgstr "Додайте роль до цієї події, перш ніж запрошувати волонтерів."
 
-#: .\console\views\events.py:390
+#: .\console\views\events.py:411
 #, python-format
 msgid "You are invited to %(event)s"
 msgstr "Вас запрошують на подію «%(event)s»"
 
-#: .\console\views\events.py:409
+#: .\console\views\events.py:416
 #, python-format
 msgid "Sent %(count)d invitation(s) for %(role)s."
 msgstr "Надіслано запрошень на роль «%(role)s»: %(count)d."
 
-#: .\console\views\events.py:411
+#: .\console\views\events.py:418
 msgid "Select at least one volunteer to invite."
 msgstr "Оберіть принаймні одного волонтера для запрошення."
 
-#: .\console\views\events.py:416
+#: .\console\views\events.py:423
 #, python-format
 msgid ""
 "Hello [Name],\n"
@@ -7662,31 +7861,31 @@ msgstr ""
 "\n"
 "Будемо раді бачити вас у команді!"
 
-#: .\console\views\events.py:427
+#: .\console\views\events.py:434
 #, python-format
 msgid "Be the spark at %(event)s!"
 msgstr "Станьте іскрою події «%(event)s»!"
 
-#: .\console\views\events.py:527
+#: .\console\views\events.py:534
 #, python-format
 msgid "%(name)s checked out."
 msgstr "%(name)s відмітився(-лась) на виході."
 
-#: .\console\views\events.py:532
+#: .\console\views\events.py:539
 #, python-format
 msgid "%(name)s is already checked in."
 msgstr "%(name)s уже відмічений(-а)."
 
-#: .\console\views\events.py:539
+#: .\console\views\events.py:546
 msgid "That volunteer is not signed up for this event."
 msgstr "Цей волонтер не записаний на цю подію."
 
-#: .\console\views\events.py:542
+#: .\console\views\events.py:549
 #, python-format
 msgid "%(name)s checked in as %(role)s."
 msgstr "%(name)s відмітився(-лась) на вході як «%(role)s»."
 
-#: .\console\views\events.py:576
+#: .\console\views\events.py:583
 msgid "Post-event statement saved."
 msgstr "Підсумок після події збережено."
 
@@ -7766,7 +7965,6 @@ msgid "Success"
 msgstr "Успіх"
 
 #: .\console\views\settings.py:60
-#| msgid "Ukrainian"
 msgid "Warning"
 msgstr "Попередження"
 
@@ -7840,49 +8038,57 @@ msgstr ""
 "Підключено до listmonk. Налаштовуємо список «%(name)s» і ваші шаблони "
 "листів; це займе хвилину."
 
-#: .\console\views\settings.py:259
+#: .\console\views\settings.py:274
+#, python-format
+msgid "%(app)s is disconnected."
+msgstr "%(app)s відключено."
+
+#: .\console\views\settings.py:274
+msgid "The app"
+msgstr "Застосунок"
+
+#: .\console\views\settings.py:285
 msgid "Backend settings saved."
 msgstr "Налаштування бекенду збережено."
 
-#: .\console\views\settings.py:268
+#: .\console\views\settings.py:294
 msgid "Blocked"
 msgstr "Заблоковано"
 
-#: .\console\views\settings.py:271
+#: .\console\views\settings.py:297
 msgid "Your own server. Free, private, no limits."
 msgstr "Ваш власний сервер. Безкоштовно, приватно, без обмежень."
 
-#: .\console\views\settings.py:272
+#: .\console\views\settings.py:298
 msgid "Paid, reliable."
 msgstr "Платно, надійно."
 
-#: .\console\views\settings.py:273
+#: .\console\views\settings.py:299
 msgid "Free tier: 500,000 characters a month."
 msgstr "Безкоштовний рівень: 500 000 символів на місяць."
 
-#: .\console\views\settings.py:274
+#: .\console\views\settings.py:300
 msgid "Google Translate (free)"
 msgstr "Google Translate (безкоштовно)"
 
-#: .\console\views\settings.py:274
+#: .\console\views\settings.py:300
 msgid "No key. Google may block your network with a CAPTCHA."
 msgstr "Без ключа. Google може заблокувати вашу мережу за допомогою CAPTCHA."
 
-#: .\console\views\settings.py:275
+#: .\console\views\settings.py:301
 msgid "No key. About 5,000 characters a day, 50,000 with a contact email."
 msgstr ""
 "Без ключа. Близько 5 000 символів на день, 50 000 з контактною адресою."
 
-#: .\console\views\settings.py:338
+#: .\console\views\settings.py:366
 msgid "Add an email address to your account first."
 msgstr "Спершу додайте електронну адресу до свого облікового запису."
 
-#: .\console\views\settings.py:342
-#| msgid "Town Hall"
+#: .\console\views\settings.py:370
 msgid "Town Hall test email"
 msgstr "Тестовий лист Town Hall"
 
-#: .\console\views\settings.py:343
+#: .\console\views\settings.py:371
 msgid ""
 "Your email settings work. Invitations and password resets will be delivered "
 "through listmonk."
@@ -7890,43 +8096,43 @@ msgstr ""
 "Ваші налаштування пошти працюють. Запрошення та скидання паролів "
 "доставлятимуться через listmonk."
 
-#: .\console\views\settings.py:347
+#: .\console\views\settings.py:375
 #, python-format
 msgid "Sending failed: %(error)s"
 msgstr "Не вдалося надіслати: %(error)s"
 
-#: .\console\views\settings.py:349
+#: .\console\views\settings.py:377
 #, python-format
 msgid "Test email sent to %(email)s."
 msgstr "Тестовий лист надіслано на %(email)s."
 
-#: .\console\views\settings.py:372
+#: .\console\views\settings.py:400
 #, python-format
 msgid "Couldn't find Bell Tower there: %(error)s"
 msgstr "Не вдалося знайти Bell Tower за цією адресою: %(error)s"
 
-#: .\console\views\settings.py:388
+#: .\console\views\settings.py:416
 msgid ""
 "This connection request expired or didn't start here. Please connect again."
 msgstr ""
 "Цей запит на підключення прострочено або його розпочато не тут. Підключіться"
 " ще раз."
 
-#: .\console\views\settings.py:390
+#: .\console\views\settings.py:418
 msgid "Bell Tower connection cancelled."
 msgstr "Підключення до Bell Tower скасовано."
 
-#: .\console\views\settings.py:395
+#: .\console\views\settings.py:423
 #, python-format
 msgid "Bell Tower didn't accept the connection: %(error)s"
 msgstr "Bell Tower не прийняв підключення: %(error)s"
 
-#: .\console\views\settings.py:398
+#: .\console\views\settings.py:426
 #, python-format
 msgid "Connected to Bell Tower as %(user)s."
 msgstr "Підключено до Bell Tower як %(user)s."
 
-#: .\console\views\settings.py:410
+#: .\console\views\settings.py:438
 msgid ""
 "Linking accounts with Bell Tower in the background. Reload this page in a "
 "minute to see the count."
@@ -7934,11 +8140,11 @@ msgstr ""
 "Пов’язуємо облікові записи з Bell Tower у фоновому режимі. Перезавантажте "
 "сторінку за хвилину, щоб побачити кількість."
 
-#: .\console\views\settings.py:418
+#: .\console\views\settings.py:446
 msgid "Disconnected from Bell Tower."
 msgstr "Відключено від Bell Tower."
 
-#: .\console\views\settings.py:421
+#: .\console\views\settings.py:449
 msgid ""
 "Disconnected. Bell Tower couldn't be reached to revoke Town Hall's key; you "
 "can remove it under Connected apps on your Bell Tower account page."
@@ -8084,7 +8290,6 @@ msgid "Profile changes saved."
 msgstr "Зміни профілю збережено."
 
 #: .\console\views\volunteers.py:324
-#| msgid "Ukrainian"
 msgid "Training completed"
 msgstr "Навчання завершено"
 
@@ -8121,7 +8326,6 @@ msgid "You're now one step closer to making a huge impact."
 msgstr "Ви стали на крок ближче до великого впливу."
 
 #: .\education\templates\education\completed_module.html:36
-#| msgid "Ukrainian"
 msgid "Continue Training"
 msgstr "Продовжити навчання"
 
@@ -8190,7 +8394,6 @@ msgid "Review Module"
 msgstr "Переглянути модуль"
 
 #: .\education\templates\education\education_layout.html:17
-#| msgid "Ukrainian"
 msgid "Training Dashboard"
 msgstr "Панель навчання"
 
@@ -8209,7 +8412,6 @@ msgid "Explore"
 msgstr "Огляд"
 
 #: .\education\templates\education\education_layout.html:36
-#| msgid "Ukrainian"
 msgid "Training dashboard"
 msgstr "Панель навчання"
 
@@ -8527,7 +8729,6 @@ msgid "Level"
 msgstr "Рівень"
 
 #: .\education\templates\education\training_dashboard.html:43
-#| msgid "Ukrainian"
 msgid "Training Progress"
 msgstr "Прогрес навчання"
 
@@ -8548,7 +8749,6 @@ msgid "View All Modules"
 msgstr "Усі модулі"
 
 #: .\education\templates\education\training_dashboard.html:122
-#| msgid "Ukrainian"
 msgid "Resume Training"
 msgstr "Продовжити навчання"
 
@@ -8617,7 +8817,6 @@ msgid "Submit a Certificate"
 msgstr "Подати сертифікат"
 
 #: .\education\templates\education\training_directory.html:12
-#| msgid "Ukrainian"
 msgid "Training Directory"
 msgstr "Каталог навчання"
 
@@ -8664,12 +8863,10 @@ msgid "Start Course"
 msgstr "Почати курс"
 
 #: .\education\templates\education\training_directory.html:116
-#| msgid "Ukrainian"
 msgid "Available Training"
 msgstr "Доступне навчання"
 
 #: .\education\templates\education\training_directory.html:117
-#| msgid "Ukrainian"
 msgid "Training topics"
 msgstr "Теми навчання"
 
@@ -8751,36 +8948,36 @@ msgstr "Переглянути деталі"
 msgid "No certificates are available yet."
 msgstr "Доступних сертифікатів поки немає."
 
-#: .\education\views.py:199
+#: .\education\views.py:204
 msgid "Failed to mark module as completed."
 msgstr "Не вдалося позначити модуль як завершений."
 
-#: .\education\views.py:438
+#: .\education\views.py:443
 msgid "Please attach at least one document."
 msgstr "Будь ласка, прикріпіть принаймні один документ."
 
-#: .\education\views.py:447
+#: .\education\views.py:452
 msgid "Your documents have been submitted for verification."
 msgstr "Ваші документи надіслано на перевірку."
 
-#: .\education\views.py:454
+#: .\education\views.py:459
 msgid "Not submitted"
 msgstr "Не подано"
 
-#: .\education\views.py:460
+#: .\education\views.py:465
 msgid "Action required"
 msgstr "Потрібна дія"
 
-#: .\education\views.py:462
+#: .\education\views.py:467
 msgid "Pending verification"
 msgstr "Очікує перевірки"
 
-#: .\events\belltower_sync.py:67
+#: .\events\belltower_sync.py:66
 #, python-format
 msgid "%(role)s tasks · %(area)s"
 msgstr "Завдання для ролі «%(role)s» · %(area)s"
 
-#: .\events\belltower_sync.py:68
+#: .\events\belltower_sync.py:67
 #, python-format
 msgid "%(role)s tasks"
 msgstr "Завдання для ролі «%(role)s»"
@@ -9890,26 +10087,115 @@ msgstr ""
 "Дякуємо, %(name)s! Ви записали годин: %(hours)s і заробили балів впливу: "
 "%(points)s."
 
-#: .\town_hall\settings.py:162
+#: .\mcp_server\templates\mcp_server\authorize.html:4
+msgid "Connect an AI app"
+msgstr "Підключити застосунок ШІ"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:21
+#, python-format
+msgid "Connect %(app)s to %(company_name)s"
+msgstr "Підключити %(app)s до %(company_name)s"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:22
+msgid "It will work in Town Hall as you, so it can help you plan events."
+msgstr ""
+"Він працюватиме в Town Hall від вашого імені, щоб допомагати вам планувати "
+"події."
+
+#: .\mcp_server\templates\mcp_server\authorize.html:26
+msgid "Signed in as"
+msgstr "Ви увійшли як"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:31
+msgid "It can"
+msgstr "Він може"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:33
+msgid "Create and edit events, and add roles and shifts to them"
+msgstr "Створювати й редагувати події та додавати до них ролі й зміни"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:34
+msgid "Build planning and event-day task lists"
+msgstr "Складати списки завдань для планування та дня події"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:35
+msgid "Create role templates and attach existing training"
+msgstr "Створювати шаблони ролей і додавати до них наявне навчання"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:36
+msgid "Write quizzes based on your training lessons"
+msgstr "Писати тести на основі ваших навчальних уроків"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:37
+msgid "Invite volunteers to shifts (they choose whether to accept)"
+msgstr "Запрошувати волонтерів на зміни (вони самі вирішують, чи погодитися)"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:38
+msgid "Read profiles, endorsements and feedback"
+msgstr "Читати профілі, рекомендації та відгуки"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:42
+msgid "It can't"
+msgstr "Він не може"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:44
+msgid "Delete anything"
+msgstr "Будь-що видаляти"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:45
+msgid "Change anyone's profile"
+msgstr "Змінювати чужі профілі"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:46
+msgid "Write or change training lessons"
+msgstr "Писати чи змінювати навчальні уроки"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:47
+msgid "Change organization settings"
+msgstr "Змінювати налаштування організації"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:57
+msgid "Allow"
+msgstr "Дозволити"
+
+#: .\mcp_server\templates\mcp_server\authorize.html:61
+#, python-format
+msgid ""
+"You'll go back to %(host)s. You can disconnect any time in Organization &gt;"
+" Backend."
+msgstr ""
+"Ви повернетеся до %(host)s. Відключити його можна будь-коли в розділі "
+"Організація &gt; Бекенд."
+
+#: .\mcp_server\templates\mcp_server\authorize_error.html:4
+#: .\mcp_server\templates\mcp_server\authorize_error.html:15
+msgid "Can't connect"
+msgstr "Не вдається підключитися"
+
+#: .\mcp_server\templates\mcp_server\authorize_error.html:17
+msgid "Go to Town Hall"
+msgstr "Перейти до Town Hall"
+
+#: .\town_hall\settings.py:169
 msgid "English"
 msgstr "Англійська"
 
-#: .\town_hall\settings.py:163
+#: .\town_hall\settings.py:170
 msgid "Spanish"
 msgstr "Іспанська"
 
-#: .\town_hall\settings.py:164
+#: .\town_hall\settings.py:171
 msgid "French"
 msgstr "Французька"
 
-#: .\town_hall\settings.py:165
+#: .\town_hall\settings.py:172
 msgid "Ukrainian"
 msgstr "Українська"
 
-#: .\town_hall\settings.py:166
+#: .\town_hall\settings.py:173
 msgid "Traditional Chinese"
 msgstr "Традиційна китайська"
 
-#: .\town_hall\settings.py:167
+#: .\town_hall\settings.py:174
 msgid "Tagalog"
 msgstr "Тагальська"

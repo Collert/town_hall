@@ -12,6 +12,11 @@ from base.email import notify
 from base.utils import qr_svg
 
 
+def get_visible_module(request, module_id):
+    """The module, or 404 when it's staff-only and the user isn't staff."""
+    return get_object_or_404(TrainingModule.visible_to(request.user), id=module_id)
+
+
 def get_module_sidebar_context(module):
     """Build the shared sidebar context for module_layout templates."""
     lessons = module.lessons.all().order_by('order')
@@ -31,13 +36,13 @@ def training_directory(request):
     last_viewed = None
     if user.is_authenticated and hasattr(user, 'profile'):
         last_viewed = user.profile.last_viewed_training_module
-        if last_viewed and not last_viewed.published:
-            last_viewed = None  # Ignore if the last viewed module is unpublished
+        if last_viewed and (not last_viewed.published or (last_viewed.staff_only and not user.is_staff)):
+            last_viewed = None  # Ignore if the last viewed module is unpublished or hidden from this user
         if last_viewed and last_viewed.completion_percentage_for_user(user) >= 100:
             last_viewed = None  # Ignore if the last viewed module is already completed
 
     # Order modules by number of roles they are required for
-    impactful_modules = TrainingModule.objects.annotate(
+    impactful_modules = TrainingModule.visible_to(user).annotate(
         role_count=Count('roles')
     ).order_by('-role_count').filter(published=True)
 
@@ -72,13 +77,13 @@ def training_directory(request):
         'last_viewed': last_viewed,
         'current_training_modules': current_training_modules,
         'available_modules': available_modules,
-        'topics': TrainingModule.objects.values_list('topic__name', flat=True).distinct(),
+        'topics': TrainingModule.visible_to(user).values_list('topic__name', flat=True).distinct(),
     }
     return render(request, 'education/training_directory.html', context)
 
 
 def module_overview(request, module_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     user = request.user
 
     # Calculate progress
@@ -111,7 +116,7 @@ def module_overview(request, module_id):
     return render(request, 'education/module_overview.html', context)
 
 def lesson_detail(request, module_id, lesson_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     lesson = get_object_or_404(TrainingLesson, id=lesson_id, training_module=module)
     user = request.user
 
@@ -170,7 +175,7 @@ def lesson_detail(request, module_id, lesson_id):
 @require_POST
 @login_required
 def mark_lesson_complete(request, module_id, lesson_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     module.started_by.add(request.user)  # Ensure user is marked as having started the module
     lesson = get_object_or_404(TrainingLesson, id=lesson_id, training_module=module)
     lesson.completed_by.add(request.user)
@@ -184,7 +189,7 @@ def mark_lesson_complete(request, module_id, lesson_id):
 @require_POST
 @login_required
 def complete_module(request, module_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     user = request.user
 
     result = module.mark_as_completed_for_user(user)
@@ -237,7 +242,7 @@ def printable_certificate(request, completion_id):
 
 @login_required
 def quiz_detail(request, module_id, quiz_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     quiz = get_object_or_404(Quiz, id=quiz_id, training_module=module)
 
     sidebar = get_module_sidebar_context(module)
@@ -255,7 +260,7 @@ def quiz_detail(request, module_id, quiz_id):
 @require_POST
 @login_required
 def submit_quiz(request, module_id, quiz_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     quiz = get_object_or_404(Quiz, id=quiz_id, training_module=module)
 
     questions = quiz.questions.all()
@@ -304,7 +309,7 @@ def submit_quiz(request, module_id, quiz_id):
 
 @login_required
 def quiz_results(request, module_id, quiz_id):
-    module = get_object_or_404(TrainingModule, id=module_id)
+    module = get_visible_module(request, module_id)
     quiz = get_object_or_404(Quiz, id=quiz_id, training_module=module)
 
     sidebar = get_module_sidebar_context(module)
@@ -369,7 +374,7 @@ def training_dashboard(request):
 
     # In-progress: started but not yet completed
     in_progress_modules = list(
-        TrainingModule.objects.filter(started_by=user, published=True).exclude(id__in=completed_module_ids)
+        TrainingModule.visible_to(user).filter(started_by=user, published=True).exclude(id__in=completed_module_ids)
     )
     for module in in_progress_modules:
         module.user_progress = module.completion_percentage_for_user(user)
@@ -379,7 +384,7 @@ def training_dashboard(request):
         completion.training_module.completion_date = completion.completed_at
 
     # Total published modules
-    total_modules = TrainingModule.objects.filter(published=True).count()
+    total_modules = TrainingModule.visible_to(user).filter(published=True).count()
     progress_pct = round((completed_count / total_modules) * 100) if total_modules else 0
 
     # Time invested: sum lengths of completed lessons + completed quizzes
@@ -401,7 +406,7 @@ def training_dashboard(request):
 
     # Suggested modules for empty state
     suggested_modules = (
-        TrainingModule.objects.filter(published=True)
+        TrainingModule.visible_to(user).filter(published=True)
         .exclude(started_by=user)
         .order_by('?')[:3]
     )

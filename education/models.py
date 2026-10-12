@@ -12,6 +12,9 @@ class TrainingModule(models.Model):
     skills = models.ManyToManyField('education.Skill', related_name='courses')
     topic = models.ForeignKey('education.TrainingTopic', related_name='courses', blank=True, null=True, on_delete=models.SET_NULL)
     published = models.BooleanField(default=False)
+    staff_only = models.BooleanField(default=False, help_text='Only staff can see and take this module, e.g. guides for running the app')
+    system_key = models.CharField(max_length=50, unique=True, blank=True, null=True, editable=False,
+                                  help_text='Set on modules Town Hall creates itself (base/onboarding.py)')
     photo = models.ImageField(upload_to='training_module_photos/', blank=True, null=True)
     icon = models.CharField(max_length=50, help_text='Icon name from Google Material Icons')
     expires_after_days = models.PositiveIntegerField(blank=True, null=True, help_text='Number of days after which the training module expires for a user')
@@ -20,6 +23,14 @@ class TrainingModule(models.Model):
 
     def __str__(self):
         return self.title
+
+    @classmethod
+    def visible_to(cls, user):
+        """Modules this user may see: staff-only ones are hidden from everyone but staff."""
+        modules = cls.objects.all()
+        if not (user.is_authenticated and user.is_staff):
+            modules = modules.filter(staff_only=False)
+        return modules
 
     def get_total_length(self):
         """Calculate total length of the training module based on its lessons and quizzes."""

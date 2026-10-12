@@ -7,7 +7,9 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Count, Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -20,6 +22,8 @@ from events.models import Event, EventFeedback, EventRoleSlot
 from jobs.models import Shift
 
 from .email import notify, send_welcome_email
+from .forms import FirstRunSetupForm
+from .middleware import FirstRunMiddleware
 from .models import AdminFeedback, Endorsement, HeroSection, Notification, PointsEntry, SiteSettings, Venue
 from .utils import gravatar_exists, qr_svg
 
@@ -159,6 +163,40 @@ def signup_view(request):
             return redirect(_safe_next(request))
 
     return render(request, 'base/signup.html', _auth_page_context(request))
+
+
+def first_run_setup(request):
+    """Create the first account on a fresh install and make it the superuser.
+
+    base.middleware.FirstRunMiddleware sends every request here until a user exists. The new admin
+    is signed in and taken to the staff-only admin guide (base/onboarding.py).
+    """
+    if User.objects.exists():
+        raise Http404
+    site = SiteSettings.get_settings()
+    default_name = SiteSettings._meta.get_field('company_name').default
+    form = FirstRunSetupForm(request.POST or None, initial={
+        'company_name': '' if site.company_name == default_name else site.company_name,
+    })
+    if request.method == 'POST' and form.is_valid():
+        from .onboarding import ensure_admin_guide
+
+        data = form.cleaned_data
+        with transaction.atomic():
+            if User.objects.select_for_update().exists():  # someone else finished setup first
+                raise Http404
+            user = User.objects.create_superuser(
+                username=data['email'][:150], email=data['email'], password=data['password'],
+                first_name=data['first_name'], last_name=data['last_name'],
+            )
+            site.company_name = data['company_name']
+            site.save()
+            guide = ensure_admin_guide()
+        FirstRunMiddleware.has_users = True
+        login(request, user)
+        messages.success(request, _('Welcome to Town Hall! Start with this guide to learn your way around.'))
+        return redirect('module_overview', module_id=guide.pk)
+    return render(request, 'base/setup.html', {'form': form})
 
 
 class PasswordResetForm(auth_forms.PasswordResetForm):
