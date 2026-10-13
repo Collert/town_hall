@@ -321,8 +321,10 @@
                     <div class="footer-links-col footer-newsletter">
                         <h5>{% trans "Newsletter" %}</h5>
                         <p>{% trans "Join our list for local updates." %}</p>
-                        <form class="newsletter-form">
-                            <input type="email" placeholder="{% trans 'Email address' %}" />
+                        <form class="newsletter-form" method="post" action="https://marketing.uahelp.ca/subscription/form">
+                            <input type="hidden" name="nonce" />
+                            <input type="hidden" name="l" value="fe65426f-7254-4eab-acb5-89df230160ff" />
+                            <input type="email" name="email" required placeholder="{% trans 'Email address' %}" aria-label="{% trans 'Email address' %}" />
                             <button type="submit" class="btn btn-accent btn-rounded">{% trans "Subscribe" %}</button>
                         </form>
                     </div>
