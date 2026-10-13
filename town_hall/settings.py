@@ -30,7 +30,7 @@ dotenv.load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('environment', 'development') != 'production'
+DEBUG = os.environ.get('ENVIRONMENT', 'development') != 'production'
 
 # APP_ORIGIN: the site's host name(s), comma-separated, e.g. "townhall.example.org" or "abc.trycloudflare.com,127.0.0.1".
 ALLOWED_HOSTS = [origin.strip().rstrip('/') for origin in os.environ.get('APP_ORIGIN', '127.0.0.1').split(',')]
