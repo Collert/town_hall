@@ -89,6 +89,9 @@ def apply(languages, default, time_zone):
         os.environ['TZ'] = time_zone
         time.tzset()
 
+    # TODO: this pokes at Django internals (trans_real's caches), which broke on Django 6.1, so
+    # requirements.txt pins django<6.1 for now. Rework this flow to use a public API (or drop the
+    # cache clearing if it isn't needed at startup), then remove the pin.
     from django.utils import timezone
     from django.utils.translation import trans_real
     for cached in (trans_real.get_languages, trans_real.check_for_language,
