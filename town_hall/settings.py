@@ -240,6 +240,23 @@ if USE_S3_MEDIA:
         )
     STORAGES['default'] = {'BACKEND': 'storages.backends.s3.S3Storage', 'OPTIONS': _s3_options}
 
+# Everything goes to stderr, which the host collects. Without this, Django only emails
+# tracebacks to ADMINS when DEBUG is off, so a 500 in production leaves no trace in the logs.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'plain': {'format': '[{asctime}] {levelname} {name}: {message}', 'style': '{'},
+    },
+    'handlers': {
+        'console': {'class': 'logging.StreamHandler', 'formatter': 'plain'},
+    },
+    'root': {'handlers': ['console'], 'level': os.environ.get('LOG_LEVEL', 'INFO')},
+    'loggers': {
+        'django': {'handlers': ['console'], 'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'), 'propagate': False},
+    },
+}
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
