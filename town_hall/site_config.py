@@ -93,7 +93,8 @@ def apply(languages, default, time_zone):
     from django.utils.translation import trans_real
     for cached in (trans_real.get_languages, trans_real.check_for_language,
                    trans_real.get_supported_language_variant, timezone.get_default_timezone):
-        cached.cache_clear()
+        if hasattr(cached, 'cache_clear'):  # not every Django version caches all of these
+            cached.cache_clear()
 
 
 class SiteConfig(AppConfig):
