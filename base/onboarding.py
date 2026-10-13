@@ -526,7 +526,9 @@ uses in each language. **Reset to default** restores Town Hall's version of a te
 - Each email goes out in the language the person last used the site in.
 - Changing your name, logo or colors under **Organization > Identity** updates every template.
 - **New event published** is a visual campaign. With **Send immediately** off, it waits as a draft in
-  listmonk so you can edit it before sending. You can also send it to extra listmonk lists.
+  listmonk so you can edit it before sending. You can also send it to extra listmonk lists. The
+  **Newsletter** form in the site footer signs visitors up to those extra lists, and it's hidden until
+  you pick at least one.
 - People who unsubscribe stay unsubscribed.
 """),
 

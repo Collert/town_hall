@@ -9,7 +9,9 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Count, Q
-from django.http import Http404, JsonResponse
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
@@ -489,6 +491,40 @@ def terms_of_service(request):
     return render(request, 'base/terms_of_service.html', {
         'terms': SiteSettings.get_settings().terms_of_service,
     })
+
+
+@require_POST
+def newsletter_subscribe(request):
+    """Footer newsletter form: add the address to the listmonk lists picked for the
+    "New event published" campaign. Answers HTMX with a toast; the page stays put."""
+    from . import listmonk
+
+    email = (request.POST.get('email') or '').strip()
+    list_ids = listmonk.newsletter_lists()
+    if request.POST.get('nonce'):
+        pass  # honeypot filled in: a bot. Pretend it worked.
+    elif not list_ids:
+        messages.error(request, _('Newsletter sign-up is not available right now.'))
+        email = None
+    else:
+        try:
+            validate_email(email)
+            listmonk.subscribe(email, list_ids)
+        except ValidationError:
+            messages.error(request, _('Please enter a valid email address.'))
+            email = None
+        except listmonk.ListmonkError as exc:
+            print(f'[listmonk] Newsletter sign-up failed: {exc}')
+            messages.error(request, _('We could not sign you up right now. Please try again later.'))
+            email = None
+    if email is not None:
+        messages.success(request, _('Thanks for subscribing! If we sent you a confirmation email, open it to finish.'))
+    if request.headers.get('HX-Request') != 'true':
+        return redirect(_safe_next(request))
+    response = HttpResponse(status=204)
+    if email is not None:
+        response['HX-Trigger'] = 'newsletter-subscribed'
+    return response
 
 
 # ---------------------------------------------------------------------------

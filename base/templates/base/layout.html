@@ -318,16 +318,20 @@
                             {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">{% trans "Log Out" %}</a></li>{% endif %}
                         </ul>
                     </div>
+                    {% if newsletter_enabled %}
                     <div class="footer-links-col footer-newsletter">
                         <h5>{% trans "Newsletter" %}</h5>
                         <p>{% trans "Join our list for local updates." %}</p>
-                        <form class="newsletter-form" method="post" action="https://marketing.uahelp.ca/subscription/form">
-                            <input type="hidden" name="nonce" />
-                            <input type="hidden" name="l" value="fe65426f-7254-4eab-acb5-89df230160ff" />
+                        <form class="newsletter-form" method="post" action="{% url 'newsletter_subscribe' %}"
+                              hx-post="{% url 'newsletter_subscribe' %}" hx-swap="none" hx-on:newsletter-subscribed="this.reset()">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                            <input type="text" name="nonce" class="newsletter-trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
                             <input type="email" name="email" required placeholder="{% trans 'Email address' %}" aria-label="{% trans 'Email address' %}" />
                             <button type="submit" class="btn btn-accent btn-rounded">{% trans "Subscribe" %}</button>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="footer-bottom">

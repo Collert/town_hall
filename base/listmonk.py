@@ -394,6 +394,44 @@ def sync_user(user, list_id=None):
     })
 
 
+def newsletter_lists():
+    """Lists the footer newsletter form signs people up to: the extra lists picked for
+    the "New event published" campaign. Empty when listmonk isn't connected."""
+    from . import triggers
+
+    if not is_configured():
+        return []
+    return triggers.setting('event_published')[2]
+
+
+def subscribe(email, list_ids):
+    """Add a visitor from the newsletter form to ``list_ids``. New subscribers aren't
+    preconfirmed, so listmonk sends its opt-in email for double opt-in lists. Lists the
+    address is already on (even unsubscribed) and blocklisted addresses are left alone."""
+    escaped = email.replace("'", "''")
+    query = f"LOWER(subscribers.email) = LOWER('{escaped}')"
+    rows = _results(api('GET', '/subscribers?' + urllib.parse.urlencode({'query': query, 'per_page': 1})))
+    if not rows:
+        api('POST', '/subscribers', {
+            'email': email, 'name': email.split('@')[0], 'status': 'enabled', 'lists': list_ids,
+            'attribs': {'source': 'newsletter_form'}, 'preconfirm_subscriptions': False,
+        })
+        return
+    existing = rows[0]
+    if existing.get('status') == 'blocklisted':
+        return
+    missing = [i for i in list_ids if i not in {lst['id'] for lst in existing.get('lists') or []}]
+    if not missing:
+        return
+    api('PUT', '/subscribers/lists', {
+        'ids': [existing['id']], 'action': 'add', 'target_list_ids': missing, 'status': 'unconfirmed',
+    })
+    try:
+        api('POST', f"/subscribers/{existing['id']}/optin")
+    except ListmonkError:
+        pass  # none of the new lists is double opt-in
+
+
 def sync_all():
     """Sync every active user with an email. Returns (synced, failed, first error)."""
     from django.contrib.auth.models import User

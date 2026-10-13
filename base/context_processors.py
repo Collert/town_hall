@@ -1,6 +1,12 @@
 from .models import SiteSettings
 
 
+def _newsletter_enabled():
+    from .listmonk import newsletter_lists
+
+    return bool(newsletter_lists())
+
+
 def site_settings(request):
     """
     Context processor that adds site settings (including theme colors)
@@ -11,6 +17,8 @@ def site_settings(request):
     return {
         'site_settings': settings,
         'company_name': settings.company_name,
+        # Callable so the footer only looks it up when it renders.
+        'newsletter_enabled': _newsletter_enabled,
         'theme_colors': {
             # Primary Colors
             'primary': settings.color_primary,

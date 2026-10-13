@@ -8,6 +8,7 @@ urlpatterns = [
     path('settings/theme/', theme_settings_edit, name='theme_settings_edit'),
     path('settings/identity/', theme_settings_edit, name='identity_settings_edit'),
     path('terms/', terms_of_service, name='terms_of_service'),
+    path('newsletter/subscribe/', newsletter_subscribe, name='newsletter_subscribe'),
     path('venues/<int:venue_id>/', venue_detail, name='venue_detail'),
     path('notifications/<int:notification_id>/read/', read_notification, name='read_notification'),
     path('notifications/read-all/', clear_notifications, name='clear_notifications'),

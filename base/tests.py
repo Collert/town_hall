@@ -248,3 +248,59 @@ class StaffOnlyModuleTests(TestCase):
         from base.onboarding import ensure_admin_guide
         self.assertEqual(ensure_admin_guide(), self.guide)
         self.assertEqual(TrainingModule.objects.filter(system_key='admin_guide').count(), 1)
+
+
+class NewsletterFormTests(TestCase):
+    """The footer form signs visitors up to the "New event published" campaign's extra lists."""
+
+    def setUp(self):
+        from base.models import EmailTrigger, SiteSettings
+        User.objects.create_user('someone', 'someone@example.com', 'pw')  # skip first-run setup
+        site = SiteSettings.get_settings()
+        site.listmonk_url, site.listmonk_api_user, site.listmonk_api_token = 'http://lists.local', 'town-hall', 'tok'
+        site.save()
+        EmailTrigger.objects.create(key='event_published', enabled=True, extra_list_ids=[7, 8])
+        self.url = reverse('newsletter_subscribe')
+
+    def post(self, **data):
+        return self.client.post(self.url, data, HTTP_HX_REQUEST='true')
+
+    def test_footer_shows_form_only_with_lists(self):
+        from base.models import EmailTrigger
+        self.assertContains(self.client.get(reverse('terms_of_service')), self.url)
+        EmailTrigger.objects.filter(key='event_published').update(extra_list_ids=[])
+        self.assertNotContains(self.client.get(reverse('terms_of_service')), self.url)
+
+    def test_new_subscriber_gets_opt_in(self):
+        from unittest.mock import patch
+        with patch('base.listmonk.api', side_effect=[{'results': []}, {'id': 1}]) as api:
+            response = self.post(email='new@example.com')
+        self.assertEqual(response.status_code, 204)
+        self.assertIn('newsletter-subscribed', response['HX-Trigger'])
+        method, path, payload = api.call_args_list[1].args
+        self.assertEqual((method, path, payload['lists']), ('POST', '/subscribers', [7, 8]))
+        self.assertFalse(payload['preconfirm_subscriptions'])
+
+    def test_existing_subscriber_only_gets_missing_lists(self):
+        from unittest.mock import patch
+        existing = {'id': 9, 'status': 'enabled', 'lists': [{'id': 7, 'subscription_status': 'unsubscribed'}]}
+        with patch('base.listmonk.api', side_effect=[{'results': [existing]}, None, None]) as api:
+            self.post(email='old@example.com')
+        self.assertEqual(api.call_args_list[1].args[2]['target_list_ids'], [8])
+        self.assertEqual(api.call_args_list[2].args[:2], ('POST', '/subscribers/9/optin'))
+
+    def test_bad_email_and_honeypot_never_reach_listmonk(self):
+        from unittest.mock import patch
+        with patch('base.listmonk.api') as api:
+            bad = self.post(email='not-an-email')
+            self.post(email='bot@example.com', nonce='x')
+        api.assert_not_called()
+        self.assertNotIn('newsletter-subscribed', bad['HX-Trigger'])
+        self.assertIn('toasts', bad['HX-Trigger'])
+
+    def test_listmonk_failure_shows_error(self):
+        from unittest.mock import patch
+        from base.listmonk import ListmonkError
+        with patch('base.listmonk.api', side_effect=ListmonkError('down')):
+            response = self.post(email='new@example.com')
+        self.assertNotIn('newsletter-subscribed', response['HX-Trigger'])

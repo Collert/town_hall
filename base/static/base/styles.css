@@ -518,6 +518,14 @@ ul {
     box-shadow: 0 0 0 3px rgba(from var(--color-primary-light) r g b / 0.3);
 }
 
+.newsletter-form .newsletter-trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
 .newsletter-form .btn {
     padding: 0.625rem;
     font-size: 0.875rem;
