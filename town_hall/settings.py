@@ -205,7 +205,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 #   S3_PUBLIC_URL    optional, e.g. https://files.example.org/town-hall: the bucket's public
 #                    address when it allows anonymous reads. Without it, links are presigned.
 USE_S3_MEDIA = not DEBUG and sys.argv[1:2] != ['test']  # tests write to a temp MEDIA_ROOT
-S3_BUCKET = os.environ.get('S3_BUCKET', '')
+S3_BUCKET = os.environ.get('S3_BUCKET_NAME', '')
 
 STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
