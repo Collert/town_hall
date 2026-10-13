@@ -384,8 +384,8 @@ msgid ""
 "Celebrating the people behind community change. Read the stories behind the "
 "impact."
 msgstr ""
-"Вшановуємо людей, які стоять за змінами в громаді. Читайте історії за цим "
-"впливом."
+"Вшановуємо людей, які стоять за змінами в громаді. Тут - їхні "
+"рекомендації."
 
 #: .\base\templates\base\endorsements.html:18
 msgid "New Endorsement"
@@ -944,7 +944,7 @@ msgstr "Розсилка"
 
 #: .\base\templates\base\layout.html:324
 msgid "Join our list for local updates."
-msgstr "Підпишіться на місцеві новини."
+msgstr "Підпишіться на наші новини."
 
 #: .\base\templates\base\layout.html:330 .\console\forms.py:411
 msgid "Email address"
@@ -9709,15 +9709,15 @@ msgstr "Переглянути мій звіт про вплив"
 
 #: .\events\templates\events\explore_events.html:16
 msgid "Explore Volunteering"
-msgstr "Відкрийте для себе волонтерство"
+msgstr "Відкрийте для себе волонтерські"
 
 #: .\events\templates\events\explore_events.html:19
 msgid ""
 "Join a community of volunteers building a better tomorrow. Find roles that "
 "match your passion and skillset in your local neighborhood."
 msgstr ""
-"Приєднуйтеся до спільноти волонтерів, що будують краще завтра. Знаходьте "
-"ролі, які відповідають вашим захопленням і навичкам, у вашому районі."
+"Приєднуйтеся до команди волонтерів, що будують вашу спільноту. Знаходьте "
+"ролі, які відповідають вашим захопленням і навичкам, недалеко від вас."
 
 #: .\events\templates\events\explore_events.html:28
 msgid "Open Roles"
