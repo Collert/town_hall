@@ -201,7 +201,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # In production uploads go to an S3-compatible bucket (self-hosted RustFS); in development to
 # MEDIA_ROOT, which town_hall/urls.py serves. Static files always stay on WhiteNoise.
 #   S3_ENDPOINT_URL  e.g. http://rustfs:9000 (the API port, reachable from this server)
-#   S3_BUCKET (or S3_BUCKET_NAME), S3_ACCESS_KEY, S3_SECRET_KEY, S3_REGION (default us-east-1)
+#   S3_BUCKET_NAME, S3_ACCESS_KEY, S3_SECRET_KEY, S3_REGION (default us-east-1)
 #   S3_PUBLIC_URL    optional, e.g. https://files.example.org/town-hall: the bucket's public
 #                    address when it allows anonymous reads. Without it, links are presigned.
 USE_S3_MEDIA = not DEBUG and sys.argv[1:2] != ['test']  # tests write to a temp MEDIA_ROOT
