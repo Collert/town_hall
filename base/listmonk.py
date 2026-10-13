@@ -356,19 +356,22 @@ def subscriber_attribs(user):
 
 
 def find_subscriber(user):
-    """The listmonk subscriber for ``user``: matched by Town Hall ID first, so an email
-    change updates the same subscriber, then by email."""
+    """The listmonk subscriber for ``user``: matched by email (ignoring case, as listmonk
+    does), then by Town Hall ID, so an email change updates the same subscriber."""
     email = user.email.replace("'", "''")
-    query = f"subscribers.attribs->>'town_hall_id' = '{user.pk}' OR subscribers.email = '{email}'"
-    rows = _results(api('GET', '/subscribers?' + urllib.parse.urlencode({'query': query, 'per_page': 2})))
-    return next((r for r in rows if (r.get('attribs') or {}).get('town_hall_id') == user.pk), rows[0] if rows else None)
+    query = (f"LOWER(subscribers.email) = LOWER('{email}') "
+             f"OR subscribers.attribs->>'town_hall_id' = '{user.pk}'")
+    rows = _results(api('GET', '/subscribers?' + urllib.parse.urlencode({'query': query, 'per_page': 10})))
+    by_email = next((r for r in rows if (r.get('email') or '').lower() == user.email.lower()), None)
+    return by_email or next((r for r in rows if (r.get('attribs') or {}).get('town_hall_id') == user.pk), None)
 
 
 def sync_user(user, list_id=None):
     """Create or update ``user``'s subscriber and make sure it's on the volunteer list.
 
-    Existing list memberships are never touched, so someone who unsubscribed from the
-    list in listmonk stays unsubscribed.
+    Someone who is already a subscriber (say, of a newsletter list) keeps their other
+    lists and is added to this one. Existing memberships of this list are never touched,
+    so someone who unsubscribed from it in listmonk stays unsubscribed.
     """
     from .models import SiteSettings
 
@@ -377,20 +380,31 @@ def sync_user(user, list_id=None):
     list_id = list_id or SiteSettings.get_settings().listmonk_list_id
     name = user.get_full_name() or user.username
     existing = find_subscriber(user)
-    if existing:
-        api('PATCH', f"/subscribers/{existing['id']}", {
-            'email': user.email, 'name': name,
-            'attribs': {**(existing.get('attribs') or {}), **subscriber_attribs(user)},
-        })
-        if list_id and list_id not in {lst['id'] for lst in existing.get('lists') or []}:
-            api('PUT', '/subscribers/lists', {
-                'ids': [existing['id']], 'action': 'add', 'target_list_ids': [list_id], 'status': 'confirmed',
+    if not existing:
+        try:
+            api('POST', '/subscribers', {
+                'email': user.email, 'name': name, 'status': 'enabled',
+                'lists': [list_id] if list_id else [], 'attribs': subscriber_attribs(user),
+                'preconfirm_subscriptions': True,
             })
-        return
-    api('POST', '/subscribers', {
-        'email': user.email, 'name': name, 'status': 'enabled',
-        'lists': [list_id] if list_id else [], 'attribs': subscriber_attribs(user),
-        'preconfirm_subscriptions': True,
+            return
+        except ListmonkError as exc:
+            if exc.status != 409:
+                raise
+        # The email exists after all: another sync got there first, or the API user's
+        # role can only see subscribers on some lists.
+        existing = find_subscriber(user)
+        if not existing:
+            raise ListmonkError(
+                f'{user.email} is already a listmonk subscriber, but the API user cannot see them. '
+                'Give its role the subscribers:get_all and subscribers:manage permissions.', 409)
+    if list_id and list_id not in {lst['id'] for lst in existing.get('lists') or []}:
+        api('PUT', '/subscribers/lists', {
+            'ids': [existing['id']], 'action': 'add', 'target_list_ids': [list_id], 'status': 'confirmed',
+        })
+    api('PATCH', f"/subscribers/{existing['id']}", {
+        'email': user.email, 'name': name,
+        'attribs': {**(existing.get('attribs') or {}), **subscriber_attribs(user)},
     })
 
 
@@ -468,6 +482,9 @@ def _sync_in_background(user_pk):
         if user:
             sync_user(user)
     except ListmonkError as exc:
+        from django.core.cache import cache
+
         print(f'[listmonk] Could not sync user {user_pk}: {exc}')
+        cache.set(TASK_ERROR_KEY, str(exc), 60 * 60)  # shown on Communication and Backend
     finally:
         connection.close()

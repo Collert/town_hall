@@ -1232,10 +1232,35 @@ class ListmonkSyncTests(ConsoleFixture):
         existing = {'id': 9, 'attribs': {'town_hall_id': self.vol.pk, 'city': 'Kyiv'}, 'lists': [{'id': 1}]}
         with patch('base.listmonk.api', side_effect=[{'results': [existing]}, None, None]) as api:
             listmonk.sync_user(self.vol)
-        patch_call, list_call = api.call_args_list[1:]
+        list_call, patch_call = api.call_args_list[1:]
         self.assertEqual(patch_call.args[:2], ('PATCH', '/subscribers/9'))
         self.assertEqual(patch_call.args[2]['attribs']['city'], 'Kyiv')  # attributes set in listmonk survive
         self.assertEqual(list_call.args[2], {'ids': [9], 'action': 'add', 'target_list_ids': [4], 'status': 'confirmed'})
+
+    def test_subscriber_of_another_list_is_found_by_email_ignoring_case(self):
+        from base import listmonk
+        from urllib.parse import unquote_plus
+        # Another install's user with the same ID shouldn't win over the email match.
+        other = {'id': 5, 'email': 'someone.else@example.com', 'attribs': {'town_hall_id': self.vol.pk}}
+        existing = {'id': 9, 'email': self.vol.email.upper(), 'attribs': {}, 'lists': [{'id': 2}]}
+        with patch('base.listmonk.api', side_effect=[{'results': [other, existing]}, None, None]) as api:
+            listmonk.sync_user(self.vol)
+        self.assertIn('LOWER(subscribers.email)', unquote_plus(api.call_args_list[0].args[1]))
+        self.assertEqual(api.call_args_list[1].args[1:], ('/subscribers/lists', {
+            'ids': [9], 'action': 'add', 'target_list_ids': [4], 'status': 'confirmed'}))
+
+    def test_email_taken_but_hidden_from_lookup(self):
+        from base import listmonk
+        existing = {'id': 9, 'email': self.vol.email, 'attribs': {}, 'lists': [{'id': 2}]}
+        taken = listmonk.ListmonkError('listmonk returned 409: E-mail already exists.', 409)
+        # Found on the second look (another sync created it meanwhile): added to the list.
+        with patch('base.listmonk.api', side_effect=[{'results': []}, taken, {'results': [existing]}, None, None]) as api:
+            listmonk.sync_user(self.vol)
+        self.assertEqual(api.call_args_list[3].args[1], '/subscribers/lists')
+        # Still invisible: a clear error about the API user's permissions.
+        with patch('base.listmonk.api', side_effect=[{'results': []}, taken, {'results': []}]):
+            with self.assertRaisesMessage(listmonk.ListmonkError, 'subscribers:get_all'):
+                listmonk.sync_user(self.vol)
 
     def test_unsubscribed_member_is_not_resubscribed(self):
         from base import listmonk
