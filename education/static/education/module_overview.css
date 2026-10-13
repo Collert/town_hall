@@ -105,6 +105,19 @@
     transition: transform 0.7s ease;
 }
 
+.featured-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 20%, var(--color-primary-light), var(--color-primary));
+}
+
+.featured-placeholder .material-symbols-outlined {
+    font-size: 7rem;
+    color: var(--color-primary-contrast);
+    opacity: 0.35;
+}
+
 .featured-image-card.group:hover .featured-img {
     transform: scale(1.05);
 }

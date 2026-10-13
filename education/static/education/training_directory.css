@@ -112,6 +112,19 @@
     inset: 0;
 }
 
+.edu-card-hero-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 20%, var(--color-primary-light), var(--color-primary));
+}
+
+.edu-card-hero-placeholder .material-symbols-outlined {
+    font-size: 5rem;
+    color: var(--color-primary-contrast);
+    opacity: 0.35;
+}
+
 .edu-card-hero-gradient {
     position: absolute;
     inset: 0;
