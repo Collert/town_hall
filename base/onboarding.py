@@ -58,7 +58,7 @@ The console sidebar has these sections, each covered in its own lesson:
 - **Venues**: the places you hold events.
 - **Training Modules** and **Certificates**: what volunteers learn and prove.
 - **Communication**: which emails the app sends.
-- **Organization**: your name, colors, home page, levels, points, languages and integrations.
+- **Organization**: your name, colors, home page, levels, skills, points, languages and integrations.
 - **Kiosk Mode**: turns a device into a check-in station.
 
 ## A good order to set things up
@@ -76,8 +76,8 @@ The rest of this guide follows that order.
 
     ('Your organization: identity, home page and region', """
 Everything about how your organization presents itself lives under **Organization** in the console.
-The page has tabs along the top: **Identity**, **Home Page**, **Levels**, **Points**, **Region** and
-**Backend**.
+The page has tabs along the top: **Identity**, **Home Page**, **Levels**, **Skills**, **Points**,
+**Region** and **Backend**.
 
 ## Identity
 
@@ -96,6 +96,15 @@ The **Setup Progress** card on this page shows what is still missing.
 The banner at the top of the public home page: headline, intro text, an image and up to two buttons.
 Button links can be a full address (`https://...`) or a page on this site such as `/en/opportunities/`.
 Events marked **Highlight on the home page** in the event editor are featured there too.
+
+## Skills
+
+**Organization > Skills** is your organization's skill list. Volunteers pick from it on their
+profile, roles list **Preferred Skills** from it, training modules say which skills they teach, and
+teammates endorse each other for them. Each skill has a name in every language you use; fill in the
+first one and use **Auto-translate** for the rest. A badge marks skills with missing translations.
+While you have fewer than five skills, **Fill with default skills** adds a ready-made, translated set
+of common volunteering skills. Deleting a skill removes it from everyone who had it.
 
 ## Region
 

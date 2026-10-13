@@ -1,0 +1,110 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Skills" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/skill_settings.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Skills" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "Skills" %}</h1>
+        <p class="page-lead">{% trans "The skills volunteers can list on their profile, roles can prefer, training modules can teach and teammates can endorse." %}</p>
+    </div>
+</header>
+
+{% include 'console/partials/settings_tabs.html' %}
+
+<div class="c-split">
+    <section class="c-card">
+        <h2 class="c-card-title">
+            <span class="material-symbols-outlined">psychology</span>{% trans "Skill List" %}
+            <span class="c-badge c-card-title-aside">{{ skills|length }}</span>
+        </h2>
+
+        {% if offer_defaults %}
+        <div class="skill-defaults">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <div class="skill-defaults-text">
+                <strong>{% trans "Start with a ready-made list" %}</strong>
+                <span>{% blocktrans count counter=default_count %}Adds {{ counter }} common volunteering skill, already translated into every language Town Hall supports.{% plural %}Adds {{ counter }} common volunteering skills, already translated into every language Town Hall supports.{% endblocktrans %}</span>
+            </div>
+            <form method="post" action="{% url 'console_settings_skill_defaults' %}">
+                {% csrf_token %}
+                <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">playlist_add</span>{% trans "Fill with default skills" %}</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if skills %}
+        <ul class="c-list skill-list">
+            {% for skill in skills %}
+            <li class="c-list-item skill-row{% if editing.pk == skill.pk %} is-editing{% endif %}">
+                <div class="c-list-item-main">
+                    <strong>{{ skill.name }}</strong>
+                    <small>
+                        {% blocktrans count counter=skill.volunteer_count %}{{ counter }} volunteer{% plural %}{{ counter }} volunteers{% endblocktrans %}
+                        · {% blocktrans count counter=skill.role_count %}{{ counter }} role{% plural %}{{ counter }} roles{% endblocktrans %}
+                        · {% blocktrans count counter=skill.module_count %}{{ counter }} module{% plural %}{{ counter }} modules{% endblocktrans %}
+                    </small>
+                </div>
+                {% if skill.missing_languages %}
+                <span class="c-badge c-badge-warning skill-missing" title="{% trans 'Missing translations' %}: {% for code in skill.missing_languages %}{{ code|language_name_local|capfirst }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                    <span class="material-symbols-outlined">translate</span>{% blocktrans count counter=skill.missing_languages|length %}{{ counter }} missing{% plural %}{{ counter }} missing{% endblocktrans %}
+                </span>
+                {% endif %}
+                <div class="skill-actions">
+                    <a href="?edit={{ skill.pk }}#skill-editor" class="c-btn c-btn-sm c-btn-ghost" title="{% trans 'Edit' %}" aria-label="{% blocktrans with name=skill.name %}Edit {{ name }}{% endblocktrans %}">
+                        <span class="material-symbols-outlined">edit</span>
+                    </a>
+                    {% blocktrans with name=skill.name|safe asvar delete_confirm %}Delete “{{ name }}”? It is removed from every volunteer, role, module and endorsement that uses it.{% endblocktrans %}
+                    <form method="post" action="{% url 'console_settings_skill_delete' skill.pk %}" onsubmit="return confirm('{{ delete_confirm|escapejs }}')">
+                        {% csrf_token %}
+                        <button type="submit" class="c-btn c-btn-sm c-btn-ghost skill-delete" title="{% trans 'Delete' %}" aria-label="{% blocktrans with name=skill.name %}Delete {{ name }}{% endblocktrans %}">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="c-empty">
+            <span class="material-symbols-outlined">psychology</span>
+            <h3>{% trans "No skills yet" %}</h3>
+            <p>{% trans "Add your first skill, or fill the list with the defaults above." %}</p>
+        </div>
+        {% endif %}
+    </section>
+
+    <aside class="c-stack">
+        <section class="c-card c-card-tonal skill-editor" id="skill-editor">
+            <h2 class="c-card-title">
+                <span class="material-symbols-outlined">{% if editing %}edit{% else %}add_circle{% endif %}</span>
+                {% if editing %}{% trans "Edit Skill" %}{% else %}{% trans "Add a Skill" %}{% endif %}
+            </h2>
+            <form method="post" class="c-form">
+                {% csrf_token %}
+                {% for error in form.non_field_errors %}<p class="c-error">{{ error }}</p>{% endfor %}
+                {% include 'console/partials/translated_fields.html' %}
+                <div class="skill-editor-actions">
+                    <button type="submit" class="c-btn c-btn-primary">
+                        <span class="material-symbols-outlined">{% if editing %}save{% else %}add{% endif %}</span>
+                        {% if editing %}{% trans "Save Skill" %}{% else %}{% trans "Add Skill" %}{% endif %}
+                    </button>
+                    {% if editing %}<a href="{% url 'console_settings_skills' %}" class="c-btn c-btn-ghost">{% trans "Cancel" %}</a>{% endif %}
+                </div>
+            </form>
+        </section>
+        <p class="c-help skill-help">{% trans "Volunteers see each skill in their own language. A missing translation falls back to the first language." %}</p>
+    </aside>
+</div>
+{% endblock %}

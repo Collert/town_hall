@@ -147,6 +147,7 @@ class ConsolePageTests(ConsoleFixture):
             ('console_verification_review', [self.user_cert.pk]),
             ('console_settings', []),
             ('console_settings_levels', []),
+            ('console_settings_skills', []),
             ('kiosk_home', []),
         ]
         for name, args in pages:
@@ -753,6 +754,52 @@ class BackendSettingsTests(ConsoleFixture):
         with patch('base.listmonk.run_in_background') as job:
             self.client.post(reverse('console_settings'), data)  # nothing brand-related changed
         job.assert_not_called()
+
+
+class SkillSettingsTests(ConsoleFixture):
+    def setUp(self):
+        self.client.force_login(self.staff)
+        self.url = reverse('console_settings_skills')
+
+    def test_add_edit_and_delete(self):
+        self.assertRedirects(self.client.post(self.url, {'name_en': 'Cooking', 'name_es': 'Cocina'}), self.url)
+        skill = Skill.objects.get(name_en='Cooking')
+        self.assertEqual(skill.name_es, 'Cocina')
+
+        self.client.post(f'{self.url}?edit={skill.pk}', {'name_en': 'Baking', 'name_es': 'Repostería'})
+        skill.refresh_from_db()
+        self.assertEqual((skill.name_en, skill.name_es), ('Baking', 'Repostería'))
+        self.assertContains(self.client.get(f'{self.url}?edit={skill.pk}'), 'value="Repostería"')
+
+        self.vol.profile.skills.add(skill)
+        self.client.post(reverse('console_settings_skill_delete', args=[skill.pk]))
+        self.assertFalse(Skill.objects.filter(pk=skill.pk).exists())
+        self.assertFalse(self.vol.profile.skills.filter(pk=skill.pk).exists())
+
+    def test_default_language_name_is_required_and_unique(self):
+        response = self.client.post(self.url, {'name_en': '', 'name_es': 'Cocina'})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(self.url, {'name_en': 'first aid'})
+        self.assertContains(response, 'There is already a skill with this name.')
+        self.assertEqual(Skill.objects.count(), 1)
+
+    def test_fill_with_defaults_only_while_list_is_short(self):
+        from education.default_skills import DEFAULT_SKILLS
+        self.assertContains(self.client.get(self.url), 'Fill with default skills')
+        self.assertRedirects(self.client.post(reverse('console_settings_skill_defaults')), self.url)
+        # The fixture's "First Aid" differs from "First Aid & CPR", so every default is added, translated
+        self.assertEqual(Skill.objects.count(), len(DEFAULT_SKILLS) + 1)
+        cooking = Skill.objects.get(name_en='Cooking')
+        self.assertEqual((cooking.name_es, cooking.name_uk, cooking.name_zh_hant), ('Cocina', 'Приготування їжі', '烹飪'))
+        self.assertNotContains(self.client.get(self.url), 'Fill with default skills')
+
+        self.client.post(reverse('console_settings_skill_defaults'))
+        self.assertEqual(Skill.objects.count(), len(DEFAULT_SKILLS) + 1)
+
+    def test_defaults_skip_names_already_taken(self):
+        Skill.objects.create(name_en='Kitchen', name_es='Cocina')
+        self.client.post(reverse('console_settings_skill_defaults'))
+        self.assertFalse(Skill.objects.filter(name_en='Cooking').exists())
 
 
 class RegionSettingsTests(ConsoleFixture):

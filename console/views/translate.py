@@ -12,7 +12,8 @@ from ..utils import LANGUAGE_CODES, lang_field
 TRANSLATABLE_FORMS = {
     form.translation_key: form
     for form in (forms.EventForm, forms.RoleForm, forms.TrainingModuleForm,
-                 forms.LessonForm, forms.QuizForm, forms.QuizQuestionForm, forms.VenueForm, forms.HeroSectionForm)
+                 forms.LessonForm, forms.QuizForm, forms.QuizQuestionForm, forms.VenueForm, forms.HeroSectionForm,
+                 forms.SkillForm)
 }
 
 

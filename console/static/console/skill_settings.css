@@ -1,0 +1,96 @@
+/* "Fill with default skills" offer, shown while the list is short */
+.skill-defaults {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: rgba(from var(--color-primary-light) r g b / 0.3);
+}
+
+.skill-defaults > .material-symbols-outlined {
+    flex-shrink: 0;
+    font-size: 1.75rem;
+    color: var(--color-primary-vivid);
+}
+
+.skill-defaults-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.skill-defaults-text strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+}
+
+.skill-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.skill-row {
+    padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+}
+
+.skill-row.is-editing {
+    box-shadow: inset 0 0 0 2px var(--color-primary-vivid);
+}
+
+.skill-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.skill-actions form {
+    margin: 0;
+}
+
+.skill-delete:hover {
+    color: var(--color-error);
+}
+
+.skill-editor {
+    scroll-margin-top: 6rem;
+}
+
+.skill-editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.skill-editor .c-input,
+.skill-editor input[type="text"] {
+    background: var(--color-surface);
+}
+
+.skill-help {
+    padding: 0 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .skill-defaults {
+        flex-wrap: wrap;
+    }
+
+    .skill-defaults form,
+    .skill-defaults .c-btn {
+        width: 100%;
+    }
+
+    .skill-missing {
+        display: none;
+    }
+}

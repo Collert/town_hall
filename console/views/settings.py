@@ -6,11 +6,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.utils import timezone, translation
-from django.utils.translation import gettext as _, gettext_lazy
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from base import belltower, listmonk
 from django.db import transaction
@@ -19,11 +20,14 @@ from base import points
 from django.contrib.auth.models import User
 
 from base.models import BellTowerLink, HeroSection, Level, PointsRules, Profile, SiteSettings
+from education.default_skills import DEFAULT_SKILLS, add_default_skills
+from education.models import Skill
 from town_hall import site_config
 
 from ..decorators import staff_required
 from .. import auto_translate
-from ..forms import BackendSettingsForm, HeroSectionForm, LevelFormSet, OrganizationForm, PointsRulesForm, RegionSettingsForm
+from ..forms import BackendSettingsForm, HeroSectionForm, LevelFormSet, OrganizationForm, PointsRulesForm, RegionSettingsForm, SkillForm
+from ..utils import LANGUAGE_CODES, lang_field
 
 # (field, CSS variable it previews live, label) grouped for the template.
 # Dark-mode fields have no live preview variable.
@@ -147,6 +151,66 @@ def level_settings(request):
         'unranked': below,
         'volunteer_total': len(points),
     })
+
+
+SKILL_DEFAULTS_BELOW = 5  # offer the starter list while the organization has fewer skills than this
+
+
+@staff_required
+def skill_settings(request):
+    """List the organization's skills, with one form that adds a skill or edits ?edit=<id>."""
+    editing = get_object_or_404(Skill, pk=request.GET['edit']) if request.GET.get('edit', '').isdigit() else None
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance=editing)
+        if form.is_valid():
+            skill = form.save()
+            if editing:
+                messages.success(request, _('“%(name)s” saved.') % {'name': skill.name})
+            else:
+                messages.success(request, _('“%(name)s” added.') % {'name': skill.name})
+            return redirect('console_settings_skills')
+        messages.error(request, _('Please fix the highlighted fields.'))
+    else:
+        form = SkillForm(instance=editing)
+
+    skills = list(Skill.objects.annotate(
+        volunteer_count=Count('user_profiles', distinct=True),
+        role_count=Count('preferred_for_roles', distinct=True),
+        module_count=Count('courses', distinct=True),
+    ).order_by('name'))
+    for skill in skills:
+        skill.missing_languages = [code for code in LANGUAGE_CODES if not getattr(skill, lang_field('name', code))]
+    return render(request, 'console/skill_settings.html', {
+        'form': form,
+        'editing': editing,
+        'skills': skills,
+        'offer_defaults': len(skills) < SKILL_DEFAULTS_BELOW,
+        'default_count': len(DEFAULT_SKILLS),
+    })
+
+
+@staff_required
+@require_POST
+def skill_defaults(request):
+    if Skill.objects.count() >= SKILL_DEFAULTS_BELOW:
+        messages.info(request, _('You already have a skill list. Add more one at a time.'))
+        return redirect('console_settings_skills')
+    added = add_default_skills()
+    if added:
+        messages.success(request, ngettext('Added %(count)d default skill.', 'Added %(count)d default skills.', added) % {'count': added})
+    else:
+        messages.info(request, _('You already have every default skill.'))
+    return redirect('console_settings_skills')
+
+
+@staff_required
+@require_POST
+def skill_delete(request, skill_id):
+    skill = get_object_or_404(Skill, pk=skill_id)
+    name = skill.name
+    skill.delete()
+    messages.success(request, _('“%(name)s” deleted.') % {'name': name})
+    return redirect('console_settings_skills')
 
 
 @staff_required

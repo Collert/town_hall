@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base import email_templates, triggers
 from base.models import EmailTemplate, EmailTrigger, HeroSection, Level, OperatingHour, PointsRules, Profile, SiteSettings, Venue, VenueFeature, VenueNote
-from education.models import ExternalCertificate, Quiz, QuizQuestion, TrainingLesson, TrainingModule
+from education.models import ExternalCertificate, Quiz, QuizQuestion, Skill, TrainingLesson, TrainingModule
 from events.models import Event, EventCategory
 from jobs.models import Role
 from town_hall import site_config
@@ -483,6 +483,28 @@ class LevelForm(forms.ModelForm):
             'min_points': forms.NumberInput(attrs={'class': 'c-input', 'min': 0, 'placeholder': '0'}),
             'benefits': forms.TextInput(attrs={'class': 'c-input', 'placeholder': _('Comma-separated, e.g. Priority sign-up, Free T-shirt')}),
         }
+
+
+class SkillForm(TranslatedFormMixin, forms.ModelForm):
+    translation_key = 'skill'
+    translated = ('name',)
+
+    class Meta:
+        model = Skill
+        fields = translated_fields('name')
+        widgets = {lang_field('name', code): forms.TextInput(attrs={'placeholder': _('e.g. First Aid')}) for code in LANGUAGE_CODES}
+
+    def clean(self):
+        cleaned = super().clean()
+        field = lang_field('name', DEFAULT_LANGUAGE)
+        name = (cleaned.get(field) or '').strip()
+        # Skills made from the chip editor are named in whatever language the staff member was using
+        same_name = Q()
+        for code in settings.MODELTRANSLATION_LANGUAGES:
+            same_name |= Q(**{f'{lang_field("name", code)}__iexact': name})
+        if name and Skill.objects.filter(same_name).exclude(pk=self.instance.pk).exists():
+            self.add_error(field, _('There is already a skill with this name.'))
+        return cleaned
 
 
 class BaseLevelFormSet(forms.BaseModelFormSet):
