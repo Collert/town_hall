@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 00:51-0700\n"
+"POT-Creation-Date: 2026-10-16 10:20-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,99 +103,99 @@ msgstr "Équipement et technologie"
 msgid "Getting there"
 msgstr "Comment s’y rendre"
 
-#: .\base\models.py:253
+#: .\base\models.py:258
 msgid "Monday"
 msgstr "Lundi"
 
-#: .\base\models.py:253
+#: .\base\models.py:258
 msgid "Tuesday"
 msgstr "Mardi"
 
-#: .\base\models.py:253
+#: .\base\models.py:258
 msgid "Wednesday"
 msgstr "Mercredi"
 
-#: .\base\models.py:253
+#: .\base\models.py:258
 msgid "Thursday"
 msgstr "Jeudi"
 
-#: .\base\models.py:254
+#: .\base\models.py:259
 msgid "Friday"
 msgstr "Vendredi"
 
-#: .\base\models.py:254
+#: .\base\models.py:259
 msgid "Saturday"
 msgstr "Samedi"
 
-#: .\base\models.py:254
+#: .\base\models.py:259
 msgid "Sunday"
 msgstr "Dimanche"
 
-#: .\base\models.py:338 .\base\points.py:177
-#: .\console\templates\console\volunteer_detail.html:169
+#: .\base\models.py:343 .\base\points.py:185
+#: .\console\templates\console\volunteer_detail.html:148
 msgid "Shift"
 msgstr "Quart de travail"
 
-#: .\base\models.py:339 .\base\templates\base\layout.html:30
+#: .\base\models.py:344 .\base\templates\base\layout.html:30
 #: .\base\templates\base\layout.html:164 .\base\templates\base\layout.html:285
 #: .\base\triggers.py:34 .\console\templates\console\points_settings.html:54
 msgid "Training"
 msgstr "Formation"
 
-#: .\base\models.py:340
+#: .\base\models.py:345
 msgid "Endorsement"
 msgstr "Recommandation"
 
-#: .\base\models.py:341 .\base\points.py:185
+#: .\base\models.py:346 .\base\points.py:193
 msgid "Adjustment"
 msgstr "Ajustement"
 
-#: .\base\points.py:168
+#: .\base\points.py:176
 msgid "Walk-in cover"
 msgstr "Remplacement sans préavis"
 
-#: .\base\points.py:169
+#: .\base\points.py:177
 msgid "Last-minute sign-up"
 msgstr "Inscription de dernière minute"
 
-#: .\base\points.py:170
+#: .\base\points.py:178
 msgid "Early or late shift"
 msgstr "Quart tôt ou tard"
 
-#: .\base\points.py:179
+#: .\base\points.py:187
 #, python-format
 msgid "%(role)s at %(event)s"
 msgstr "%(role)s à %(event)s"
 
-#: .\base\points.py:182
+#: .\base\points.py:190
 #, python-format
 msgid "Completed %(module)s"
 msgstr "%(module)s terminé"
 
-#: .\base\points.py:182
+#: .\base\points.py:190
 msgid "a training module"
 msgstr "un module de formation"
 
-#: .\base\points.py:184
+#: .\base\points.py:192
 #, python-format
 msgid "Endorsed by %(name)s"
 msgstr "Recommandé par %(name)s"
 
-#: .\base\points.py:184
+#: .\base\points.py:192
 msgid "a teammate"
 msgstr "un coéquipier"
 
-#: .\base\points.py:193
+#: .\base\points.py:201
 #, python-format
 msgid "%(h)s h"
 msgstr "%(h)s h"
 
-#: .\base\points.py:195
+#: .\base\points.py:203
 #, python-format
 msgid "×%(w)s role"
 msgstr "Rôle ×%(w)s"
 
-#: .\base\points.py:197
+#: .\base\points.py:205
 #, python-format
 msgid "+%(p)s%% reach"
 msgstr "+%(p)s %% de portée"
@@ -297,14 +297,14 @@ msgstr "Compétences"
 #: .\console\templates\console\partials\task_list_card.html:26
 #: .\console\templates\console\role_edit.html:22
 #: .\console\templates\console\skill_settings.html:103
-#: .\console\templates\console\volunteer_detail.html:278
-#: .\console\templates\console\volunteer_detail.html:329
-#: .\console\templates\console\volunteer_detail.html:356
-#: .\console\templates\console\volunteer_detail.html:386
+#: .\console\templates\console\volunteer_detail.html:281
+#: .\console\templates\console\volunteer_detail.html:332
+#: .\console\templates\console\volunteer_detail.html:359
+#: .\console\templates\console\volunteer_detail.html:389
 #: .\console\templates\console\volunteer_edit.html:24
 #: .\console\templates\console\volunteer_edit.html:83
 #: .\console\templates\console\volunteer_list.html:91
-#: .\events\templates\events\event_detail.html:474
+#: .\events\templates\events\event_detail.html:478
 #: .\mcp_server\templates\mcp_server\authorize.html:55
 msgid "Cancel"
 msgstr "Annuler"
@@ -486,7 +486,7 @@ msgid "Admin Feedback (Private)"
 msgstr "Retour pour l’administration (privé)"
 
 #: .\base\templates\base\give_endorsement.html:78
-#: .\console\templates\console\volunteer_detail.html:375
+#: .\console\templates\console\volunteer_detail.html:378
 #: .\events\templates\events\event_thank_you.html:75
 #, python-format
 msgid "%(n)s stars"
@@ -521,7 +521,7 @@ msgstr "a recommandé"
 
 #: .\base\templates\base\give_endorsement.html:107
 #: .\base\templates\base\partials\endorsement_feed.html:11
-#: .\console\templates\console\volunteer_detail.html:239
+#: .\console\templates\console\volunteer_detail.html:242
 #, python-format
 msgid "%(t)s ago"
 msgstr "il y a %(t)s"
@@ -578,7 +578,7 @@ msgstr "BÉNÉVOLE DE NIVEAU 4"
 #: .\base\templates\base\home.html:132
 #: .\console\templates\console\partials\event_history.html:10
 #: .\console\templates\console\partials\volunteer_table.html:10
-#: .\console\templates\console\volunteer_detail.html:103
+#: .\console\templates\console\volunteer_detail.html:76
 #: .\console\templates\console\volunteer_edit.html:93
 #: .\events\templates\events\event_certificate.html:47
 msgid "Total Hours"
@@ -699,14 +699,14 @@ msgstr "Niveau %(n)s %(name)s"
 #: .\base\templates\base\impact_record.html:42
 #: .\base\templates\base\profile.html:99
 #: .\base\templates\base\volunteer_resume.html:34
-#: .\console\templates\console\volunteer_detail.html:173
+#: .\console\templates\console\volunteer_detail.html:152
 msgid "Verified Hours"
 msgstr "Heures vérifiées"
 
 #: .\base\templates\base\impact_record.html:43
 #: .\base\templates\base\profile.html:103
 #: .\base\templates\base\volunteer_resume.html:36
-#: .\console\templates\console\volunteer_detail.html:102
+#: .\console\templates\console\volunteer_detail.html:75
 #: .\education\templates\education\training_dashboard.html:31
 msgid "Impact Points"
 msgstr "Points d’impact"
@@ -859,7 +859,7 @@ msgid "My Training"
 msgstr "Ma formation"
 
 #: .\base\templates\base\layout.html:195
-#: .\console\templates\console\volunteer_detail.html:156
+#: .\console\templates\console\volunteer_detail.html:135
 msgid "Impact Record"
 msgstr "Relevé d’impact"
 
@@ -1447,7 +1447,7 @@ msgstr "Compétences clés"
 #: .\base\templates\base\profile.html:147
 #: .\base\templates\base\profile.html:344
 #: .\base\templates\base\volunteer_resume.html:102
-#: .\console\templates\console\volunteer_detail.html:112
+#: .\console\templates\console\volunteer_detail.html:91
 msgid "No skills listed."
 msgstr "Aucune compétence indiquée."
 
@@ -1574,12 +1574,12 @@ msgid "No activity history yet."
 msgstr "Aucun historique d’activité pour l’instant."
 
 #: .\base\templates\base\profile.html:329
-#: .\console\templates\console\volunteer_detail.html:220
+#: .\console\templates\console\volunteer_detail.html:223
 msgid "Endorsements Summary"
 msgstr "Résumé des recommandations"
 
 #: .\base\templates\base\profile.html:352
-#: .\console\templates\console\volunteer_detail.html:231
+#: .\console\templates\console\volunteer_detail.html:234
 msgid "Public Feedback Feed"
 msgstr "Fil des commentaires publics"
 
@@ -1748,25 +1748,25 @@ msgid "About This Venue"
 msgstr "À propos de ce lieu"
 
 #: .\base\templates\base\venue_detail.html:67
+msgid "Upcoming Events Here"
+msgstr "Événements à venir ici"
+
+#: .\base\templates\base\venue_detail.html:82
+msgid "Nothing is scheduled here right now. Check back soon."
+msgstr "Rien n’est prévu ici pour le moment. Revenez bientôt."
+
+#: .\base\templates\base\venue_detail.html:89
+msgid "Ongoing Positions"
+msgstr "Postes continus"
+
+#: .\base\templates\base\venue_detail.html:105
 #: .\console\templates\console\venue_edit.html:67
 msgid "Features & Amenities"
 msgstr "Caractéristiques et commodités"
 
-#: .\base\templates\base\venue_detail.html:78
+#: .\base\templates\base\venue_detail.html:116
 msgid "No amenities have been listed for this venue yet."
 msgstr "Aucune commodité n’a encore été indiquée pour ce lieu."
-
-#: .\base\templates\base\venue_detail.html:83
-msgid "Upcoming Events Here"
-msgstr "Événements à venir ici"
-
-#: .\base\templates\base\venue_detail.html:98
-msgid "Nothing is scheduled here right now. Check back soon."
-msgstr "Rien n’est prévu ici pour le moment. Revenez bientôt."
-
-#: .\base\templates\base\venue_detail.html:105
-msgid "Ongoing Positions"
-msgstr "Postes continus"
 
 #: .\base\templates\base\venue_detail.html:123
 msgid "Opening Hours"
@@ -3210,12 +3210,12 @@ msgstr ""
 #: .\console\templates\console\partials\area_dialog.html:7
 #: .\console\templates\console\partials\area_lead_dialog.html:7
 #: .\console\templates\console\partials\slot_edit_dialog.html:7
-#: .\console\templates\console\volunteer_detail.html:268
-#: .\console\templates\console\volunteer_detail.html:290
-#: .\console\templates\console\volunteer_detail.html:341
-#: .\console\templates\console\volunteer_detail.html:367
+#: .\console\templates\console\volunteer_detail.html:271
+#: .\console\templates\console\volunteer_detail.html:293
+#: .\console\templates\console\volunteer_detail.html:344
+#: .\console\templates\console\volunteer_detail.html:370
 #: .\console\templates\console\volunteer_list.html:79
-#: .\events\templates\events\event_detail.html:491
+#: .\events\templates\events\event_detail.html:495
 #: .\events\templates\events\my_events.html:240
 msgid "Close"
 msgstr "Fermer"
@@ -3626,8 +3626,8 @@ msgstr "Répertoire des rôles"
 #: .\console\templates\console\module_list.html:14
 #: .\console\templates\console\module_list.html:20
 #: .\console\templates\console\quiz_edit.html:11
-#: .\console\templates\console\volunteer_detail.html:104
-#: .\console\templates\console\volunteer_detail.html:127
+#: .\console\templates\console\volunteer_detail.html:77
+#: .\console\templates\console\volunteer_detail.html:106
 msgid "Training Modules"
 msgstr "Modules de formation"
 
@@ -4215,7 +4215,7 @@ msgstr ""
 "Cet événement n’est pas encore terminé, donc ces chiffres évoluent encore."
 
 #: .\console\templates\console\event_report.html:54
-#: .\events\templates\events\event_detail.html:309
+#: .\events\templates\events\event_detail.html:313
 msgid "Post-Event Statement"
 msgstr "Déclaration après l’événement"
 
@@ -4276,7 +4276,7 @@ msgstr "Meilleurs éléments"
 #: .\console\templates\console\event_report.html:119
 #: .\console\templates\console\partials\event_history.html:20
 #: .\console\templates\console\partials\volunteer_table.html:32
-#: .\console\templates\console\volunteer_detail.html:174
+#: .\console\templates\console\volunteer_detail.html:153
 #: .\education\templates\education\training_dashboard.html:67
 #: .\events\templates\events\event_thank_you.html:29
 msgid "hrs"
@@ -4289,7 +4289,7 @@ msgstr "Recommandé"
 
 #: .\console\templates\console\event_report.html:104
 #: .\console\templates\console\event_report.html:124
-#: .\console\templates\console\volunteer_detail.html:232
+#: .\console\templates\console\volunteer_detail.html:235
 msgid "Endorse"
 msgstr "Recommander"
 
@@ -4436,7 +4436,7 @@ msgid "Chain of Command"
 msgstr "Chaîne de commandement"
 
 #: .\console\templates\console\event_roles.html:99
-#: .\events\templates\events\event_detail.html:193
+#: .\events\templates\events\event_detail.html:197
 msgid "General coordinator"
 msgstr "Coordonnateur général"
 
@@ -4521,8 +4521,8 @@ msgstr "Centre du lieu"
 
 #: .\console\templates\console\event_roles.html:155
 #: .\console\templates\console\volunteer_detail.html:40
-#: .\console\templates\console\volunteer_detail.html:272
-#: .\events\templates\events\event_detail.html:546
+#: .\console\templates\console\volunteer_detail.html:275
+#: .\events\templates\events\event_detail.html:550
 msgid "Message"
 msgstr "Message"
 
@@ -5106,7 +5106,8 @@ msgid "Add Role to Event"
 msgstr "Ajouter un rôle à l’événement"
 
 #: .\console\templates\console\partials\add_role_dialog.html:12
-#: .\events\templates\events\event_detail.html:142
+#: .\events\templates\events\event_detail.html:139
+#: .\events\templates\events\event_detail.html:146
 msgid "Select Role"
 msgstr "Choisir un rôle"
 
@@ -5698,7 +5699,7 @@ msgstr "Heure"
 
 #: .\console\templates\console\partials\monitor_activity.html:13
 #: .\console\templates\console\partials\volunteer_table.html:8
-#: .\console\templates\console\volunteer_detail.html:130
+#: .\console\templates\console\volunteer_detail.html:109
 #: .\education\templates\education\completed_module.html:120
 #: .\education\templates\education\printable_certificate.html:52
 #: .\events\templates\events\event_certificate.html:26
@@ -5909,7 +5910,7 @@ msgstr "Identité"
 
 #: .\console\templates\console\partials\settings_tabs.html:8
 #: .\console\templates\console\points_settings.html:13
-#: .\console\templates\console\volunteer_detail.html:345
+#: .\console\templates\console\volunteer_detail.html:348
 msgid "Points"
 msgstr "Points"
 
@@ -7302,7 +7303,7 @@ msgid "Member since %(d)s"
 msgstr "Membre depuis le %(d)s"
 
 #: .\console\templates\console\volunteer_detail.html:34
-#: .\console\templates\console\volunteer_detail.html:303
+#: .\console\templates\console\volunteer_detail.html:306
 msgid "Superuser"
 msgstr "Superutilisateur"
 
@@ -7331,218 +7332,221 @@ msgid "Admin Insights"
 msgstr "Perspectives de l’administration"
 
 #: .\console\templates\console\volunteer_detail.html:59
-msgid "Reliability"
-msgstr "Fiabilité"
-
-#: .\console\templates\console\volunteer_detail.html:64
-#, python-format
-msgid "%(kept)s of %(counter)s shift kept"
-msgid_plural "%(kept)s of %(counter)s shifts kept"
-msgstr[0] "%(kept)s quart honoré sur %(counter)s"
-msgstr[1] "%(kept)s quarts honorés sur %(counter)s"
-
-#: .\console\templates\console\volunteer_detail.html:65
-#, python-format
-msgid "%(counter)s no-show"
-msgid_plural "%(counter)s no-shows"
-msgstr[0] "%(counter)s absence"
-msgstr[1] "%(counter)s absences"
-
-#: .\console\templates\console\volunteer_detail.html:66
-#, python-format
-msgid "%(counter)s late cancellation"
-msgid_plural "%(counter)s late cancellations"
-msgstr[0] "%(counter)s annulation tardive"
-msgstr[1] "%(counter)s annulations tardives"
-
-#: .\console\templates\console\volunteer_detail.html:68
-msgid "No finished shifts yet."
-msgstr "Aucun quart terminé pour l’instant."
-
-#: .\console\templates\console\volunteer_detail.html:80
-msgid "No-show"
-msgstr "Absence"
-
-#: .\console\templates\console\volunteer_detail.html:80
-msgid "Cancelled after it started"
-msgstr "Annulé après le début"
-
-#: .\console\templates\console\volunteer_detail.html:80
-#, python-format
-msgid "Cancelled %(t)s before"
-msgstr "Annulé %(t)s avant le début"
-
-#: .\console\templates\console\volunteer_detail.html:86
 msgid "Internal rating"
 msgstr "Cote interne"
 
-#: .\console\templates\console\volunteer_detail.html:93
+#: .\console\templates\console\volunteer_detail.html:66
 msgid "Not rated yet."
 msgstr "Pas encore coté."
 
-#: .\console\templates\console\volunteer_detail.html:95
+#: .\console\templates\console\volunteer_detail.html:68
 msgid "Admin notes"
 msgstr "Notes de l’administration"
 
-#: .\console\templates\console\volunteer_detail.html:96
+#: .\console\templates\console\volunteer_detail.html:69
 msgid "No notes yet."
 msgstr "Aucune note pour l’instant."
 
-#: .\console\templates\console\volunteer_detail.html:97
+#: .\console\templates\console\volunteer_detail.html:70
 msgid "Add private feedback"
 msgstr "Ajouter un commentaire privé"
 
-#: .\console\templates\console\volunteer_detail.html:105
+#: .\console\templates\console\volunteer_detail.html:78
 msgid "Events Attended"
 msgstr "Événements auxquels il a participé"
 
-#: .\console\templates\console\volunteer_detail.html:110
+#: .\console\templates\console\volunteer_detail.html:80
+msgid "Reliability"
+msgstr "Fiabilité"
+
+#: .\console\templates\console\volunteer_detail.html:82
+#, python-format
+msgid "%(kept)s of %(total)s shifts kept"
+msgstr "%(kept)s quarts honorés sur %(total)s"
+
+#: .\console\templates\console\volunteer_detail.html:82
+msgid "No finished shifts yet."
+msgstr "Aucun quart terminé pour l’instant."
+
+#: .\console\templates\console\volunteer_detail.html:89
 msgid "Skills & Certs"
 msgstr "Compétences et certifications"
 
-#: .\console\templates\console\volunteer_detail.html:110
+#: .\console\templates\console\volunteer_detail.html:89
 msgid "Edit skills"
 msgstr "Modifier les compétences"
 
-#: .\console\templates\console\volunteer_detail.html:130
+#: .\console\templates\console\volunteer_detail.html:109
 #: .\education\templates\education\module_overview.html:14
 #: .\education\templates\education\printable_certificate.html:59
 msgid "Module"
 msgstr "Module"
 
-#: .\console\templates\console\volunteer_detail.html:130
-#: .\console\templates\console\volunteer_detail.html:135
+#: .\console\templates\console\volunteer_detail.html:109
+#: .\console\templates\console\volunteer_detail.html:114
 #: .\education\templates\education\printable_certificate.html:60
 #: .\education\templates\education\training_dashboard.html:134
 #: .\education\templates\education\training_directory.html:135
-#: .\events\templates\events\event_detail.html:417
-#: .\events\templates\events\event_detail.html:420
+#: .\events\templates\events\event_detail.html:421
+#: .\events\templates\events\event_detail.html:424
 msgid "Completed"
 msgstr "Terminé"
 
-#: .\console\templates\console\volunteer_detail.html:130
+#: .\console\templates\console\volunteer_detail.html:109
 msgid "Progress"
 msgstr "Progression"
 
-#: .\console\templates\console\volunteer_detail.html:135
+#: .\console\templates\console\volunteer_detail.html:114
 msgid "In progress"
 msgstr "En cours"
 
-#: .\console\templates\console\volunteer_detail.html:143
+#: .\console\templates\console\volunteer_detail.html:122
 msgid "Hasn't started any training yet."
 msgstr "N’a encore commencé aucune formation."
 
-#: .\console\templates\console\volunteer_detail.html:153
+#: .\console\templates\console\volunteer_detail.html:132
 msgid "Service History"
 msgstr "Historique de service"
 
-#: .\console\templates\console\volunteer_detail.html:154
+#: .\console\templates\console\volunteer_detail.html:133
 msgid "Chronological log of verified contributions"
 msgstr "Journal chronologique des contributions vérifiées"
 
-#: .\console\templates\console\volunteer_detail.html:170
+#: .\console\templates\console\volunteer_detail.html:149
 msgid "Clutch cover"
 msgstr "Dépannage"
 
-#: .\console\templates\console\volunteer_detail.html:170
+#: .\console\templates\console\volunteer_detail.html:149
 msgid "impact points"
 msgstr "points d’impact"
 
-#: .\console\templates\console\volunteer_detail.html:180
+#: .\console\templates\console\volunteer_detail.html:159
 #, python-format
 msgid "View %(counter)s More Activity"
 msgid_plural "View %(counter)s More Activities"
 msgstr[0] "Voir %(counter)s autre activité"
 msgstr[1] "Voir %(counter)s autres activités"
 
-#: .\console\templates\console\volunteer_detail.html:182
+#: .\console\templates\console\volunteer_detail.html:161
 msgid "No completed shifts yet."
 msgstr "Aucun quart terminé pour l’instant."
 
-#: .\console\templates\console\volunteer_detail.html:189
-msgid "Points Ledger"
-msgstr "Registre des points"
+#: .\console\templates\console\volunteer_detail.html:169
+msgid "Attendance Record"
+msgstr "Dossier de présence"
 
-#: .\console\templates\console\volunteer_detail.html:190
-msgid "Every award that makes up this volunteer's impact points"
-msgstr "Chaque attribution qui compose les points d’impact de ce bénévole"
-
-#: .\console\templates\console\volunteer_detail.html:192
-msgid "Adjust points"
-msgstr "Ajuster les points"
-
-#: .\console\templates\console\volunteer_detail.html:204
+#: .\console\templates\console\volunteer_detail.html:170
 #, python-format
-msgid "by %(name)s"
-msgstr "par %(name)s"
+msgid "%(counter)s no-show"
+msgid_plural "%(counter)s no-shows"
+msgstr[0] "%(counter)s absence"
+msgstr[1] "%(counter)s absences"
 
-#: .\console\templates\console\volunteer_detail.html:212
+#: .\console\templates\console\volunteer_detail.html:170
+#, python-format
+msgid "%(counter)s late cancellation"
+msgid_plural "%(counter)s late cancellations"
+msgstr[0] "%(counter)s annulation tardive"
+msgstr[1] "%(counter)s annulations tardives"
+
+#: .\console\templates\console\volunteer_detail.html:181
+msgid "No-show"
+msgstr "Absence"
+
+#: .\console\templates\console\volunteer_detail.html:181
+msgid "Cancelled after it started"
+msgstr "Annulé après le début"
+
+#: .\console\templates\console\volunteer_detail.html:181
+#, python-format
+msgid "Cancelled %(t)s before"
+msgstr "Annulé %(t)s avant le début"
+
+#: .\console\templates\console\volunteer_detail.html:185
+#: .\console\templates\console\volunteer_detail.html:215
 #, python-format
 msgid "View all %(counter)s entry"
 msgid_plural "View all %(counter)s entries"
 msgstr[0] "Voir la %(counter)s entrée"
 msgstr[1] "Voir les %(counter)s entrées"
 
-#: .\console\templates\console\volunteer_detail.html:214
+#: .\console\templates\console\volunteer_detail.html:192
+msgid "Points Ledger"
+msgstr "Registre des points"
+
+#: .\console\templates\console\volunteer_detail.html:193
+msgid "Every award that makes up this volunteer's impact points"
+msgstr "Chaque attribution qui compose les points d’impact de ce bénévole"
+
+#: .\console\templates\console\volunteer_detail.html:195
+msgid "Adjust points"
+msgstr "Ajuster les points"
+
+#: .\console\templates\console\volunteer_detail.html:207
+#, python-format
+msgid "by %(name)s"
+msgstr "par %(name)s"
+
+#: .\console\templates\console\volunteer_detail.html:217
 msgid "No points earned yet."
 msgstr "Aucun point gagné pour l’instant."
 
-#: .\console\templates\console\volunteer_detail.html:225
+#: .\console\templates\console\volunteer_detail.html:228
 msgid "No endorsements yet."
 msgstr "Aucune recommandation pour l’instant."
 
-#: .\console\templates\console\volunteer_detail.html:245
+#: .\console\templates\console\volunteer_detail.html:248
 msgid "Nobody has endorsed this volunteer yet."
 msgstr "Personne n’a encore recommandé ce bénévole."
 
-#: .\console\templates\console\volunteer_detail.html:249
+#: .\console\templates\console\volunteer_detail.html:252
 msgid "Private staff feedback"
 msgstr "Commentaires privés du personnel"
 
-#: .\console\templates\console\volunteer_detail.html:267
-#: .\events\templates\events\event_detail.html:201
+#: .\console\templates\console\volunteer_detail.html:270
+#: .\events\templates\events\event_detail.html:205
 #, python-format
 msgid "Message %(name)s"
 msgstr "Envoyer un message à %(name)s"
 
-#: .\console\templates\console\volunteer_detail.html:274
+#: .\console\templates\console\volunteer_detail.html:277
 msgid "Delivered as an in-app notification."
 msgstr "Remis sous forme de notification dans l’application."
 
-#: .\console\templates\console\volunteer_detail.html:279
+#: .\console\templates\console\volunteer_detail.html:282
 msgid "Send"
 msgstr "Envoyer"
 
-#: .\console\templates\console\volunteer_detail.html:289
+#: .\console\templates\console\volunteer_detail.html:292
 #, python-format
 msgid "Access for %(name)s"
 msgstr "Accès de %(name)s"
 
-#: .\console\templates\console\volunteer_detail.html:295
+#: .\console\templates\console\volunteer_detail.html:298
 msgid "Staff status"
 msgstr "Statut de personnel"
 
-#: .\console\templates\console\volunteer_detail.html:296
+#: .\console\templates\console\volunteer_detail.html:299
 msgid "Can open this admin console and sign in to the Django admin."
 msgstr ""
 "Peut ouvrir cette console d’administration et se connecter à l’administration"
 " Django."
 
-#: .\console\templates\console\volunteer_detail.html:304
+#: .\console\templates\console\volunteer_detail.html:307
 msgid "Has every permission without being assigned it. Give this sparingly."
 msgstr ""
 "Possède toutes les permissions sans qu’elles lui soient attribuées. À "
 "accorder avec parcimonie."
 
-#: .\console\templates\console\volunteer_detail.html:310
+#: .\console\templates\console\volunteer_detail.html:313
 msgid "Permission groups"
 msgstr "Groupes de permissions"
 
-#: .\console\templates\console\volunteer_detail.html:321
+#: .\console\templates\console\volunteer_detail.html:324
 msgid "No permission groups exist yet."
 msgstr "Aucun groupe de permissions n’existe pour l’instant."
 
-#: .\console\templates\console\volunteer_detail.html:323
+#: .\console\templates\console\volunteer_detail.html:326
 msgid ""
 "Groups bundle Django permissions. Create them and choose what each can do in "
 "the Django admin."
@@ -7550,61 +7554,61 @@ msgstr ""
 "Les groupes regroupent des permissions Django. Créez-les et choisissez ce que"
 " chacun peut faire dans l’administration Django."
 
-#: .\console\templates\console\volunteer_detail.html:324
+#: .\console\templates\console\volunteer_detail.html:327
 msgid "Manage groups"
 msgstr "Gérer les groupes"
 
-#: .\console\templates\console\volunteer_detail.html:330
+#: .\console\templates\console\volunteer_detail.html:333
 msgid "Save Access"
 msgstr "Enregistrer l’accès"
 
-#: .\console\templates\console\volunteer_detail.html:340
+#: .\console\templates\console\volunteer_detail.html:343
 msgid "Adjust Impact Points"
 msgstr "Ajuster les points d’impact"
 
-#: .\console\templates\console\volunteer_detail.html:346
+#: .\console\templates\console\volunteer_detail.html:349
 msgid "e.g. 50 or -20"
 msgstr "p. ex. 50 ou -20"
 
-#: .\console\templates\console\volunteer_detail.html:347
+#: .\console\templates\console\volunteer_detail.html:350
 #, python-format
 msgid "Use a negative number to take points away. Current total: %(pts)s."
 msgstr ""
 "Utilisez un nombre négatif pour retirer des points. Total actuel : %(pts)s."
 
-#: .\console\templates\console\volunteer_detail.html:350
+#: .\console\templates\console\volunteer_detail.html:353
 msgid "Reason"
 msgstr "Raison"
 
-#: .\console\templates\console\volunteer_detail.html:351
+#: .\console\templates\console\volunteer_detail.html:354
 msgid "e.g. Led the volunteer orientation"
 msgstr "p. ex. A dirigé l’orientation des bénévoles"
 
-#: .\console\templates\console\volunteer_detail.html:352
+#: .\console\templates\console\volunteer_detail.html:355
 msgid "The volunteer sees this in their points history."
 msgstr "Le bénévole voit ceci dans son historique de points."
 
-#: .\console\templates\console\volunteer_detail.html:357
+#: .\console\templates\console\volunteer_detail.html:360
 msgid "Record Adjustment"
 msgstr "Enregistrer l’ajustement"
 
-#: .\console\templates\console\volunteer_detail.html:366
+#: .\console\templates\console\volunteer_detail.html:369
 msgid "Private Feedback"
 msgstr "Commentaires privés"
 
-#: .\console\templates\console\volunteer_detail.html:371
+#: .\console\templates\console\volunteer_detail.html:374
 msgid "Rating"
 msgstr "Cote"
 
-#: .\console\templates\console\volunteer_detail.html:380
+#: .\console\templates\console\volunteer_detail.html:383
 msgid "Internal performance notes"
 msgstr "Notes internes sur la performance"
 
-#: .\console\templates\console\volunteer_detail.html:382
+#: .\console\templates\console\volunteer_detail.html:385
 msgid "Only staff can see this."
 msgstr "Seul le personnel peut voir ceci."
 
-#: .\console\templates\console\volunteer_detail.html:387
+#: .\console\templates\console\volunteer_detail.html:390
 msgid "Save Feedback"
 msgstr "Enregistrer les commentaires"
 
@@ -8511,7 +8515,12 @@ msgstr "Lieu supprimé."
 msgid "Feature \"%(name)s\" added."
 msgstr "Caractéristique « %(name)s » ajoutée."
 
-#: .\console\views\venues.py:142
+#: .\console\views\venues.py:128
+#, python-format
+msgid "Feature \"%(name)s\" moved to %(category)s."
+msgstr "La caractéristique « %(name)s » a été déplacée vers %(category)s."
+
+#: .\console\views\venues.py:147
 msgid "Note posted."
 msgstr "Note publiée."
 
@@ -9392,7 +9401,7 @@ msgstr[0] "%(counter)s rôle disponible"
 msgstr[1] "%(counter)s rôles disponibles"
 
 #: .\events\templates\events\event_detail.html:120
-#: .\events\templates\events\event_detail.html:446
+#: .\events\templates\events\event_detail.html:450
 msgid "Full"
 msgstr "Complet"
 
@@ -9411,15 +9420,15 @@ msgstr "Plusieurs créneaux disponibles"
 msgid "Your tasks"
 msgstr "Vos tâches"
 
-#: .\events\templates\events\event_detail.html:149
+#: .\events\templates\events\event_detail.html:153
 msgid "No volunteer roles have been posted for this event yet."
 msgstr "Aucun rôle de bénévole n’a encore été publié pour cet événement."
 
-#: .\events\templates\events\event_detail.html:157
+#: .\events\templates\events\event_detail.html:161
 msgid "Location & Check-in"
 msgstr "Lieu et enregistrement"
 
-#: .\events\templates\events\event_detail.html:159
+#: .\events\templates\events\event_detail.html:163
 #, python-format
 msgid ""
 "Check in at <strong>%(location)s</strong> 30 minutes before your shift start "
@@ -9428,44 +9437,44 @@ msgstr ""
 "Enregistrez-vous à <strong>%(location)s</strong> 30 minutes avant le début de"
 " votre quart."
 
-#: .\events\templates\events\event_detail.html:173
+#: .\events\templates\events\event_detail.html:177
 msgid "Directions"
 msgstr "Itinéraire"
 
-#: .\events\templates\events\event_detail.html:174
+#: .\events\templates\events\event_detail.html:178
 msgid "Venue info"
 msgstr "Infos sur le lieu"
 
-#: .\events\templates\events\event_detail.html:185
+#: .\events\templates\events\event_detail.html:189
 msgid "Event Coordinator"
 msgid_plural "Event Coordinators"
 msgstr[0] "Coordonnateur de l’événement"
 msgstr[1] "Coordonnateurs de l’événement"
 
-#: .\events\templates\events\event_detail.html:193
+#: .\events\templates\events\event_detail.html:197
 msgid "Coordinator"
 msgstr "Coordonnateur"
 
-#: .\events\templates\events\event_detail.html:194
-#: .\events\templates\events\event_detail.html:256
-#: .\events\templates\events\event_detail.html:545
+#: .\events\templates\events\event_detail.html:198
+#: .\events\templates\events\event_detail.html:260
+#: .\events\templates\events\event_detail.html:549
 #, python-format
 msgid "%(area)s lead"
 msgstr "Responsable de %(area)s"
 
-#: .\events\templates\events\event_detail.html:197
+#: .\events\templates\events\event_detail.html:201
 msgid "Your lead"
 msgstr "Votre responsable"
 
-#: .\events\templates\events\event_detail.html:215
+#: .\events\templates\events\event_detail.html:219
 msgid "My Teams"
 msgstr "Mes équipes"
 
-#: .\events\templates\events\event_detail.html:215
+#: .\events\templates\events\event_detail.html:219
 msgid "My Team"
 msgstr "Mon équipe"
 
-#: .\events\templates\events\event_detail.html:234
+#: .\events\templates\events\event_detail.html:238
 #, python-format
 msgid ""
 "You lead %(area)s. Pass direction from the general coordinator to these shift"
@@ -9474,11 +9483,11 @@ msgstr ""
 "Vous dirigez %(area)s. Transmettez les directives du coordonnateur général à "
 "ces responsables de quart."
 
-#: .\events\templates\events\event_detail.html:242
+#: .\events\templates\events\event_detail.html:246
 msgid "No shift leads have been picked in your area yet."
 msgstr "Aucun responsable de quart n’a encore été choisi dans votre secteur."
 
-#: .\events\templates\events\event_detail.html:245
+#: .\events\templates\events\event_detail.html:249
 msgid ""
 "You lead this shift. Pass direction on to your team, and bring what you can't"
 " answer to your area lead."
@@ -9486,27 +9495,27 @@ msgstr ""
 "Vous dirigez ce quart. Transmettez les directives à votre équipe et apportez "
 "à votre responsable de secteur ce à quoi vous ne pouvez pas répondre."
 
-#: .\events\templates\events\event_detail.html:249
+#: .\events\templates\events\event_detail.html:253
 msgid "Your shift lead"
 msgstr "Votre responsable de quart"
 
-#: .\events\templates\events\event_detail.html:250
+#: .\events\templates\events\event_detail.html:254
 msgid "Message your shift lead"
 msgstr "Écrire à votre responsable de quart"
 
-#: .\events\templates\events\event_detail.html:266
+#: .\events\templates\events\event_detail.html:270
 msgid "Nobody else has signed up for this shift yet."
 msgstr "Personne d’autre ne s’est encore inscrit à ce quart."
 
-#: .\events\templates\events\event_detail.html:276
+#: .\events\templates\events\event_detail.html:280
 msgid "Volunteer Crew"
 msgstr "Équipe de bénévoles"
 
-#: .\events\templates\events\event_detail.html:280
+#: .\events\templates\events\event_detail.html:284
 msgid "Volunteer avatar"
 msgstr "Avatar du bénévole"
 
-#: .\events\templates\events\event_detail.html:297
+#: .\events\templates\events\event_detail.html:301
 #, python-format
 msgid "Join %(counter)s other community member making an impact!"
 msgid_plural "Join %(counter)s other community members making an impact!"
@@ -9516,89 +9525,89 @@ msgstr[1] ""
 "Joignez-vous à %(counter)s autres membres de la communauté qui ont un impact "
 "!"
 
-#: .\events\templates\events\event_detail.html:301
+#: .\events\templates\events\event_detail.html:305
 msgid "Be the first to volunteer for this event!"
 msgstr "Soyez le premier à vous porter bénévole pour cet événement !"
 
-#: .\events\templates\events\event_detail.html:323
+#: .\events\templates\events\event_detail.html:327
 #: .\jobs\templates\jobs\kiosk_role_select.html:11
 msgid "Select Your Role"
 msgstr "Choisissez votre rôle"
 
-#: .\events\templates\events\event_detail.html:344
+#: .\events\templates\events\event_detail.html:348
 msgid "Role Description"
 msgstr "Description du rôle"
 
-#: .\events\templates\events\event_detail.html:360
+#: .\events\templates\events\event_detail.html:364
 msgid "Training Status"
 msgstr "État de la formation"
 
-#: .\events\templates\events\event_detail.html:364
+#: .\events\templates\events\event_detail.html:368
 msgid "No required training."
 msgstr "Aucune formation requise."
 
-#: .\events\templates\events\event_detail.html:369
+#: .\events\templates\events\event_detail.html:373
 msgid "Mandatory training"
 msgstr "Formation obligatoire"
 
-#: .\events\templates\events\event_detail.html:377
+#: .\events\templates\events\event_detail.html:381
 msgid "Mandatory module"
 msgstr "Module obligatoire"
 
-#: .\events\templates\events\event_detail.html:389
+#: .\events\templates\events\event_detail.html:393
 #: .\events\templates\events\respond_to_invite.html:30
 msgid "Required training"
 msgstr "Formation requise"
 
-#: .\events\templates\events\event_detail.html:397
+#: .\events\templates\events\event_detail.html:401
 msgid "Recommended module"
 msgstr "Module recommandé"
 
-#: .\events\templates\events\event_detail.html:409
+#: .\events\templates\events\event_detail.html:413
 msgid "Completed training"
 msgstr "Formation terminée"
 
-#: .\events\templates\events\event_detail.html:434
+#: .\events\templates\events\event_detail.html:438
 msgid "Available Time Slots"
 msgstr "Créneaux disponibles"
 
-#: .\events\templates\events\event_detail.html:444
+#: .\events\templates\events\event_detail.html:448
 msgid "Signed up"
 msgstr "Inscrit"
 
-#: .\events\templates\events\event_detail.html:449
+#: .\events\templates\events\event_detail.html:453
 msgid "spot left"
 msgid_plural "spots left"
 msgstr[0] "place restante"
 msgstr[1] "places restantes"
 
-#: .\events\templates\events\event_detail.html:451
+#: .\events\templates\events\event_detail.html:455
 msgid "Filling Fast"
 msgstr "Se remplit vite"
 
-#: .\events\templates\events\event_detail.html:463
+#: .\events\templates\events\event_detail.html:467
 msgid "You must complete required training to sign up."
 msgstr "Vous devez terminer la formation requise pour vous inscrire."
 
-#: .\events\templates\events\event_detail.html:470
+#: .\events\templates\events\event_detail.html:474
 msgid "Confirm Selection"
 msgstr "Confirmer la sélection"
 
-#: .\events\templates\events\event_detail.html:488
+#: .\events\templates\events\event_detail.html:492
 msgid "Cancel your shift"
 msgstr "Annuler votre quart"
 
-#: .\events\templates\events\event_detail.html:488
+#: .\events\templates\events\event_detail.html:492
 msgid "Cancel a shift"
 msgstr "Annuler un quart"
 
-#: .\events\templates\events\event_detail.html:497
+#: .\events\templates\events\event_detail.html:501
 msgid "Can't make it? Cancelling opens your spot for someone else."
 msgstr ""
 "Vous ne pouvez pas venir ? En annulant, vous libérez votre place pour "
 "quelqu’un d’autre."
 
-#: .\events\templates\events\event_detail.html:497
+#: .\events\templates\events\event_detail.html:501
 msgid ""
 "Can't make it? Pick the shift to cancel, and your spot opens for someone "
 "else."
@@ -9606,11 +9615,11 @@ msgstr ""
 "Vous ne pouvez pas venir ? Choisissez le quart à annuler et votre place sera "
 "libérée pour quelqu’un d’autre."
 
-#: .\events\templates\events\event_detail.html:507
+#: .\events\templates\events\event_detail.html:511
 msgid "Within 24 hours"
 msgstr "Dans moins de 24 h"
 
-#: .\events\templates\events\event_detail.html:516
+#: .\events\templates\events\event_detail.html:520
 msgid ""
 "This shift starts in less than 24 hours. Cancelling now counts the same as a "
 "no-show and lowers your reliability score."
@@ -9618,7 +9627,7 @@ msgstr ""
 "Ce quart commence dans moins de 24 heures. Une annulation maintenant compte "
 "comme une absence et fait baisser votre indice de fiabilité."
 
-#: .\events\templates\events\event_detail.html:518
+#: .\events\templates\events\event_detail.html:522
 msgid ""
 "Cancelling 24 hours or more before a shift starts doesn't affect your "
 "reliability score. Late cancellations and no-shows do."
@@ -9626,19 +9635,19 @@ msgstr ""
 "Annuler au moins 24 heures avant le début d’un quart n’a aucun effet sur "
 "votre indice de fiabilité. Les annulations tardives et les absences, oui."
 
-#: .\events\templates\events\event_detail.html:521
+#: .\events\templates\events\event_detail.html:525
 msgid "Cancel Shift"
 msgstr "Annuler le quart"
 
-#: .\events\templates\events\event_detail.html:522
+#: .\events\templates\events\event_detail.html:526
 msgid "Keep It"
 msgstr "Le garder"
 
-#: .\events\templates\events\event_detail.html:533
+#: .\events\templates\events\event_detail.html:537
 msgid "Try your lead first"
 msgstr "Essayez d’abord votre responsable"
 
-#: .\events\templates\events\event_detail.html:540
+#: .\events\templates\events\event_detail.html:544
 msgid ""
 "Your area lead is the person to ask first. They can answer most questions and"
 " bring anything bigger to the coordinators."
@@ -9654,16 +9663,16 @@ msgstr[1] ""
 "Ils peuvent répondre à la plupart des questions et transmettre tout ce qui "
 "est plus important aux coordonnateurs."
 
-#: .\events\templates\events\event_detail.html:551
+#: .\events\templates\events\event_detail.html:555
 #, python-format
 msgid "Contact %(name)s anyway"
 msgstr "Contacter %(name)s quand même"
 
-#: .\events\templates\events\event_detail.html:551
+#: .\events\templates\events\event_detail.html:555
 msgid "Contact them anyway"
 msgstr "Les contacter quand même"
 
-#: .\events\templates\events\event_detail.html:622
+#: .\events\templates\events\event_detail.html:626
 msgid "Confirming..."
 msgstr "Confirmation..."
 
