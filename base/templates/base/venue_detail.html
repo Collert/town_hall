@@ -84,22 +84,6 @@
             </div>
         </div>
 
-        <div class="venue-section">
-            <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "Features & Amenities" %}</h2>
-            {% for label, features in feature_groups %}
-            <div class="venue-feature-group">
-                <h3>{{ label }}</h3>
-                <ul class="venue-features">
-                    {% for f in features %}
-                    <li><span class="material-symbols-outlined">{{ f.icon }}</span>{{ f.name }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% empty %}
-            <p class="venue-muted">{% trans "No amenities have been listed for this venue yet." %}</p>
-            {% endfor %}
-        </div>
-
         {% if roles %}
         <div class="venue-section">
             <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "Ongoing Positions" %}</h2>
@@ -116,6 +100,22 @@
             </div>
         </div>
         {% endif %}
+
+        <div class="venue-section">
+            <h2 class="venue-section-title"><span class="venue-section-bar"></span>{% trans "Features & Amenities" %}</h2>
+            {% for label, features in feature_groups %}
+            <div class="venue-feature-group">
+                <h3>{{ label }}</h3>
+                <ul class="venue-features">
+                    {% for f in features %}
+                    <li><span class="material-symbols-outlined">{{ f.icon }}</span>{{ f.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% empty %}
+            <p class="venue-muted">{% trans "No amenities have been listed for this venue yet." %}</p>
+            {% endfor %}
+        </div>
     </div>
 
     <aside class="venue-sidebar">
