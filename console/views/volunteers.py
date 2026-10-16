@@ -47,7 +47,7 @@ def _hours_by_user(user_ids, since=None):
 
 
 def _volunteer_page(request):
-    users = User.objects.filter(is_staff=False).select_related('profile').prefetch_related('profile__skills').order_by('first_name', 'last_name', 'username')
+    users = User.objects.exclude(pk=request.user.pk).select_related('profile').prefetch_related('profile__skills').order_by('first_name', 'last_name', 'username')
     query = request.GET.get('q', '').strip()
     status = request.GET.get('status', '')
     if query:
@@ -84,7 +84,7 @@ def volunteer_list(request):
     if request.headers.get('HX-Request') == 'true':
         return render(request, 'console/partials/volunteer_table.html', context)
 
-    volunteers = User.objects.filter(is_staff=False)
+    volunteers = User.objects.exclude(pk=request.user.pk)
     total = volunteers.count()
     month_ago = timezone.now() - timedelta(days=30)
     active_month = len(
@@ -111,7 +111,7 @@ def export_volunteers(request):
     response['Content-Disposition'] = 'attachment; filename="volunteers.csv"'
     writer = csv.writer(response)
     writer.writerow(['Name', 'Email', 'Phone', 'Location', 'Volunteer ID', 'Joined', 'Active', 'Impact points', 'Hours', 'Skills'])
-    users = User.objects.filter(is_staff=False).select_related('profile').prefetch_related('profile__skills')
+    users = User.objects.exclude(pk=request.user.pk).select_related('profile').prefetch_related('profile__skills')
     totals = _hours_by_user(users.values_list('pk', flat=True))
     for user in users:
         profile = user.profile
