@@ -1488,6 +1488,17 @@ class VenueTests(ConsoleFixture):
         self.assertContains(response, f'value="{piano.pk}" checked')
         self.assertContains(response, f'value="{self.stage.pk}" checked')
 
+    def test_adding_existing_feature_in_another_category_moves_it(self, geocode):
+        url = reverse('console_venue_feature_add')
+        self.client.post(url, {'feature-name': 'Piano', 'feature-category': 'facilities'}, **HTMX)
+        piano = VenueFeature.objects.get(name_en='Piano')
+        count = VenueFeature.objects.count()
+        response = self.client.post(url, {'feature-name': 'piano', 'feature-category': 'equipment'}, **HTMX)
+        piano.refresh_from_db()
+        self.assertEqual(piano.category, 'equipment')
+        self.assertEqual(VenueFeature.objects.count(), count)
+        self.assertContains(response, f'value="{piano.pk}" checked')
+
     def test_notes_post_expire_and_delete(self, geocode):
         self.client.post(reverse('console_venue_note_add', args=[self.venue.pk]),
                          {'note-text': 'Use the side door.', 'note-expires_in_days': 3}, **HTMX)

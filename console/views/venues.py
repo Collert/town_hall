@@ -122,6 +122,11 @@ def venue_feature_add(request):
                 setattr(feature, lang_field('name', code), getattr(feature, lang_field('name', code)) or name)
             feature.save()
             messages.success(request, _('Feature "%(name)s" added.') % {'name': feature.name})
+        elif feature.category != form.cleaned_data['category']:  # same name, other category: move it
+            feature.category = form.cleaned_data['category']
+            feature.save(update_fields=['category'])
+            messages.success(request, _('Feature "%(name)s" moved to %(category)s.') % {
+                'name': feature.name, 'category': feature.get_category_display()})
         selected.append(feature.pk)
         form = VenueFeatureForm(prefix='feature')
     return render(request, 'console/partials/venue_features.html', {
