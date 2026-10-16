@@ -36,16 +36,16 @@
                 {% for group in volunteer.groups.all %}<span class="c-chip"><span class="material-symbols-outlined">group</span>{{ group.name }}</span>{% endfor %}
             </div>
             <div class="vd-actions">
-                <a href="{% url 'console_volunteer_edit' volunteer.pk %}" class="c-btn c-btn-primary c-btn-sm"><span class="material-symbols-outlined">edit</span>{% trans "Edit Profile" %}</a>
-                <button type="button" class="c-btn c-btn-dark c-btn-sm" data-dialog-open="message-dialog"><span class="material-symbols-outlined">chat</span>{% trans "Message" %}</button>
+                <a href="{% url 'console_volunteer_edit' volunteer.pk %}" class="c-btn c-btn-primary"><span class="material-symbols-outlined">edit</span>{% trans "Edit Profile" %}</a>
+                <button type="button" class="c-btn c-btn-dark" data-dialog-open="message-dialog"><span class="material-symbols-outlined">chat</span>{% trans "Message" %}</button>
                 {% if can_manage_access %}
-                <button type="button" class="c-btn c-btn-sm" data-dialog-open="access-dialog"><span class="material-symbols-outlined">admin_panel_settings</span>{% trans "Staff access" %}</button>
+                <button type="button" class="c-btn" data-dialog-open="access-dialog"><span class="material-symbols-outlined">admin_panel_settings</span>{% trans "Staff access" %}</button>
                 {% endif %}
-                <a href="{% url 'profile_view' volunteer.username %}" class="c-btn c-btn-sm" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span>{% trans "Public profile" %}</a>
+                <a href="{% url 'profile_view' volunteer.username %}" class="c-btn" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span>{% trans "Public profile" %}</a>
                 {% if volunteer != user %}
                 <form method="post" action="{% url 'console_volunteer_status' volunteer.pk %}">
                     {% csrf_token %}
-                    <button type="submit" class="c-btn c-btn-sm c-btn-danger" onclick="return confirm('{% if volunteer.is_active %}{% trans "Deactivate this account?" %}{% else %}{% trans "Reactivate this account?" %}{% endif %}')">
+                    <button type="submit" class="c-btn c-btn-danger" onclick="return confirm('{% if volunteer.is_active %}{% trans "Deactivate this account?" %}{% else %}{% trans "Reactivate this account?" %}{% endif %}')">
                         {% if volunteer.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Reactivate" %}{% endif %}
                     </button>
                 </form>
@@ -57,7 +57,7 @@
     <section class="c-card c-card-tonal vd-insights">
         <h2 class="vd-insights-title">{% trans "Admin Insights" %}</h2>
         <span class="c-label">{% trans "Reliability" %}</span>
-        <div class="vd-reliability {% if reliability.score >= 90 %}good{% elif reliability.score >= 70 %}fair{% else %}poor{% endif %}">
+        <div class="vd-reliability {% if reliability.score >= 70 %}good{% elif reliability.score >= 30 %}fair{% else %}poor{% endif %}">
             <strong>{{ reliability.score }}%</strong>
             <small>
                 {% if reliability.total %}
