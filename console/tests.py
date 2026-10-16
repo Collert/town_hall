@@ -1580,6 +1580,18 @@ class VenueTests(ConsoleFixture):
         self.assertContains(response, 'openstreetmap.org')  # "View larger map" stays on OpenStreetMap
         self.assertNotContains(response, reverse('console_venue_edit', args=[self.venue.pk]))
 
+    def test_select_role_sends_signed_out_visitors_to_login(self, geocode):
+        url = reverse('opportunity_detail', args=[self.live.pk])
+        login = f"{reverse('login')}?next={url}%23roles"
+        self.client.logout()
+        response = self.client.get(url)
+        self.assertContains(response, f'href="{login}"')
+        self.assertNotContains(response, 'role-select-btn"')
+        self.client.force_login(self.vol)
+        response = self.client.get(url)
+        self.assertNotContains(response, login)
+        self.assertContains(response, 'role-select-btn"')
+
     def test_event_page_links_to_venue(self, geocode):
         self.live.venue = self.venue
         self.live.save()
