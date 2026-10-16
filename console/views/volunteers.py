@@ -199,7 +199,7 @@ def volunteer_detail(request, user_id):
         'feedback': feedback[:3],
         'average_rating': feedback.aggregate(avg=Avg('rating'))['avg'],
         'reliability': record,
-        'reliability_misses': record.recent_misses(),
+        'reliability_misses': record.recent_misses(None if request.GET.get('misses') == 'all' else 5),
         'upcoming': EventRoleSlot.objects.filter(signups=volunteer, end_time__gte=now).select_related('event', 'role').order_by('start_time')[:3],
         'points_entries': (PointsEntry.objects.filter(user=volunteer)
                            .select_related('shift__role', 'shift__event_role_slot__event', 'training_module', 'created_by')

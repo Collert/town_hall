@@ -56,33 +56,6 @@
 
     <section class="c-card c-card-tonal vd-insights">
         <h2 class="vd-insights-title">{% trans "Admin Insights" %}</h2>
-        <span class="c-label">{% trans "Reliability" %}</span>
-        <div class="vd-reliability {% if reliability.score >= 70 %}good{% elif reliability.score >= 30 %}fair{% else %}poor{% endif %}">
-            <strong>{{ reliability.score }}%</strong>
-            <small>
-                {% if reliability.total %}
-                {% blocktrans count counter=reliability.total with kept=reliability.kept %}{{ kept }} of {{ counter }} shift kept{% plural %}{{ kept }} of {{ counter }} shifts kept{% endblocktrans %}
-                &bull; {% blocktrans count counter=reliability.no_shows|length %}{{ counter }} no-show{% plural %}{{ counter }} no-shows{% endblocktrans %}
-                &bull; {% blocktrans count counter=reliability.late_cancellations|length %}{{ counter }} late cancellation{% plural %}{{ counter }} late cancellations{% endblocktrans %}
-                {% else %}
-                {% trans "No finished shifts yet." %}
-                {% endif %}
-            </small>
-        </div>
-        <div class="vd-reliability-bar"><span style="width: {{ reliability.score }}%"></span></div>
-        {% if reliability_misses %}
-        <ul class="vd-misses">
-            {% for miss in reliability_misses %}
-            <li>
-                <span class="material-symbols-outlined">{% if miss.kind == 'no_show' %}person_off{% else %}event_busy{% endif %}</span>
-                <span class="vd-misses-main">
-                    <strong>{{ miss.slot.event.title }}</strong>
-                    <small>{{ miss.slot.role.name }} &bull; {{ miss.slot.start_time|date:"M j, Y" }} &bull; {% if miss.kind == 'no_show' %}{% trans "No-show" %}{% elif miss.when >= miss.slot.start_time %}{% trans "Cancelled after it started" %}{% else %}{% blocktrans with t=miss.when|timesince:miss.slot.start_time %}Cancelled {{ t }} before{% endblocktrans %}{% endif %}</small>
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
         <span class="c-label">{% trans "Internal rating" %}</span>
         {% if average_rating %}
         <div class="vd-rating">
@@ -103,6 +76,12 @@
     <div class="vd-stat"><span class="c-label">{% trans "Total Hours" %}</span><strong>{{ total_hours|hours }}</strong><span class="material-symbols-outlined">schedule</span></div>
     <div class="vd-stat accent"><span class="c-label">{% trans "Training Modules" %}</span><strong>{{ completed_modules }}/{{ tracked_modules }}</strong><span class="material-symbols-outlined">verified</span></div>
     <div class="vd-stat"><span class="c-label">{% trans "Events Attended" %}</span><strong>{{ events_attended }}</strong><span class="material-symbols-outlined">event_available</span></div>
+    <div class="vd-stat vd-reliability {% if reliability.score >= 70 %}good{% elif reliability.score >= 30 %}fair{% else %}poor{% endif %}">
+        <span class="c-label">{% trans "Reliability" %}</span>
+        <strong>{{ reliability.score }}%</strong>
+        <small>{% if reliability.total %}{% blocktrans with kept=reliability.kept total=reliability.total %}{{ kept }} of {{ total }} shifts kept{% endblocktrans %}{% else %}{% trans "No finished shifts yet." %}{% endif %}</small>
+        <div class="vd-reliability-bar"><span style="width: {{ reliability.score }}%"></span></div>
+    </div>
 </section>
 
 <div class="vd-row">
@@ -182,6 +161,30 @@
     <p class="c-muted">{% trans "No completed shifts yet." %}</p>
     {% endif %}
 </section>
+
+{% if reliability.misses %}
+<section class="c-card vd-attendance" id="attendance">
+    <div class="c-section-head">
+        <div>
+            <h2 class="c-card-title">{% trans "Attendance Record" %}</h2>
+            <p class="c-muted">{% blocktrans count counter=reliability.no_shows|length %}{{ counter }} no-show{% plural %}{{ counter }} no-shows{% endblocktrans %} &bull; {% blocktrans count counter=reliability.late_cancellations|length %}{{ counter }} late cancellation{% plural %}{{ counter }} late cancellations{% endblocktrans %}</p>
+        </div>
+    </div>
+    <ul class="vd-misses">
+        {% for miss in reliability_misses %}
+        <li>
+            <span class="c-icon-tile round accent"><span class="material-symbols-outlined">{% if miss.kind == 'no_show' %}person_off{% else %}event_busy{% endif %}</span></span>
+            <span class="vd-misses-main">
+                <strong>{{ miss.slot.event.title }}</strong>
+                <small>{{ miss.slot.role.name }} &bull; {{ miss.slot.start_time|date:"M j, Y" }}</small>
+            </span>
+            <span class="c-badge c-badge-accent">{% if miss.kind == 'no_show' %}{% trans "No-show" %}{% elif miss.when >= miss.slot.start_time %}{% trans "Cancelled after it started" %}{% else %}{% blocktrans with t=miss.when|timesince:miss.slot.start_time %}Cancelled {{ t }} before{% endblocktrans %}{% endif %}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% if reliability.misses > reliability_misses|length %}<div class="vd-more"><a href="?misses=all#attendance" class="c-btn">{% blocktrans count counter=reliability.misses %}View all {{ counter }} entry{% plural %}View all {{ counter }} entries{% endblocktrans %}</a></div>{% endif %}
+</section>
+{% endif %}
 
 <section class="c-card vd-points" id="points">
     <div class="c-section-head">
