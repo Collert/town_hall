@@ -16,7 +16,7 @@ from base.utils import qr_svg, short_datetime
 from education.models import TrainingModule, TrainingModuleCompletion
 from jobs.models import RoleTrainingRequirement, Shift
 
-from . import leadership
+from . import leadership, reliability
 from .models import Event, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite
 
 User = get_user_model()
@@ -175,6 +175,7 @@ def event_detail(request, event_id):
         'role_slots': unique_role_slots,
         'role_slots_data': role_slots_data,
         'event_volunteers': event.volunteers(),
+        'cancellable_slots': reliability.cancellable(my_slots, user) if user.is_authenticated else [],
         **_chain_context(event, user, my_slots),
     })
 
@@ -264,6 +265,30 @@ def role_slot_signup(request, slot_id):
     _confirm_signup(request, slot)
     messages.success(request, _('Successfully signed up for %(role)s at %(event)s!') % {
         'role': slot.role.name, 'event': slot.event.title})
+    return redirect('opportunity_detail', event_id=event_id)
+
+
+@login_required
+@require_POST
+def cancel_signup(request, event_id):
+    """A volunteer takes themselves off one of their shifts at this event (the dialog
+    posts its ``slot_id``). Less than 24 hours ahead it counts against their reliability."""
+    slot_id = request.POST.get('slot_id', '')
+    slot = get_object_or_404(EventRoleSlot.objects.select_related('event', 'role'),
+                             pk=slot_id if slot_id.isdigit() else 0, event_id=event_id)
+    if not slot.user_signed_up(request.user):
+        messages.error(request, _("You aren't signed up for that shift."))
+    elif not reliability.cancellable([slot], request.user):
+        if slot.is_area_lead:
+            messages.error(request, _('Area lead shifts are assigned by the coordinators. Ask them to take you off.'))
+        else:
+            messages.error(request, _("That shift has already started or ended, so it can't be cancelled."))
+    elif reliability.cancel_signup(slot, request.user).late:
+        messages.warning(request, _('You cancelled your %(role)s shift. It started less than 24 hours from now, so it counts against your reliability score.') % {
+            'role': slot.role.name})
+    else:
+        messages.success(request, _('You cancelled your %(role)s shift. Your spot is open for someone else.') % {
+            'role': slot.role.name})
     return redirect('opportunity_detail', event_id=event_id)
 
 

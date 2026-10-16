@@ -1384,3 +1384,72 @@ Since the background is already primary-light usually, let's keep it that way fo
 .lead-redirect-btn .material-symbols-outlined {
     font-size: 1.1rem;
 }
+
+/* Cancel a shift dialog */
+.cancel-signup-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cancel-signup-form .modal-body {
+    gap: 1.25rem;
+}
+
+.cancel-signup-text,
+.cancel-signup-note {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+}
+
+.cancel-signup-note {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+}
+
+.cancel-signup-form .timeslot-item {
+    position: relative;
+}
+
+/* Kept focusable (not display: none) so the browser can point at it when nothing is picked */
+.cancel-signup-form .timeslot-item input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.cancel-signup-form .timeslot-item:has(input:focus-visible) {
+    border-color: var(--color-accent);
+}
+
+.cancel-signup-form .timeslot-info {
+    flex-wrap: wrap;
+    color: var(--color-text-secondary);
+}
+
+.cancel-late-warning {
+    display: none;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-warning) r g b / 0.12);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.cancel-late-warning .material-symbols-outlined {
+    color: var(--color-warning);
+    flex-shrink: 0;
+}
+
+.cancel-signup-form:has(input[data-late]:checked) .cancel-late-warning {
+    display: flex;
+}
+
+.cancel-signup-form:has(input[data-late]:checked) .cancel-signup-note {
+    display: none;
+}

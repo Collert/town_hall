@@ -56,6 +56,33 @@
 
     <section class="c-card c-card-tonal vd-insights">
         <h2 class="vd-insights-title">{% trans "Admin Insights" %}</h2>
+        <span class="c-label">{% trans "Reliability" %}</span>
+        <div class="vd-reliability {% if reliability.score >= 90 %}good{% elif reliability.score >= 70 %}fair{% else %}poor{% endif %}">
+            <strong>{{ reliability.score }}%</strong>
+            <small>
+                {% if reliability.total %}
+                {% blocktrans count counter=reliability.total with kept=reliability.kept %}{{ kept }} of {{ counter }} shift kept{% plural %}{{ kept }} of {{ counter }} shifts kept{% endblocktrans %}
+                &bull; {% blocktrans count counter=reliability.no_shows|length %}{{ counter }} no-show{% plural %}{{ counter }} no-shows{% endblocktrans %}
+                &bull; {% blocktrans count counter=reliability.late_cancellations|length %}{{ counter }} late cancellation{% plural %}{{ counter }} late cancellations{% endblocktrans %}
+                {% else %}
+                {% trans "No finished shifts yet." %}
+                {% endif %}
+            </small>
+        </div>
+        <div class="vd-reliability-bar"><span style="width: {{ reliability.score }}%"></span></div>
+        {% if reliability_misses %}
+        <ul class="vd-misses">
+            {% for miss in reliability_misses %}
+            <li>
+                <span class="material-symbols-outlined">{% if miss.kind == 'no_show' %}person_off{% else %}event_busy{% endif %}</span>
+                <span class="vd-misses-main">
+                    <strong>{{ miss.slot.event.title }}</strong>
+                    <small>{{ miss.slot.role.name }} &bull; {{ miss.slot.start_time|date:"M j, Y" }} &bull; {% if miss.kind == 'no_show' %}{% trans "No-show" %}{% elif miss.when >= miss.slot.start_time %}{% trans "Cancelled after it started" %}{% else %}{% blocktrans with t=miss.when|timesince:miss.slot.start_time %}Cancelled {{ t }} before{% endblocktrans %}{% endif %}</small>
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <span class="c-label">{% trans "Internal rating" %}</span>
         {% if average_rating %}
         <div class="vd-rating">

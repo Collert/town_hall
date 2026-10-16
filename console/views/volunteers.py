@@ -16,6 +16,7 @@ from base.email import notify, send_welcome_email, text_to_html
 from base import points
 from base.models import AdminFeedback, Endorsement, Notification, PointsEntry, SiteSettings
 from education.models import Skill, TrainingModule, TrainingModuleCompletion, UserCertification
+from events import reliability
 from events.models import EventRoleSlot
 from jobs.models import Role, Shift
 
@@ -179,6 +180,7 @@ def volunteer_detail(request, user_id):
 
     endorsements = volunteer.endorsements.select_related('endorser', 'event').prefetch_related('skills').order_by('-timestamp')
     feedback = AdminFeedback.objects.filter(volunteer=volunteer).select_related('author')
+    record = reliability.for_user(volunteer, now)
 
     return render(request, 'console/volunteer_detail.html', {
         'volunteer': volunteer,
@@ -196,6 +198,8 @@ def volunteer_detail(request, user_id):
         'endorsement_total': endorsements.count(),
         'feedback': feedback[:3],
         'average_rating': feedback.aggregate(avg=Avg('rating'))['avg'],
+        'reliability': record,
+        'reliability_misses': record.recent_misses(),
         'upcoming': EventRoleSlot.objects.filter(signups=volunteer, end_time__gte=now).select_related('event', 'role').order_by('start_time')[:3],
         'points_entries': (PointsEntry.objects.filter(user=volunteer)
                            .select_related('shift__role', 'shift__event_role_slot__event', 'training_module', 'created_by')

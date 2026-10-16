@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:event_id>/certificate/<str:username>/', views.event_certificate, name='event_certificate'),
     path('<int:event_id>/impact-card/', views.event_impact_card, name='event_impact_card'),
     path('slot/<int:slot_id>/signup/', views.role_slot_signup, name='role_slot_signup'),
+    path('<int:event_id>/cancel-signup/', views.cancel_signup, name='cancel_signup'),
     path('invite/<str:token>/', views.respond_to_invite, name='respond_to_invite'),
     path('<int:event_id>/download-ics/', views.download_ics, name='event_download_ics'),
     path('search/', views.search_events, name='search_events'),

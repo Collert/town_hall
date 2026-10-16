@@ -22,6 +22,7 @@ from education.models import (
     TrainingModuleCompletion, UserCertification, UserCertificationFile,
 )
 from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
+from events import reliability
 from jobs.models import Role, RoleTrainingRequirement, Shift
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -2610,3 +2611,86 @@ class ChainOfCommandBellTowerTests(ChainOfCommandFixture):
                                     {'source': kids.pk}, **HTMX)
         self.assertContains(response, 'different areas')
         self.assertTrue(EventTaskList.objects.filter(pk=kids.pk).exists())
+
+
+class CancelSignupTests(ConsoleFixture):
+    def setUp(self):
+        now = timezone.now()
+        self.future = make_event('Winter Market', now + timedelta(days=3), now + timedelta(days=3, hours=6))
+        self.future.coordinators.add(self.staff)
+        self.early = EventRoleSlot.objects.create(event=self.future, role=self.role, start_time=self.future.start_date,
+                                                  end_time=self.future.start_date + timedelta(hours=2), required_qty=6)
+        self.soon = EventRoleSlot.objects.create(event=self.future, role=self.role, start_time=now + timedelta(hours=5),
+                                                 end_time=now + timedelta(hours=7), required_qty=2)
+        self.early.add_signup(self.vol)
+        self.soon.add_signup(self.vol)
+        self.client.force_login(self.vol)
+
+    def cancel(self, slot, event=None):
+        return self.client.post(reverse('cancel_signup', args=[(event or slot.event).pk]), {'slot_id': slot.pk}, follow=True)
+
+    def test_event_page_offers_each_cancellable_shift(self):
+        response = self.client.get(reverse('opportunity_detail', args=[self.future.pk]))
+        self.assertContains(response, 'id="cancel-signup-dialog"')
+        self.assertContains(response, f'value="{self.early.pk}" required')
+        self.assertNotContains(response, f'value="{self.early.pk}" required data-late')
+        self.assertContains(response, f'value="{self.soon.pk}" required data-late')
+
+    def test_cancelling_a_day_ahead_does_not_count(self):
+        self.cancel(self.early)
+        self.assertFalse(self.early.user_signed_up(self.vol))
+        self.assertFalse(SlotSignup.objects.filter(slot=self.early, user=self.vol).exists())
+        self.assertFalse(self.early.cancellations.get(user=self.vol).late)
+        self.assertEqual(reliability.for_user(self.vol).score, 100)
+        self.assertFalse(Notification.objects.filter(user=self.staff, message__contains='cancelled').exists())
+
+    def test_late_cancellation_counts_and_tells_coordinators(self):
+        response = self.cancel(self.soon)
+        self.assertContains(response, 'reliability score')
+        self.assertTrue(self.soon.cancellations.get(user=self.vol).late)
+        record = reliability.for_user(self.vol)
+        self.assertEqual((record.kept, len(record.late_cancellations), record.score), (1, 1, 50))
+        self.assertTrue(Notification.objects.filter(user=self.staff, message__contains='cancelled their Greeter shift').exists())
+
+    def test_cancelling_frees_the_lead_position(self):
+        self.soon.lead = self.vol
+        self.soon.save()
+        self.cancel(self.soon)
+        self.soon.refresh_from_db()
+        self.assertIsNone(self.soon.lead)
+
+    def test_checked_in_and_area_lead_shifts_cannot_be_cancelled(self):
+        Shift.objects.create(user=self.vol, event_role_slot=self.slot)
+        self.cancel(self.slot)
+        self.assertTrue(self.slot.user_signed_up(self.vol))
+        lead_slot = EventRoleSlot.objects.create(event=self.future, role=Role.area_lead(), is_public=False,
+                                                 start_time=self.early.start_time, end_time=self.early.end_time)
+        lead_slot.signups.add(self.mate)
+        self.client.force_login(self.mate)
+        self.cancel(lead_slot)
+        self.assertTrue(lead_slot.user_signed_up(self.mate))
+        self.assertFalse(lead_slot.cancellations.exists())
+
+    def test_cannot_cancel_someone_elses_shift(self):
+        self.client.force_login(self.mate)
+        self.cancel(self.early)
+        self.assertTrue(self.early.user_signed_up(self.vol))
+
+    def test_missing_more_than_half_the_shift_is_a_no_show(self):
+        # past_slot runs 4 hours: arriving 1 hour late is fine, 2.5 hours late is a no-show
+        shift = Shift.objects.create(user=self.mate, event_role_slot=self.past_slot)
+        Shift.objects.filter(pk=shift.pk).update(start_time=self.past_slot.start_time + timedelta(hours=1))
+        self.assertEqual(reliability.for_user(self.mate).score, 100)
+        Shift.objects.filter(pk=shift.pk).update(start_time=self.past_slot.start_time + timedelta(hours=2, minutes=30))
+        self.assertEqual(len(reliability.for_user(self.mate).no_shows), 1)
+
+    def test_no_show_lowers_reliability_on_console_profile(self):
+        # mate signed up for the past cleanup but no shift was recorded
+        record = reliability.for_user(self.mate)
+        self.assertEqual((record.kept, len(record.no_shows), record.score), (0, 1, 0))
+        self.client.force_login(self.staff)
+        response = self.client.get(reverse('console_volunteer_detail', args=[self.mate.pk]))
+        self.assertContains(response, 'vd-reliability poor')
+        self.assertContains(response, 'No-show')
+        response = self.client.get(reverse('console_volunteer_detail', args=[self.vol.pk]))
+        self.assertContains(response, 'vd-reliability good')

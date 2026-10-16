@@ -42,6 +42,12 @@
                     <span class="material-symbols-outlined">event</span>
                     {% trans "Add to Calendar" %}
                 </a>
+                {% if cancellable_slots %}
+                <button type="button" class="btn btn-outline btn-lg btn-rounded" id="cancel-signup-open">
+                    <span class="material-symbols-outlined">event_busy</span>
+                    {% blocktranslate count counter=cancellable_slots|length %}Cancel My Shift{% plural %}Cancel a Shift{% endblocktranslate %}
+                </button>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -473,6 +479,52 @@
 </dialog>
 {% endfor %}
 
+{% if cancellable_slots %}
+<dialog class="modal-dialog" id="cancel-signup-dialog">
+    <form method="post" action="{% url 'cancel_signup' event.pk %}" class="cancel-signup-form">
+        {% csrf_token %}
+        <header class="modal-header">
+            <div>
+                <h2 class="modal-title">{% blocktranslate count counter=cancellable_slots|length %}Cancel your shift{% plural %}Cancel a shift{% endblocktranslate %}</h2>
+                <p class="modal-subtitle">{{ event.title }}</p>
+            </div>
+            <button class="modal-close" type="submit" formmethod="dialog" formnovalidate aria-label="{% trans 'Close' %}">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </header>
+        <div class="modal-body">
+            <p class="cancel-signup-text">
+                {% blocktranslate count counter=cancellable_slots|length %}Can't make it? Cancelling opens your spot for someone else.{% plural %}Can't make it? Pick the shift to cancel, and your spot opens for someone else.{% endblocktranslate %}
+            </p>
+            <div class="timeslot-list">
+                {% for slot in cancellable_slots %}
+                <label class="timeslot-item{% if cancellable_slots|length == 1 %} selected{% endif %}">
+                    <input type="radio" name="slot_id" value="{{ slot.pk }}" required {% if slot.late %}data-late{% endif %} {% if cancellable_slots|length == 1 %}checked{% endif %}>
+                    <div class="timeslot-content">
+                        <div class="timeslot-time">{{ slot.role.name }}{% if slot.area %} <span class="timeslot-area">{{ slot.area.name }}</span>{% endif %}</div>
+                        <div class="timeslot-info">
+                            <span>{{ slot.start_time|date:"D, M j" }} &middot; {{ slot.start_time|time:"TIME_FORMAT" }} - {{ slot.end_time|time:"TIME_FORMAT" }}</span>
+                            {% if slot.late %}<span class="badge-filling">{% trans "Within 24 hours" %}</span>{% endif %}
+                        </div>
+                    </div>
+                    <div class="timeslot-radio-indicator"></div>
+                </label>
+                {% endfor %}
+            </div>
+            <p class="cancel-late-warning" role="alert">
+                <span class="material-symbols-outlined">warning</span>
+                <span>{% trans "This shift starts in less than 24 hours. Cancelling now counts the same as a no-show and lowers your reliability score." %}</span>
+            </p>
+            <p class="cancel-signup-note">{% trans "Cancelling 24 hours or more before a shift starts doesn't affect your reliability score. Late cancellations and no-shows do." %}</p>
+        </div>
+        <footer class="modal-footer">
+            <button type="submit" class="btn btn-accent btn-lg btn-rounded">{% trans "Cancel Shift" %}</button>
+            <button type="submit" formmethod="dialog" formnovalidate class="btn btn-outline btn-lg btn-rounded modal-cancel">{% trans "Keep It" %}</button>
+        </footer>
+    </form>
+</dialog>
+{% endif %}
+
 {% if my_leads %}
 <dialog class="modal-dialog lead-redirect-dialog" id="lead-redirect-dialog">
     <div class="lead-redirect">
@@ -517,6 +569,14 @@
             });
         });
         anyway.addEventListener('click', () => leadDialog.close());
+    }
+
+    const cancelOpen = document.getElementById('cancel-signup-open');
+    if (cancelOpen) {
+        cancelOpen.addEventListener('click', () => {
+            document.getElementById('cancel-signup-dialog').showModal();
+            document.body.style.overflow = 'hidden';
+        });
     }
 
     // Open Dialog

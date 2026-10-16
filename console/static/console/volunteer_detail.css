@@ -549,3 +549,75 @@
 .vd-ledger-amount.negative {
     color: var(--color-error);
 }
+
+/* Reliability (events/reliability.py) */
+.vd-reliability {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.vd-reliability strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+}
+
+.vd-reliability small {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+.vd-reliability-bar {
+    height: 0.4rem;
+    border-radius: 1rem;
+    background: rgba(from var(--color-text-tertiary) r g b / 0.15);
+    overflow: hidden;
+}
+
+.vd-reliability-bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--color-success);
+}
+
+.vd-reliability.fair + .vd-reliability-bar span { background: var(--color-warning); }
+.vd-reliability.poor + .vd-reliability-bar span { background: var(--color-error); }
+
+.vd-misses {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.vd-misses li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.vd-misses li > .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: var(--color-text-tertiary);
+}
+
+.vd-misses-main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.vd-misses-main strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+.vd-misses-main small {
+    color: var(--color-text-secondary);
+}

@@ -332,6 +332,21 @@ class SlotSignup(models.Model):
         return f"{self.user} signed up for {self.slot}"
 
 
+class SlotCancellation(models.Model):
+    """A volunteer took themselves off a slot. Cancelling less than 24 hours before it
+    starts (`late`) counts against their reliability like a no-show (events/reliability.py)."""
+    slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='cancellations')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='slot_cancellations')
+    created_at = models.DateTimeField(auto_now_add=True)
+    late = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user} cancelled {self.slot}{' (late)' if self.late else ''}"
+
+
 class EventSlotInvite(models.Model):
     event_role_slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='invites')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='event_invites')

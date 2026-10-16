@@ -429,7 +429,7 @@ teammate from the same event earns a small number of impact points.
 """),
 
     ('Managing volunteers', """
-The **Volunteer Pool** lists everyone with an account, with search, status filters, totals and the
+The **Volunteer Pool** lists everyone with an account, staff included (but not you), with search, status filters, totals and the
 **Top Skills in Pool**. **Export List** downloads it as a spreadsheet.
 
 ## Adding people
@@ -448,6 +448,12 @@ Click anyone to open their page:
 - **Points Ledger**: every award that makes up their points. **Adjust points** to add or remove
   points with a reason the volunteer can see.
 - **Private Feedback** and an internal **Rating** that only staff can see, plus **Admin notes**.
+- **Reliability**: the share of their shifts they turned up for. Everyone starts at 100%. A
+  **no-show** (signed up, but never checked in, or checked in after more than half of the shift had
+  passed; arriving a little late is fine) and a **late
+  cancellation** (cancelling less than 24 hours before the shift starts) both lower it. Volunteers
+  cancel from the event page with **Cancel a Shift**, and the event's coordinators get a
+  notification when a cancellation is late.
 - **Message**: send them an in-app notification.
 - **Edit Profile**, and **Deactivate** / **Reactivate** the account.
 - **Roles**: assign **permanent roles** (see the Roles lesson).
