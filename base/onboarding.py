@@ -483,7 +483,8 @@ Every award is a line in the volunteer's **Points Ledger**:
   understaffed slot, and early-morning or late-night shifts.
 - **Training**: a one-time award for finishing a module, based on its length. Staff-only modules such
   as this guide don't award points.
-- **Endorsements**: a small bonus when a teammate from the same event endorses you.
+- **Endorsements**: a small bonus when a teammate from the same event endorses you, or when a
+  staff member does (no shared event needed; once per staff member per person every 30 days).
 - **Admin adjustments**: made from the volunteer's page.
 
 ## Tuning the rules

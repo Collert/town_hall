@@ -135,22 +135,30 @@ def award_training(completion):
 
 
 def award_endorsement(endorsement):
-    """Small bonus for being endorsed by a teammate from the same event. One per event, a monthly
-    cap, and nothing for endorsing back someone who just endorsed you."""
+    """Small bonus for being endorsed. From a teammate it needs the same event: one per event, and
+    nothing for endorsing back someone who just endorsed you. A staff member's endorsement needs no
+    event (and no roster spot) but earns once per person per 30 days. Both share the monthly cap."""
     rules = PointsRules.get()
     event, endorsed, endorser = endorsement.event, endorsement.endorsed, endorsement.endorser
-    if not event or not rules.endorsement_points or endorsed == endorser:
+    if not rules.endorsement_points or endorsed == endorser:
         return None
-    team = event.volunteers()
-    if not team.filter(pk=endorsed.pk).exists() or not team.filter(pk=endorser.pk).exists():
-        return None
+    since = timezone.now() - timedelta(days=30)
     earned = PointsEntry.objects.filter(user=endorsed, source=PointsEntry.ENDORSEMENT)
-    if earned.filter(event=event).exists():
-        return None
-    if earned.filter(created_at__gte=timezone.now() - timedelta(days=30)).count() >= rules.endorsement_monthly_cap:
-        return None
     from .models import Endorsement
-    if Endorsement.objects.filter(endorser=endorsed, endorsed=endorser, event=event, timestamp__lt=endorsement.timestamp).exists():
+    if endorser.is_staff:
+        if earned.filter(endorsement__endorser=endorser, created_at__gte=since).exists():
+            return None
+    else:
+        if not event:
+            return None
+        team = event.volunteers()
+        if not team.filter(pk=endorsed.pk).exists() or not team.filter(pk=endorser.pk).exists():
+            return None
+        if earned.filter(event=event).exists():
+            return None
+        if Endorsement.objects.filter(endorser=endorsed, endorsed=endorser, event=event, timestamp__lt=endorsement.timestamp).exists():
+            return None
+    if earned.filter(created_at__gte=since).count() >= rules.endorsement_monthly_cap:
         return None
     return PointsEntry.objects.create(
         user=endorsed, amount=rules.endorsement_points, source=PointsEntry.ENDORSEMENT,

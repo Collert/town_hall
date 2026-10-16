@@ -126,6 +126,20 @@ class PointsTests(TestCase):
         Endorsement.give(self.mate, self.vol, [Skill.objects.create(name='Logistics')])
         self.assertEqual(PointsEntry.objects.filter(user=self.vol, source=PointsEntry.ENDORSEMENT).count(), 1)
 
+    def test_staff_endorsement_needs_no_event(self):
+        staff = User.objects.create_user('boss2', 'boss2@example.com', 'pw', is_staff=True)
+        skill = Skill.objects.create(name='Leadership')
+        Endorsement.give(staff, self.vol, [skill])
+        entry = PointsEntry.objects.get(user=self.vol, source=PointsEntry.ENDORSEMENT)
+        self.assertEqual(entry.amount, 5)
+        # Once per staff member and person every 30 days
+        Endorsement.give(staff, self.vol, [Skill.objects.create(name='Logistics')])
+        self.assertEqual(PointsEntry.objects.filter(user=self.vol, source=PointsEntry.ENDORSEMENT).count(), 1)
+        # A different staff member can still add one, up to the monthly cap
+        other = User.objects.create_user('boss3', 'boss3@example.com', 'pw', is_staff=True)
+        Endorsement.give(other, self.vol, [skill])
+        self.assertEqual(PointsEntry.objects.filter(user=self.vol, source=PointsEntry.ENDORSEMENT).count(), 2)
+
     def test_staff_adjustment_and_rules_page(self):
         staff = User.objects.create_user('boss', 'boss@example.com', 'pw', is_staff=True)
         self.client.force_login(staff)
