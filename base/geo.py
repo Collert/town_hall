@@ -25,14 +25,15 @@ def geocode(address):
 
 
 def directions_url(latitude, longitude, address=''):
-    """Google Maps route to the place; Google starts it from the visitor's location."""
+    """Google Maps route to the place, starting from the visitor's location. It opens on
+    public transit, a nudge away from driving; visitors can switch mode in Google Maps."""
     if latitude is not None and longitude is not None:
         destination = f'{latitude},{longitude}'
     elif address:
         destination = address
     else:
         return ''
-    return 'https://www.google.com/maps/dir/?' + urllib.parse.urlencode({'api': 1, 'destination': destination})
+    return 'https://www.google.com/maps/dir/?' + urllib.parse.urlencode({'api': 1, 'destination': destination, 'travelmode': 'transit'})
 
 
 def map_url(latitude, longitude, address=''):
