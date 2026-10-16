@@ -115,6 +115,11 @@ class Event(models.Model):
         from base.geo import map_url
         return map_url(self.latitude, self.longitude, self.address)
 
+    @property
+    def directions_url(self):
+        from base.geo import directions_url
+        return directions_url(self.latitude, self.longitude, self.address)
+
     def staffing_progress(self):
         """Calculate staffing progress as a percentage."""
         total_required = self.total_required()
