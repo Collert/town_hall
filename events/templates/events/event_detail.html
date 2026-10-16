@@ -45,7 +45,7 @@
                 {% if cancellable_slots %}
                 <button type="button" class="btn btn-outline btn-lg btn-rounded" id="cancel-signup-open">
                     <span class="material-symbols-outlined">event_busy</span>
-                    {% blocktranslate count counter=cancellable_slots|length %}Cancel My Shift{% plural %}Cancel a Shift{% endblocktranslate %}
+                    {% if cancellable_slots|length == 1 %}{% trans "Cancel My Shift" %}{% else %}{% trans "Cancel a Shift" %}{% endif %}
                 </button>
                 {% endif %}
             </div>
@@ -485,7 +485,7 @@
         {% csrf_token %}
         <header class="modal-header">
             <div>
-                <h2 class="modal-title">{% blocktranslate count counter=cancellable_slots|length %}Cancel your shift{% plural %}Cancel a shift{% endblocktranslate %}</h2>
+                <h2 class="modal-title">{% if cancellable_slots|length == 1 %}{% trans "Cancel your shift" %}{% else %}{% trans "Cancel a shift" %}{% endif %}</h2>
                 <p class="modal-subtitle">{{ event.title }}</p>
             </div>
             <button class="modal-close" type="submit" formmethod="dialog" formnovalidate aria-label="{% trans 'Close' %}">
@@ -494,7 +494,7 @@
         </header>
         <div class="modal-body">
             <p class="cancel-signup-text">
-                {% blocktranslate count counter=cancellable_slots|length %}Can't make it? Cancelling opens your spot for someone else.{% plural %}Can't make it? Pick the shift to cancel, and your spot opens for someone else.{% endblocktranslate %}
+                {% if cancellable_slots|length == 1 %}{% trans "Can't make it? Cancelling opens your spot for someone else." %}{% else %}{% trans "Can't make it? Pick the shift to cancel, and your spot opens for someone else." %}{% endif %}
             </p>
             <div class="timeslot-list">
                 {% for slot in cancellable_slots %}
