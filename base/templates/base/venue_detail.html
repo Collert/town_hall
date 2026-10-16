@@ -24,8 +24,8 @@
             </div>
         </div>
         <div class="venue-hero-actions">
-            {% if venue.map_url %}
-            <a href="{{ venue.map_url }}" class="btn btn-accent btn-lg btn-rounded" target="_blank" rel="noopener">
+            {% if venue.directions_url %}
+            <a href="{{ venue.directions_url }}" class="btn btn-accent btn-lg btn-rounded" target="_blank" rel="noopener">
                 <span class="material-symbols-outlined">directions</span>{% trans "Get Directions" %}
             </a>
             {% endif %}

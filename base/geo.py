@@ -24,6 +24,17 @@ def geocode(address):
     return None
 
 
+def directions_url(latitude, longitude, address=''):
+    """Google Maps route to the place; Google starts it from the visitor's location."""
+    if latitude is not None and longitude is not None:
+        destination = f'{latitude},{longitude}'
+    elif address:
+        destination = address
+    else:
+        return ''
+    return 'https://www.google.com/maps/dir/?' + urllib.parse.urlencode({'api': 1, 'destination': destination})
+
+
 def map_url(latitude, longitude, address=''):
     """OpenStreetMap link: a pin when coordinates are known, else an address search."""
     if latitude is not None and longitude is not None:

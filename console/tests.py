@@ -1576,6 +1576,8 @@ class VenueTests(ConsoleFixture):
         self.assertContains(response, 'Elevator out of service')
         self.assertContains(response, 'Fall Festival')
         self.assertContains(response, 'Librarian Assistant')
+        self.assertContains(response, 'https://www.google.com/maps/dir/?api=1&amp;destination=49.27%2C-123.1')
+        self.assertContains(response, 'openstreetmap.org')  # "View larger map" stays on OpenStreetMap
         self.assertNotContains(response, reverse('console_venue_edit', args=[self.venue.pk]))
 
     def test_event_page_links_to_venue(self, geocode):

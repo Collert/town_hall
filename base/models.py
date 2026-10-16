@@ -199,6 +199,11 @@ class Venue(models.Model):
         return map_url(self.latitude, self.longitude, self.address)
 
     @property
+    def directions_url(self):
+        from .geo import directions_url
+        return directions_url(self.latitude, self.longitude, self.address)
+
+    @property
     def map_embed_url(self):
         from .geo import map_embed_url
         return map_embed_url(self.latitude, self.longitude)
