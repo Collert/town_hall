@@ -1,6 +1,30 @@
 import json
 
+from django.conf import settings
 from django.contrib.messages import get_messages
+
+
+class SavedLanguageMiddleware:
+    """Use a signed-in user's saved language when the browser has no language cookie.
+
+    Without it, Django falls back to the browser's Accept-Language, so someone on a new
+    device would lose their saved choice. An explicit choice (the cookie) still wins, and
+    visitors with no saved language keep getting the browser language. Runs before
+    LocaleMiddleware.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = getattr(request, 'user', None)
+        if settings.LANGUAGE_COOKIE_NAME not in request.COOKIES and user is not None and user.is_authenticated:
+            from .models import Profile
+
+            lang = Profile.objects.filter(user=user).values_list('language', flat=True).first()
+            if lang and lang in dict(settings.LANGUAGES):
+                request.COOKIES[settings.LANGUAGE_COOKIE_NAME] = lang
+        return self.get_response(request)
 
 
 class RememberLanguageMiddleware:

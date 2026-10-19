@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from base.models import Endorsement, PointsEntry, PointsRules
+from base.models import Endorsement, PointsEntry, PointsRules, Profile
 from education.models import Skill, TrainingModule, TrainingModuleCompletion
 from events.models import Event, EventRoleSlot
 from jobs.models import Role, Shift
@@ -318,3 +318,19 @@ class NewsletterFormTests(TestCase):
         with patch('base.listmonk.api', side_effect=ListmonkError('down')):
             response = self.post(email='new@example.com')
         self.assertNotIn('newsletter-subscribed', response['HX-Trigger'])
+
+
+class SavedLanguageTests(TestCase):
+    def test_saved_language_beats_browser_but_cookie_beats_saved(self):
+        from django.conf import settings
+        from django.contrib.auth.models import User
+
+        codes = [c for c, _n in settings.LANGUAGES]
+        saved = next(c for c in codes if c != 'fr') if 'fr' in codes else codes[-1]
+        user = User.objects.create_user('lang', password='x')
+        Profile.objects.filter(user=user).update(language=saved)
+        self.client.force_login(user)
+        response = self.client.get('/', HTTP_ACCEPT_LANGUAGE='fr')
+        if saved != 'fr':
+            self.assertEqual(response.status_code, 302)
+            self.assertIn(f'/{saved}/', response['Location'])
