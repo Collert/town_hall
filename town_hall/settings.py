@@ -258,6 +258,26 @@ LOGGING = {
     },
 }
 
+# Anonymous error reports for the Town Hall project, sent to its Bugsink (Sentry protocol).
+# The DSN is a write-only ingest key, so it is safe to publish. By default a report holds
+# only the traceback and environment: no IP addresses, cookies, request bodies or local
+# variables. Opt out with BUGSINK_DSN= (empty), or point it at your own Bugsink. Set
+# BUGSINK_SEND_PII=1 to include request details (only for a deployment you own). Nothing is
+# sent under manage.py test.
+BUGSINK_DSN = os.environ.get('BUGSINK_DSN', 'https://7af5d437e1e64658aa8df922f6c44ea5@bugs.adpit.space/1')
+if BUGSINK_DSN and 'test' not in sys.argv:
+    import sentry_sdk
+
+    _full_reports = os.environ.get('BUGSINK_SEND_PII') == '1'
+    sentry_sdk.init(
+        dsn=BUGSINK_DSN,
+        environment=os.environ.get('ENVIRONMENT', 'development'),
+        send_default_pii=_full_reports,
+        max_request_body_size='always' if _full_reports else 'never',
+        include_local_variables=_full_reports,
+        traces_sample_rate=0,  # Bugsink stores errors only, not performance traces
+    )
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 

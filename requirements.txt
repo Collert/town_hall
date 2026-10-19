@@ -11,3 +11,4 @@ dj-database-url
 django-storages[s3]
 gunicorn
 psycopg[binary]
+sentry-sdk
