@@ -102,6 +102,13 @@ class OAuthTests(McpFixture):
         self.assertEqual(server['code_challenge_methods_supported'], ['S256'])
         self.assertEqual(server['registration_endpoint'], 'http://testserver/oauth/register')
 
+    def test_discovery_fallback_paths(self):
+        for path in ('/.well-known/openid-configuration', '/.well-known/openid-configuration/mcp',
+                     '/mcp/.well-known/openid-configuration', '/.well-known/oauth-authorization-server/mcp'):
+            response = self.client.get(path)
+            self.assertEqual(response.status_code, 200, path)
+            self.assertEqual(response.json()['token_endpoint'], 'http://testserver/oauth/token')
+
     def test_register_rejects_unsafe_redirects(self):
         for uris in ([], ['http://evil.example/cb'], ['javascript:alert(1)']):
             response = self.client.post('/oauth/register', json.dumps({'redirect_uris': uris}), content_type='application/json')
