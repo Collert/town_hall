@@ -104,12 +104,7 @@ def announce_event(event, link, lang):
     if template.get('type') != 'campaign_visual' or not template.get('body_source'):
         raise listmonk.ListmonkError(f'"{template.get("name")}" is not a visual campaign template.')
 
-    image_url = ''
-    if event.image:
-        try:
-            image_url = listmonk.upload_file(event.image)
-        except listmonk.ListmonkError as exc:  # announce without the picture rather than not at all
-            print(f'[listmonk] Announcing "{event.title}" without its image: {exc}')
+    image_url = listmonk.upload_file(event.image) if event.image else ''
     with translation.override(lang):
         subject = str(triggers.BY_KEY['event_published'].subject) % {'event': event.title}
         date = formats.date_format(timezone.localtime(event.start_date), 'DATETIME_FORMAT')
