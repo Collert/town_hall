@@ -485,13 +485,16 @@ Every award is a line in the volunteer's **Points Ledger**:
   as this guide don't award points.
 - **Endorsements**: a small bonus when a teammate from the same event endorses you, or when a
   staff member does (no shared event needed; once per staff member per person every 30 days).
+- **Completed profile**: a one-time award the first time a volunteer's profile has a photo, a bio,
+  skills and a location. Their **Edit Profile** page shows a checklist of what's left.
 - **Admin adjustments**: made from the volunteer's page.
 
 ## Tuning the rules
 
 **Organization > Points** holds every number: **Points per hour**, **Top role weight**,
 **Reach bonus cap**, the walk-in, last-minute and early/late percentages and windows, points per
-training minute with a minimum and maximum per module, and endorsement points with a monthly cap.
+training minute with a minimum and maximum per module, endorsement points with a monthly cap, and
+the completed-profile award (0 turns it off).
 New rules apply to new shifts. A developer can reapply them to past shifts with
 `python manage.py recalculate_points`.
 
@@ -537,6 +540,12 @@ uses in each language. **Reset to default** restores Town Hall's version of a te
   **Newsletter** form in the site footer signs visitors up to those extra lists, and it's hidden until
   you pick at least one.
 - People who unsubscribe stay unsubscribed.
+- **Profile reminder** and **Second profile reminder** go out by themselves, a day and a week after
+  someone registers, but only if their profile still lacks a photo, bio, skills or location. Each
+  lists what's missing and mentions the completed-profile award. People who registered long before
+  you switch them on don't get them.
+- When a Town Hall update adds a new kind of email, choose **Re-create missing templates** so it gets
+  a template in each language.
 """),
 
     ('Task lists with Bell Tower', """

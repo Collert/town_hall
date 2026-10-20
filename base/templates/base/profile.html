@@ -212,7 +212,7 @@
     <ol class="points-history">
       {% for entry in points_history %}
       <li class="points-history-item">
-        <span class="points-history-icon material-symbols-outlined">{% if entry.source == 'shift' %}schedule{% elif entry.source == 'training' %}school{% elif entry.source == 'endorsement' %}thumb_up{% else %}star{% endif %}</span>
+        <span class="points-history-icon material-symbols-outlined">{% if entry.source == 'shift' %}schedule{% elif entry.source == 'training' %}school{% elif entry.source == 'endorsement' %}thumb_up{% elif entry.source == 'profile' %}person_check{% else %}star{% endif %}</span>
         <div class="points-history-main">
           <strong>{{ entry.label }}</strong>
           <span>{{ entry.created_at|date:"M j, Y" }}{% for factor in entry.factors %} &middot; {{ factor }}{% endfor %}</span>

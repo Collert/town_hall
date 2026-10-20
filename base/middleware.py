@@ -117,3 +117,16 @@ class FirstRunMiddleware:
         from django.shortcuts import redirect
 
         return redirect('first_run_setup')
+
+
+class ProfileReminderMiddleware:
+    """Sends due complete-your-profile reminder emails, checking at most every few minutes
+    as requests come in, so it works without a scheduler (base/profile_completion.py)."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        from .profile_completion import run_due_if_idle
+        run_due_if_idle(request)
+        return self.get_response(request)

@@ -26,8 +26,10 @@ from jobs.models import Shift
 
 from .email import notify, send_welcome_email
 from .forms import FirstRunSetupForm
+from . import profile_completion
 from .middleware import FirstRunMiddleware
-from .models import AdminFeedback, Endorsement, HeroSection, Notification, PointsEntry, SiteSettings, Venue
+from .points import award_profile
+from .models import AdminFeedback, Endorsement, HeroSection, Notification, PointsEntry, PointsRules, SiteSettings, Venue
 from .utils import gravatar_exists, qr_svg
 
 
@@ -294,9 +296,23 @@ def edit_profile(request):
             profile.use_gravatar = False
         profile.save()
         messages.success(request, _('Profile updated successfully!'))
+        _award_if_complete(request, profile)
         return redirect('edit_profile')
 
-    return render(request, 'base/edit_profile.html', {'profile': profile, **_skills_context(profile)})
+    return render(request, 'base/edit_profile.html', {
+        'profile': profile, 'completion': _completion_context(profile), **_skills_context(profile)})
+
+
+def _completion_context(profile):
+    """The complete-your-profile checklist, or None once the profile is complete."""
+    gaps = profile_completion.missing(profile)
+    if not gaps:
+        return None
+    awarded = PointsEntry.objects.filter(user_id=profile.user_id, source=PointsEntry.PROFILE).exists()
+    return {
+        'items': [{'label': label, 'done': key not in gaps} for key, label in profile_completion.ITEMS.items()],
+        'points': 0 if awarded else PointsRules.get().profile_complete_points,
+    }
 
 
 def _set_gravatar(request, profile, use):
@@ -314,7 +330,15 @@ def _set_gravatar(request, profile, use):
         messages.success(request, _('Gravatar turned off.'))
     profile.use_gravatar = use
     profile.save(update_fields=['use_gravatar'])
+    _award_if_complete(request, profile)
     return redirect('edit_profile')
+
+
+def _award_if_complete(request, profile):
+    """The one-time award for a completed profile, the first time it's complete."""
+    entry = award_profile(profile)
+    if entry:
+        messages.success(request, _('Your profile is complete. You earned %(points)d impact points!') % {'points': entry.amount})
 
 
 @login_required
@@ -329,6 +353,7 @@ def profile_skills(request):
             messages.warning(request, _('You can only add up to %(max)d skills.') % {'max': context['max_skills']})
         else:
             profile.skills.add(skill)
+            _award_if_complete(request, profile)
     else:
         profile.skills.remove(skill)
     return render(request, 'base/partials/profile_skills.html', _skills_context(profile))

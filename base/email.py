@@ -42,6 +42,9 @@ def deliver(trigger, emails, data, lang=None):
         message.send()
         return
     template = template_for(trigger, lang or settings.LANGUAGE_CODE)
+    if not template:  # a trigger added by an update since listmonk was connected
+        listmonk.seed_templates(keys=[trigger])
+        template = template_for(trigger, lang or settings.LANGUAGE_CODE)
     if not template:
         raise listmonk.ListmonkError(
             f'No listmonk template for "{trigger}". Use "Re-create missing templates" in Communication > Email.')

@@ -10,6 +10,8 @@ Shift = points per hour x hours x role weight x (1 + reach bonus) x (1 + clutch 
     or a permanent role's beneficiaries per hour x hours). +10% per doubling, capped.
   * clutch: walk-in cover at the kiosk, last-minute sign-up to an understaffed slot, and
     shifts that start early or end late. These add up.
+
+Training, endorsements and a completed profile earn fixed one-time awards (see below).
 """
 import math
 from datetime import timedelta
@@ -18,7 +20,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from .models import PointsEntry, PointsRules
+from .models import PointsEntry, PointsRules, Profile
 
 REACH_PERCENT_PER_DOUBLING = 10
 
@@ -166,6 +168,19 @@ def award_endorsement(endorsement):
     )
 
 
+def award_profile(profile):
+    """One-time award the first time a profile is complete (base/profile_completion.py).
+    Emptying the profile later doesn't take it back."""
+    from .profile_completion import is_complete
+
+    amount = PointsRules.get().profile_complete_points
+    if not amount or PointsEntry.objects.filter(user_id=profile.user_id, source=PointsEntry.PROFILE).exists():
+        return None
+    if not is_complete(profile):
+        return None
+    return PointsEntry.objects.create(user_id=profile.user_id, amount=amount, source=PointsEntry.PROFILE)
+
+
 def adjust(user, amount, reason, by):
     return PointsEntry.objects.create(user=user, amount=amount, source=PointsEntry.ADJUSTMENT, reason=reason, created_by=by)
 
@@ -190,6 +205,8 @@ def entry_label(entry):
         return _('Completed %(module)s') % {'module': entry.training_module.title if entry.training_module else _('a training module')}
     if entry.source == PointsEntry.ENDORSEMENT:
         return _('Endorsed by %(name)s') % {'name': entry.details.get('from', _('a teammate'))}
+    if entry.source == PointsEntry.PROFILE:
+        return _('Completed your profile')
     return entry.reason or _('Adjustment')
 
 
@@ -223,5 +240,8 @@ def rebuild(users=None):
         award_shift(shift)
     for completion in completions:
         award_training(completion)
+    profiles = Profile.objects.all() if users is None else Profile.objects.filter(user__in=users)
+    for profile in profiles:
+        award_profile(profile)
     for user in (users if users is not None else User.objects.all()):
         user.profile.recalculate_impact_points()

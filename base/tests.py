@@ -334,3 +334,128 @@ class SavedLanguageTests(TestCase):
         if saved != 'fr':
             self.assertEqual(response.status_code, 302)
             self.assertIn(f'/{saved}/', response['Location'])
+
+
+class ProfileCompletionTests(TestCase):
+    def setUp(self):
+        cache.clear()  # PointsRules and the middleware throttle are cached
+        self.vol = User.objects.create_user('newbie', 'newbie@example.com', 'pw', first_name='Nina')
+        self.skill = Skill.objects.create(name='First aid')
+
+    def tearDown(self):
+        cache.clear()
+
+    def joined(self, user, ago):
+        User.objects.filter(pk=user.pk).update(date_joined=timezone.now() - ago)
+
+    def run_reminders(self):
+        from base.profile_completion import run_due_reminders
+        return run_due_reminders('https://volunteer.example.org')
+
+    def complete(self, profile):
+        profile.bio, profile.location, profile.use_gravatar = 'Hi there.', 'Vancouver', True
+        profile.save()
+        profile.skills.add(self.skill)
+
+    def sent_triggers(self):
+        from django.core import mail
+        return [message.subject for message in mail.outbox]
+
+    def test_first_reminder_after_a_day_lists_whats_missing(self):
+        from django.core import mail
+        self.joined(self.vol, timedelta(hours=25))
+        self.assertEqual(self.run_reminders(), 1)
+        self.assertEqual(self.sent_triggers(), ['[profile_reminder] Profile reminder'])
+        body = mail.outbox[0].body
+        self.assertIn('missing: a profile photo, a short bio, your skills, your location', body)
+        self.assertIn('points: 25', body)
+        self.assertIn('link: https://volunteer.example.org/en/profile/edit/', body)
+        self.assertEqual(self.run_reminders(), 0)  # once only
+
+    def test_nothing_before_a_day_or_for_complete_profiles(self):
+        self.joined(self.vol, timedelta(hours=20))
+        self.assertEqual(self.run_reminders(), 0)
+        self.joined(self.vol, timedelta(days=2))
+        self.complete(self.vol.profile)
+        self.assertEqual(self.run_reminders(), 0)
+
+    def test_second_reminder_after_a_week(self):
+        self.joined(self.vol, timedelta(days=1, hours=1))
+        self.run_reminders()
+        self.joined(self.vol, timedelta(days=7, hours=1))
+        self.assertEqual(self.run_reminders(), 1)
+        self.assertEqual(self.sent_triggers(), ['[profile_reminder] Profile reminder',
+                                                '[profile_reminder_week] Second profile reminder'])
+        self.assertEqual(self.run_reminders(), 0)
+
+    def test_late_starters_get_only_the_week_reminder(self):
+        self.joined(self.vol, timedelta(days=8))
+        self.assertEqual(self.run_reminders(), 1)
+        self.assertEqual(self.sent_triggers(), ['[profile_reminder_week] Second profile reminder'])
+
+    def test_old_accounts_are_left_alone(self):
+        self.joined(self.vol, timedelta(days=60))
+        self.assertEqual(self.run_reminders(), 0)
+
+    def test_switched_off_trigger_sends_nothing_and_keeps_people_waiting(self):
+        from base.models import EmailTrigger
+        EmailTrigger.objects.create(key='profile_reminder', enabled=False)
+        self.joined(self.vol, timedelta(days=2))
+        self.assertEqual(self.run_reminders(), 0)
+        self.vol.profile.refresh_from_db()
+        self.assertEqual(self.vol.profile.profile_reminders_sent, 0)
+
+    def test_link_uses_the_recipients_language(self):
+        from django.core import mail
+        Profile.objects.filter(user=self.vol).update(language='uk')
+        self.joined(self.vol, timedelta(days=2))
+        self.run_reminders()
+        self.assertIn('link: https://volunteer.example.org/uk/profile/edit/', mail.outbox[0].body)
+
+    def test_middleware_runs_the_pass(self):
+        from django.core import mail
+        self.joined(self.vol, timedelta(days=2))
+        self.client.get(reverse('home'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('link: http://testserver/en/profile/edit/', mail.outbox[0].body)
+
+    def test_completing_the_profile_awards_points_once(self):
+        self.client.force_login(self.vol)
+        profile = self.vol.profile
+        profile.use_gravatar = True
+        profile.save()
+        self.client.post(reverse('profile_skills'), {'skill_id': self.skill.pk, 'action': 'add'})
+        self.assertFalse(PointsEntry.objects.filter(source=PointsEntry.PROFILE).exists())
+        response = self.client.post(reverse('edit_profile'), {'first_name': 'Nina', 'email': 'newbie@example.com',
+                                                               'bio': 'Hi there.', 'location': 'Vancouver'}, follow=True)
+        self.assertContains(response, 'You earned 25 impact points')
+        profile.refresh_from_db()
+        self.assertEqual(profile.impact_points, 25)
+        self.assertNotContains(response, 'profile-checklist')
+        # Emptying and refilling the profile doesn't pay out again.
+        self.client.post(reverse('edit_profile'), {'first_name': 'Nina', 'email': 'newbie@example.com', 'bio': ''})
+        self.client.post(reverse('edit_profile'), {'first_name': 'Nina', 'email': 'newbie@example.com',
+                                                   'bio': 'Back.', 'location': 'Vancouver'})
+        self.assertEqual(PointsEntry.objects.filter(source=PointsEntry.PROFILE).count(), 1)
+
+    def test_checklist_shows_progress_and_award(self):
+        self.client.force_login(self.vol)
+        Profile.objects.filter(user=self.vol).update(bio='Hi there.')
+        response = self.client.get(reverse('edit_profile'))
+        self.assertContains(response, '+25 impact points')
+        self.assertContains(response, '<li class="is-done"><span class="material-symbols-outlined">check_circle</span><span>A short bio</span></li>', html=True)
+
+    def test_award_can_be_switched_off(self):
+        rules = PointsRules.get()
+        rules.profile_complete_points = 0
+        rules.save()
+        self.complete(self.vol.profile)
+        from base.points import award_profile
+        self.assertIsNone(award_profile(self.vol.profile))
+
+    def test_recalculate_backfills_complete_profiles(self):
+        from base.points import rebuild
+        self.complete(self.vol.profile)
+        rebuild()
+        self.vol.profile.refresh_from_db()
+        self.assertEqual(self.vol.profile.impact_points, 25)

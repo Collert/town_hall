@@ -543,6 +543,7 @@ class PointsRulesForm(forms.ModelForm):
             'training_points_cap': _('Maximum per module'),
             'endorsement_points': _('Points per endorsement'),
             'endorsement_monthly_cap': _('Endorsement awards per 30 days'),
+            'profile_complete_points': _('Points for a completed profile'),
         }
         help_texts = {
             'max_role_weight': _('Roles with the longest training get this multiplier; untrained roles get 1.0. A role can set its own weight instead.'),
@@ -552,6 +553,7 @@ class PointsRulesForm(forms.ModelForm):
             'early_start_hour': _('0-23, local time.'),
             'late_end_hour': _('0-23, local time. Shifts that run past midnight also count.'),
             'endorsement_points': _('Given to someone endorsed by a teammate from the same event, once per event.'),
+            'profile_complete_points': _('Once per person, the first time their profile has a photo, bio, skills and location. 0 turns it off.'),
         }
 
     def clean(self):

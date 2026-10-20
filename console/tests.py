@@ -993,6 +993,15 @@ class ListmonkTemplateTests(ConsoleFixture):
         self.assertIn('{{ with .Tx.Data.html }}{{ . | Safe }}{{ end }}<p>mine</p>', self.fake.templates[tpl_id]['body'])
         self.assertEqual(email_templates.upgrade_body('{{ .Tx.Data.notes }}'), '{{ .Tx.Data.notes }}')
 
+    def test_sending_a_trigger_without_a_template_seeds_it(self):
+        from base import email
+        email.deliver('profile_reminder', ['vol@example.com'], {'name': 'Val', 'missing': 'a short bio', 'points': 25, 'link': 'x'}, 'uk')
+        self.assertEqual(EmailTemplate.objects.filter(trigger='profile_reminder').count(), len(email.email_templates.languages()))
+        sent = self.fake.tx[-1]
+        uk = EmailTemplate.objects.get(trigger='profile_reminder', language='uk').template_id
+        self.assertEqual(sent['template_id'], uk)
+        self.assertIn('Дякуємо, що приєдналися', self.fake.templates[uk]['body'])
+
     def test_deleted_templates_are_recreated(self):
         from base import listmonk
         listmonk.seed_templates(keys=['welcome'])

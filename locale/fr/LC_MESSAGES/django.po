@@ -9672,9 +9672,8 @@ msgstr "Contacter %(name)s quand même"
 msgid "Contact them anyway"
 msgstr "Les contacter quand même"
 
-#: .\events\templates\events\event_detail.html:626
-msgid "Confirming..."
-msgstr "Confirmation..."
+#~ msgid "Confirming..."
+#~ msgstr "Confirmation..."
 
 #: .\events\templates\events\event_impact_card.html:4
 #, python-format
@@ -10548,3 +10547,165 @@ msgstr "Chinois traditionnel"
 #: .\town_hall\settings.py:175
 msgid "Tagalog"
 msgstr "Tagalog"
+
+#: .\base\models.py:348
+msgid "Profile completed"
+msgstr "Profil complété"
+
+#: .\base\points.py:209
+msgid "Completed your profile"
+msgstr "Profil complété"
+
+#: .\base\profile_completion.py:34
+msgid "a profile photo"
+msgstr "une photo de profil"
+
+#: .\base\profile_completion.py:35
+msgid "a short bio"
+msgstr "une courte biographie"
+
+#: .\base\profile_completion.py:36
+msgid "your skills"
+msgstr "vos compétences"
+
+#: .\base\profile_completion.py:37
+msgid "your location"
+msgstr "votre lieu"
+
+#: .\base\templates\base\edit_profile.html:90
+#: .\base\templates\base\listmonk\profile_reminder.html:6
+msgid "Complete your profile"
+msgstr "Complétez votre profil"
+
+#: .\base\templates\base\edit_profile.html:91
+#, python-format
+msgid "+%(points)s impact points"
+msgstr "+%(points)s points d’impact"
+
+#: .\base\templates\base\edit_profile.html:93
+msgid ""
+"A photo, a few lines about you, your skills and where you're based help "
+"coordinators find the right role for you."
+msgstr ""
+"Une photo, quelques mots sur vous, vos compétences et votre lieu aident les "
+"coordonnateurs à vous trouver le bon rôle."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:2
+#, python-format
+msgid "Thanks for joining, %(name)s!"
+msgstr "Merci de votre inscription, %(name)s !"
+
+#: .\base\templates\base\listmonk\profile_reminder.html:3
+#, python-format
+msgid ""
+"We're glad you're part of %(org)s. Take a minute to finish your profile so "
+"coordinators and teammates can get to know you."
+msgstr ""
+"Nous sommes ravis de vous compter parmi nous chez %(org)s. Prenez une minute"
+" pour compléter votre profil afin que les coordonnateurs et vos coéquipiers "
+"puissent apprendre à vous connaître."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:4
+#: .\base\templates\base\listmonk\profile_reminder_week.html:4
+#, python-format
+msgid "Still to add: <strong>%(missing)s</strong>."
+msgstr "Reste à ajouter : <strong>%(missing)s</strong>."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:5
+#: .\base\templates\base\listmonk\profile_reminder_week.html:5
+#, python-format
+msgid "Complete it to earn <strong>%(points)s impact points</strong>."
+msgstr "Complétez-le pour gagner <strong>%(points)s points d’impact</strong>."
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:2
+#, python-format
+msgid "Your profile is almost there, %(name)s"
+msgstr "Votre profil est presque complet, %(name)s"
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:3
+msgid ""
+"A complete profile helps coordinators match you with the right roles, and "
+"lets your teammates put a face to your name."
+msgstr ""
+"Un profil complet aide les coordonnateurs à vous proposer les bons rôles et "
+"permet à vos coéquipiers de mettre un visage sur votre nom."
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:6
+msgid "Finish your profile"
+msgstr "Terminez votre profil"
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:7
+msgid "This is the last reminder we'll send about your profile."
+msgstr ""
+"C’est le dernier rappel que nous vous enverrons au sujet de votre profil."
+
+#: .\base\triggers.py:43
+msgid "Profile reminder"
+msgstr "Rappel de profil"
+
+#: .\base\triggers.py:44
+msgid ""
+"A day after someone registers, if their profile still lacks a photo, bio, "
+"skills or location."
+msgstr ""
+"Un jour après l’inscription, si le profil n’a toujours pas de photo, de "
+"biographie, de compétences ou de lieu."
+
+#: .\base\triggers.py:45
+#, python-format
+msgid "Finish your %(org)s profile"
+msgstr "Terminez votre profil %(org)s"
+
+#: .\base\triggers.py:46
+msgid "Second profile reminder"
+msgstr "Deuxième rappel de profil"
+
+#: .\base\triggers.py:47
+msgid "A week after someone registers, if their profile is still incomplete."
+msgstr "Une semaine après l’inscription, si le profil est toujours incomplet."
+
+#: .\base\triggers.py:48
+#, python-format
+msgid "Your %(org)s profile is almost there"
+msgstr "Votre profil %(org)s est presque complet"
+
+#: .\base\triggers.py:89
+msgid "What the profile still lacks, e.g. \"a profile photo, your skills\""
+msgstr ""
+"Ce qui manque encore au profil, p. ex. « une photo de profil, vos "
+"compétences »"
+
+#: .\base\triggers.py:90
+msgid "Impact points for completing the profile; 0 when there is no award"
+msgstr ""
+"Points d’impact pour un profil complété; 0 s’il n’y a pas de récompense"
+
+#: .\base\views.py:341
+#, python-format
+msgid "Your profile is complete. You earned %(points)d impact points!"
+msgstr ""
+"Votre profil est complet. Vous avez gagné %(points)d points d’impact !"
+
+#: .\console\forms.py:546
+msgid "Points for a completed profile"
+msgstr "Points pour un profil complété"
+
+#: .\console\forms.py:556
+msgid ""
+"Once per person, the first time their profile has a photo, bio, skills and "
+"location. 0 turns it off."
+msgstr ""
+"Une fois par personne, la première fois que son profil a une photo, une "
+"biographie, des compétences et un lieu. 0 désactive cette récompense."
+
+#: .\console\templates\console\points_settings.html:73
+msgid "Completed Profile"
+msgstr "Profil complété"
+
+#: .\console\templates\console\points_settings.html:74
+msgid ""
+"Encourages new volunteers to fill in their profile. The reminder emails in "
+"Communication > Email mention it."
+msgstr ""
+"Encourage les nouveaux bénévoles à remplir leur profil. Les e-mails de "
+"rappel dans Communication > E-mail le mentionnent."

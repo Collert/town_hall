@@ -1,0 +1,7 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% blocktranslate asvar title with name=tx.name %}Thanks for joining, {{ name }}!{% endblocktranslate %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% blocktranslate with org=brand.org_name %}We're glad you're part of {{ org }}. Take a minute to finish your profile so coordinators and teammates can get to know you.{% endblocktranslate %}</p>
+<div class="th-box">{% blocktranslate with missing=tx.missing %}Still to add: <strong>{{ missing }}</strong>.{% endblocktranslate %}</div>
+{{ tx_if.points }}<p class="th-text">{% blocktranslate with points=tx.points %}Complete it to earn <strong>{{ points }} impact points</strong>.{% endblocktranslate %}</p>{{ go.end }}
+{% translate "Complete your profile" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+{% endblock %}

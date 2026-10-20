@@ -1,0 +1,8 @@
+{% extends 'base/listmonk/_layout.html' %}{% load i18n %}
+{% block content %}{% blocktranslate asvar title with name=tx.name %}Your profile is almost there, {{ name }}{% endblocktranslate %}{% include 'base/listmonk/_heading.html' with text=title %}
+<p class="th-text">{% translate "A complete profile helps coordinators match you with the right roles, and lets your teammates put a face to your name." %}</p>
+<div class="th-box">{% blocktranslate with missing=tx.missing %}Still to add: <strong>{{ missing }}</strong>.{% endblocktranslate %}</div>
+{{ tx_if.points }}<p class="th-text">{% blocktranslate with points=tx.points %}Complete it to earn <strong>{{ points }} impact points</strong>.{% endblocktranslate %}</p>{{ go.end }}
+{% translate "Finish your profile" as label %}{% include 'base/listmonk/_button.html' with href=tx.link label=label %}
+<p class="th-note">{% translate "This is the last reminder we'll send about your profile." %}</p>
+{% endblock %}

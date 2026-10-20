@@ -745,3 +745,75 @@ dialog.account-dialog.dialog-closing::backdrop {
         grid-template-columns: 1fr;
     }
 }
+/* ---- Complete-your-profile checklist ---- */
+.profile-checklist-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.profile-checklist-head .account-section-title {
+    margin: 0;
+}
+
+.profile-checklist-points {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.profile-checklist-points .material-symbols-outlined {
+    font-size: 1rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+.profile-checklist-intro {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin: 0 0 1.25rem;
+}
+
+.profile-checklist-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+}
+
+.profile-checklist-items li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.profile-checklist-items .material-symbols-outlined {
+    font-size: 1.25rem;
+    color: var(--color-text-tertiary);
+}
+
+.profile-checklist-items li.is-done {
+    color: var(--color-text-tertiary);
+}
+
+.profile-checklist-items li.is-done > span:last-child {
+    text-decoration: line-through;
+}
+
+.profile-checklist-items li.is-done .material-symbols-outlined {
+    color: var(--color-primary-vivid);
+    font-variation-settings: 'FILL' 1;
+}

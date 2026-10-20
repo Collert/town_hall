@@ -73,6 +73,7 @@ class Profile(models.Model):
     id_code = models.CharField(max_length=6, unique=True, editable=False, help_text='Unique identifier for the user (e.g., employee ID, volunteer ID)')
     admin_notes = models.TextField(blank=True, default='', help_text='Internal notes visible to staff only')
     language = models.CharField(max_length=10, blank=True, default='', help_text='Language the user last browsed in; emails use it')
+    profile_reminders_sent = models.PositiveSmallIntegerField(default=0, help_text='Complete-your-profile reminder emails sent so far (base/profile_completion.py)')
 
     def avatar_url(self, size=192):
         """URL of the picture to show: the Gravatar if chosen, else the upload, else None (initials)."""
@@ -311,6 +312,7 @@ class PointsRules(models.Model):
     training_points_cap = models.PositiveIntegerField(default=60, help_text='Largest award for finishing a module')
     endorsement_points = models.PositiveIntegerField(default=5, help_text='Awarded to someone endorsed by a teammate from the same event')
     endorsement_monthly_cap = models.PositiveIntegerField(default=5, help_text='Endorsement awards a person can earn in 30 days')
+    profile_complete_points = models.PositiveIntegerField(default=25, help_text='One-time award for filling in photo, bio, skills and location')
 
     class Meta:
         verbose_name_plural = 'Points rules'
@@ -338,11 +340,12 @@ class PointsRules(models.Model):
 class PointsEntry(models.Model):
     """One line of a volunteer's impact points ledger. Their total is the sum of these, and each
     entry keeps the amount it was given with, so changing the rules never rewrites history."""
-    SHIFT, TRAINING, ENDORSEMENT, ADJUSTMENT = 'shift', 'training', 'endorsement', 'adjustment'
+    SHIFT, TRAINING, ENDORSEMENT, PROFILE, ADJUSTMENT = 'shift', 'training', 'endorsement', 'profile', 'adjustment'
     SOURCES = [
         (SHIFT, _('Shift')),
         (TRAINING, _('Training')),
         (ENDORSEMENT, _('Endorsement')),
+        (PROFILE, _('Profile completed')),
         (ADJUSTMENT, _('Adjustment')),
     ]
 

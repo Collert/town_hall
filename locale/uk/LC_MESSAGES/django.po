@@ -9633,9 +9633,8 @@ msgstr "Усе одно написати: %(name)s"
 msgid "Contact them anyway"
 msgstr "Усе одно звернутися"
 
-#: .\events\templates\events\event_detail.html:626
-msgid "Confirming..."
-msgstr "Підтвердження..."
+#~ msgid "Confirming..."
+#~ msgstr "Підтвердження..."
 
 #: .\events\templates\events\event_impact_card.html:4
 #, python-format
@@ -10498,3 +10497,160 @@ msgstr "Традиційна китайська"
 #: .\town_hall\settings.py:175
 msgid "Tagalog"
 msgstr "Тагальська"
+
+#: .\base\models.py:348
+msgid "Profile completed"
+msgstr "Профіль заповнено"
+
+#: .\base\points.py:209
+msgid "Completed your profile"
+msgstr "Заповнено профіль"
+
+#: .\base\profile_completion.py:34
+msgid "a profile photo"
+msgstr "фото профілю"
+
+#: .\base\profile_completion.py:35
+msgid "a short bio"
+msgstr "коротка біографія"
+
+#: .\base\profile_completion.py:36
+msgid "your skills"
+msgstr "ваші навички"
+
+#: .\base\profile_completion.py:37
+msgid "your location"
+msgstr "ваше місцезнаходження"
+
+#: .\base\templates\base\edit_profile.html:90
+#: .\base\templates\base\listmonk\profile_reminder.html:6
+msgid "Complete your profile"
+msgstr "Заповніть свій профіль"
+
+#: .\base\templates\base\edit_profile.html:91
+#, python-format
+msgid "+%(points)s impact points"
+msgstr "+%(points)s балів впливу"
+
+#: .\base\templates\base\edit_profile.html:93
+msgid ""
+"A photo, a few lines about you, your skills and where you're based help "
+"coordinators find the right role for you."
+msgstr ""
+"Фото, кілька слів про себе, ваші навички та місцезнаходження допомагають "
+"координаторам знайти для вас відповідну роль."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:2
+#, python-format
+msgid "Thanks for joining, %(name)s!"
+msgstr "Дякуємо, що приєдналися, %(name)s!"
+
+#: .\base\templates\base\listmonk\profile_reminder.html:3
+#, python-format
+msgid ""
+"We're glad you're part of %(org)s. Take a minute to finish your profile so "
+"coordinators and teammates can get to know you."
+msgstr ""
+"Ми раді, що ви з %(org)s. Приділіть хвилинку, щоб заповнити свій профіль, і "
+"координатори та ваша команда зможуть краще вас пізнати."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:4
+#: .\base\templates\base\listmonk\profile_reminder_week.html:4
+#, python-format
+msgid "Still to add: <strong>%(missing)s</strong>."
+msgstr "Ще потрібно додати: <strong>%(missing)s</strong>."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:5
+#: .\base\templates\base\listmonk\profile_reminder_week.html:5
+#, python-format
+msgid "Complete it to earn <strong>%(points)s impact points</strong>."
+msgstr ""
+"Заповніть його, щоб отримати <strong>%(points)s балів впливу</strong>."
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:2
+#, python-format
+msgid "Your profile is almost there, %(name)s"
+msgstr "Ваш профіль майже готовий, %(name)s"
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:3
+msgid ""
+"A complete profile helps coordinators match you with the right roles, and "
+"lets your teammates put a face to your name."
+msgstr ""
+"Повний профіль допомагає координаторам підібрати для вас відповідні ролі, а "
+"вашій команді — знати вас в обличчя."
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:6
+msgid "Finish your profile"
+msgstr "Завершіть свій профіль"
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:7
+msgid "This is the last reminder we'll send about your profile."
+msgstr "Це останнє нагадування про ваш профіль."
+
+#: .\base\triggers.py:43
+msgid "Profile reminder"
+msgstr "Нагадування про профіль"
+
+#: .\base\triggers.py:44
+msgid ""
+"A day after someone registers, if their profile still lacks a photo, bio, "
+"skills or location."
+msgstr ""
+"Через день після реєстрації, якщо в профілі досі немає фото, біографії, "
+"навичок або місцезнаходження."
+
+#: .\base\triggers.py:45
+#, python-format
+msgid "Finish your %(org)s profile"
+msgstr "Завершіть свій профіль у %(org)s"
+
+#: .\base\triggers.py:46
+msgid "Second profile reminder"
+msgstr "Друге нагадування про профіль"
+
+#: .\base\triggers.py:47
+msgid "A week after someone registers, if their profile is still incomplete."
+msgstr "Через тиждень після реєстрації, якщо профіль досі не заповнено."
+
+#: .\base\triggers.py:48
+#, python-format
+msgid "Your %(org)s profile is almost there"
+msgstr "Ваш профіль у %(org)s майже готовий"
+
+#: .\base\triggers.py:89
+msgid "What the profile still lacks, e.g. \"a profile photo, your skills\""
+msgstr "Чого ще бракує в профілі, напр. «фото профілю, ваші навички»"
+
+#: .\base\triggers.py:90
+msgid "Impact points for completing the profile; 0 when there is no award"
+msgstr "Бали впливу за заповнений профіль; 0, якщо нагороди немає"
+
+#: .\base\views.py:341
+#, python-format
+msgid "Your profile is complete. You earned %(points)d impact points!"
+msgstr "Ваш профіль заповнено. Ви отримали %(points)d балів впливу!"
+
+#: .\console\forms.py:546
+msgid "Points for a completed profile"
+msgstr "Балів за заповнений профіль"
+
+#: .\console\forms.py:556
+msgid ""
+"Once per person, the first time their profile has a photo, bio, skills and "
+"location. 0 turns it off."
+msgstr ""
+"Один раз на людину — коли її профіль уперше має фото, біографію, навички та "
+"місцезнаходження. 0 вимикає нагороду."
+
+#: .\console\templates\console\points_settings.html:73
+msgid "Completed Profile"
+msgstr "Заповнений профіль"
+
+#: .\console\templates\console\points_settings.html:74
+msgid ""
+"Encourages new volunteers to fill in their profile. The reminder emails in "
+"Communication > Email mention it."
+msgstr ""
+"Заохочує нових волонтерів заповнювати профіль. Листи-нагадування в розділі "
+"«Комунікація > Ел. пошта» згадують про це."

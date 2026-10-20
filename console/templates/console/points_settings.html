@@ -68,6 +68,14 @@
                     {% include 'console/partials/field.html' with field=form.endorsement_monthly_cap %}
                 </div>
             </section>
+
+            <section class="c-card">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">person_check</span>{% trans "Completed Profile" %}</h2>
+                <p class="c-muted points-intro">{% trans "Encourages new volunteers to fill in their profile. The reminder emails in Communication > Email mention it." %}</p>
+                <div class="points-grid">
+                    {% include 'console/partials/field.html' with field=form.profile_complete_points %}
+                </div>
+            </section>
         </div>
 
         <aside class="c-stack">

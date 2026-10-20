@@ -84,6 +84,20 @@
 
         <!-- Main content -->
         <div class="account-main">
+            {% if completion %}
+            <div class="account-section-card profile-checklist">
+                <div class="profile-checklist-head">
+                    <h2 class="account-section-title">{% trans "Complete your profile" %}</h2>
+                    {% if completion.points %}<span class="profile-checklist-points"><span class="material-symbols-outlined">star</span>{% blocktrans with points=completion.points %}+{{ points }} impact points{% endblocktrans %}</span>{% endif %}
+                </div>
+                <p class="profile-checklist-intro">{% trans "A photo, a few lines about you, your skills and where you're based help coordinators find the right role for you." %}</p>
+                <ul class="profile-checklist-items">
+                    {% for item in completion.items %}
+                    <li class="{% if item.done %}is-done{% endif %}"><span class="material-symbols-outlined">{% if item.done %}check_circle{% else %}radio_button_unchecked{% endif %}</span><span>{{ item.label|capfirst }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
             <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data" id="profile-form">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="save">
