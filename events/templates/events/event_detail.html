@@ -617,15 +617,6 @@
             e.target.closest('.timeslot-item').classList.add('selected');
         });
     });
-
-    // Form submit loading state
-    document.querySelectorAll('form[id^="role-signup-form-"]').forEach(form => {
-        form.addEventListener('submit', (e) => {
-            const btn = e.target.closest('.modal-dialog').querySelector('.modal-confirm');
-            btn.disabled = true;
-            btn.textContent = '{% trans "Confirming..." %}';
-        });
-    });
 })();
 </script>
 {% endblock %}

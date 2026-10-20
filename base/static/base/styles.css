@@ -1234,3 +1234,41 @@ span.mobile-avatar.avatar-initials {
     z-index: 50;
     /* Allow clicks to pass through when not interacting with the nav */
 }
+/* Busy submit buttons (busy_buttons.js): the label hides behind a spinner in the
+   button's own text colour while its request runs. */
+.is-busy {
+    position: relative;
+    color: transparent !important;
+    opacity: 1 !important;
+    cursor: progress !important;
+}
+
+.is-busy > * {
+    visibility: hidden;
+}
+
+.is-busy::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 1.1em;
+    height: 1.1em;
+    margin: auto;
+    border: 2px solid var(--busy-color, var(--color-text-primary));
+    border-right-color: transparent;
+    border-radius: 50%;
+    visibility: visible;
+    animation: busy-spin 0.7s linear infinite;
+}
+
+@keyframes busy-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .is-busy::after {
+        animation-duration: 1.6s;
+    }
+}
