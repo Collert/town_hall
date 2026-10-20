@@ -34,6 +34,10 @@ NAME_PREFIX = 'Town Hall'
 EVENT_TOKENS = ('[event_title]', '[event_date]', '[event_location]', '[event_description]')
 EVENT_LINK = 'https://town-hall.invalid/event-link'
 EVENT_IMAGE = 'https://town-hall.invalid/event-image.png'
+# listmonk counts opens with a pixel from {{ TrackView }} and clicks on URLs ending in
+# @TrackLink; without them its campaign analytics stay at zero.
+TRACK_VIEW = '{{ TrackView }}'
+TRACK_LINK = '@TrackLink'
 
 
 def languages():
@@ -207,7 +211,7 @@ def visual_blocks(brand):
         ('Text', {'style': {'padding': _padding(16, 24), 'color': brand['color_muted'], 'fontSize': 13},
                   'props': {'markdown': True, 'text': _(
                       "You're receiving this because you have an account with %(org)s. [Unsubscribe]({{UnsubscribeURL}})"
-                  ) % {'org': brand['org_name']}}}),
+                  ) % {'org': brand['org_name']} + '\n' + TRACK_VIEW}}),
     ]
     return blocks
 
@@ -297,6 +301,7 @@ def fill_event(template, values, link, image_url):
     ``values`` maps EVENT_TOKENS to text. Without an image, the event image block is dropped.
     """
     source = json.loads(template['body_source'])
+    tracked_link = link + TRACK_LINK
 
     def fill(node):
         if isinstance(node, dict):
@@ -306,7 +311,7 @@ def fill_event(template, values, link, image_url):
         if isinstance(node, str):
             for token, value in values.items():
                 node = node.replace(token, value)
-            return node.replace(EVENT_IMAGE, image_url or EVENT_IMAGE).replace(EVENT_LINK, link)
+            return node.replace(EVENT_IMAGE, image_url or EVENT_IMAGE).replace(EVENT_LINK, tracked_link)
         return node
 
     if not image_url:
@@ -319,12 +324,18 @@ def fill_event(template, values, link, image_url):
     source = fill(source)
 
     body = template['body']
+    if 'TrackView' not in body:  # seeded before Town Hall added tracking
+        footer = next((block for key, block in source.items() if key != 'root'
+                       and 'UnsubscribeURL' in json.dumps(block.get('data', {}).get('props', {}))), None)
+        if footer and footer['data']['props'].get('text'):
+            footer['data']['props']['text'] += '\n' + TRACK_VIEW
+        body = body.replace('</body>', TRACK_VIEW + '</body>', 1) if '</body>' in body else body + TRACK_VIEW
     if image_url:
         body = body.replace(EVENT_IMAGE, html.escape(image_url))
     else:
         body = re.sub(r'<div[^>]*>\s*<img[^>]*%s[^>]*/?>\s*</div>' % re.escape(EVENT_IMAGE), '', body)
         body = re.sub(r'<img[^>]*%s[^>]*/?>' % re.escape(EVENT_IMAGE), '', body)
-    body = body.replace(EVENT_LINK, html.escape(link))
+    body = body.replace(EVENT_LINK, html.escape(tracked_link))
     for token, value in values.items():
         escaped = html.escape(value)
         body = body.replace(token, escaped.replace('\n', '<br>') if token == '[event_description]' else escaped)

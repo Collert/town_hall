@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import shutil
@@ -1079,6 +1080,25 @@ class ListmonkTemplateTests(ConsoleFixture):
             self.assertNotIn(leftover, campaign['body_source'])  # no photo: the image block is dropped
         self.assertNotIn(('PUT', f'/campaigns/{self.fake._next}/status'), self.fake.calls)  # left as a draft
         self.assertContains(response, 'waiting as a draft')
+        # listmonk analytics: an open-tracking pixel and a tracked event link, in what's sent and in the editor.
+        self.assertEqual(campaign['body'].count('{{ TrackView }}'), 1)
+        self.assertIn('{{ TrackView }}', campaign['body_source'])
+        self.assertIn(f'/opportunities/{event.pk}/@TrackLink', campaign['body'])
+        self.assertIn(f'/opportunities/{event.pk}/@TrackLink', campaign['body_source'])
+
+    def test_templates_seeded_before_tracking_still_get_it(self):
+        from base import email_templates
+        with translation.override('en'):
+            template = email_templates.render('event_published', 'en', email_templates.brand_values(SiteSettings.get_settings()))
+        template['body'] = template['body'].replace('{{ TrackView }}', '')
+        template['body_source'] = template['body_source'].replace('\\n{{ TrackView }}', '')
+        self.assertNotIn('TrackView', template['body'] + template['body_source'])
+        body, source = email_templates.fill_event(template, {'[event_title]': 'Drive', '[event_date]': 'Today',
+                                                             '[event_location]': 'Hall', '[event_description]': '.'},
+                                                  'https://th.example/en/opportunities/1/', '')
+        self.assertEqual(body.count('{{ TrackView }}'), 1)
+        footer = next(b for b in json.loads(source).values() if 'UnsubscribeURL' in json.dumps(b))
+        self.assertTrue(footer['data']['props']['text'].endswith('{{ TrackView }}'))
 
     def test_publishing_with_the_trigger_off_creates_nothing(self):
         event = make_event('Winter Drive', timezone.now() + timedelta(days=3), timezone.now() + timedelta(days=3, hours=4),
