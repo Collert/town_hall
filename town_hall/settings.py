@@ -219,7 +219,15 @@ STORAGES = {
 if USE_S3_MEDIA:
     from urllib.parse import urlsplit
 
+    from botocore.config import Config as _BotoConfig
+
     _s3_options = {
+        # boto waits 60 s to connect and then retries, longer than gunicorn's 30 s worker
+        # timeout, so an unreachable bucket killed the worker instead of raising an error.
+        'client_config': _BotoConfig(
+            connect_timeout=5, read_timeout=15, retries={'max_attempts': 2, 'mode': 'standard'},
+            signature_version='s3v4', s3={'addressing_style': 'path'},
+        ),
         'bucket_name': S3_BUCKET,
         'endpoint_url': os.environ.get('S3_ENDPOINT_URL') or None,
         'access_key': os.environ.get('S3_ACCESS_KEY', ''),

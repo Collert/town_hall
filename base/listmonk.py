@@ -149,8 +149,11 @@ def upload_media(filename, content, content_type):
 
 def upload_file(field_file):
     """Upload a Django FieldFile (an ImageField value) and return its listmonk URL."""
-    with field_file.open('rb') as handle:
-        content = handle.read()
+    try:
+        with field_file.open('rb') as handle:
+            content = handle.read()
+    except Exception as exc:  # storage errors vary by backend (OSError, botocore errors)
+        raise ListmonkError(f'Could not read {field_file.name} from media storage: {exc}') from exc
     name = os.path.basename(field_file.name)
     return upload_media(name, content, mimetypes.guess_type(name)[0] or 'application/octet-stream')
 
