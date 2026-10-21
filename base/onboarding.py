@@ -544,6 +544,9 @@ uses in each language. **Reset to default** restores Town Hall's version of a te
   someone registers, but only if their profile still lacks a photo, bio, skills or location. Each
   lists what's missing and mentions the completed-profile award. People who registered long before
   you switch them on don't get them.
+- **Shift reminder** goes out by itself at 9 AM the day before each shift, to everyone signed up for
+  it, with the role, time and place. People who sign up after 9 AM that day aren't reminded, because
+  their sign-up confirmation just told them the same thing.
 - When a Town Hall update adds a new kind of email, choose **Re-create missing templates** so it gets
   a template in each language.
 """),

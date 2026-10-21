@@ -126,7 +126,7 @@
                                 {% if slot.multiple_slots %}
                                 <p class="role-time">{% trans "Multiple time slots available" %}</p>
                                 {% else %}
-                                <p class="role-time">{{ slot.start_time|time:"TIME_FORMAT" }} - {{ slot.end_time|time:"TIME_FORMAT" }}</p>
+                                <p class="role-time">{{ slot.when }}</p>
                                 {% endif %}
                             </div>
                             {% if slot.task_list_id %}
@@ -442,7 +442,7 @@
                                 {% if ts.is_full and not ts.user_signed_up %}style="pointer-events:none;"{% endif %}>
                                 <input type="radio" name="slot_id" value="{{ ts.id }}" {% if ts.is_selected %}checked{% endif %} {% if ts.is_full and not ts.user_signed_up %}disabled{% endif %} style="display:none;">
                                 <div class="timeslot-content">
-                                    <div class="timeslot-time">{{ ts.start_time|time:"TIME_FORMAT" }} - {{ ts.end_time|time:"TIME_FORMAT" }}{% if ts.area %} <span class="timeslot-area">{{ ts.area }}</span>{% endif %}</div>
+                                    <div class="timeslot-time">{{ ts.when }}{% if ts.area %} <span class="timeslot-area">{{ ts.area }}</span>{% endif %}</div>
                                     <div class="timeslot-info">
                                         {% if ts.user_signed_up %}
                                             <span style="color: var(--color-success); font-weight: 600;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size:1.25rem;">check_circle</span> {% trans "Signed up" %}</span>

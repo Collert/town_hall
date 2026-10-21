@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 
 from base.email import notify
 from base.models import Endorsement
-from base.utils import qr_svg, short_datetime
+from base.utils import qr_svg, short_datetime, slot_when
 from education.models import TrainingModule, TrainingModuleCompletion
 from jobs.models import RoleTrainingRequirement, Shift
 
@@ -97,6 +97,7 @@ def event_detail(request, event_id):
             slot.total_available_spots = slot.available_slots()
             slot.multiple_slots = False
             slot.all_fully_staffed = slot.is_fully_staffed()
+            slot.when = slot_when(slot.start_time, slot.end_time, event.start_date)
             unique_role_slots.append(slot)
         else:
             first_slot = seen_roles[slot.role_id]
@@ -133,6 +134,7 @@ def event_detail(request, event_id):
             'id': s.pk,
             'start_time': s.start_time,
             'end_time': s.end_time,
+            'when': slot_when(s.start_time, s.end_time, event.start_date),
             'available': s.available_slots(),
             'is_full': s.is_fully_staffed(),
             'is_selected': s.pk == slot.pk,

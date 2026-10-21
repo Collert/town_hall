@@ -80,6 +80,7 @@ MIDDLEWARE = [
     'base.middleware.HtmxMessagesMiddleware',
     'base.middleware.RememberLanguageMiddleware',
     'events.middleware.LeadDeadlineMiddleware',
+    'events.middleware.ShiftReminderMiddleware',
     'base.middleware.ProfileReminderMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

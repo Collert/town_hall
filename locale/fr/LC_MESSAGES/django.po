@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 10:20-0700\n"
+"POT-Creation-Date: 2026-10-21 16:09-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,15 +34,15 @@ msgstr "Cette adresse comporte un port non valide."
 msgid "No Bell Tower server answered at that address."
 msgstr "Aucun serveur Bell Tower n’a répondu à cette adresse."
 
-#: .\base\email_templates.py:195
+#: .\base\email_templates.py:199
 msgid "New opportunity"
 msgstr "Nouvelle opportunité"
 
-#: .\base\email_templates.py:203
+#: .\base\email_templates.py:207
 msgid "See roles and sign up"
 msgstr "Voir les rôles et s'inscrire"
 
-#: .\base\email_templates.py:209
+#: .\base\email_templates.py:213
 #, python-format
 msgid ""
 "You're receiving this because you have an account with %(org)s. "
@@ -51,21 +51,21 @@ msgstr ""
 "Vous recevez ce message parce que vous avez un compte chez %(org)s. [Se "
 "désabonner]({{UnsubscribeURL}})"
 
-#: .\base\forms.py:9 .\base\triggers.py:80 .\base\triggers.py:101
+#: .\base\forms.py:9 .\base\triggers.py:90 .\base\triggers.py:113
 msgid "Organization name"
 msgstr "Nom de l’organisation"
 
-#: .\base\forms.py:10 .\base\templates\base\edit_profile.html:96
+#: .\base\forms.py:10 .\base\templates\base\edit_profile.html:110
 #: .\base\templates\base\signup.html:49
 msgid "First Name"
 msgstr "Prénom"
 
-#: .\base\forms.py:11 .\base\templates\base\edit_profile.html:100
+#: .\base\forms.py:11 .\base\templates\base\edit_profile.html:114
 #: .\base\templates\base\signup.html:53
 msgid "Last Name"
 msgstr "Nom"
 
-#: .\base\forms.py:12 .\base\templates\base\edit_profile.html:104
+#: .\base\forms.py:12 .\base\templates\base\edit_profile.html:118
 #: .\base\templates\base\login.html:19
 #: .\base\templates\base\password_reset_form.html:19
 #: .\base\templates\base\signup.html:59
@@ -87,118 +87,142 @@ msgstr "Confirmer le mot de passe"
 msgid "The passwords don't match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: .\base\models.py:149
+#: .\base\models.py:150
 msgid "Facilities"
 msgstr "Installations"
 
-#: .\base\models.py:150
+#: .\base\models.py:151
 msgid "Accessibility"
 msgstr "Accessibilité"
 
-#: .\base\models.py:151
+#: .\base\models.py:152
 msgid "Equipment & tech"
 msgstr "Équipement et technologie"
 
-#: .\base\models.py:152
+#: .\base\models.py:153
 msgid "Getting there"
 msgstr "Comment s’y rendre"
 
-#: .\base\models.py:258
+#: .\base\models.py:259
 msgid "Monday"
 msgstr "Lundi"
 
-#: .\base\models.py:258
+#: .\base\models.py:259
 msgid "Tuesday"
 msgstr "Mardi"
 
-#: .\base\models.py:258
+#: .\base\models.py:259
 msgid "Wednesday"
 msgstr "Mercredi"
 
-#: .\base\models.py:258
+#: .\base\models.py:259
 msgid "Thursday"
 msgstr "Jeudi"
 
-#: .\base\models.py:259
+#: .\base\models.py:260
 msgid "Friday"
 msgstr "Vendredi"
 
-#: .\base\models.py:259
+#: .\base\models.py:260
 msgid "Saturday"
 msgstr "Samedi"
 
-#: .\base\models.py:259
+#: .\base\models.py:260
 msgid "Sunday"
 msgstr "Dimanche"
 
-#: .\base\models.py:343 .\base\points.py:185
+#: .\base\models.py:345 .\base\points.py:200
 #: .\console\templates\console\volunteer_detail.html:148
 msgid "Shift"
 msgstr "Quart de travail"
 
-#: .\base\models.py:344 .\base\templates\base\layout.html:30
+#: .\base\models.py:346 .\base\templates\base\layout.html:30
 #: .\base\templates\base\layout.html:164 .\base\templates\base\layout.html:285
 #: .\base\triggers.py:34 .\console\templates\console\points_settings.html:54
 msgid "Training"
 msgstr "Formation"
 
-#: .\base\models.py:345
+#: .\base\models.py:347
 msgid "Endorsement"
 msgstr "Recommandation"
 
-#: .\base\models.py:346 .\base\points.py:193
+#: .\base\models.py:348
+msgid "Profile completed"
+msgstr "Profil complété"
+
+#: .\base\models.py:349 .\base\points.py:210
 msgid "Adjustment"
 msgstr "Ajustement"
 
-#: .\base\points.py:176
+#: .\base\points.py:191
 msgid "Walk-in cover"
 msgstr "Remplacement sans préavis"
 
-#: .\base\points.py:177
+#: .\base\points.py:192
 msgid "Last-minute sign-up"
 msgstr "Inscription de dernière minute"
 
-#: .\base\points.py:178
+#: .\base\points.py:193
 msgid "Early or late shift"
 msgstr "Quart tôt ou tard"
 
-#: .\base\points.py:187
+#: .\base\points.py:202
 #, python-format
 msgid "%(role)s at %(event)s"
 msgstr "%(role)s à %(event)s"
 
-#: .\base\points.py:190
+#: .\base\points.py:205
 #, python-format
 msgid "Completed %(module)s"
 msgstr "%(module)s terminé"
 
-#: .\base\points.py:190
+#: .\base\points.py:205
 msgid "a training module"
 msgstr "un module de formation"
 
-#: .\base\points.py:192
+#: .\base\points.py:207
 #, python-format
 msgid "Endorsed by %(name)s"
 msgstr "Recommandé par %(name)s"
 
-#: .\base\points.py:192
+#: .\base\points.py:207
 msgid "a teammate"
 msgstr "un coéquipier"
 
-#: .\base\points.py:201
+#: .\base\points.py:209
+msgid "Completed your profile"
+msgstr "Profil complété"
+
+#: .\base\points.py:218
 #, python-format
 msgid "%(h)s h"
 msgstr "%(h)s h"
 
-#: .\base\points.py:203
+#: .\base\points.py:220
 #, python-format
 msgid "×%(w)s role"
 msgstr "Rôle ×%(w)s"
 
-#: .\base\points.py:205
+#: .\base\points.py:222
 #, python-format
 msgid "+%(p)s%% reach"
 msgstr "+%(p)s %% de portée"
+
+#: .\base\profile_completion.py:34
+msgid "a profile photo"
+msgstr "une photo de profil"
+
+#: .\base\profile_completion.py:35
+msgid "a short bio"
+msgstr "une courte biographie"
+
+#: .\base\profile_completion.py:36
+msgid "your skills"
+msgstr "vos compétences"
+
+#: .\base\profile_completion.py:37
+msgid "your location"
+msgstr "votre lieu"
 
 #: .\base\templates\base\edit_profile.html:13
 msgid "Edit Your Profile"
@@ -242,36 +266,54 @@ msgid "Security & Login"
 msgstr "Sécurité et connexion"
 
 #: .\base\templates\base\edit_profile.html:72
-#: .\base\templates\base\edit_profile.html:142
+#: .\base\templates\base\edit_profile.html:156
 msgid "Change Password"
 msgstr "Changer le mot de passe"
 
 #: .\base\templates\base\edit_profile.html:77
-#: .\base\templates\base\edit_profile.html:193
+#: .\base\templates\base\edit_profile.html:207
 msgid "Deactivate Account"
 msgstr "Désactiver le compte"
 
+#: .\base\templates\base\edit_profile.html:90
+#: .\base\templates\base\listmonk\profile_reminder.html:6
+msgid "Complete your profile"
+msgstr "Complétez votre profil"
+
+#: .\base\templates\base\edit_profile.html:91
+#, python-format
+msgid "+%(points)s impact points"
+msgstr "+%(points)s points d’impact"
+
 #: .\base\templates\base\edit_profile.html:93
+msgid ""
+"A photo, a few lines about you, your skills and where you're based help "
+"coordinators find the right role for you."
+msgstr ""
+"Une photo, quelques mots sur vous, vos compétences et votre lieu aident les "
+"coordonnateurs à vous trouver le bon rôle."
+
+#: .\base\templates\base\edit_profile.html:107
 msgid "Basic Information"
 msgstr "Informations de base"
 
-#: .\base\templates\base\edit_profile.html:108
+#: .\base\templates\base\edit_profile.html:122
 msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
-#: .\base\templates\base\edit_profile.html:112
+#: .\base\templates\base\edit_profile.html:126
 msgid "Location"
 msgstr "Lieu"
 
-#: .\base\templates\base\edit_profile.html:116
+#: .\base\templates\base\edit_profile.html:130
 msgid "Bio / About Me"
 msgstr "Biographie / À propos de moi"
 
-#: .\base\templates\base\edit_profile.html:117
+#: .\base\templates\base\edit_profile.html:131
 msgid "Tell us about yourself..."
 msgstr "Parlez-nous de vous..."
 
-#: .\base\templates\base\edit_profile.html:124
+#: .\base\templates\base\edit_profile.html:138
 #: .\base\templates\base\volunteer_resume.html:91
 #: .\console\templates\console\partials\settings_tabs.html:7
 #: .\console\templates\console\skill_settings.html:4
@@ -280,9 +322,9 @@ msgstr "Parlez-nous de vous..."
 msgid "Skills"
 msgstr "Compétences"
 
-#: .\base\templates\base\edit_profile.html:131
-#: .\base\templates\base\edit_profile.html:185
-#: .\base\templates\base\edit_profile.html:219
+#: .\base\templates\base\edit_profile.html:145
+#: .\base\templates\base\edit_profile.html:199
+#: .\base\templates\base\edit_profile.html:233
 #: .\console\templates\console\backend_settings.html:249
 #: .\console\templates\console\certificate_edit.html:26
 #: .\console\templates\console\event_invite.html:93
@@ -309,7 +351,7 @@ msgstr "Compétences"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: .\base\templates\base\edit_profile.html:132
+#: .\base\templates\base\edit_profile.html:146
 #: .\console\templates\console\backend_settings.html:24
 #: .\console\templates\console\certificate_edit.html:27
 #: .\console\templates\console\communication_email.html:24
@@ -323,34 +365,34 @@ msgstr "Annuler"
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
-#: .\base\templates\base\edit_profile.html:150
+#: .\base\templates\base\edit_profile.html:164
 msgid "Update your password to keep your account secure."
 msgstr "Mettez à jour votre mot de passe pour protéger votre compte."
 
-#: .\base\templates\base\edit_profile.html:153
+#: .\base\templates\base\edit_profile.html:167
 msgid "Current Password"
 msgstr "Mot de passe actuel"
 
-#: .\base\templates\base\edit_profile.html:163
+#: .\base\templates\base\edit_profile.html:177
 #: .\base\templates\base\password_reset_confirm.html:21
 msgid "New Password"
 msgstr "Nouveau mot de passe"
 
-#: .\base\templates\base\edit_profile.html:170
+#: .\base\templates\base\edit_profile.html:184
 msgid "Must be at least 8 characters long and include a number and symbol."
 msgstr "Doit comporter au moins 8 caractères, dont un chiffre et un symbole."
 
-#: .\base\templates\base\edit_profile.html:174
+#: .\base\templates\base\edit_profile.html:188
 #: .\base\templates\base\password_reset_confirm.html:27
 msgid "Confirm New Password"
 msgstr "Confirmer le nouveau mot de passe"
 
-#: .\base\templates\base\edit_profile.html:184
+#: .\base\templates\base\edit_profile.html:198
 #: .\base\templates\base\password_reset_confirm.html:33
 msgid "Update Password"
 msgstr "Mettre à jour le mot de passe"
 
-#: .\base\templates\base\edit_profile.html:203
+#: .\base\templates\base\edit_profile.html:217
 msgid ""
 "This action is permanent and cannot be easily undone. Deactivating your "
 "account will immediately disable your profile, remove you from all active "
@@ -361,15 +403,15 @@ msgstr ""
 "les listes d’événements actifs et masquera définitivement votre historique de"
 " formation au public."
 
-#: .\base\templates\base\edit_profile.html:205
+#: .\base\templates\base\edit_profile.html:219
 msgid "Are you absolutely sure you want to proceed?"
 msgstr "Êtes-vous absolument sûr de vouloir continuer ?"
 
-#: .\base\templates\base\edit_profile.html:208
+#: .\base\templates\base\edit_profile.html:222
 msgid "Type your password to confirm deactivation"
 msgstr "Saisissez votre mot de passe pour confirmer la désactivation"
 
-#: .\base\templates\base\edit_profile.html:218
+#: .\base\templates\base\edit_profile.html:232
 msgid "Deactivate My Account"
 msgstr "Désactiver mon compte"
 
@@ -1076,6 +1118,95 @@ msgstr ""
 "Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail. Votre "
 "mot de passe ne changera pas."
 
+#: .\base\templates\base\listmonk\profile_reminder.html:2
+#, python-format
+msgid "Thanks for joining, %(name)s!"
+msgstr "Merci de votre inscription, %(name)s !"
+
+#: .\base\templates\base\listmonk\profile_reminder.html:3
+#, python-format
+msgid ""
+"We're glad you're part of %(org)s. Take a minute to finish your profile so "
+"coordinators and teammates can get to know you."
+msgstr ""
+"Nous sommes ravis de vous compter parmi nous chez %(org)s. Prenez une minute "
+"pour compléter votre profil afin que les coordonnateurs et vos coéquipiers "
+"puissent apprendre à vous connaître."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:4
+#: .\base\templates\base\listmonk\profile_reminder_week.html:4
+#, python-format
+msgid "Still to add: <strong>%(missing)s</strong>."
+msgstr "Reste à ajouter : <strong>%(missing)s</strong>."
+
+#: .\base\templates\base\listmonk\profile_reminder.html:5
+#: .\base\templates\base\listmonk\profile_reminder_week.html:5
+#, python-format
+msgid "Complete it to earn <strong>%(points)s impact points</strong>."
+msgstr "Complétez-le pour gagner <strong>%(points)s points d’impact</strong>."
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:2
+#, python-format
+msgid "Your profile is almost there, %(name)s"
+msgstr "Votre profil est presque complet, %(name)s"
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:3
+msgid ""
+"A complete profile helps coordinators match you with the right roles, and "
+"lets your teammates put a face to your name."
+msgstr ""
+"Un profil complet aide les coordonnateurs à vous proposer les bons rôles et "
+"permet à vos coéquipiers de mettre un visage sur votre nom."
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:6
+msgid "Finish your profile"
+msgstr "Terminez votre profil"
+
+#: .\base\templates\base\listmonk\profile_reminder_week.html:7
+msgid "This is the last reminder we'll send about your profile."
+msgstr ""
+"C’est le dernier rappel que nous vous enverrons au sujet de votre profil."
+
+#: .\base\templates\base\listmonk\shift_reminder.html:2
+msgid "See you tomorrow!"
+msgstr "À demain !"
+
+#: .\base\templates\base\listmonk\shift_reminder.html:3
+#, python-format
+msgid ""
+"Hi %(name)s, this is a reminder that you're volunteering as "
+"<strong>%(role)s</strong> at <strong>%(event)s</strong> tomorrow."
+msgstr ""
+"Bonjour %(name)s, petit rappel : demain, vous êtes bénévole comme "
+"<strong>%(role)s</strong> à <strong>%(event)s</strong>."
+
+#: .\base\templates\base\listmonk\shift_reminder.html:5
+#: .\base\templates\base\listmonk\signup_confirmed.html:5
+#: .\console\templates\console\event_invite.html:83
+#: .\events\templates\events\respond_to_invite.html:21
+msgid "When"
+msgstr "Quand"
+
+#: .\base\templates\base\listmonk\shift_reminder.html:7
+#: .\base\templates\base\listmonk\signup_confirmed.html:7
+#: .\console\templates\console\event_invite.html:84
+#: .\events\templates\events\respond_to_invite.html:22
+msgid "Where"
+msgstr "Où"
+
+#: .\base\templates\base\listmonk\shift_reminder.html:10
+#: .\base\templates\base\listmonk\signup_confirmed.html:10
+msgid "See event details"
+msgstr "Voir les détails de l'événement"
+
+#: .\base\templates\base\listmonk\shift_reminder.html:11
+msgid ""
+"Can't make it anymore? Please cancel from the event page as soon as you can, "
+"so someone else can take your spot."
+msgstr ""
+"Vous ne pouvez plus venir ? Annulez dès que possible depuis la page de "
+"l'événement, pour que quelqu'un d'autre puisse prendre votre place."
+
 #: .\base\templates\base\listmonk\signup_confirmed.html:2
 msgid "You're on the team!"
 msgstr "Vous faites partie de l'équipe !"
@@ -1088,22 +1219,6 @@ msgid ""
 msgstr ""
 "Bonjour %(name)s, votre inscription comme <strong>%(role)s</strong> à "
 "<strong>%(event)s</strong> est confirmée."
-
-#: .\base\templates\base\listmonk\signup_confirmed.html:5
-#: .\console\templates\console\event_invite.html:83
-#: .\events\templates\events\respond_to_invite.html:21
-msgid "When"
-msgstr "Quand"
-
-#: .\base\templates\base\listmonk\signup_confirmed.html:7
-#: .\console\templates\console\event_invite.html:84
-#: .\events\templates\events\respond_to_invite.html:22
-msgid "Where"
-msgstr "Où"
-
-#: .\base\templates\base\listmonk\signup_confirmed.html:10
-msgid "See event details"
-msgstr "Voir les détails de l'événement"
 
 #: .\base\templates\base\listmonk\signup_confirmed.html:11
 msgid ""
@@ -1902,7 +2017,7 @@ msgid "Someone signs up, or staff add a volunteer from the console."
 msgstr ""
 "Quelqu’un s’inscrit, ou le personnel ajoute un bénévole depuis la console."
 
-#: .\base\triggers.py:38
+#: .\base\triggers.py:38 .\base\triggers.py:45 .\base\triggers.py:48
 msgid "The new volunteer"
 msgstr "Le nouveau bénévole"
 
@@ -1929,195 +2044,253 @@ msgid "Reset your %(org)s password"
 msgstr "Réinitialisez votre mot de passe %(org)s"
 
 #: .\base\triggers.py:43
+msgid "Profile reminder"
+msgstr "Rappel de profil"
+
+#: .\base\triggers.py:44
+msgid ""
+"A day after someone registers, if their profile still lacks a photo, bio, "
+"skills or location."
+msgstr ""
+"Un jour après l’inscription, si le profil n’a toujours pas de photo, de "
+"biographie, de compétences ou de lieu."
+
+#: .\base\triggers.py:45
+#, python-format
+msgid "Finish your %(org)s profile"
+msgstr "Terminez votre profil %(org)s"
+
+#: .\base\triggers.py:46
+msgid "Second profile reminder"
+msgstr "Deuxième rappel de profil"
+
+#: .\base\triggers.py:47
+msgid "A week after someone registers, if their profile is still incomplete."
+msgstr "Une semaine après l’inscription, si le profil est toujours incomplet."
+
+#: .\base\triggers.py:48
+#, python-format
+msgid "Your %(org)s profile is almost there"
+msgstr "Votre profil %(org)s est presque complet"
+
+#: .\base\triggers.py:49
 msgid "New event published"
 msgstr "Nouvel événement publié"
 
-#: .\base\triggers.py:44
+#: .\base\triggers.py:50
 msgid "An event becomes visible to volunteers."
 msgstr "Un événement devient visible pour les bénévoles."
 
-#: .\base\triggers.py:44
+#: .\base\triggers.py:50
 msgid "Everyone on \"Town Hall users\", plus any lists you add"
 msgstr ""
 "Tous les membres de « Town Hall users », plus les listes que vous ajoutez"
 
-#: .\base\triggers.py:45
+#: .\base\triggers.py:51
 #, python-format
 msgid "New opportunity: %(event)s"
 msgstr "Nouvelle opportunité : %(event)s"
 
-#: .\base\triggers.py:46
+#: .\base\triggers.py:52
 msgid "Invitation received"
 msgstr "Invitation reçue"
 
-#: .\base\triggers.py:47
+#: .\base\triggers.py:53
 msgid "Staff invite a volunteer to a role from the console."
 msgstr "Le personnel invite un bénévole à un rôle depuis la console."
 
-#: .\base\triggers.py:47
+#: .\base\triggers.py:53
 msgid "The invited volunteer"
 msgstr "Le bénévole invité"
 
-#: .\base\triggers.py:49
+#: .\base\triggers.py:55
 msgid "Sign-up confirmed"
 msgstr "Inscription confirmée"
 
-#: .\base\triggers.py:50
+#: .\base\triggers.py:56
 msgid "A volunteer signs up for a role or accepts an invitation."
 msgstr "Un bénévole s’inscrit à un rôle ou accepte une invitation."
 
-#: .\base\triggers.py:50 .\base\triggers.py:62 .\base\triggers.py:65
-#: .\base\triggers.py:68
+#: .\base\triggers.py:56 .\base\triggers.py:72 .\base\triggers.py:75
+#: .\base\triggers.py:78
 msgid "The volunteer"
 msgstr "Le bénévole"
 
-#: .\base\triggers.py:51
+#: .\base\triggers.py:57
 #, python-format
 msgid "You're signed up: %(event)s"
 msgstr "Inscription confirmée : %(event)s"
 
-#: .\base\triggers.py:52
+#: .\base\triggers.py:58
+msgid "Shift reminder"
+msgstr "Rappel de quart"
+
+#: .\base\triggers.py:59
+msgid "At 9 AM the day before a volunteer's shift."
+msgstr "À 9 h la veille du quart d'un bénévole."
+
+#: .\base\triggers.py:59
+msgid "Each volunteer signed up for the shift"
+msgstr "Chaque bénévole inscrit au quart"
+
+#: .\base\triggers.py:60
+#, python-format
+msgid "Reminder: %(role)s at %(event)s tomorrow"
+msgstr "Rappel : %(role)s à %(event)s demain"
+
+#: .\base\triggers.py:62
 msgid "Message to event volunteers"
 msgstr "Message aux bénévoles de l’événement"
 
-#: .\base\triggers.py:53
+#: .\base\triggers.py:63
 msgid "Staff use \"Message All Volunteers\" on an event."
 msgstr "Le personnel utilise « Message All Volunteers » sur un événement."
 
-#: .\base\triggers.py:53
+#: .\base\triggers.py:63
 msgid "The event's volunteers"
 msgstr "Les bénévoles de l’événement"
 
-#: .\base\triggers.py:54
+#: .\base\triggers.py:64
 #, python-format
 msgid "News about %(event)s"
 msgstr "Des nouvelles de %(event)s"
 
-#: .\base\triggers.py:55
+#: .\base\triggers.py:65
 msgid "Message to a volunteer"
 msgstr "Message à un bénévole"
 
-#: .\base\triggers.py:56
+#: .\base\triggers.py:66
 msgid "Staff send a message from a volunteer's profile."
 msgstr "Le personnel envoie un message depuis le profil d’un bénévole."
 
-#: .\base\triggers.py:56
+#: .\base\triggers.py:66
 msgid "That volunteer"
 msgstr "Ce bénévole"
 
-#: .\base\triggers.py:57
+#: .\base\triggers.py:67
 #, python-format
 msgid "A message from %(org)s"
 msgstr "Un message de %(org)s"
 
-#: .\base\triggers.py:58
+#: .\base\triggers.py:68
 msgid "Endorsement received"
 msgstr "Recommandation reçue"
 
-#: .\base\triggers.py:59
+#: .\base\triggers.py:69
 msgid "Someone endorses a volunteer for a skill."
 msgstr "Quelqu’un recommande un bénévole pour une compétence."
 
-#: .\base\triggers.py:59
+#: .\base\triggers.py:69
 msgid "The endorsed volunteer"
 msgstr "Le bénévole recommandé"
 
-#: .\base\triggers.py:60
+#: .\base\triggers.py:70
 #, python-format
 msgid "%(from_name)s endorsed you"
 msgstr "%(from_name)s vous recommande"
 
-#: .\base\triggers.py:61
+#: .\base\triggers.py:71
 msgid "Training module completed"
 msgstr "Module de formation terminé"
 
-#: .\base\triggers.py:62
+#: .\base\triggers.py:72
 msgid "A volunteer finishes a training module."
 msgstr "Un bénévole termine un module de formation."
 
-#: .\base\triggers.py:63
+#: .\base\triggers.py:73
 #, python-format
 msgid "You completed %(module)s"
 msgstr "Vous avez terminé %(module)s"
 
-#: .\base\triggers.py:64
+#: .\base\triggers.py:74
 msgid "Certificate approved"
 msgstr "Certificat approuvé"
 
-#: .\base\triggers.py:65
+#: .\base\triggers.py:75
 msgid "Staff verify an uploaded certificate."
 msgstr "Le personnel vérifie un certificat téléversé."
 
-#: .\base\triggers.py:66
+#: .\base\triggers.py:76
 #, python-format
 msgid "Your %(certificate)s certificate was verified"
 msgstr "Votre certificat %(certificate)s a été vérifié"
 
-#: .\base\triggers.py:67
+#: .\base\triggers.py:77
 msgid "Certificate rejected"
 msgstr "Certificat rejeté"
 
-#: .\base\triggers.py:68
+#: .\base\triggers.py:78
 msgid "Staff send a certificate back for another upload."
 msgstr "Le personnel renvoie un certificat pour un nouveau téléversement."
 
-#: .\base\triggers.py:69
+#: .\base\triggers.py:79
 #, python-format
 msgid "Your %(certificate)s documents need another look"
 msgstr "Vos documents pour %(certificate)s doivent être revus"
 
-#: .\base\triggers.py:70
+#: .\base\triggers.py:80
 msgid "Test and system emails"
 msgstr "E-mails de test et du système"
 
-#: .\base\triggers.py:71
+#: .\base\triggers.py:81
 msgid "\"Send test email\" and any other message without an event of its own."
 msgstr "« Send test email » et tout autre message sans événement associé."
 
-#: .\base\triggers.py:71
+#: .\base\triggers.py:81
 msgid "Varies"
 msgstr "Variable"
 
-#: .\base\triggers.py:79
+#: .\base\triggers.py:89
 msgid "Recipient's first name (or username)"
 msgstr "Prénom du destinataire (ou nom d’utilisateur)"
 
-#: .\base\triggers.py:81
+#: .\base\triggers.py:91
 msgid ""
 "Main link of the email: the event page, invitation, profile or certificate"
 msgstr ""
 "Lien principal de l’e-mail : la page de l’événement, l’invitation, le profil "
 "ou le certificat"
 
-#: .\base\triggers.py:82
+#: .\base\triggers.py:92
 msgid "The volunteer's 6-digit kiosk ID"
 msgstr "L’identifiant de borne à 6 chiffres du bénévole"
 
-#: .\base\triggers.py:83
+#: .\base\triggers.py:93
+msgid "What the profile still lacks, e.g. \"a profile photo, your skills\""
+msgstr ""
+"Ce qui manque encore au profil, p. ex. « une photo de profil, vos "
+"compétences »"
+
+#: .\base\triggers.py:94
+msgid "Impact points for completing the profile; 0 when there is no award"
+msgstr ""
+"Points d’impact pour un profil complété; 0 s’il n’y a pas de récompense"
+
+#: .\base\triggers.py:95
 msgid "Subject line"
 msgstr "Objet"
 
-#: .\base\triggers.py:84
+#: .\base\triggers.py:96
 msgid "Event title"
 msgstr "Titre de l’événement"
 
-#: .\base\triggers.py:85
+#: .\base\triggers.py:97
 msgid "Role name"
 msgstr "Nom du rôle"
 
-#: .\base\triggers.py:86
+#: .\base\triggers.py:98
 msgid "Date and time of the shift"
 msgstr "Date et heure du quart"
 
-#: .\base\triggers.py:87
+#: .\base\triggers.py:99
 msgid "Event location, with the check-in point if there is one"
 msgstr "Lieu de l’événement, avec le point d’enregistrement s’il y en a un"
 
-#: .\base\triggers.py:88
+#: .\base\triggers.py:100
 msgid "Text written by staff, as plain text"
 msgstr "Texte rédigé par le personnel, en texte brut"
 
-#: .\base\triggers.py:89
+#: .\base\triggers.py:101
 msgid ""
 "The same text as HTML. It may be empty, so keep the \"with ... Safe ... end\""
 " wrapper"
@@ -2125,31 +2298,31 @@ msgstr ""
 "Le même texte en HTML. Il peut être vide ; conservez donc l’enveloppe « with "
 "... Safe ... end »"
 
-#: .\base\triggers.py:90
+#: .\base\triggers.py:102
 msgid "Name of the person who gave the endorsement"
 msgstr "Nom de la personne qui a donné la recommandation"
 
-#: .\base\triggers.py:91
+#: .\base\triggers.py:103
 msgid "Endorsed skills, separated by commas"
 msgstr "Compétences recommandées, séparées par des virgules"
 
-#: .\base\triggers.py:92
+#: .\base\triggers.py:104
 msgid "Training module title"
 msgstr "Titre du module de formation"
 
-#: .\base\triggers.py:93
+#: .\base\triggers.py:105
 msgid "Certificate name"
 msgstr "Nom du certificat"
 
-#: .\base\triggers.py:94
+#: .\base\triggers.py:106
 msgid "Reviewer's notes; may be empty"
 msgstr "Notes du réviseur ; peuvent être vides"
 
-#: .\base\triggers.py:95
+#: .\base\triggers.py:107
 msgid "The message as plain text"
 msgstr "Le message en texte brut"
 
-#: .\base\triggers.py:96
+#: .\base\triggers.py:108
 msgid ""
 "The message as HTML. It may be empty, so keep the \"with ... Safe ... end\" "
 "wrapper"
@@ -2157,85 +2330,85 @@ msgstr ""
 "Le message en HTML. Il peut être vide ; conservez donc l’enveloppe « with ..."
 " Safe ... end »"
 
-#: .\base\triggers.py:102
+#: .\base\triggers.py:114
 msgid "Logo, uploaded to listmonk media; empty when there is no logo"
 msgstr ""
 "Logo, téléversé dans les médias de listmonk ; vide s’il n’y a pas de logo"
 
-#: .\base\triggers.py:103
+#: .\base\triggers.py:115
 msgid "Primary brand colour (headings)"
 msgstr "Couleur principale de la marque (titres)"
 
-#: .\base\triggers.py:104
+#: .\base\triggers.py:116
 msgid "Text colour on primary-coloured backgrounds"
 msgstr "Couleur du texte sur les arrière-plans de couleur principale"
 
-#: .\base\triggers.py:105
+#: .\base\triggers.py:117
 msgid "Accent colour (buttons, highlights)"
 msgstr "Couleur d’accent (boutons, mises en évidence)"
 
-#: .\base\triggers.py:106
+#: .\base\triggers.py:118
 msgid "Text colour on accent-coloured buttons"
 msgstr "Couleur du texte sur les boutons de couleur d’accent"
 
-#: .\base\triggers.py:107
+#: .\base\triggers.py:119
 msgid "Page background around the email card"
 msgstr "Arrière-plan de la page autour de la carte de l’e-mail"
 
-#: .\base\triggers.py:108
+#: .\base\triggers.py:120
 msgid "Background of the email card"
 msgstr "Arrière-plan de la carte de l’e-mail"
 
-#: .\base\triggers.py:109
+#: .\base\triggers.py:121
 msgid "Body text colour"
 msgstr "Couleur du texte principal"
 
-#: .\base\triggers.py:110
+#: .\base\triggers.py:122
 msgid "Secondary text colour (footers, notes)"
 msgstr "Couleur du texte secondaire (pieds de page, notes)"
 
-#: .\base\triggers.py:111
+#: .\base\triggers.py:123
 msgid "Divider and border colour"
 msgstr "Couleur des séparateurs et des bordures"
 
-#: .\base\views.py:122
+#: .\base\views.py:124
 msgid "Successfully logged in."
 msgstr "Connexion réussie."
 
-#: .\base\views.py:124 .\jobs\views.py:108
+#: .\base\views.py:126 .\jobs\views.py:108
 msgid "Invalid email or password."
 msgstr "Adresse e-mail ou mot de passe invalide."
 
-#: .\base\views.py:147
+#: .\base\views.py:149
 msgid "Email and password are required."
 msgstr "L’adresse e-mail et le mot de passe sont obligatoires."
 
-#: .\base\views.py:149 .\console\forms.py:417
+#: .\base\views.py:151 .\console\forms.py:417
 msgid "An account with that email already exists."
 msgstr "Un compte avec cette adresse e-mail existe déjà."
 
-#: .\base\views.py:165
+#: .\base\views.py:167
 msgid "Account created successfully!"
 msgstr "Compte créé avec succès !"
 
-#: .\base\views.py:225
+#: .\base\views.py:227
 msgid "Welcome to Town Hall! Start with this guide to learn your way around."
 msgstr ""
 "Bienvenue dans Town Hall ! Commencez par ce guide pour vous y retrouver."
 
-#: .\base\views.py:281 .\console\forms.py:383
+#: .\base\views.py:283 .\console\forms.py:383
 msgid "That email address is already in use."
 msgstr "Cette adresse e-mail est déjà utilisée."
 
-#: .\base\views.py:296
+#: .\base\views.py:298
 msgid "Profile updated successfully!"
 msgstr "Profil mis à jour avec succès !"
 
-#: .\base\views.py:307
+#: .\base\views.py:323
 msgid "Add an email address to your profile before using Gravatar."
 msgstr "Ajoutez une adresse e-mail à votre profil avant d’utiliser Gravatar."
 
-#: .\base\views.py:310
+#: .\base\views.py:326
 #, python-format
 msgid ""
 "There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try "
@@ -2244,62 +2417,67 @@ msgstr ""
 "Il n’y a pas encore de Gravatar pour %(email)s. Créez-en un sur gravatar.com,"
 " puis réessayez."
 
-#: .\base\views.py:312
+#: .\base\views.py:328
 msgid "Your profile picture now comes from Gravatar."
 msgstr "Votre photo de profil provient maintenant de Gravatar."
 
-#: .\base\views.py:314
+#: .\base\views.py:330
 msgid "Gravatar turned off."
 msgstr "Gravatar désactivé."
 
-#: .\base\views.py:329
+#: .\base\views.py:341
+#, python-format
+msgid "Your profile is complete. You earned %(points)d impact points!"
+msgstr "Votre profil est complet. Vous avez gagné %(points)d points d’impact !"
+
+#: .\base\views.py:353
 #, python-format
 msgid "You can only add up to %(max)d skills."
 msgstr "Vous ne pouvez ajouter que %(max)d compétences au maximum."
 
-#: .\base\views.py:345
+#: .\base\views.py:370
 msgid "Current password is incorrect."
 msgstr "Le mot de passe actuel est incorrect."
 
-#: .\base\views.py:347
+#: .\base\views.py:372
 msgid "New password must be at least 8 characters."
 msgstr "Le nouveau mot de passe doit comporter au moins 8 caractères."
 
-#: .\base\views.py:349
+#: .\base\views.py:374
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: .\base\views.py:354
+#: .\base\views.py:379
 msgid "Password updated successfully."
 msgstr "Mot de passe mis à jour avec succès."
 
-#: .\base\views.py:365
+#: .\base\views.py:390
 msgid "Your kiosk ID was changed. The old one no longer works."
 msgstr "Votre identifiant de borne a été modifié. L’ancien ne fonctionne plus."
 
-#: .\base\views.py:377
+#: .\base\views.py:402
 msgid "Your account has been deactivated."
 msgstr "Votre compte a été désactivé."
 
-#: .\base\views.py:380
+#: .\base\views.py:405
 msgid "Incorrect password. Account not deactivated."
 msgstr "Mot de passe incorrect. Le compte n’a pas été désactivé."
 
-#: .\base\views.py:507
+#: .\base\views.py:532
 msgid "Newsletter sign-up is not available right now."
 msgstr "L’inscription à l’infolettre n’est pas disponible pour le moment."
 
-#: .\base\views.py:514
+#: .\base\views.py:539
 msgid "Please enter a valid email address."
 msgstr "Veuillez saisir une adresse e-mail valide."
 
-#: .\base\views.py:518
+#: .\base\views.py:543
 msgid "We could not sign you up right now. Please try again later."
 msgstr ""
 "Nous n’avons pas pu vous inscrire pour le moment. Veuillez réessayer plus "
 "tard."
 
-#: .\base\views.py:521
+#: .\base\views.py:546
 msgid ""
 "Thanks for subscribing! If we sent you a confirmation email, open it to "
 "finish."
@@ -2307,35 +2485,35 @@ msgstr ""
 "Merci de votre abonnement ! Si nous vous avons envoyé un e-mail de "
 "confirmation, ouvrez-le pour terminer."
 
-#: .\base\views.py:600
+#: .\base\views.py:625
 msgid "Choose at least one skill to endorse."
 msgstr "Choisissez au moins une compétence à recommander."
 
-#: .\base\views.py:610
+#: .\base\views.py:635
 #, python-format
 msgid "%(name)s endorsed you!"
 msgstr "%(name)s vous a recommandé !"
 
-#: .\base\views.py:614
+#: .\base\views.py:639
 #, python-format
 msgid "Endorsement sent to %(name)s."
 msgstr "Recommandation envoyée à %(name)s."
 
-#: .\base\views.py:658
+#: .\base\views.py:683
 #, python-format
 msgid "%(name)s endorsed you for %(skill)s!"
 msgstr "%(name)s vous a recommandé pour %(skill)s !"
 
-#: .\base\views.py:803
+#: .\base\views.py:828
 msgid "Task lists are not set up yet."
 msgstr "Les listes de tâches ne sont pas encore configurées."
 
-#: .\base\views.py:810
+#: .\base\views.py:835
 msgid "Add an email address to your account to use task lists."
 msgstr ""
 "Ajoutez une adresse e-mail à votre compte pour utiliser les listes de tâches."
 
-#: .\base\views.py:816
+#: .\base\views.py:841
 #, python-format
 msgid "Couldn't open your tasks right now: %(error)s"
 msgstr "Impossible d’ouvrir vos tâches pour le moment : %(error)s"
@@ -2688,7 +2866,11 @@ msgstr "Points par recommandation"
 msgid "Endorsement awards per 30 days"
 msgstr "Recommandations accordées par 30 jours"
 
-#: .\console\forms.py:548
+#: .\console\forms.py:546
+msgid "Points for a completed profile"
+msgstr "Points pour un profil complété"
+
+#: .\console\forms.py:549
 msgid ""
 "Roles with the longest training get this multiplier; untrained roles get 1.0."
 " A role can set its own weight instead."
@@ -2697,124 +2879,132 @@ msgstr ""
 " rôles sans formation reçoivent 1,0. Un rôle peut définir sa propre "
 "pondération."
 
-#: .\console\forms.py:549
+#: .\console\forms.py:550
 msgid ""
 "Serving more people per volunteer adds 10% per doubling, up to this cap."
 msgstr ""
 "Servir plus de personnes par bénévole ajoute 10 % à chaque doublement, "
 "jusqu’à ce plafond."
 
-#: .\console\forms.py:550
+#: .\console\forms.py:551
 msgid "Checking in at the kiosk to cover a slot they had not signed up for."
 msgstr ""
 "S’enregistrer à la borne pour couvrir un créneau auquel on ne s’était pas "
 "inscrit."
 
-#: .\console\forms.py:551
+#: .\console\forms.py:552
 msgid "Signing up for an understaffed slot within the window before it starts."
 msgstr ""
 "S’inscrire à un créneau en sous-effectif dans la fenêtre précédant son début."
 
-#: .\console\forms.py:552
+#: .\console\forms.py:553
 msgid "0-23, local time."
 msgstr "0-23, heure locale."
 
-#: .\console\forms.py:553
+#: .\console\forms.py:554
 msgid "0-23, local time. Shifts that run past midnight also count."
 msgstr "0-23, heure locale. Les quarts qui dépassent minuit comptent aussi."
 
-#: .\console\forms.py:554
+#: .\console\forms.py:555
 msgid ""
 "Given to someone endorsed by a teammate from the same event, once per event."
 msgstr ""
 "Accordé à une personne recommandée par un coéquipier du même événement, une "
 "fois par événement."
 
-#: .\console\forms.py:562
+#: .\console\forms.py:556
+msgid ""
+"Once per person, the first time their profile has a photo, bio, skills and "
+"location. 0 turns it off."
+msgstr ""
+"Une fois par personne, la première fois que son profil a une photo, une "
+"biographie, des compétences et un lieu. 0 désactive cette récompense."
+
+#: .\console\forms.py:564
 msgid "Use an hour from 0 to 23."
 msgstr "Utilisez une heure de 0 à 23."
 
-#: .\console\forms.py:564
+#: .\console\forms.py:566
 msgid "Use 1.0 or more."
 msgstr "Utilisez 1,0 ou plus."
 
-#: .\console\forms.py:582
+#: .\console\forms.py:584
 msgid "LibreTranslate URL"
 msgstr "URL de LibreTranslate"
 
-#: .\console\forms.py:583
+#: .\console\forms.py:585
 msgid "LibreTranslate API key"
 msgstr "Clé API LibreTranslate"
 
-#: .\console\forms.py:584
+#: .\console\forms.py:586
 msgid "Google Cloud Translation key"
 msgstr "Clé Google Cloud Translation"
 
-#: .\console\forms.py:585
+#: .\console\forms.py:587
 msgid "DeepL API key"
 msgstr "Clé API DeepL"
 
-#: .\console\forms.py:586
+#: .\console\forms.py:588
 msgid "MyMemory contact email"
 msgstr "Adresse e-mail de contact MyMemory"
 
-#: .\console\forms.py:587
+#: .\console\forms.py:589
 msgid "listmonk URL"
 msgstr "URL de listmonk"
 
-#: .\console\forms.py:588
+#: .\console\forms.py:590
 msgid "API user"
 msgstr "Utilisateur API"
 
-#: .\console\forms.py:589
+#: .\console\forms.py:591
 msgid "API token"
 msgstr "Jeton API"
 
-#: .\console\forms.py:590
+#: .\console\forms.py:592
 msgid "From address"
 msgstr "Adresse d’expédition"
 
-#: .\console\forms.py:602
+#: .\console\forms.py:604
 #, python-format
 msgid "Saved (ends in %(tail)s). Leave blank to keep."
 msgstr "Enregistré (se termine par %(tail)s). Laissez vide pour conserver."
 
-#: .\console\forms.py:602 .\console\forms.py:698
+#: .\console\forms.py:604 .\console\forms.py:700
 #: .\console\views\settings.py:358
 msgid "Not set"
 msgstr "Non défini"
 
-#: .\console\forms.py:632
+#: .\console\forms.py:634
 msgid "Switch on at least one language."
 msgstr "Activez au moins une langue."
 
-#: .\console\forms.py:634
+#: .\console\forms.py:636
 msgid "Default language"
 msgstr "Langue par défaut"
 
-#: .\console\forms.py:636
+#: .\console\forms.py:638
 msgid "Time zone"
 msgstr "Fuseau horaire"
 
-#: .\console\forms.py:636
+#: .\console\forms.py:638
 msgid "Event times are entered and shown in this time zone."
 msgstr ""
 "Les heures des événements sont saisies et affichées dans ce fuseau horaire."
 
-#: .\console\forms.py:651
+#: .\console\forms.py:653
 msgid "The default language has to be switched on."
 msgstr "La langue par défaut doit être activée."
 
-#: .\console\forms.py:681
+#: .\console\forms.py:683
 #, python-format
 msgid "Send \"%(label)s\" emails"
 msgstr "Envoyer les e-mails « %(label)s »"
 
-#: .\console\forms.py:697
+#: .\console\forms.py:699
 msgid "listmonk template ID"
 msgstr "ID du modèle listmonk"
 
-#: .\console\forms.py:700
+#: .\console\forms.py:702
 #, python-format
 msgid "#%(id)s (missing in listmonk)"
 msgstr "#%(id)s (introuvable dans listmonk)"
@@ -6462,48 +6652,60 @@ msgstr ""
 "Seulement entre personnes ayant travaillé au même événement. Recommander en "
 "retour quelqu’un qui vient de vous recommander ne rapporte rien."
 
-#: .\console\templates\console\points_settings.html:75
+#: .\console\templates\console\points_settings.html:73
+msgid "Completed Profile"
+msgstr "Profil complété"
+
+#: .\console\templates\console\points_settings.html:74
+msgid ""
+"Encourages new volunteers to fill in their profile. The reminder emails in "
+"Communication > Email mention it."
+msgstr ""
+"Encourage les nouveaux bénévoles à remplir leur profil. Les e-mails de rappel"
+" dans Communication > E-mail le mentionnent."
+
+#: .\console\templates\console\points_settings.html:83
 msgid "How a Shift Scores"
 msgstr "Comment un quart est noté"
 
-#: .\console\templates\console\points_settings.html:76
+#: .\console\templates\console\points_settings.html:84
 msgid ""
 "points per hour × hours × role weight × (1 + reach) × (1 + clutch bonuses)"
 msgstr ""
 "points par heure × heures × pondération du rôle × (1 + portée) × (1 + bonus "
 "de dépannage)"
 
-#: .\console\templates\console\points_settings.html:77
+#: .\console\templates\console\points_settings.html:85
 msgid "Example"
 msgstr "Exemple"
 
-#: .\console\templates\console\points_settings.html:79
+#: .\console\templates\console\points_settings.html:87
 #: .\events\templates\events\event_certificate.html:48
 #: .\events\templates\events\my_events.html:209
 msgid "Hours"
 msgstr "Heures"
 
-#: .\console\templates\console\points_settings.html:80
+#: .\console\templates\console\points_settings.html:88
 msgid "Mid-level role"
 msgstr "Rôle de niveau intermédiaire"
 
-#: .\console\templates\console\points_settings.html:81
+#: .\console\templates\console\points_settings.html:89
 msgid "25 people per volunteer"
 msgstr "25 personnes par bénévole"
 
-#: .\console\templates\console\points_settings.html:82
+#: .\console\templates\console\points_settings.html:90
 msgid "Starts at 6 am"
 msgstr "Commence à 6 h"
 
-#: .\console\templates\console\points_settings.html:83
+#: .\console\templates\console\points_settings.html:91
 msgid "Impact points"
 msgstr "Points d’impact"
 
-#: .\console\templates\console\points_settings.html:88
+#: .\console\templates\console\points_settings.html:96
 msgid "Apply to Past Shifts"
 msgstr "Appliquer aux quarts passés"
 
-#: .\console\templates\console\points_settings.html:89
+#: .\console\templates\console\points_settings.html:97
 msgid ""
 "Recalculate every finished shift with the saved rules and give training "
 "points for modules finished earlier. Manual adjustments and endorsement "
@@ -6513,13 +6715,13 @@ msgstr ""
 "points de formation pour les modules terminés plus tôt. Les ajustements "
 "manuels et les recommandations accordées restent inchangés."
 
-#: .\console\templates\console\points_settings.html:91
+#: .\console\templates\console\points_settings.html:99
 msgid "Recalculate every past shift? Volunteer totals and levels may change."
 msgstr ""
 "Recalculer tous les quarts passés ? Les totaux et les niveaux des bénévoles "
 "peuvent changer."
 
-#: .\console\templates\console\points_settings.html:92
+#: .\console\templates\console\points_settings.html:100
 msgid "Recalculate Past Shifts"
 msgstr "Recalculer les quarts passés"
 
@@ -9672,9 +9874,6 @@ msgstr "Contacter %(name)s quand même"
 msgid "Contact them anyway"
 msgstr "Les contacter quand même"
 
-#~ msgid "Confirming..."
-#~ msgstr "Confirmation..."
-
 #: .\events\templates\events\event_impact_card.html:4
 #, python-format
 msgid "%(title)s Impact"
@@ -10056,45 +10255,45 @@ msgstr "Refuser"
 msgid "Accept & Sign Up"
 msgstr "Accepter et s’inscrire"
 
-#: .\events\views.py:246
+#: .\events\views.py:248
 msgid "This time slot is invite-only."
 msgstr "Ce créneau est sur invitation seulement."
 
-#: .\events\views.py:250
+#: .\events\views.py:252
 #, python-format
 msgid "You haven't completed the required training modules for %(role)s."
 msgstr "Vous n’avez pas terminé les modules de formation requis pour %(role)s."
 
-#: .\events\views.py:254
+#: .\events\views.py:256
 msgid "Sorry, this slot just filled up!"
 msgstr "Désolé, ce créneau vient d’être comblé !"
 
-#: .\events\views.py:258 .\events\views.py:318
+#: .\events\views.py:260 .\events\views.py:320
 msgid "You have other commitments that conflict with this slot."
 msgstr "Vous avez d’autres engagements qui entrent en conflit avec ce créneau."
 
-#: .\events\views.py:266
+#: .\events\views.py:268
 #, python-format
 msgid "Successfully signed up for %(role)s at %(event)s!"
 msgstr "Inscription réussie à %(role)s pour %(event)s !"
 
-#: .\events\views.py:280
+#: .\events\views.py:282
 msgid "You aren't signed up for that shift."
 msgstr "Vous n’êtes pas inscrit à ce quart."
 
-#: .\events\views.py:283
+#: .\events\views.py:285
 msgid ""
 "Area lead shifts are assigned by the coordinators. Ask them to take you off."
 msgstr ""
 "Les quarts de responsable de secteur sont attribués par les coordonnateurs. "
 "Demandez-leur de vous retirer."
 
-#: .\events\views.py:285
+#: .\events\views.py:287
 msgid "That shift has already started or ended, so it can't be cancelled."
 msgstr ""
 "Ce quart a déjà commencé ou est terminé ; il ne peut donc pas être annulé."
 
-#: .\events\views.py:287
+#: .\events\views.py:289
 #, python-format
 msgid ""
 "You cancelled your %(role)s shift. It started less than 24 hours from now, so"
@@ -10103,48 +10302,48 @@ msgstr ""
 "Vous avez annulé votre quart %(role)s. Comme il commençait dans moins de 24 "
 "heures, cela compte contre votre indice de fiabilité."
 
-#: .\events\views.py:290
+#: .\events\views.py:292
 #, python-format
 msgid "You cancelled your %(role)s shift. Your spot is open for someone else."
 msgstr ""
 "Vous avez annulé votre quart %(role)s. Votre place est libre pour quelqu’un "
 "d’autre."
 
-#: .\events\views.py:300
+#: .\events\views.py:302
 msgid "Log in to respond to your invitation."
 msgstr "Connectez-vous pour répondre à votre invitation."
 
-#: .\events\views.py:308
+#: .\events\views.py:310
 msgid "Invitation declined. Thanks for letting us know."
 msgstr "Invitation refusée. Merci de nous en avoir informés."
 
-#: .\events\views.py:311
+#: .\events\views.py:313
 msgid "You're already signed up for this slot."
 msgstr "Vous êtes déjà inscrit à ce créneau."
 
-#: .\events\views.py:313
+#: .\events\views.py:315
 msgid "Finish the required training first, then accept the invitation."
 msgstr "Terminez d’abord la formation requise, puis acceptez l’invitation."
 
-#: .\events\views.py:316
+#: .\events\views.py:318
 msgid "Sorry, this slot is already full."
 msgstr "Désolé, ce créneau est déjà complet."
 
-#: .\events\views.py:323
+#: .\events\views.py:325
 #, python-format
 msgid "You're on the team! See you at %(event)s."
 msgstr "Vous faites partie de l’équipe ! À bientôt à %(event)s."
 
-#: .\events\views.py:451
+#: .\events\views.py:453
 #, python-format
 msgid "You weren't signed up for %(event)s."
 msgstr "Vous n’étiez pas inscrit à %(event)s."
 
-#: .\events\views.py:458
+#: .\events\views.py:460
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Veuillez choisir une cote de 1 à 5 étoiles."
 
-#: .\events\views.py:465
+#: .\events\views.py:467
 msgid "Thanks for sharing your experience!"
 msgstr "Merci d’avoir partagé votre expérience !"
 
@@ -10524,188 +10723,29 @@ msgstr "Connexion impossible"
 msgid "Go to Town Hall"
 msgstr "Aller à Town Hall"
 
-#: .\town_hall\settings.py:170
+#: .\town_hall\settings.py:173
 msgid "English"
 msgstr "Anglais"
 
-#: .\town_hall\settings.py:171
+#: .\town_hall\settings.py:174
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: .\town_hall\settings.py:172
+#: .\town_hall\settings.py:175
 msgid "French"
 msgstr "Français"
 
-#: .\town_hall\settings.py:173
+#: .\town_hall\settings.py:176
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
-#: .\town_hall\settings.py:174
+#: .\town_hall\settings.py:177
 msgid "Traditional Chinese"
 msgstr "Chinois traditionnel"
 
-#: .\town_hall\settings.py:175
+#: .\town_hall\settings.py:178
 msgid "Tagalog"
 msgstr "Tagalog"
 
-#: .\base\models.py:348
-msgid "Profile completed"
-msgstr "Profil complété"
-
-#: .\base\points.py:209
-msgid "Completed your profile"
-msgstr "Profil complété"
-
-#: .\base\profile_completion.py:34
-msgid "a profile photo"
-msgstr "une photo de profil"
-
-#: .\base\profile_completion.py:35
-msgid "a short bio"
-msgstr "une courte biographie"
-
-#: .\base\profile_completion.py:36
-msgid "your skills"
-msgstr "vos compétences"
-
-#: .\base\profile_completion.py:37
-msgid "your location"
-msgstr "votre lieu"
-
-#: .\base\templates\base\edit_profile.html:90
-#: .\base\templates\base\listmonk\profile_reminder.html:6
-msgid "Complete your profile"
-msgstr "Complétez votre profil"
-
-#: .\base\templates\base\edit_profile.html:91
-#, python-format
-msgid "+%(points)s impact points"
-msgstr "+%(points)s points d’impact"
-
-#: .\base\templates\base\edit_profile.html:93
-msgid ""
-"A photo, a few lines about you, your skills and where you're based help "
-"coordinators find the right role for you."
-msgstr ""
-"Une photo, quelques mots sur vous, vos compétences et votre lieu aident les "
-"coordonnateurs à vous trouver le bon rôle."
-
-#: .\base\templates\base\listmonk\profile_reminder.html:2
-#, python-format
-msgid "Thanks for joining, %(name)s!"
-msgstr "Merci de votre inscription, %(name)s !"
-
-#: .\base\templates\base\listmonk\profile_reminder.html:3
-#, python-format
-msgid ""
-"We're glad you're part of %(org)s. Take a minute to finish your profile so "
-"coordinators and teammates can get to know you."
-msgstr ""
-"Nous sommes ravis de vous compter parmi nous chez %(org)s. Prenez une minute"
-" pour compléter votre profil afin que les coordonnateurs et vos coéquipiers "
-"puissent apprendre à vous connaître."
-
-#: .\base\templates\base\listmonk\profile_reminder.html:4
-#: .\base\templates\base\listmonk\profile_reminder_week.html:4
-#, python-format
-msgid "Still to add: <strong>%(missing)s</strong>."
-msgstr "Reste à ajouter : <strong>%(missing)s</strong>."
-
-#: .\base\templates\base\listmonk\profile_reminder.html:5
-#: .\base\templates\base\listmonk\profile_reminder_week.html:5
-#, python-format
-msgid "Complete it to earn <strong>%(points)s impact points</strong>."
-msgstr "Complétez-le pour gagner <strong>%(points)s points d’impact</strong>."
-
-#: .\base\templates\base\listmonk\profile_reminder_week.html:2
-#, python-format
-msgid "Your profile is almost there, %(name)s"
-msgstr "Votre profil est presque complet, %(name)s"
-
-#: .\base\templates\base\listmonk\profile_reminder_week.html:3
-msgid ""
-"A complete profile helps coordinators match you with the right roles, and "
-"lets your teammates put a face to your name."
-msgstr ""
-"Un profil complet aide les coordonnateurs à vous proposer les bons rôles et "
-"permet à vos coéquipiers de mettre un visage sur votre nom."
-
-#: .\base\templates\base\listmonk\profile_reminder_week.html:6
-msgid "Finish your profile"
-msgstr "Terminez votre profil"
-
-#: .\base\templates\base\listmonk\profile_reminder_week.html:7
-msgid "This is the last reminder we'll send about your profile."
-msgstr ""
-"C’est le dernier rappel que nous vous enverrons au sujet de votre profil."
-
-#: .\base\triggers.py:43
-msgid "Profile reminder"
-msgstr "Rappel de profil"
-
-#: .\base\triggers.py:44
-msgid ""
-"A day after someone registers, if their profile still lacks a photo, bio, "
-"skills or location."
-msgstr ""
-"Un jour après l’inscription, si le profil n’a toujours pas de photo, de "
-"biographie, de compétences ou de lieu."
-
-#: .\base\triggers.py:45
-#, python-format
-msgid "Finish your %(org)s profile"
-msgstr "Terminez votre profil %(org)s"
-
-#: .\base\triggers.py:46
-msgid "Second profile reminder"
-msgstr "Deuxième rappel de profil"
-
-#: .\base\triggers.py:47
-msgid "A week after someone registers, if their profile is still incomplete."
-msgstr "Une semaine après l’inscription, si le profil est toujours incomplet."
-
-#: .\base\triggers.py:48
-#, python-format
-msgid "Your %(org)s profile is almost there"
-msgstr "Votre profil %(org)s est presque complet"
-
-#: .\base\triggers.py:89
-msgid "What the profile still lacks, e.g. \"a profile photo, your skills\""
-msgstr ""
-"Ce qui manque encore au profil, p. ex. « une photo de profil, vos "
-"compétences »"
-
-#: .\base\triggers.py:90
-msgid "Impact points for completing the profile; 0 when there is no award"
-msgstr ""
-"Points d’impact pour un profil complété; 0 s’il n’y a pas de récompense"
-
-#: .\base\views.py:341
-#, python-format
-msgid "Your profile is complete. You earned %(points)d impact points!"
-msgstr ""
-"Votre profil est complet. Vous avez gagné %(points)d points d’impact !"
-
-#: .\console\forms.py:546
-msgid "Points for a completed profile"
-msgstr "Points pour un profil complété"
-
-#: .\console\forms.py:556
-msgid ""
-"Once per person, the first time their profile has a photo, bio, skills and "
-"location. 0 turns it off."
-msgstr ""
-"Une fois par personne, la première fois que son profil a une photo, une "
-"biographie, des compétences et un lieu. 0 désactive cette récompense."
-
-#: .\console\templates\console\points_settings.html:73
-msgid "Completed Profile"
-msgstr "Profil complété"
-
-#: .\console\templates\console\points_settings.html:74
-msgid ""
-"Encourages new volunteers to fill in their profile. The reminder emails in "
-"Communication > Email mention it."
-msgstr ""
-"Encourage les nouveaux bénévoles à remplir leur profil. Les e-mails de "
-"rappel dans Communication > E-mail le mentionnent."
+#~ msgid "Confirming..."
+#~ msgstr "Confirmation..."

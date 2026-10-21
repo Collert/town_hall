@@ -2748,3 +2748,61 @@ class CancelSignupTests(ConsoleFixture):
         self.assertContains(response, 'No-show')
         response = self.client.get(reverse('console_volunteer_detail', args=[self.vol.pk]))
         self.assertContains(response, 'vd-reliability good')
+
+
+class ShiftReminderTests(ConsoleFixture):
+    def setUp(self):
+        from datetime import datetime, time
+        cache.clear()  # the middleware throttle is cached
+        day = timezone.localdate() + timedelta(days=4)
+        self.start = timezone.make_aware(datetime.combine(day, time(17)))
+        self.due = timezone.make_aware(datetime.combine(day - timedelta(days=1), time(9)))
+        self.event = make_event('Harvest Supper', self.start, self.start + timedelta(hours=4))
+        self.evening = EventRoleSlot.objects.create(event=self.event, role=self.role, start_time=self.start,
+                                                    end_time=self.start + timedelta(hours=3), required_qty=4)
+        self.evening.add_signup(self.vol)
+        self.evening.add_signup(self.mate)
+
+    def tearDown(self):
+        cache.clear()
+
+    def run_reminders(self, now):
+        from events.reminders import run_due_reminders
+        mail.outbox = []
+        return run_due_reminders('https://volunteer.example.org', now=now)
+
+    def test_sent_at_9am_the_day_before_and_only_once(self):
+        self.assertEqual(self.run_reminders(self.due - timedelta(minutes=1)), 0)
+        self.assertEqual(self.run_reminders(self.due + timedelta(minutes=1)), 2)
+        self.assertEqual(sorted(m.to[0] for m in mail.outbox), ['mate@example.com', 'vol@example.com'])
+        body = mail.outbox[0].body
+        self.assertIn('[shift_reminder]', mail.outbox[0].subject)
+        self.assertIn('role: Greeter', body)
+        self.assertIn(f'link: https://volunteer.example.org/en/opportunities/{self.event.pk}/', body)
+        self.assertEqual(self.run_reminders(self.due + timedelta(hours=3)), 0)
+
+    def test_late_pass_still_sends_until_the_shift_starts(self):
+        self.assertEqual(self.run_reminders(self.start + timedelta(minutes=1)), 0)
+        self.assertEqual(self.run_reminders(self.start - timedelta(hours=1)), 2)
+
+    def test_skips_sign_ups_after_reminder_time_unpublished_events_and_when_off(self):
+        from events.models import ShiftReminder
+        SlotSignup.objects.filter(slot=self.evening, user=self.mate).update(created_at=self.due + timedelta(hours=2))
+        self.assertEqual(self.run_reminders(self.due + timedelta(hours=3)), 1)
+        self.assertEqual(mail.outbox[0].to, ['vol@example.com'])
+
+        ShiftReminder.objects.all().delete()
+        EmailTrigger.objects.update_or_create(key='shift_reminder', defaults={'enabled': False})
+        self.assertEqual(self.run_reminders(self.due + timedelta(hours=3)), 0)
+        EmailTrigger.objects.filter(key='shift_reminder').update(enabled=True)
+        Event.objects.filter(pk=self.event.pk).update(published=False)
+        self.assertEqual(self.run_reminders(self.due + timedelta(hours=3)), 0)
+
+    def test_event_page_dates_only_shifts_on_another_day(self):
+        from django.utils.formats import date_format
+        next_day = EventRoleSlot.objects.create(event=self.event, role=self.role, start_time=self.start + timedelta(days=1),
+                                                end_time=self.start + timedelta(days=1, hours=2))
+        self.client.force_login(self.vol)
+        response = self.client.get(reverse('opportunity_detail', args=[self.event.pk]))
+        self.assertContains(response, date_format(timezone.localtime(next_day.start_time), 'D, M j'))
+        self.assertNotContains(response, date_format(timezone.localtime(self.start), 'D, M j') + ' ·')

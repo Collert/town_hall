@@ -337,6 +337,20 @@ class SlotSignup(models.Model):
         return f"{self.user} signed up for {self.slot}"
 
 
+class ShiftReminder(models.Model):
+    """The day-before reminder email went out for this person's shift (events/reminders.py).
+    Created before sending, so the unique pair keeps it to one email even with several workers."""
+    slot = models.ForeignKey(EventRoleSlot, on_delete=models.CASCADE, related_name='reminders')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shift_reminders')
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('slot', 'user')
+
+    def __str__(self):
+        return f"Reminded {self.user} about {self.slot}"
+
+
 class SlotCancellation(models.Model):
     """A volunteer took themselves off a slot. Cancelling less than 24 hours before it
     starts (`late`) counts against their reliability like a no-show (events/reliability.py)."""

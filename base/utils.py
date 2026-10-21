@@ -22,6 +22,21 @@ def time_range(start, end):
     return f"{formats.time_format(timezone.localtime(start))} – {formats.time_format(timezone.localtime(end))}"
 
 
+def slot_when(start, end, event_start):
+    """A shift's times for the event page: "9:00 AM – 5:00 PM", with the date only when
+    the shift falls on another day than the event starts ("Sat, Oct 25 · 9:00 AM – …"),
+    and the end's date too when the shift runs past midnight."""
+    start, end = timezone.localtime(start), timezone.localtime(end)
+    day = timezone.localtime(event_start).date()
+    first = formats.time_format(start)
+    if start.date() != day:
+        first = f"{formats.date_format(start, 'D, M j')} · {first}"
+    last = formats.time_format(end)
+    if end.date() != start.date():
+        last = f"{formats.date_format(end, 'D, M j')} · {last}"
+    return f"{first} – {last}"
+
+
 def qr_svg(data):
     """Inline SVG QR code for `data`. It's drawn in `currentColor`, so the surrounding CSS
     sets its color (the text color, which keeps contrast in light and dark mode)."""
