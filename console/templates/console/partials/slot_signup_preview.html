@@ -1,0 +1,16 @@
+{% load i18n avatar_tags %}
+{% if candidates %}
+<ul class="person-options slot-signup-preview">
+    {% for person in candidates %}
+    <li class="person-option-card">
+        {% avatar person 'sm' %}
+        <span class="person-option-text">
+            <strong>{{ person|display_name }}{% if person.pk == slot.lead_id %} <span class="c-badge">{% trans "Shift lead" %}</span>{% endif %}</strong>
+            <small>{% if person.profile.level %}{{ person.profile.level.name }} &middot; {% endif %}{% blocktrans with n=person.profile.impact_points %}{{ n }} impact points{% endblocktrans %}</small>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="c-help">{% trans "Nobody has signed up for this shift yet." %}</p>
+{% endif %}

@@ -30,7 +30,7 @@ from . import profile_completion
 from .middleware import FirstRunMiddleware
 from .points import award_profile
 from .models import AdminFeedback, Endorsement, HeroSection, Notification, PointsEntry, PointsRules, SiteSettings, Venue
-from .utils import gravatar_exists, qr_svg
+from .utils import gravatar_exists, photos_first, qr_svg
 
 
 def _safe_next(request, fallback='home'):
@@ -104,7 +104,7 @@ def _auth_page_context(request):
         'next': request.GET.get('next', ''),
         'testimonial': reviews.first(),
         'volunteer_count': volunteers.count(),
-        'recent_volunteers': volunteers.select_related('profile').order_by('-date_joined')[:3],
+        'recent_volunteers': photos_first(volunteers.select_related('profile').order_by('-date_joined'))[:3],
     }
 
 

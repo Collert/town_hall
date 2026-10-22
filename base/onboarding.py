@@ -320,7 +320,7 @@ button and their team.
 
     ('Chain of command, areas and leads', """
 Large events need structure. Any event can turn on a **chain of command**; the **Roles & Staffing**
-tab suggests it once an event needs more than 20 volunteers. Choose **Set Up Chain of Command**.
+tab suggests it once an event needs more than 35 volunteers. Choose **Set Up Chain of Command**.
 
 ## The three levels
 

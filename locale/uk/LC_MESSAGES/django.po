@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Town Hall\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 16:09-0700\n"
+"POT-Creation-Date: 2026-10-22 11:59-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
@@ -131,7 +131,7 @@ msgid "Sunday"
 msgstr "Неділя"
 
 #: .\base\models.py:345 .\base\points.py:200
-#: .\console\templates\console\volunteer_detail.html:148
+#: .\console\templates\console\volunteer_detail.html:150
 msgid "Shift"
 msgstr "Зміна"
 
@@ -333,19 +333,19 @@ msgstr "Навички"
 #: .\console\templates\console\partials\area_dialog.html:19
 #: .\console\templates\console\partials\area_lead_dialog.html:39
 #: .\console\templates\console\partials\quiz_questions.html:90
-#: .\console\templates\console\partials\slot_edit_dialog.html:83
+#: .\console\templates\console\partials\slot_edit_dialog.html:93
 #: .\console\templates\console\partials\task_item.html:9
 #: .\console\templates\console\partials\task_list_card.html:26
 #: .\console\templates\console\role_edit.html:22
 #: .\console\templates\console\skill_settings.html:103
-#: .\console\templates\console\volunteer_detail.html:281
-#: .\console\templates\console\volunteer_detail.html:332
-#: .\console\templates\console\volunteer_detail.html:359
-#: .\console\templates\console\volunteer_detail.html:389
+#: .\console\templates\console\volunteer_detail.html:283
+#: .\console\templates\console\volunteer_detail.html:334
+#: .\console\templates\console\volunteer_detail.html:361
+#: .\console\templates\console\volunteer_detail.html:391
 #: .\console\templates\console\volunteer_edit.html:24
 #: .\console\templates\console\volunteer_edit.html:83
 #: .\console\templates\console\volunteer_list.html:91
-#: .\events\templates\events\event_detail.html:478
+#: .\events\templates\events\event_detail.html:479
 #: .\mcp_server\templates\mcp_server\authorize.html:55
 msgid "Cancel"
 msgstr "Скасувати"
@@ -522,7 +522,7 @@ msgid "Admin Feedback (Private)"
 msgstr "Відгук для адміністрації (приватний)"
 
 #: .\base\templates\base\give_endorsement.html:78
-#: .\console\templates\console\volunteer_detail.html:378
+#: .\console\templates\console\volunteer_detail.html:380
 #: .\events\templates\events\event_thank_you.html:75
 #, python-format
 msgid "%(n)s stars"
@@ -555,7 +555,7 @@ msgstr "рекомендує"
 
 #: .\base\templates\base\give_endorsement.html:107
 #: .\base\templates\base\partials\endorsement_feed.html:11
-#: .\console\templates\console\volunteer_detail.html:242
+#: .\console\templates\console\volunteer_detail.html:244
 #, python-format
 msgid "%(t)s ago"
 msgstr "%(t)s тому"
@@ -737,7 +737,7 @@ msgstr "Рівень %(n)s: %(name)s"
 #: .\base\templates\base\impact_record.html:42
 #: .\base\templates\base\profile.html:99
 #: .\base\templates\base\volunteer_resume.html:34
-#: .\console\templates\console\volunteer_detail.html:152
+#: .\console\templates\console\volunteer_detail.html:154
 msgid "Verified Hours"
 msgstr "Підтверджені години"
 
@@ -899,7 +899,7 @@ msgid "My Training"
 msgstr "Моє навчання"
 
 #: .\base\templates\base\layout.html:195
-#: .\console\templates\console\volunteer_detail.html:135
+#: .\console\templates\console\volunteer_detail.html:137
 msgid "Impact Record"
 msgstr "Звіт про вплив"
 
@@ -1671,12 +1671,12 @@ msgid "No activity history yet."
 msgstr "Історії активності ще немає."
 
 #: .\base\templates\base\profile.html:329
-#: .\console\templates\console\volunteer_detail.html:223
+#: .\console\templates\console\volunteer_detail.html:225
 msgid "Endorsements Summary"
 msgstr "Підсумок рекомендацій"
 
 #: .\base\templates\base\profile.html:352
-#: .\console\templates\console\volunteer_detail.html:234
+#: .\console\templates\console\volunteer_detail.html:236
 msgid "Public Feedback Feed"
 msgstr "Стрічка публічних відгуків"
 
@@ -3359,12 +3359,12 @@ msgstr ""
 #: .\console\templates\console\partials\area_dialog.html:7
 #: .\console\templates\console\partials\area_lead_dialog.html:7
 #: .\console\templates\console\partials\slot_edit_dialog.html:7
-#: .\console\templates\console\volunteer_detail.html:271
-#: .\console\templates\console\volunteer_detail.html:293
-#: .\console\templates\console\volunteer_detail.html:344
-#: .\console\templates\console\volunteer_detail.html:370
+#: .\console\templates\console\volunteer_detail.html:273
+#: .\console\templates\console\volunteer_detail.html:295
+#: .\console\templates\console\volunteer_detail.html:346
+#: .\console\templates\console\volunteer_detail.html:372
 #: .\console\templates\console\volunteer_list.html:79
-#: .\events\templates\events\event_detail.html:495
+#: .\events\templates\events\event_detail.html:496
 #: .\events\templates\events\my_events.html:240
 msgid "Close"
 msgstr "Закрити"
@@ -4417,7 +4417,7 @@ msgstr "Найкращі учасники"
 #: .\console\templates\console\event_report.html:119
 #: .\console\templates\console\partials\event_history.html:20
 #: .\console\templates\console\partials\volunteer_table.html:32
-#: .\console\templates\console\volunteer_detail.html:153
+#: .\console\templates\console\volunteer_detail.html:155
 #: .\education\templates\education\training_dashboard.html:67
 #: .\events\templates\events\event_thank_you.html:29
 msgid "hrs"
@@ -4430,7 +4430,7 @@ msgstr "Рекомендовано"
 
 #: .\console\templates\console\event_report.html:104
 #: .\console\templates\console\event_report.html:124
-#: .\console\templates\console\volunteer_detail.html:235
+#: .\console\templates\console\volunteer_detail.html:237
 msgid "Endorse"
 msgstr "Рекомендувати"
 
@@ -4663,8 +4663,8 @@ msgstr "Про місце"
 
 #: .\console\templates\console\event_roles.html:155
 #: .\console\templates\console\volunteer_detail.html:40
-#: .\console\templates\console\volunteer_detail.html:275
-#: .\events\templates\events\event_detail.html:550
+#: .\console\templates\console\volunteer_detail.html:277
+#: .\events\templates\events\event_detail.html:551
 msgid "Message"
 msgstr "Повідомлення"
 
@@ -5310,7 +5310,8 @@ msgid "Create Area"
 msgstr "Створити зону"
 
 #: .\console\templates\console\partials\area_lead_candidates.html:10
-#: .\console\templates\console\partials\slot_edit_dialog.html:73
+#: .\console\templates\console\partials\slot_edit_dialog.html:78
+#: .\console\templates\console\partials\slot_signup_preview.html:9
 #, python-format
 msgid "%(n)s impact points"
 msgstr "Балів впливу: %(n)s"
@@ -5483,7 +5484,8 @@ msgid "Remove this time slot?"
 msgstr "Видалити цей часовий слот?"
 
 #: .\console\templates\console\partials\event_role_card.html:34
-#: .\console\templates\console\partials\slot_edit_dialog.html:47
+#: .\console\templates\console\partials\slot_edit_dialog.html:54
+#: .\console\templates\console\partials\slot_signup_preview.html:8
 msgid "Shift lead"
 msgstr "Керівник зміни"
 
@@ -5847,7 +5849,7 @@ msgstr "Час"
 
 #: .\console\templates\console\partials\monitor_activity.html:13
 #: .\console\templates\console\partials\volunteer_table.html:8
-#: .\console\templates\console\volunteer_detail.html:109
+#: .\console\templates\console\volunteer_detail.html:110
 #: .\education\templates\education\completed_module.html:120
 #: .\education\templates\education\printable_certificate.html:52
 #: .\events\templates\events\event_certificate.html:26
@@ -6060,7 +6062,7 @@ msgstr "Ідентичність"
 
 #: .\console\templates\console\partials\settings_tabs.html:8
 #: .\console\templates\console\points_settings.html:13
-#: .\console\templates\console\volunteer_detail.html:348
+#: .\console\templates\console\volunteer_detail.html:350
 msgid "Points"
 msgstr "Бали"
 
@@ -6106,7 +6108,13 @@ msgstr "Зона"
 msgid "Turn off to make this slot invite-only."
 msgstr "Вимкніть, щоб цей слот був лише за запрошенням."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:49
+#: .\console\templates\console\partials\slot_edit_dialog.html:48
+#: .\console\templates\console\partials\slot_edit_dialog.html:86
+#, python-format
+msgid "Sign-ups (%(n)s of %(total)s)"
+msgstr "Записалися (%(n)s з %(total)s)"
+
+#: .\console\templates\console\partials\slot_edit_dialog.html:50
 #, python-format
 msgid ""
 "Shifts get a lead when more than %(n)s people can sign up, or when the event "
@@ -6115,16 +6123,16 @@ msgstr ""
 "Зміни отримують керівника, коли на них може записатися понад %(n)s осіб або "
 "коли на події є ланцюг командування."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:51
+#: .\console\templates\console\partials\slot_edit_dialog.html:56
 #, python-format
 msgid "%(name)s leads this shift."
 msgstr "Цю зміну очолює %(name)s."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:51
+#: .\console\templates\console\partials\slot_edit_dialog.html:56
 msgid "Shift leads are assigned by the event's general coordinator."
 msgstr "Керівників змін призначає головний координатор події."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:53
+#: .\console\templates\console\partials\slot_edit_dialog.html:58
 #, python-format
 msgid ""
 "%(name)s leads this shift. Leads are locked 24 hours before the event so "
@@ -6133,7 +6141,7 @@ msgstr ""
 "Цю зміну очолює %(name)s. Керівників фіксують за 24 години до події, щоб "
 "волонтери знали, кому вони підпорядковуються."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:55
+#: .\console\templates\console\partials\slot_edit_dialog.html:60
 #, python-format
 msgid ""
 "Nobody has signed up yet. Once people do, the one with the most impact points"
@@ -6142,7 +6150,7 @@ msgstr ""
 "Ще ніхто не записався. Коли люди запишуться, %(when)s буде обрано того, хто "
 "має найбільше балів впливу, якщо ви не оберете когось."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:57
+#: .\console\templates\console\partials\slot_edit_dialog.html:62
 #, python-format
 msgid ""
 "Left open, the volunteer with the most impact points is picked on %(when)s. "
@@ -6151,19 +6159,19 @@ msgstr ""
 "Якщо залишити вільним, %(when)s буде обрано волонтера з найбільшою кількістю "
 "балів впливу. Керівників фіксують %(locked)s."
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:63
+#: .\console\templates\console\partials\slot_edit_dialog.html:68
 msgid "Leave open"
 msgstr "Залишити вільним"
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:63
+#: .\console\templates\console\partials\slot_edit_dialog.html:68
 msgid "Pick automatically 48 h before"
 msgstr "Обрати автоматично за 48 год"
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:72
+#: .\console\templates\console\partials\slot_edit_dialog.html:77
 msgid "Top pick"
 msgstr "Найкращий вибір"
 
-#: .\console\templates\console\partials\slot_edit_dialog.html:84
+#: .\console\templates\console\partials\slot_edit_dialog.html:94
 msgid "Save Shift"
 msgstr "Зберегти зміну"
 
@@ -6190,6 +6198,10 @@ msgstr "Дозволено додаткових волонтерів"
 #: .\console\templates\console\partials\slot_row.html:23
 msgid "Remove slot"
 msgstr "Видалити слот"
+
+#: .\console\templates\console\partials\slot_signup_preview.html:15
+msgid "Nobody has signed up for this shift yet."
+msgstr "На цю зміну ще ніхто не записався."
 
 #: .\console\templates\console\partials\task_fields.html:4
 msgid "Details"
@@ -7468,7 +7480,7 @@ msgid "Member since %(d)s"
 msgstr "Учасник з %(d)s"
 
 #: .\console\templates\console\volunteer_detail.html:34
-#: .\console\templates\console\volunteer_detail.html:306
+#: .\console\templates\console\volunteer_detail.html:308
 msgid "Superuser"
 msgstr "Суперкористувач"
 
@@ -7541,14 +7553,14 @@ msgstr "Навички та сертифікати"
 msgid "Edit skills"
 msgstr "Редагувати навички"
 
-#: .\console\templates\console\volunteer_detail.html:109
+#: .\console\templates\console\volunteer_detail.html:110
 #: .\education\templates\education\module_overview.html:14
 #: .\education\templates\education\printable_certificate.html:59
 msgid "Module"
 msgstr "Модуль"
 
-#: .\console\templates\console\volunteer_detail.html:109
-#: .\console\templates\console\volunteer_detail.html:114
+#: .\console\templates\console\volunteer_detail.html:110
+#: .\console\templates\console\volunteer_detail.html:115
 #: .\education\templates\education\printable_certificate.html:60
 #: .\education\templates\education\training_dashboard.html:134
 #: .\education\templates\education\training_directory.html:135
@@ -7557,35 +7569,35 @@ msgstr "Модуль"
 msgid "Completed"
 msgstr "Завершено"
 
-#: .\console\templates\console\volunteer_detail.html:109
+#: .\console\templates\console\volunteer_detail.html:110
 msgid "Progress"
 msgstr "Прогрес"
 
-#: .\console\templates\console\volunteer_detail.html:114
+#: .\console\templates\console\volunteer_detail.html:115
 msgid "In progress"
 msgstr "У процесі"
 
-#: .\console\templates\console\volunteer_detail.html:122
+#: .\console\templates\console\volunteer_detail.html:124
 msgid "Hasn't started any training yet."
 msgstr "Ще не розпочав(-ла) жодного навчання."
 
-#: .\console\templates\console\volunteer_detail.html:132
+#: .\console\templates\console\volunteer_detail.html:134
 msgid "Service History"
 msgstr "Історія волонтерської діяльності"
 
-#: .\console\templates\console\volunteer_detail.html:133
+#: .\console\templates\console\volunteer_detail.html:135
 msgid "Chronological log of verified contributions"
 msgstr "Хронологічний журнал підтверджених внесків"
 
-#: .\console\templates\console\volunteer_detail.html:149
+#: .\console\templates\console\volunteer_detail.html:151
 msgid "Clutch cover"
 msgstr "Критична заміна"
 
-#: .\console\templates\console\volunteer_detail.html:149
+#: .\console\templates\console\volunteer_detail.html:151
 msgid "impact points"
 msgstr "балів впливу"
 
-#: .\console\templates\console\volunteer_detail.html:159
+#: .\console\templates\console\volunteer_detail.html:161
 #, python-format
 msgid "View %(counter)s More Activity"
 msgid_plural "View %(counter)s More Activities"
@@ -7594,15 +7606,15 @@ msgstr[1] "Переглянути ще %(counter)s активності"
 msgstr[2] "Переглянути ще %(counter)s активностей"
 msgstr[3] "Переглянути ще %(counter)s активності"
 
-#: .\console\templates\console\volunteer_detail.html:161
+#: .\console\templates\console\volunteer_detail.html:163
 msgid "No completed shifts yet."
 msgstr "Завершених змін ще немає."
 
-#: .\console\templates\console\volunteer_detail.html:169
+#: .\console\templates\console\volunteer_detail.html:171
 msgid "Attendance Record"
 msgstr "Облік відвідуваності"
 
-#: .\console\templates\console\volunteer_detail.html:170
+#: .\console\templates\console\volunteer_detail.html:172
 #, python-format
 msgid "%(counter)s no-show"
 msgid_plural "%(counter)s no-shows"
@@ -7611,7 +7623,7 @@ msgstr[1] "%(counter)s неявки"
 msgstr[2] "%(counter)s неявок"
 msgstr[3] "%(counter)s неявки"
 
-#: .\console\templates\console\volunteer_detail.html:170
+#: .\console\templates\console\volunteer_detail.html:172
 #, python-format
 msgid "%(counter)s late cancellation"
 msgid_plural "%(counter)s late cancellations"
@@ -7620,21 +7632,21 @@ msgstr[1] "%(counter)s пізні скасування"
 msgstr[2] "%(counter)s пізніх скасувань"
 msgstr[3] "%(counter)s пізнього скасування"
 
-#: .\console\templates\console\volunteer_detail.html:181
+#: .\console\templates\console\volunteer_detail.html:183
 msgid "No-show"
 msgstr "Неявка"
 
-#: .\console\templates\console\volunteer_detail.html:181
+#: .\console\templates\console\volunteer_detail.html:183
 msgid "Cancelled after it started"
 msgstr "Скасовано після початку"
 
-#: .\console\templates\console\volunteer_detail.html:181
+#: .\console\templates\console\volunteer_detail.html:183
 #, python-format
 msgid "Cancelled %(t)s before"
 msgstr "Скасовано за %(t)s до початку"
 
-#: .\console\templates\console\volunteer_detail.html:185
-#: .\console\templates\console\volunteer_detail.html:215
+#: .\console\templates\console\volunteer_detail.html:187
+#: .\console\templates\console\volunteer_detail.html:217
 #, python-format
 msgid "View all %(counter)s entry"
 msgid_plural "View all %(counter)s entries"
@@ -7643,79 +7655,79 @@ msgstr[1] "Переглянути всі %(counter)s записи"
 msgstr[2] "Переглянути всі %(counter)s записів"
 msgstr[3] "Переглянути всі %(counter)s записи"
 
-#: .\console\templates\console\volunteer_detail.html:192
+#: .\console\templates\console\volunteer_detail.html:194
 msgid "Points Ledger"
 msgstr "Журнал балів"
 
-#: .\console\templates\console\volunteer_detail.html:193
+#: .\console\templates\console\volunteer_detail.html:195
 msgid "Every award that makes up this volunteer's impact points"
 msgstr "Усі нарахування, з яких складаються бали впливу цього волонтера"
 
-#: .\console\templates\console\volunteer_detail.html:195
+#: .\console\templates\console\volunteer_detail.html:197
 msgid "Adjust points"
 msgstr "Скоригувати бали"
 
-#: .\console\templates\console\volunteer_detail.html:207
+#: .\console\templates\console\volunteer_detail.html:209
 #, python-format
 msgid "by %(name)s"
 msgstr "від %(name)s"
 
-#: .\console\templates\console\volunteer_detail.html:217
+#: .\console\templates\console\volunteer_detail.html:219
 msgid "No points earned yet."
 msgstr "Балів ще не зароблено."
 
-#: .\console\templates\console\volunteer_detail.html:228
+#: .\console\templates\console\volunteer_detail.html:230
 msgid "No endorsements yet."
 msgstr "Рекомендацій ще немає."
 
-#: .\console\templates\console\volunteer_detail.html:248
+#: .\console\templates\console\volunteer_detail.html:250
 msgid "Nobody has endorsed this volunteer yet."
 msgstr "Цього волонтера ще ніхто не рекомендував."
 
-#: .\console\templates\console\volunteer_detail.html:252
+#: .\console\templates\console\volunteer_detail.html:254
 msgid "Private staff feedback"
 msgstr "Приватний відгук персоналу"
 
-#: .\console\templates\console\volunteer_detail.html:270
+#: .\console\templates\console\volunteer_detail.html:272
 #: .\events\templates\events\event_detail.html:205
 #, python-format
 msgid "Message %(name)s"
 msgstr "Написати: %(name)s"
 
-#: .\console\templates\console\volunteer_detail.html:277
+#: .\console\templates\console\volunteer_detail.html:279
 msgid "Delivered as an in-app notification."
 msgstr "Надсилається як сповіщення в застосунку."
 
-#: .\console\templates\console\volunteer_detail.html:282
+#: .\console\templates\console\volunteer_detail.html:284
 msgid "Send"
 msgstr "Надіслати"
 
-#: .\console\templates\console\volunteer_detail.html:292
+#: .\console\templates\console\volunteer_detail.html:294
 #, python-format
 msgid "Access for %(name)s"
 msgstr "Доступ для %(name)s"
 
-#: .\console\templates\console\volunteer_detail.html:298
+#: .\console\templates\console\volunteer_detail.html:300
 msgid "Staff status"
 msgstr "Статус персоналу"
 
-#: .\console\templates\console\volunteer_detail.html:299
+#: .\console\templates\console\volunteer_detail.html:301
 msgid "Can open this admin console and sign in to the Django admin."
 msgstr "Може відкривати цю консоль адміністратора та входити в адмінку Django."
 
-#: .\console\templates\console\volunteer_detail.html:307
+#: .\console\templates\console\volunteer_detail.html:309
 msgid "Has every permission without being assigned it. Give this sparingly."
 msgstr "Має всі дозволи без окремого призначення. Надавайте обережно."
 
-#: .\console\templates\console\volunteer_detail.html:313
+#: .\console\templates\console\volunteer_detail.html:315
 msgid "Permission groups"
 msgstr "Групи дозволів"
 
-#: .\console\templates\console\volunteer_detail.html:324
+#: .\console\templates\console\volunteer_detail.html:326
 msgid "No permission groups exist yet."
 msgstr "Груп дозволів ще немає."
 
-#: .\console\templates\console\volunteer_detail.html:326
+#: .\console\templates\console\volunteer_detail.html:328
 msgid ""
 "Groups bundle Django permissions. Create them and choose what each can do in "
 "the Django admin."
@@ -7723,60 +7735,60 @@ msgstr ""
 "Групи об’єднують дозволи Django. Створіть їх і оберіть, що кожна може робити "
 "в адмінці Django."
 
-#: .\console\templates\console\volunteer_detail.html:327
+#: .\console\templates\console\volunteer_detail.html:329
 msgid "Manage groups"
 msgstr "Керувати групами"
 
-#: .\console\templates\console\volunteer_detail.html:333
+#: .\console\templates\console\volunteer_detail.html:335
 msgid "Save Access"
 msgstr "Зберегти доступ"
 
-#: .\console\templates\console\volunteer_detail.html:343
+#: .\console\templates\console\volunteer_detail.html:345
 msgid "Adjust Impact Points"
 msgstr "Скоригувати бали впливу"
 
-#: .\console\templates\console\volunteer_detail.html:349
+#: .\console\templates\console\volunteer_detail.html:351
 msgid "e.g. 50 or -20"
 msgstr "наприклад: 50 або -20"
 
-#: .\console\templates\console\volunteer_detail.html:350
+#: .\console\templates\console\volunteer_detail.html:352
 #, python-format
 msgid "Use a negative number to take points away. Current total: %(pts)s."
 msgstr "Використайте від’ємне число, щоб забрати бали. Поточна сума: %(pts)s."
 
-#: .\console\templates\console\volunteer_detail.html:353
+#: .\console\templates\console\volunteer_detail.html:355
 msgid "Reason"
 msgstr "Причина"
 
-#: .\console\templates\console\volunteer_detail.html:354
+#: .\console\templates\console\volunteer_detail.html:356
 msgid "e.g. Led the volunteer orientation"
 msgstr "наприклад: провів(-ла) вступне заняття для волонтерів"
 
-#: .\console\templates\console\volunteer_detail.html:355
+#: .\console\templates\console\volunteer_detail.html:357
 msgid "The volunteer sees this in their points history."
 msgstr "Волонтер бачить це в історії своїх балів."
 
-#: .\console\templates\console\volunteer_detail.html:360
+#: .\console\templates\console\volunteer_detail.html:362
 msgid "Record Adjustment"
 msgstr "Записати коригування"
 
-#: .\console\templates\console\volunteer_detail.html:369
+#: .\console\templates\console\volunteer_detail.html:371
 msgid "Private Feedback"
 msgstr "Приватний відгук"
 
-#: .\console\templates\console\volunteer_detail.html:374
+#: .\console\templates\console\volunteer_detail.html:376
 msgid "Rating"
 msgstr "Оцінка"
 
-#: .\console\templates\console\volunteer_detail.html:383
+#: .\console\templates\console\volunteer_detail.html:385
 msgid "Internal performance notes"
 msgstr "Внутрішні нотатки про роботу"
 
-#: .\console\templates\console\volunteer_detail.html:385
+#: .\console\templates\console\volunteer_detail.html:387
 msgid "Only staff can see this."
 msgstr "Це бачить лише персонал."
 
-#: .\console\templates\console\volunteer_detail.html:390
+#: .\console\templates\console\volunteer_detail.html:392
 msgid "Save Feedback"
 msgstr "Зберегти відгук"
 
@@ -9610,7 +9622,7 @@ msgstr "Координатор"
 
 #: .\events\templates\events\event_detail.html:198
 #: .\events\templates\events\event_detail.html:260
-#: .\events\templates\events\event_detail.html:549
+#: .\events\templates\events\event_detail.html:550
 #, python-format
 msgid "%(area)s lead"
 msgstr "Керівник зони «%(area)s»"
@@ -9745,23 +9757,23 @@ msgstr "Місця швидко закінчуються"
 msgid "You must complete required training to sign up."
 msgstr "Щоб записатися, потрібно завершити обов’язкове навчання."
 
-#: .\events\templates\events\event_detail.html:474
+#: .\events\templates\events\event_detail.html:475
 msgid "Confirm Selection"
 msgstr "Підтвердити вибір"
 
-#: .\events\templates\events\event_detail.html:492
+#: .\events\templates\events\event_detail.html:493
 msgid "Cancel your shift"
 msgstr "Скасувати вашу зміну"
 
-#: .\events\templates\events\event_detail.html:492
+#: .\events\templates\events\event_detail.html:493
 msgid "Cancel a shift"
 msgstr "Скасувати зміну"
 
-#: .\events\templates\events\event_detail.html:501
+#: .\events\templates\events\event_detail.html:502
 msgid "Can't make it? Cancelling opens your spot for someone else."
 msgstr "Не можете прийти? Якщо скасуєте, ваше місце зможе зайняти хтось інший."
 
-#: .\events\templates\events\event_detail.html:501
+#: .\events\templates\events\event_detail.html:502
 msgid ""
 "Can't make it? Pick the shift to cancel, and your spot opens for someone "
 "else."
@@ -9769,11 +9781,11 @@ msgstr ""
 "Не можете прийти? Виберіть зміну, яку хочете скасувати, і ваше місце зможе "
 "зайняти хтось інший."
 
-#: .\events\templates\events\event_detail.html:511
+#: .\events\templates\events\event_detail.html:512
 msgid "Within 24 hours"
 msgstr "Менш ніж за 24 год"
 
-#: .\events\templates\events\event_detail.html:520
+#: .\events\templates\events\event_detail.html:521
 msgid ""
 "This shift starts in less than 24 hours. Cancelling now counts the same as a "
 "no-show and lowers your reliability score."
@@ -9781,7 +9793,7 @@ msgstr ""
 "Ця зміна починається менш ніж за 24 години. Скасування зараз зараховується як"
 " неявка і знижує ваш показник надійності."
 
-#: .\events\templates\events\event_detail.html:522
+#: .\events\templates\events\event_detail.html:523
 msgid ""
 "Cancelling 24 hours or more before a shift starts doesn't affect your "
 "reliability score. Late cancellations and no-shows do."
@@ -9789,19 +9801,19 @@ msgstr ""
 "Скасування щонайменше за 24 години до початку зміни не впливає на ваш "
 "показник надійності. Пізні скасування та неявки — впливають."
 
-#: .\events\templates\events\event_detail.html:525
+#: .\events\templates\events\event_detail.html:526
 msgid "Cancel Shift"
 msgstr "Скасувати зміну"
 
-#: .\events\templates\events\event_detail.html:526
+#: .\events\templates\events\event_detail.html:527
 msgid "Keep It"
 msgstr "Залишити"
 
-#: .\events\templates\events\event_detail.html:537
+#: .\events\templates\events\event_detail.html:538
 msgid "Try your lead first"
 msgstr "Спершу зверніться до свого керівника"
 
-#: .\events\templates\events\event_detail.html:544
+#: .\events\templates\events\event_detail.html:545
 msgid ""
 "Your area lead is the person to ask first. They can answer most questions and"
 " bring anything bigger to the coordinators."
@@ -9821,12 +9833,12 @@ msgstr[3] ""
 "До ваших керівників зон варто звернутися першими. Вони можуть відповісти на "
 "більшість запитань і передати складніші координаторам."
 
-#: .\events\templates\events\event_detail.html:555
+#: .\events\templates\events\event_detail.html:556
 #, python-format
 msgid "Contact %(name)s anyway"
 msgstr "Усе одно написати: %(name)s"
 
-#: .\events\templates\events\event_detail.html:555
+#: .\events\templates\events\event_detail.html:556
 msgid "Contact them anyway"
 msgstr "Усе одно звернутися"
 

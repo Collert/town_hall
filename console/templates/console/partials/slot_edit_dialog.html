@@ -43,11 +43,16 @@
                 <span class="c-toggle"><input type="checkbox" name="is_public" {% if slot.is_public %}checked{% endif %}><span></span></span>
             </label>
 
+            {% if not lead_position %}
+            <section class="slot-edit-lead">
+                <h3 class="c-label">{% blocktrans with n=candidates|length total=slot.required_qty %}Sign-ups ({{ n }} of {{ total }}){% endblocktrans %}</h3>
+                {% include 'console/partials/slot_signup_preview.html' %}
+                <p class="c-help slot-edit-note">{% blocktrans with n=lead_min %}Shifts get a lead when more than {{ n }} people can sign up, or when the event has a chain of command.{% endblocktrans %}</p>
+            </section>
+            {% else %}
             <section class="slot-edit-lead">
                 <h3 class="c-label">{% trans "Shift lead" %}</h3>
-                {% if not lead_position %}
-                <p class="c-help">{% blocktrans with n=lead_min %}Shifts get a lead when more than {{ n }} people can sign up, or when the event has a chain of command.{% endblocktrans %}</p>
-                {% elif not can_manage %}
+                {% if not can_manage %}
                 <p class="c-help">{% if slot.lead %}{% blocktrans with name=slot.lead|display_name %}{{ name }} leads this shift.{% endblocktrans %} {% endif %}{% trans "Shift leads are assigned by the event's general coordinator." %}</p>
                 {% elif not lead_open %}
                 <p class="c-help"><span class="material-symbols-outlined slot-edit-lock">lock</span>{% blocktrans with name=slot.lead|display_name %}{{ name }} leads this shift. Leads are locked 24 hours before the event so volunteers know who they report to.{% endblocktrans %}</p>
@@ -77,7 +82,12 @@
                     {% endfor %}
                 </div>
                 {% endif %}
+                {% if candidates and not picker %}
+                <h3 class="c-label slot-edit-signups-head">{% blocktrans with n=candidates|length total=slot.required_qty %}Sign-ups ({{ n }} of {{ total }}){% endblocktrans %}</h3>
+                {% include 'console/partials/slot_signup_preview.html' %}
+                {% endif %}
             </section>
+            {% endif %}
         </div>
         <div class="c-dialog-foot">
             <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>

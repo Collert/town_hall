@@ -74,3 +74,14 @@ def gravatar_exists(email):
         return False if e.code == 404 else None
     except (urllib.error.URLError, OSError):
         return None
+
+def photos_first(users):
+    """Order a User queryset so people with a picture (upload or Gravatar) come first.
+
+    Rows of faces look empty when they lead with initials; the existing order breaks ties.
+    """
+    from django.db.models import Case, IntegerField, Q, Value, When
+    has_photo = (Q(profile__use_gravatar=True) & ~Q(email='')) | (Q(profile__avatar__isnull=False) & ~Q(profile__avatar=''))
+    ordering = users.query.order_by or users.model._meta.ordering or ['pk']
+    return users.annotate(has_photo=Case(When(has_photo, then=Value(1)), default=Value(0), output_field=IntegerField())
+                          ).order_by('-has_photo', *ordering)

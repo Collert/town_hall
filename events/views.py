@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 
 from base.email import notify
 from base.models import Endorsement
-from base.utils import qr_svg, short_datetime, slot_when
+from base.utils import photos_first, qr_svg, short_datetime, slot_when
 from education.models import TrainingModule, TrainingModuleCompletion
 from jobs.models import RoleTrainingRequirement, Shift
 
@@ -176,7 +176,7 @@ def event_detail(request, event_id):
         'event': event,
         'role_slots': unique_role_slots,
         'role_slots_data': role_slots_data,
-        'event_volunteers': event.volunteers(),
+        'event_volunteers': photos_first(event.volunteers().select_related('profile')),
         'cancellable_slots': reliability.cancellable(my_slots, user) if user.is_authenticated else [],
         **_chain_context(event, user, my_slots),
     })

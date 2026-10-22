@@ -251,14 +251,18 @@ def slot_edit(request, event_id, slot_id):
         messages.success(request, _('Time slot saved.'))
         return _back(event)
 
+    lead_position = leadership.has_lead_position(slot, event)
+    candidates = leadership.ranked_signups(slot)
     return render(request, 'console/partials/slot_edit_dialog.html', {
         'event': event,
         'slot': slot,
         'start': _local_input(slot.start_time),
         'end': _local_input(slot.end_time),
         'areas': event.areas.all() if event.chain_of_command else [],
-        'lead_position': leadership.has_lead_position(slot, event),
-        'candidates': leadership.ranked_signups(slot),
+        'lead_position': lead_position,
+        'candidates': candidates,
+        # Without the lead picker, the dialog lists the sign-ups read-only instead
+        'picker': bool(lead_position and can_manage and lead_open and candidates),
         'can_manage': can_manage,
         'lead_open': lead_open,
         'auto_assign_at': leadership.auto_assign_at(event),

@@ -2301,20 +2301,23 @@ class ChainOfCommandConsoleTests(ChainOfCommandFixture):
     def roles_page(self):
         return self.client.get(reverse('console_event_roles', args=[self.event.pk]))
 
-    def test_chain_suggested_past_twenty_volunteers_but_always_available(self):
+    def test_chain_suggested_past_thirty_five_volunteers_but_always_available(self):
         self.make_slot(qty=5)
         page = self.roles_page()
         self.assertFalse(page.context['suggest_chain'])
         self.assertContains(page, 'Set Up Chain of Command')  # the sidebar button is always there
-        self.make_slot(qty=16, hours=(4, 8))
+        self.make_slot(qty=30, hours=(4, 8))
+        page = self.roles_page()
+        self.assertFalse(page.context['suggest_chain'])  # 35 is still fine
+        self.make_slot(qty=1, hours=(8, 9))
         page = self.roles_page()
         self.assertTrue(page.context['suggest_chain'])
-        self.assertContains(page, 'This event needs 21 volunteers.')
+        self.assertContains(page, 'This event needs 36 volunteers.')
 
     def test_crossing_the_threshold_while_adding_roles_suggests_a_chain(self):
         response = self.client.post(reverse('console_add_role_slots', args=[self.event.pk]), {
             'role': self.cleaner.pk, 'slot_date': timezone.localtime(self.start).date().isoformat(),
-            'slot_start': '08:00', 'slot_end': '12:00', 'slot_qty': '25', 'slot_over': '0', 'is_public': 'on',
+            'slot_start': '08:00', 'slot_end': '12:00', 'slot_qty': '40', 'slot_over': '0', 'is_public': 'on',
         }, follow=True)
         self.assertContains(response, 'Consider setting up a chain of command')
 
@@ -2441,6 +2444,21 @@ class ChainOfCommandConsoleTests(ChainOfCommandFixture):
         self.assertFalse(slot.lead_auto_assigned)
         self.assertTrue(Notification.objects.filter(user=self.vol, message__contains='shift lead for Cleaner').exists())
         self.assertContains(self.roles_page(), 'Shift lead')
+
+    def test_small_slot_previews_its_signups_instead_of_a_lead_picker(self):
+        slot = self.make_slot(qty=3)
+        slot.signups.add(self.vol, self.mate)
+        dialog = self.client.get(reverse('console_slot_edit', args=[self.event.pk, slot.pk]))
+        self.assertFalse(dialog.context['picker'])
+        self.assertContains(dialog, 'Sign-ups (2 of 3)')
+        self.assertContains(dialog, 'slot-signup-preview')
+        self.assertNotContains(dialog, 'name="lead"')
+        for person in (self.vol, self.mate):
+            self.assertContains(dialog, person.get_full_name() or person.username)
+
+        empty = self.make_slot(qty=2, hours=(4, 8))
+        dialog = self.client.get(reverse('console_slot_edit', args=[self.event.pk, empty.pk]))
+        self.assertContains(dialog, 'Nobody has signed up for this shift yet.')
 
     def test_slot_cannot_shrink_below_its_signups(self):
         slot = self.make_slot(qty=2)

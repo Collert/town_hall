@@ -29,7 +29,7 @@ from django.urls import reverse
 from django.utils import timezone, translation
 from django.utils.translation import gettext_lazy as _
 
-SUGGEST_CHAIN_AT = 20
+SUGGEST_CHAIN_AT = 35
 SLOT_LEAD_MIN = 5
 AUTO_ASSIGN_BEFORE = timedelta(hours=48)
 LOCK_BEFORE = timedelta(hours=24)

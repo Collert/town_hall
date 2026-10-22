@@ -394,7 +394,7 @@ def update_role_slot(ctx, slot_id, **args):
 
 @tool('enable_chain_of_command', 'Turn on chain of command',
       'Organise an event into areas (kitchen, stage, parking...) that each have area leads, which helps events needing '
-      'more than 20 volunteers. Area leads are assigned by the event\'s coordinators in Town Hall. Turning it off is '
+      'more than 35 volunteers. Area leads are assigned by the event\'s coordinators in Town Hall. Turning it off is '
       'only possible in Town Hall.',
       {'event_id': integer('The event')}, ['event_id'], idempotent=True)
 def enable_chain_of_command(ctx, event_id):

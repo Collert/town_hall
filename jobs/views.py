@@ -18,7 +18,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from base.models import Profile, SiteSettings, Venue
-from base.utils import time_range
+from base.utils import photos_first, time_range
 from console.decorators import staff_required
 from events.models import Event
 
@@ -193,7 +193,7 @@ def kiosk_logged_in(request):
         context.update({
             'kind': 'event', 'place': event, 'slot': slot,
             'team_size': team.count(),
-            'team_arrived': User.objects.filter(pk__in=arrived).select_related('profile'),
+            'team_arrived': photos_first(User.objects.filter(pk__in=arrived).select_related('profile')),
             'estimated_impact': round(hours * max(event.attendees, 1)),
             'supervisor': event.coordinators.select_related('profile').first(),
         })

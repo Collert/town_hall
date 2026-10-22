@@ -771,6 +771,19 @@
     margin-bottom: 0.5rem;
 }
 
+.slot-signup-preview {
+    list-style: none;
+    margin: 0;
+}
+
+.slot-edit-signups-head {
+    margin-top: 1.25rem;
+}
+
+.slot-edit-note {
+    margin-top: 0.75rem;
+}
+
 .slot-edit-lock {
     font-size: 1rem;
     vertical-align: -0.15em;

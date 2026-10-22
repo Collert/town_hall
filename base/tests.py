@@ -459,3 +459,20 @@ class ProfileCompletionTests(TestCase):
         rebuild()
         self.vol.profile.refresh_from_db()
         self.assertEqual(self.vol.profile.impact_points, 25)
+
+
+class PhotosFirstTests(TestCase):
+    def test_people_with_a_picture_come_first(self):
+        from base.utils import photos_first
+        plain = User.objects.create_user('plain', 'plain@example.com', 'pw')
+        gravatar = User.objects.create_user('grav', 'grav@example.com', 'pw')
+        gravatar.profile.use_gravatar = True
+        gravatar.profile.save()
+        uploaded = User.objects.create_user('upload', 'upload@example.com', 'pw')
+        uploaded.profile.avatar = 'avatars/upload.png'
+        uploaded.profile.save()
+        no_email = User.objects.create_user('noemail', '', 'pw')
+        no_email.profile.use_gravatar = True  # no email, so no Gravatar to show
+        no_email.profile.save()
+        ordered = list(photos_first(User.objects.filter(pk__in=[plain.pk, gravatar.pk, uploaded.pk, no_email.pk]).order_by('pk')))
+        self.assertEqual(ordered, [gravatar, uploaded, plain, no_email])
