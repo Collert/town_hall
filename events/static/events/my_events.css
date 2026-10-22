@@ -635,9 +635,48 @@
         grid-template-columns: 1fr;
     }
 
+    /* Thumbnail on the left; title, then date + hours, then role + report link */
     .past-event-row {
-        flex-wrap: wrap;
-        gap: 0.75rem;
+        grid-template-columns: 3rem minmax(0, 1fr) auto;
+        grid-template-areas:
+            "thumb info info"
+            "thumb date hours"
+            "thumb role action";
+        gap: 0.4rem 0.75rem;
+        padding: 1rem 1.25rem;
+    }
+
+    .past-event-thumb {
+        grid-area: thumb;
+        align-self: start;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .past-event-info {
+        grid-area: info;
+    }
+
+    .past-event-title {
+        white-space: normal;
+    }
+
+    .past-event-date {
+        grid-area: date;
+    }
+
+    .past-event-hours {
+        grid-area: hours;
+    }
+
+    .past-event-role {
+        grid-area: role;
+        min-width: 0;
+        white-space: normal;
+    }
+
+    .past-event-action {
+        grid-area: action;
     }
 
     .past-event-date,

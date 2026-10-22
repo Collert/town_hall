@@ -366,7 +366,33 @@
 }
 
 @media (max-width: 600px) {
+    .endorse-card {
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    /* Avatars on the left, title and time stacked beside them */
     .endorse-card-head {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 0.85rem;
+        row-gap: 0.2rem;
+    }
+
+    .endorse-avatars {
+        grid-row: span 2;
+    }
+
+    .endorse-card-head time {
+        grid-column: 2;
+    }
+
+    .endorse-card-title h3 {
+        font-size: 1.05rem;
+        line-height: 1.35;
+    }
+
+    .endorse-card blockquote {
+        font-size: 1rem;
     }
 }

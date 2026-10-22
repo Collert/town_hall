@@ -12,7 +12,7 @@
 {% block content %}
 <!-- Hero Banner -->
 <section class="event-hero">
-    <div class="event-hero-image">
+    <div class="event-hero-image{% if not event.image %} is-empty{% endif %}">
         {% if event.image %}
         <img src="{{ event.image.url }}" alt="{{ event.title }}" />
         {% endif %}
@@ -461,11 +461,12 @@
                                 {% endif %}
                             </label>
                         {% endfor %}
-                </div>
+                    </div>
 
-                {% if not data.all_completed %}
-                    <p class="text-warning" style="color:red; margin: 0 2rem 1rem;">{% trans "You must complete required training to sign up." %}</p>
-                {% endif %}
+                    {% if not data.all_completed %}
+                        <p class="text-warning" style="color:red; margin: 1rem 0 0;">{% trans "You must complete required training to sign up." %}</p>
+                    {% endif %}
+                </div>
             </form>
         </div>
 

@@ -377,6 +377,24 @@ body.bare {
 }
 
 @media screen and (max-width: 720px) {
+    .record-bar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .record-bar-back {
+        font-size: 1.15rem;
+    }
+
+    .record-btn {
+        white-space: nowrap;
+        padding: 0.6rem 1.1rem;
+    }
+
+    .record-shield {
+        display: none;
+    }
+
     .record-sheet {
         padding: 2rem 1.5rem;
     }

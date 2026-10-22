@@ -618,6 +618,22 @@ main {
     .stats-card {
         grid-template-columns: 1fr;
         gap: 0;
+        padding: 1.5rem;
+    }
+
+    /* Stacked stats line up on the left instead of each centering on its own width */
+    .stat {
+        justify-content: flex-start;
+        padding: 1rem 0.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+
+    .mockup-stat-value {
+        white-space: nowrap;
     }
 
     .stat-divider {

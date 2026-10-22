@@ -318,12 +318,21 @@
 .edu-tabs {
     display: flex;
     gap: 2rem;
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
     font-size: 0.875rem;
     font-weight: 800;
     color: var(--color-text-tertiary);
 }
 
+.edu-tabs::-webkit-scrollbar {
+    display: none;
+}
+
 .edu-tab {
+    flex-shrink: 0;
+    white-space: nowrap;
     padding-bottom: 1rem;
     border-bottom: 2px solid transparent;
     cursor: pointer;
