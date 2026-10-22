@@ -2,12 +2,15 @@
 {% if candidates %}
 <ul class="person-options slot-signup-preview">
     {% for person in candidates %}
-    <li class="person-option-card">
+    <li>
+        <a href="{% url 'console_volunteer_detail' person.pk %}" class="person-option-card slot-signup-link">
         {% avatar person 'sm' %}
         <span class="person-option-text">
             <strong>{{ person|display_name }}{% if person.pk == slot.lead_id %} <span class="c-badge">{% trans "Shift lead" %}</span>{% endif %}</strong>
             <small>{% if person.profile.level %}{{ person.profile.level.name }} &middot; {% endif %}{% blocktrans with n=person.profile.impact_points %}{{ n }} impact points{% endblocktrans %}</small>
         </span>
+        <span class="material-symbols-outlined slot-signup-go">chevron_right</span>
+        </a>
     </li>
     {% endfor %}
 </ul>

@@ -2455,6 +2455,7 @@ class ChainOfCommandConsoleTests(ChainOfCommandFixture):
         self.assertNotContains(dialog, 'name="lead"')
         for person in (self.vol, self.mate):
             self.assertContains(dialog, person.get_full_name() or person.username)
+            self.assertContains(dialog, reverse('console_volunteer_detail', args=[person.pk]))
 
         empty = self.make_slot(qty=2, hours=(4, 8))
         dialog = self.client.get(reverse('console_slot_edit', args=[self.event.pk, empty.pk]))
