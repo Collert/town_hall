@@ -141,6 +141,6 @@
 
 @media (max-width: 760px) {
     .venue-filters {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }

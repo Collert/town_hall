@@ -191,6 +191,6 @@
 
 @media (max-width: 640px) {
     .composer-options {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }

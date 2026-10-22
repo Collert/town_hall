@@ -129,7 +129,7 @@ h3 {
 
 @media (max-width: 760px) {
     .role-filters {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 .role-tile > p.role-tile-venues {

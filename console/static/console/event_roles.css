@@ -368,7 +368,7 @@
 @media (max-width: 640px) {
     .role-options,
     .slot-row-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .slot-row-over {
@@ -783,7 +783,7 @@
     }
 
     .lead-dialog-times {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .area-lead-card,

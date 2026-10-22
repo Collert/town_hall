@@ -236,7 +236,7 @@
 
 @media (max-width: 760px) {
     .venue-feature-add-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .venue-hours-head {

@@ -139,7 +139,7 @@
 
 @media (max-width: 640px) {
     .level-fields {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .level-number {

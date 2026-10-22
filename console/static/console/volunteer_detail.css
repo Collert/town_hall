@@ -188,6 +188,10 @@
     margin-top: 1.25rem;
 }
 
+.vd-table-scroll {
+    overflow-x: auto;
+}
+
 .vd-training td,
 .vd-training th {
     padding: 0.85rem 0.75rem;
@@ -432,7 +436,7 @@
     .vd-top,
     .vd-row,
     .vd-row-endorse {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 

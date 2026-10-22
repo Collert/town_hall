@@ -20,3 +20,10 @@
     font-size: 0.875rem;
     cursor: pointer;
 }
+
+@media (max-width: 640px) {
+    /* min-height with the 4:3 ratio would force it wider than the screen */
+    .hero-image-drop {
+        min-height: 0;
+    }
+}

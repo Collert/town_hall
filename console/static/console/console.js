@@ -135,4 +135,12 @@
         target.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
         target.classList.add('has-image');
     });
+
+    // Tab bars scroll sideways on phones: bring the active tab into view.
+    document.querySelectorAll('.c-tabs').forEach((tabs) => {
+        const active = tabs.querySelector('.c-tab.active');
+        if (active && tabs.scrollWidth > tabs.clientWidth) {
+            tabs.scrollLeft = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
+        }
+    });
 })();

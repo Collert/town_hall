@@ -7,7 +7,7 @@
 body.console {
     font-family: 'Inter', sans-serif;
     display: grid;
-    grid-template-columns: 16rem 1fr;
+    grid-template-columns: 16rem minmax(0, 1fr);
     min-height: 100vh;
     /* Paint the sidebar column the full page height, below the sticky sidebar too. */
     background: linear-gradient(to right, var(--color-bg-secondary) 16rem, var(--color-bg-primary) 16rem);
@@ -1865,13 +1865,15 @@ body.console ol {
     }
 
     .c-split {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
 @media (max-width: 960px) {
     body.console {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+        /* The sidebar is off-canvas now, so drop its painted column */
+        background: var(--color-bg-primary);
     }
 
     .console-sidebar {
@@ -1880,11 +1882,12 @@ body.console ol {
         width: 17rem;
         transform: translateX(-100%);
         transition: transform 250ms ease;
-        box-shadow: 0 0 48px rgba(from var(--color-text-primary) r g b / 0.15);
     }
 
+    /* Shadow only while open, or it bleeds onto the page from off-canvas */
     body.sidebar-open .console-sidebar {
         transform: none;
+        box-shadow: 0 0 48px rgba(from var(--color-text-primary) r g b / 0.15);
     }
 
     body.sidebar-open .console-scrim {
@@ -1919,7 +1922,7 @@ body.console ol {
     .c-grid-2,
     .c-grid-3,
     .c-grid-4 {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .c-card {
@@ -1931,5 +1934,68 @@ body.console ol {
     .c-dialog-foot {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
+    }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+    /* Only the current page in the top bar; the menu covers the rest */
+    .console-breadcrumbs {
+        flex-wrap: nowrap;
+        min-width: 0;
+    }
+
+    .console-breadcrumbs > *:not(.crumb-current) {
+        display: none;
+    }
+
+    .console-breadcrumbs .crumb-current {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .page-header {
+        gap: 1.25rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .page-title {
+        font-size: 1.875rem;
+    }
+
+    .page-lead {
+        font-size: 1rem;
+    }
+
+    .page-actions .c-btn-lg {
+        padding: 0.7rem 1.25rem;
+        font-size: 0.9375rem;
+    }
+
+    /* Tab bars stay one row and scroll sideways instead of wrapping into a blob */
+    .c-tabs {
+        flex-wrap: nowrap;
+        max-width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .c-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .c-tab {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .c-tabs-lg .c-tab {
+        padding: 0.6rem 1.15rem;
+        font-size: 0.9375rem;
+    }
+
+    .md-toolbar {
+        flex-wrap: wrap;
     }
 }
