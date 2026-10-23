@@ -1626,6 +1626,15 @@ body.console ol {
     color: var(--color-text-primary);
 }
 
+/* Long module titles wrap inside the card instead of running past it */
+.c-timeline-text .c-chip {
+    white-space: normal;
+    max-width: 100%;
+    margin-top: 0.35rem;
+    border-radius: 1rem;
+    overflow-wrap: anywhere;
+}
+
 /* Star rating input: radios reversed so :checked ~ fills preceding stars */
 .c-stars {
     display: inline-flex;
