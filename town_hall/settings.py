@@ -275,7 +275,7 @@ LOGGING = {
 # BUGSINK_SEND_PII=1 to include request details (only for a deployment you own). Nothing is
 # sent under manage.py test.
 BUGSINK_DSN = os.environ.get('BUGSINK_DSN', 'https://7af5d437e1e64658aa8df922f6c44ea5@bugs.adpit.space/1')
-if BUGSINK_DSN and 'test' not in sys.argv:
+if BUGSINK_DSN and 'test' not in sys.argv and not DEBUG:
     import sentry_sdk
 
     _full_reports = os.environ.get('BUGSINK_SEND_PII') == '1'
