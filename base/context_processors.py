@@ -1,4 +1,4 @@
-from .models import SiteSettings
+from .models import Level, SiteSettings
 
 
 def _newsletter_enabled():
@@ -19,6 +19,8 @@ def site_settings(request):
         'company_name': settings.company_name,
         # Callable so the footer only looks it up when it renders.
         'newsletter_enabled': _newsletter_enabled,
+        # The Recognition link only shows once the organization has set up levels.
+        'has_levels': lambda: Level.objects.exists(),
         'theme_colors': {
             # Primary Colors
             'primary': settings.color_primary,

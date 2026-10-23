@@ -28,6 +28,7 @@ urlpatterns = [
     path('profile/<str:username>/', profile_view, name='profile_view'),
     path('impact/<str:username>/', impact_record, name='impact_record'),
     path('resume/<str:username>/', volunteer_resume, name='volunteer_resume'),
+    path('recognition/', recognition, name='recognition'),
     path('endorsements/', endorsements_feed, name='endorsements_feed'),
     path('endorsements/give/', give_endorsement, name='give_endorsement'),
     path('endorsements/people/', endorse_people_search, name='endorse_people_search'),

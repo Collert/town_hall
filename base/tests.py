@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from base.models import Endorsement, PointsEntry, PointsRules, Profile
+from base.models import Endorsement, Level, PointsEntry, PointsRules, Profile
 from education.models import Skill, TrainingModule, TrainingModuleCompletion
 from events.models import Event, EventRoleSlot
 from jobs.models import Role, Shift
@@ -476,3 +476,43 @@ class PhotosFirstTests(TestCase):
         no_email.profile.save()
         ordered = list(photos_first(User.objects.filter(pk__in=[plain.pk, gravatar.pk, uploaded.pk, no_email.pk]).order_by('pk')))
         self.assertEqual(ordered, [gravatar, uploaded, plain, no_email])
+
+
+class RecognitionTests(TestCase):
+    def setUp(self):
+        self.vol = User.objects.create_user('vol', 'vol@example.com', 'pw')
+
+    def test_link_hidden_until_levels_exist(self):
+        response = self.client.get(reverse('endorsements_feed'))
+        self.assertNotContains(response, reverse('recognition'))
+        Level.objects.create(name='Helper', numeric_name=1, min_points=0)
+        response = self.client.get(reverse('endorsements_feed'))
+        self.assertContains(response, reverse('recognition'))
+
+    def test_ladder_marks_current_level(self):
+        Level.objects.create(name='Helper', numeric_name=1, min_points=0, benefits='Thank-you card')
+        Level.objects.create(name='Builder', numeric_name=2, min_points=100, benefits='Event T-shirt, Priority sign-up')
+        Level.objects.create(name='Champion', numeric_name=3, min_points=500)
+        Profile.objects.filter(user=self.vol).update(impact_points=150)
+        self.client.force_login(self.vol)
+        response = self.client.get(reverse('recognition'))
+        rows = response.context['ladder']
+        self.assertEqual([row['current'] for row in rows], [False, True, False])
+        self.assertEqual(rows[1]['perks'], ['Event T-shirt', 'Priority sign-up'])
+        self.assertEqual(rows[2]['to_go'], 350)
+        self.assertEqual(response.context['progress'], 12)
+        self.assertContains(response, 'You are here', count=1)
+
+    def test_anonymous_sees_ladder_without_marker(self):
+        Level.objects.create(name='Helper', numeric_name=1, min_points=0)
+        response = self.client.get(reverse('recognition'))
+        self.assertContains(response, 'Helper')
+        self.assertNotContains(response, 'You are here')
+
+
+class MarkdownTableTests(TestCase):
+    def test_table_without_blank_line_renders(self):
+        from events.templatetags.md_extras import render_markdown
+        html = render_markdown('An example:\n| Step | Points |\n| --- | --- |\n| Start | 30 |')
+        self.assertIn('<div class="md-table"><table>', html)
+        self.assertIn('<td>Start</td>', html)

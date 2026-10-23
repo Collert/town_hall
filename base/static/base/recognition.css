@@ -1,0 +1,320 @@
+.recog-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.recog-header {
+    margin-bottom: 2.5rem;
+}
+
+.recog-header h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    line-height: 1.05;
+}
+
+.recog-header p {
+    margin-top: 0.75rem;
+    max-width: 40rem;
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+}
+
+/* Your standing */
+
+.recog-standing {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 2.5rem;
+    padding: 2rem 2.25rem;
+    margin-bottom: 3rem;
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-primary-contrast);
+    box-shadow: 0 16px 32px rgba(from var(--color-primary) r g b / 0.18);
+}
+
+.recog-standing-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.recog-standing-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+.recog-standing-level {
+    font-family: 'Manrope', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.recog-standing-points {
+    font-size: 0.95rem;
+    opacity: 0.85;
+}
+
+.recog-standing-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.recog-track {
+    height: 10px;
+    border-radius: 9999px;
+    background: rgba(from var(--color-primary-contrast) r g b / 0.2);
+    overflow: hidden;
+}
+
+.recog-fill {
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--color-accent);
+}
+
+.recog-standing-next {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.recog-signin {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 1.25rem;
+    margin-bottom: 3rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+}
+
+.recog-signin a {
+    color: var(--color-text-primary);
+    font-weight: 700;
+}
+
+/* The ladder */
+
+.recog-ladder {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0;
+    margin: 0;
+}
+
+.recog-step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 1.25rem;
+}
+
+/* The rail joining each step to the next one */
+.recog-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: calc(1.5rem - 2px);
+    top: 3rem;
+    bottom: -1.25rem;
+    width: 4px;
+    border-radius: 9999px;
+    background: rgba(from var(--color-text-primary) r g b / 0.08);
+}
+
+.recog-step.is-reached:not(.is-current)::before {
+    background: var(--color-primary-vivid);
+}
+
+.recog-node {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-top: 1.25rem;
+    border-radius: 9999px;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.recog-step.is-reached .recog-node {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.recog-step.is-current .recog-node {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    box-shadow: 0 0 0 6px rgba(from var(--color-accent) r g b / 0.2);
+}
+
+.recog-card {
+    padding: 1.5rem 1.75rem;
+    border-radius: 1.5rem;
+    background: var(--color-bg-secondary);
+}
+
+.recog-step.is-current .recog-card {
+    background: var(--color-surface);
+    box-shadow: 0 0 0 2px var(--color-accent), 0 16px 32px rgba(from var(--color-accent) r g b / 0.12);
+}
+
+.recog-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.recog-card-number {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+}
+
+.recog-card h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+}
+
+.recog-card-points {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.recog-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: rgba(from var(--color-text-primary) r g b / 0.06);
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.recog-chip .material-symbols-outlined {
+    font-size: 1.05rem;
+}
+
+.recog-chip-done {
+    background: rgba(from var(--color-success) r g b / 0.15);
+    color: var(--color-text-primary);
+}
+
+.recog-chip-here {
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+}
+
+.recog-perks {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 1.25rem 0 0;
+}
+
+.recog-perks li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 1rem;
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+.recog-perks .material-symbols-outlined {
+    font-size: 1.1rem;
+    color: var(--color-text-tertiary);
+}
+
+.recog-step.is-reached .recog-perks .material-symbols-outlined {
+    color: var(--color-primary-vivid);
+}
+
+.recog-step:not(.is-reached) .recog-perks li {
+    color: var(--color-text-secondary);
+}
+
+.recog-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 4rem 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.recog-empty .material-symbols-outlined {
+    font-size: 2.5rem;
+    color: var(--color-text-tertiary);
+}
+
+@media (max-width: 700px) {
+    .recog-page {
+        padding: 2rem 1rem 6rem;
+    }
+
+    .recog-standing {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 1.5rem;
+    }
+
+    .recog-step {
+        grid-template-columns: 2.25rem minmax(0, 1fr);
+        gap: 0.75rem;
+    }
+
+    .recog-step:not(:last-child)::before {
+        left: calc(1.125rem - 2px);
+        top: 2.25rem;
+    }
+
+    .recog-node {
+        width: 2.25rem;
+        height: 2.25rem;
+        margin-top: 1.25rem;
+        font-size: 0.95rem;
+    }
+
+    .recog-card {
+        padding: 1.25rem;
+    }
+}

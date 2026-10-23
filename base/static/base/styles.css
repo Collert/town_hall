@@ -1272,3 +1272,35 @@ span.mobile-avatar.avatar-initials {
         animation-duration: 1.6s;
     }
 }
+
+/* Tables in rendered Markdown (lessons, event descriptions, terms) */
+.md-table {
+    margin: 1.25rem 0;
+    overflow-x: auto;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+}
+
+.md-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+}
+
+.md-table th,
+.md-table td {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    color: var(--color-text-primary);
+}
+
+.md-table th {
+    background: var(--color-bg-tertiary);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.md-table tbody tr:nth-child(even) {
+    background: rgba(from var(--color-text-primary) r g b / 0.04);
+}

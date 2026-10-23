@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Town Hall\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 11:59-0700\n"
+"POT-Creation-Date: 2026-10-23 10:49-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
@@ -136,7 +136,7 @@ msgid "Shift"
 msgstr "Зміна"
 
 #: .\base\models.py:346 .\base\templates\base\layout.html:30
-#: .\base\templates\base\layout.html:164 .\base\templates\base\layout.html:285
+#: .\base\templates\base\layout.html:165 .\base\templates\base\layout.html:292
 #: .\base\triggers.py:34 .\console\templates\console\points_settings.html:54
 msgid "Training"
 msgstr "Навчання"
@@ -809,101 +809,107 @@ msgstr "Працює на основі"
 msgid "Town Hall"
 msgstr "Ратуша"
 
-#: .\base\templates\base\layout.html:29 .\base\templates\base\layout.html:159
-#: .\base\templates\base\layout.html:308
+#: .\base\templates\base\layout.html:29 .\base\templates\base\layout.html:160
+#: .\base\templates\base\layout.html:315
 #: .\events\templates\events\explore_events.html:17
 msgid "Opportunities"
 msgstr "Можливості"
 
-#: .\base\templates\base\layout.html:31 .\base\templates\base\layout.html:186
+#: .\base\templates\base\layout.html:31 .\base\templates\base\layout.html:187
 #: .\events\templates\events\my_events.html:17
 msgid "My Events"
 msgstr "Мої події"
 
-#: .\base\templates\base\layout.html:32 .\base\templates\base\layout.html:203
+#: .\base\templates\base\layout.html:32 .\base\templates\base\layout.html:204
 msgid "Community"
 msgstr "Громада"
 
-#: .\base\templates\base\layout.html:75 .\base\templates\base\layout.html:223
+#: .\base\templates\base\layout.html:33 .\base\templates\base\layout.html:209
+#: .\base\templates\base\recognition.html:4
+#: .\base\templates\base\recognition.html:13
+msgid "Recognition"
+msgstr "Відзнаки"
+
+#: .\base\templates\base\layout.html:76 .\base\templates\base\layout.html:230
 msgid "Notifications"
 msgstr "Сповіщення"
 
-#: .\base\templates\base\layout.html:76 .\base\templates\base\layout.html:224
+#: .\base\templates\base\layout.html:77 .\base\templates\base\layout.html:231
 msgid "Clear all"
 msgstr "Очистити все"
 
-#: .\base\templates\base\layout.html:78 .\base\templates\base\layout.html:226
+#: .\base\templates\base\layout.html:79 .\base\templates\base\layout.html:233
 #: .\base\templates\base\partials\profile_skills.html:22
 msgid "New"
 msgstr "Нове"
 
-#: .\base\templates\base\layout.html:86 .\base\templates\base\layout.html:234
+#: .\base\templates\base\layout.html:87 .\base\templates\base\layout.html:241
 #: .\base\templates\base\profile.html:378
 msgid "ago"
 msgstr "тому"
 
-#: .\base\templates\base\layout.html:92 .\base\templates\base\layout.html:240
+#: .\base\templates\base\layout.html:93 .\base\templates\base\layout.html:247
 msgid "No new notifications"
 msgstr "Нових сповіщень немає"
 
-#: .\base\templates\base\layout.html:99 .\base\templates\base\layout.html:108
+#: .\base\templates\base\layout.html:100 .\base\templates\base\layout.html:109
 msgid "Account menu"
 msgstr "Меню облікового запису"
 
-#: .\base\templates\base\layout.html:117
+#: .\base\templates\base\layout.html:118
 msgid "My profile"
 msgstr "Мій профіль"
 
-#: .\base\templates\base\layout.html:121
+#: .\base\templates\base\layout.html:122
 msgid "My tasks"
 msgstr "Мої завдання"
 
-#: .\base\templates\base\layout.html:125 .\base\templates\base\layout.html:258
+#: .\base\templates\base\layout.html:126 .\base\templates\base\layout.html:265
 msgid "Account settings"
 msgstr "Налаштування облікового запису"
 
-#: .\base\templates\base\layout.html:129
+#: .\base\templates\base\layout.html:130
 msgid "Admin portal"
 msgstr "Портал адміністратора"
 
-#: .\base\templates\base\layout.html:133
+#: .\base\templates\base\layout.html:134
 msgid "Log out"
 msgstr "Вийти"
 
-#: .\base\templates\base\layout.html:139 .\base\templates\base\layout.html:262
+#: .\base\templates\base\layout.html:140 .\base\templates\base\layout.html:269
 #: .\base\templates\base\signup.html:84
 msgid "Log In"
 msgstr "Увійти"
 
-#: .\base\templates\base\layout.html:148
+#: .\base\templates\base\layout.html:149
 msgid "Close menu"
 msgstr "Закрити меню"
 
-#: .\base\templates\base\layout.html:155
+#: .\base\templates\base\layout.html:156
 msgid "Home"
 msgstr "Головна"
 
-#: .\base\templates\base\layout.html:171
+#: .\base\templates\base\layout.html:172
 #: .\education\templates\education\education_layout.html:13
 #: .\education\templates\education\submit_certificate.html:12
 #: .\education\templates\education\verify_certificates.html:12
 msgid "Explore Courses"
 msgstr "Переглянути курси"
 
-#: .\base\templates\base\layout.html:179
+#: .\base\templates\base\layout.html:180
 msgid "My Dashboard"
 msgstr "Моя панель"
 
-#: .\base\templates\base\layout.html:190
+#: .\base\templates\base\layout.html:191
 msgid "My Training"
 msgstr "Моє навчання"
 
-#: .\base\templates\base\layout.html:195
+#: .\base\templates\base\layout.html:196
 #: .\console\templates\console\volunteer_detail.html:137
 msgid "Impact Record"
 msgstr "Звіт про вплив"
 
-#: .\base\templates\base\layout.html:208
+#: .\base\templates\base\layout.html:215
 #: .\console\templates\console\certificate_list.html:11
 #: .\console\templates\console\console_layout.html:6
 #: .\console\templates\console\event_list.html:11
@@ -918,17 +924,17 @@ msgstr "Звіт про вплив"
 msgid "Admin"
 msgstr "Адміністратор"
 
-#: .\base\templates\base\layout.html:255
+#: .\base\templates\base\layout.html:262
 #: .\console\templates\console\partials\task_list_card.html:116
 #: .\console\templates\console\partials\task_list_card.html:137
 msgid "Member"
 msgstr "Учасник"
 
-#: .\base\templates\base\layout.html:277
+#: .\base\templates\base\layout.html:284
 msgid "Dash"
 msgstr "Панель"
 
-#: .\base\templates\base\layout.html:281 .\base\triggers.py:34
+#: .\base\templates\base\layout.html:288 .\base\triggers.py:34
 #: .\console\templates\console\event_list.html:13
 #: .\console\templates\console\event_monitor.html:12
 #: .\console\templates\console\event_report.html:12
@@ -936,70 +942,70 @@ msgstr "Панель"
 msgid "Events"
 msgstr "Події"
 
-#: .\base\templates\base\layout.html:289
+#: .\base\templates\base\layout.html:296
 msgid "Menu"
 msgstr "Меню"
 
-#: .\base\templates\base\layout.html:301
+#: .\base\templates\base\layout.html:308
 msgid ""
 "Connecting passionate individuals with local opportunities. Power your "
 "community."
 msgstr ""
 "Єднаємо небайдужих людей з місцевими можливостями. Надихайте свою громаду."
 
-#: .\base\templates\base\layout.html:306
+#: .\base\templates\base\layout.html:313
 msgid "Platform"
 msgstr "Платформа"
 
-#: .\base\templates\base\layout.html:309
+#: .\base\templates\base\layout.html:316
 msgid "Training Portal"
 msgstr "Навчальний портал"
 
-#: .\base\templates\base\layout.html:310
+#: .\base\templates\base\layout.html:317
 msgid "Community Endorsements"
 msgstr "Рекомендації громади"
 
-#: .\base\templates\base\layout.html:314
+#: .\base\templates\base\layout.html:321
 msgid "Support"
 msgstr "Підтримка"
 
-#: .\base\templates\base\layout.html:316
+#: .\base\templates\base\layout.html:323
 msgid "Contact Us"
 msgstr "Зв’язатися з нами"
 
-#: .\base\templates\base\layout.html:317 .\base\templates\base\layout.html:340
+#: .\base\templates\base\layout.html:324 .\base\templates\base\layout.html:347
 #: .\base\templates\base\terms_of_service.html:4
 #: .\base\templates\base\terms_of_service.html:14
 #: .\console\templates\console\organization_settings.html:98
 msgid "Terms of Service"
 msgstr "Умови користування"
 
-#: .\base\templates\base\layout.html:318
+#: .\base\templates\base\layout.html:325
 #: .\console\templates\console\console_layout.html:66
 msgid "Log Out"
 msgstr "Вийти"
 
-#: .\base\templates\base\layout.html:323
+#: .\base\templates\base\layout.html:330
 msgid "Newsletter"
 msgstr "Розсилка"
 
-#: .\base\templates\base\layout.html:324
+#: .\base\templates\base\layout.html:331
 msgid "Join our list for local updates."
 msgstr "Підпишіться на наші новини."
 
-#: .\base\templates\base\layout.html:330 .\console\forms.py:411
+#: .\base\templates\base\layout.html:337 .\console\forms.py:411
 msgid "Email address"
 msgstr "Електронна адреса"
 
-#: .\base\templates\base\layout.html:331
+#: .\base\templates\base\layout.html:338
 msgid "Subscribe"
 msgstr "Підписатися"
 
-#: .\base\templates\base\layout.html:338
+#: .\base\templates\base\layout.html:345
 msgid "All rights reserved."
 msgstr "Усі права захищено."
 
-#: .\base\templates\base\layout.html:341
+#: .\base\templates\base\layout.html:348
 msgid "Careers"
 msgstr "Вакансії"
 
@@ -1687,6 +1693,92 @@ msgstr "Показати всі"
 #: .\base\templates\base\profile.html:395
 msgid "No public feedback yet."
 msgstr "Публічних відгуків ще немає."
+
+#: .\base\templates\base\recognition.html:14
+msgid ""
+"Every shift, training and endorsement earns impact points. As your points "
+"grow you climb the levels below, and each one unlocks new perks."
+msgstr ""
+"Кожна зміна, навчання та рекомендація приносять бали впливу. Що більше балів,"
+" то вище ви піднімаєтеся рівнями нижче, і кожен із них відкриває нові "
+"переваги."
+
+#: .\base\templates\base\recognition.html:21
+msgid "Your level"
+msgstr "Ваш рівень"
+
+#: .\base\templates\base\recognition.html:22
+#: .\console\templates\console\level_settings.html:78
+msgid "Not ranked yet"
+msgstr "Ще не оцінено"
+
+#: .\base\templates\base\recognition.html:24
+#, python-format
+msgid "%(counter)s impact point"
+msgid_plural "%(counter)s impact points"
+msgstr[0] "%(counter)s бал впливу"
+msgstr[1] "%(counter)s бали впливу"
+msgstr[2] "%(counter)s балів впливу"
+msgstr[3] "%(counter)s бала впливу"
+
+#: .\base\templates\base\recognition.html:31
+#, python-format
+msgid "%(counter)s point to %(name)s"
+msgid_plural "%(counter)s points to %(name)s"
+msgstr[0] "Ще %(counter)s бал до рівня «%(name)s»"
+msgstr[1] "Ще %(counter)s бали до рівня «%(name)s»"
+msgstr[2] "Ще %(counter)s балів до рівня «%(name)s»"
+msgstr[3] "Ще %(counter)s бала до рівня «%(name)s»"
+
+#: .\base\templates\base\recognition.html:33
+msgid "You've reached the top level. Thank you!"
+msgstr "Ви досягли найвищого рівня. Дякуємо!"
+
+#: .\base\templates\base\recognition.html:41
+msgid "Sign in"
+msgstr "Увійдіть"
+
+#: .\base\templates\base\recognition.html:41
+msgid "to see where you are on the ladder."
+msgstr "щоб побачити, на якому рівні ви зараз."
+
+#: .\base\templates\base\recognition.html:54
+#, python-format
+msgid "Level %(n)s"
+msgstr "Рівень %(n)s"
+
+#: .\base\templates\base\recognition.html:57
+#: .\console\templates\console\level_settings.html:86
+#, python-format
+msgid "%(a)s–%(b)s points"
+msgstr "%(a)s–%(b)s балів"
+
+#: .\base\templates\base\recognition.html:57
+#: .\console\templates\console\level_settings.html:86
+#, python-format
+msgid "%(a)s+ points"
+msgstr "%(a)s+ балів"
+
+#: .\base\templates\base\recognition.html:61
+msgid "You are here"
+msgstr "Ви тут"
+
+#: .\base\templates\base\recognition.html:63
+msgid "Unlocked"
+msgstr "Відкрито"
+
+#: .\base\templates\base\recognition.html:65
+#, python-format
+msgid "%(counter)s point to go"
+msgid_plural "%(counter)s points to go"
+msgstr[0] "Ще %(counter)s бал"
+msgstr[1] "Ще %(counter)s бали"
+msgstr[2] "Ще %(counter)s балів"
+msgstr[3] "Ще %(counter)s бала"
+
+#: .\base\templates\base\recognition.html:82
+msgid "This organization hasn't set up levels yet."
+msgstr "Ця організація ще не налаштувала рівні."
 
 #: .\base\templates\base\setup.html:4
 msgid "Set Up Town Hall"
@@ -2464,36 +2556,36 @@ msgstr ""
 "Дякуємо за підписку! Якщо ми надіслали вам лист із підтвердженням, відкрийте "
 "його, щоб завершити."
 
-#: .\base\views.py:625
+#: .\base\views.py:666
 msgid "Choose at least one skill to endorse."
 msgstr "Оберіть принаймні одну навичку для рекомендації."
 
-#: .\base\views.py:635
+#: .\base\views.py:676
 #, python-format
 msgid "%(name)s endorsed you!"
 msgstr "%(name)s рекомендує вас!"
 
-#: .\base\views.py:639
+#: .\base\views.py:680
 #, python-format
 msgid "Endorsement sent to %(name)s."
 msgstr "Рекомендацію надіслано: %(name)s."
 
-#: .\base\views.py:683
+#: .\base\views.py:724
 #, python-format
 msgid "%(name)s endorsed you for %(skill)s!"
 msgstr "%(name)s рекомендує вас за навичку «%(skill)s»!"
 
-#: .\base\views.py:828
+#: .\base\views.py:869
 msgid "Task lists are not set up yet."
 msgstr "Списки завдань ще не налаштовано."
 
-#: .\base\views.py:835
+#: .\base\views.py:876
 msgid "Add an email address to your account to use task lists."
 msgstr ""
 "Додайте електронну адресу до облікового запису, щоб користуватися списками "
 "завдань."
 
-#: .\base\views.py:841
+#: .\base\views.py:882
 #, python-format
 msgid "Couldn't open your tasks right now: %(error)s"
 msgstr "Не вдалося відкрити ваші завдання: %(error)s"
@@ -4929,20 +5021,6 @@ msgstr ""
 msgid "Where Volunteers Are"
 msgstr "Де зараз волонтери"
 
-#: .\console\templates\console\level_settings.html:78
-msgid "Not ranked yet"
-msgstr "Ще не оцінено"
-
-#: .\console\templates\console\level_settings.html:86
-#, python-format
-msgid "%(a)s–%(b)s points"
-msgstr "%(a)s–%(b)s балів"
-
-#: .\console\templates\console\level_settings.html:86
-#, python-format
-msgid "%(a)s+ points"
-msgstr "%(a)s+ балів"
-
 #: .\console\templates\console\level_settings.html:91
 msgid "No levels yet. Add your first one to start ranking volunteers."
 msgstr "Рівнів ще немає. Додайте перший, щоб почати ранжувати волонтерів."
@@ -5311,7 +5389,7 @@ msgstr "Створити зону"
 
 #: .\console\templates\console\partials\area_lead_candidates.html:10
 #: .\console\templates\console\partials\slot_edit_dialog.html:78
-#: .\console\templates\console\partials\slot_signup_preview.html:9
+#: .\console\templates\console\partials\slot_signup_preview.html:10
 #, python-format
 msgid "%(n)s impact points"
 msgstr "Балів впливу: %(n)s"
@@ -5485,7 +5563,7 @@ msgstr "Видалити цей часовий слот?"
 
 #: .\console\templates\console\partials\event_role_card.html:34
 #: .\console\templates\console\partials\slot_edit_dialog.html:54
-#: .\console\templates\console\partials\slot_signup_preview.html:8
+#: .\console\templates\console\partials\slot_signup_preview.html:9
 msgid "Shift lead"
 msgstr "Керівник зміни"
 
@@ -6199,7 +6277,7 @@ msgstr "Дозволено додаткових волонтерів"
 msgid "Remove slot"
 msgstr "Видалити слот"
 
-#: .\console\templates\console\partials\slot_signup_preview.html:15
+#: .\console\templates\console\partials\slot_signup_preview.html:18
 msgid "Nobody has signed up for this shift yet."
 msgstr "На цю зміну ще ніхто не записався."
 

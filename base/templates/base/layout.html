@@ -30,6 +30,7 @@
                     <a href="{% url 'training_directory' %}" class="nav-link {% if '/training/' in request.path %}active{% endif %}">{% trans "Training" %}</a>
                     <a href="{% url 'my_events' %}" class="nav-link {% if '/my-events/' in request.path %}active{% endif %}">{% trans "My Events" %}</a>
                     <a href="{% url 'endorsements_feed' %}" class="nav-link {% if '/endorsements/' in request.path %}active{% endif %}">{% trans "Community" %}</a>
+                    {% if has_levels %}<a href="{% url 'recognition' %}" class="nav-link {% if '/recognition/' in request.path %}active{% endif %}">{% trans "Recognition" %}</a>{% endif %}
                 </div>
             </div>
             <div class="nav-right">
@@ -202,6 +203,12 @@
                             <span class="material-symbols-outlined nav-icon">diversity_3</span>
                             <span class="nav-text">{% trans "Community" %}</span>
                         </a>
+                        {% if has_levels %}
+                        <a href="{% url 'recognition' %}" class="mobile-nav-link {% if '/recognition/' in request.path %}active{% endif %}">
+                            <span class="material-symbols-outlined nav-icon" {% if '/recognition/' in request.path %}style="font-variation-settings: 'FILL' 1;"{% endif %}>military_tech</span>
+                            <span class="nav-text">{% trans "Recognition" %}</span>
+                        </a>
+                        {% endif %}
                         {% if user.is_staff %}
                         <a href="{% url 'console_dashboard' %}" class="mobile-nav-link">
                             <span class="material-symbols-outlined nav-icon">admin_panel_settings</span>

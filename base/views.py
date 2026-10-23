@@ -29,7 +29,7 @@ from .forms import FirstRunSetupForm
 from . import profile_completion
 from .middleware import FirstRunMiddleware
 from .points import award_profile
-from .models import AdminFeedback, Endorsement, HeroSection, Notification, PointsEntry, PointsRules, SiteSettings, Venue
+from .models import AdminFeedback, Endorsement, HeroSection, Level, Notification, PointsEntry, PointsRules, SiteSettings, Venue
 from .utils import gravatar_exists, photos_first, qr_svg
 
 
@@ -550,6 +550,47 @@ def newsletter_subscribe(request):
     if email is not None:
         response['HX-Trigger'] = 'newsletter-subscribed'
     return response
+
+
+# ---------------------------------------------------------------------------
+# Recognition
+# ---------------------------------------------------------------------------
+
+def recognition(request):
+    """The organization's level ladder, with the signed-in volunteer's place on it."""
+    levels = list(Level.objects.order_by('min_points'))
+    points = request.user.profile.impact_points if request.user.is_authenticated else None
+    current = None
+    if points is not None:
+        current = next((level for level in reversed(levels) if level.min_points <= points), None)
+    ladder = []
+    for i, level in enumerate(levels):
+        upper = levels[i + 1].min_points if i + 1 < len(levels) else None
+        ladder.append({
+            'level': level,
+            'upper': upper,
+            'perks': [perk.strip() for perk in (level.benefits or '').split(',') if perk.strip()],
+            'reached': points is not None and points >= level.min_points,
+            'current': level == current,
+            'to_go': level.min_points - points if points is not None and points < level.min_points else 0,
+        })
+    next_level = next((row['level'] for row in ladder if not row['reached']), None) if points is not None else None
+    progress = 0
+    if points is not None:
+        if next_level is None:
+            progress = 100 if current else 0
+        else:
+            floor = current.min_points if current else 0
+            span = next_level.min_points - floor
+            progress = min(100, round((points - floor) / span * 100)) if span > 0 else 100
+    return render(request, 'base/recognition.html', {
+        'ladder': ladder,
+        'points': points,
+        'current_level': current,
+        'next_level': next_level,
+        'points_to_next': next_level.min_points - points if next_level else 0,
+        'progress': progress,
+    })
 
 
 # ---------------------------------------------------------------------------

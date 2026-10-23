@@ -1,0 +1,86 @@
+{% extends 'base/layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Recognition" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/recognition.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="recog-page">
+    <header class="recog-header">
+        <h1>{% trans "Recognition" %}</h1>
+        <p>{% trans "Every shift, training and endorsement earns impact points. As your points grow you climb the levels below, and each one unlocks new perks." %}</p>
+    </header>
+
+    {% if ladder %}
+    {% if user.is_authenticated %}
+    <section class="recog-standing">
+        <div class="recog-standing-main">
+            <span class="recog-standing-label">{% trans "Your level" %}</span>
+            <strong class="recog-standing-level">{% if current_level %}{{ current_level.name }}{% else %}{% trans "Not ranked yet" %}{% endif %}</strong>
+            <span class="recog-standing-points">
+                {% blocktrans count counter=points %}{{ counter }} impact point{% plural %}{{ counter }} impact points{% endblocktrans %}
+            </span>
+        </div>
+        <div class="recog-standing-progress">
+            <div class="recog-track"><div class="recog-fill" style="width: {{ progress }}%;"></div></div>
+            <span class="recog-standing-next">
+                {% if next_level %}
+                {% blocktrans count counter=points_to_next with name=next_level.name %}{{ counter }} point to {{ name }}{% plural %}{{ counter }} points to {{ name }}{% endblocktrans %}
+                {% else %}
+                {% trans "You've reached the top level. Thank you!" %}
+                {% endif %}
+            </span>
+        </div>
+    </section>
+    {% else %}
+    <p class="recog-signin">
+        <span class="material-symbols-outlined">login</span>
+        <span><a href="{% url 'login' %}?next={{ request.path|urlencode }}">{% trans "Sign in" %}</a> {% trans "to see where you are on the ladder." %}</span>
+    </p>
+    {% endif %}
+
+    <ol class="recog-ladder">
+        {% for row in ladder %}
+        <li class="recog-step{% if row.reached %} is-reached{% endif %}{% if row.current %} is-current{% endif %}">
+            <span class="recog-node" aria-hidden="true">
+                {% if row.reached and not row.current %}<span class="material-symbols-outlined">check</span>{% else %}{{ row.level.numeric_name }}{% endif %}
+            </span>
+            <article class="recog-card">
+                <header class="recog-card-head">
+                    <div>
+                        <span class="recog-card-number">{% blocktrans with n=row.level.numeric_name %}Level {{ n }}{% endblocktrans %}</span>
+                        <h2>{{ row.level.name }}</h2>
+                        <span class="recog-card-points">
+                            {% if row.upper is not None %}{% blocktrans with a=row.level.min_points b=row.upper|add:-1 %}{{ a }}–{{ b }} points{% endblocktrans %}{% else %}{% blocktrans with a=row.level.min_points %}{{ a }}+ points{% endblocktrans %}{% endif %}
+                        </span>
+                    </div>
+                    {% if row.current %}
+                    <span class="recog-chip recog-chip-here"><span class="material-symbols-outlined">person_pin_circle</span>{% trans "You are here" %}</span>
+                    {% elif row.reached %}
+                    <span class="recog-chip recog-chip-done"><span class="material-symbols-outlined">lock_open</span>{% trans "Unlocked" %}</span>
+                    {% elif points is not None %}
+                    <span class="recog-chip"><span class="material-symbols-outlined">lock</span>{% blocktrans count counter=row.to_go %}{{ counter }} point to go{% plural %}{{ counter }} points to go{% endblocktrans %}</span>
+                    {% endif %}
+                </header>
+                {% if row.perks %}
+                <ul class="recog-perks">
+                    {% for perk in row.perks %}
+                    <li><span class="material-symbols-outlined">{% if row.reached %}verified{% else %}redeem{% endif %}</span>{{ perk }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </article>
+        </li>
+        {% endfor %}
+    </ol>
+    {% else %}
+    <div class="recog-empty">
+        <span class="material-symbols-outlined">military_tech</span>
+        <p>{% trans "This organization hasn't set up levels yet." %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

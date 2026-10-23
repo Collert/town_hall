@@ -215,7 +215,7 @@ The arrows next to each item change the order.
 
 ## Lessons
 
-A lesson has a title and **content** written in Markdown: `## Headings`, `**bold**`, lists and links.
+A lesson has a title and **content** written in Markdown: `## Headings`, `**bold**`, lists, links and tables.
 Switch between **Write** and **Preview** to check how it looks. Paste a YouTube link into
 **Add Lesson Video** to embed a video; its length is detected automatically. **Save & Add Another**
 speeds up writing a series of lessons.
@@ -504,6 +504,10 @@ New rules apply to new shifts. A developer can reapply them to past shifts with
 description of its **benefits**. A volunteer's level is the highest one whose minimum they've
 reached, so changes apply to everyone right away. Fill in the last row to add a level; removing a
 level never removes anyone's points. The chart shows how many volunteers are at each level.
+
+Volunteers see the ladder on the **Recognition** page in the main menu, with each level's benefits
+and a "You are here" marker on their own level. Write benefits as a comma-separated list; each one
+shows as its own perk. The Recognition link stays hidden until you add your first level.
 """),
 
     ('Communication and email', """
