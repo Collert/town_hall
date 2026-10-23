@@ -5,6 +5,8 @@ from .models import HeroSection, Venue, VenueFeature
 @register(HeroSection)
 class HeroSectionTranslationOptions(TranslationOptions):
     fields = ('title', 'subtitle', 'button_1_text', 'button_2_text')
+    # An empty button text hides that button instead of showing the model default.
+    fallback_values = {'button_1_text': '', 'button_2_text': ''}
 
 
 @register(Venue)

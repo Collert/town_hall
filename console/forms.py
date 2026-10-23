@@ -175,6 +175,8 @@ class VenueForm(TranslatedFormMixin, forms.ModelForm):
 class HeroSectionForm(TranslatedFormMixin, forms.ModelForm):
     translation_key = 'hero'
     translated = ('title', 'subtitle', 'button_1_text', 'button_2_text')
+    # Leave a button's text empty to hide that button.
+    optional_translated = ('button_1_text', 'button_2_text')
 
     class Meta:
         model = HeroSection

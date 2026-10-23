@@ -219,6 +219,10 @@ class ConsoleFlowTests(ConsoleFixture):
         self.assertFalse(hero.image)
         self.assertContains(self.client.get(reverse('home')), 'hero-inner--text-only')
 
+        # Both buttons are optional; empty ones aren't shown
+        self.assertRedirects(self.client.post(url, dict(data, button_1_text_en='', button_2_text_en='', button_1_url='', button_2_url='')), url)
+        self.assertNotContains(self.client.get(reverse('home')), 'hero-actions')
+
     def test_level_settings_add_edit_and_renumber(self):
         low = Level.objects.create(name='Starter', numeric_name=1, min_points=0)
         high = Level.objects.create(name='Hero', numeric_name=2, min_points=500)

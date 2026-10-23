@@ -15,12 +15,16 @@
         <div class="hero-content">
             <h1>{{ hero.title }}</h1>
             <p>{{ hero.subtitle }}</p>
+            {% if hero.button_1_text or hero.button_2_text %}
             <div class="hero-actions">
-                <a href="{{ hero.button_1_url }}" class="btn btn-accent btn-lg btn-rounded">{{ hero.button_1_text }}</a>
-                <a href="{{ hero.button_2_url }}" class="hero-video-link">
+                {% if hero.button_1_text %}<a href="{{ hero.button_1_url|default:'#' }}" class="btn btn-accent btn-lg btn-rounded">{{ hero.button_1_text }}</a>{% endif %}
+                {% if hero.button_2_text %}
+                <a href="{{ hero.button_2_url|default:'#' }}" class="hero-video-link">
                     {{ hero.button_2_text }}
                 </a>
+                {% endif %}
             </div>
+            {% endif %}
         </div>
         {% if hero.image %}
         <div class="hero-image-wrap">
