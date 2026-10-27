@@ -395,6 +395,79 @@ class RoleAndTrainingToolTests(McpFixture):
         ])
         self.assertEqual(more['total_questions'], 3)
 
+    def test_modules_are_planned_then_written_from_quoted_material(self):
+        is_error, created = self.call('create_training_module', title='Coffee hour', description='Hosting coffee hour.', icon='coffee')
+        self.assertFalse(is_error, created)
+        module = TrainingModule.objects.get(pk=created['module_id'])
+        self.assertFalse(module.published)
+
+        notes = ('The urn is in the hall closet. Fill it to the 40 cup line and switch it on at 9:15. '
+                 'Cups are kept on the top shelf. Wash everything and lock the closet before you leave.')
+        _, source = self.call('add_training_source', module_id=module.pk, title='Hall notes', origin='message', content=notes)
+        lesson_plan = [
+            {'title': 'Making coffee', 'teaches': 'Where the urn is and when to start it', 'source_ids': [source['source_id']]},
+            {'title': 'Closing up', 'teaches': 'Washing up and locking the closet', 'source_ids': [source['source_id']]},
+        ]
+        is_error, text = self.call('write_lesson', module_id=module.pk, step=1, content='x',
+                                   quotes=[{'source_id': source['source_id'], 'quote': 'The urn is in the hall closet.'}])
+        self.assertIn('no approved lesson plan', text)
+        is_error, text = self.call('plan_training_module', module_id=module.pk, goal='Host coffee hour', lessons=lesson_plan,
+                                   gaps=['Who has the closet key'], confirmed_with_user=True)
+        self.assertTrue(is_error)
+        self.assertIn('Who has the closet key', text)
+        is_error, _ = self.call('plan_training_module', module_id=module.pk, goal='Host coffee hour', lessons=lesson_plan,
+                                gaps=[], confirmed_with_user=False)
+        self.assertTrue(is_error)
+        is_error, planned = self.call('plan_training_module', module_id=module.pk, goal='Host coffee hour', lessons=lesson_plan,
+                                      gaps=[], confirmed_with_user=True)
+        self.assertFalse(is_error, planned)
+
+        quote = {'source_id': source['source_id'], 'quote': 'Fill it to the 40 cup line and switch it on at 9:15.'}
+        is_error, text = self.call('write_lesson', module_id=module.pk, step=2, content='Wash up.', quotes=[quote])
+        self.assertIn('next one is step 1', text)
+        is_error, text = self.call('write_lesson', module_id=module.pk, step=1, content='Fill the urn.',
+                                   quotes=[{'source_id': source['source_id'], 'quote': 'Fill it to the 50 cup line'}])
+        self.assertIn('word for word', text)
+        is_error, text = self.call('write_lesson', module_id=module.pk, step=1, quotes=[quote],
+                                   content='Fill the urn to the 40 cup line and start it at 9:00.')
+        self.assertIn('9:00', text)  # a number the material never gave
+        is_error, text = self.call('write_lesson', module_id=module.pk, step=1, quotes=[quote],
+                                   content='Fill the urn. See https://example.org/urn for help.')
+        self.assertIn('https://example.org/urn', text)
+        self.assertFalse(module.lessons.exists())
+
+        is_error, written = self.call('write_lesson', module_id=module.pk, step=1, quotes=[
+            {'source_id': source['source_id'], 'quote': 'The urn is in the hall closet.'}, quote,
+        ], content='1. Get the urn from the **hall closet**.\n2. Fill it to the 40 cup line and switch it on at 9:15.')
+        self.assertFalse(is_error, written)
+        self.assertEqual(written['next']['step'], 2)
+        lesson = TrainingLesson.objects.get(pk=written['lesson_id'])
+        self.assertEqual((lesson.title, lesson.order), ('Making coffee', 1))
+
+        # Re-planning keeps written lessons written.
+        lesson_plan[0]['lesson_id'] = lesson.pk
+        _, replanned = self.call('plan_training_module', module_id=module.pk, goal='Host coffee hour', lessons=lesson_plan,
+                                 gaps=[], confirmed_with_user=True)
+        self.assertEqual([s['written'] for s in replanned['plan']['steps']], [True, False])
+
+        # Edits quote the lesson itself or the stored material.
+        is_error, text = self.call('update_training_lesson', lesson_id=lesson.pk, content='Switch the urn on at 8:00.',
+                                   quotes=[{'lesson_id': lesson.pk, 'quote': 'switch it on at 9:15'}])
+        self.assertIn('8:00', text)
+        is_error, edited = self.call('update_training_lesson', lesson_id=lesson.pk, title='Starting the urn',
+                                     quotes=[{'lesson_id': lesson.pk, 'quote': 'Get the urn from the hall closet'}])
+        self.assertFalse(is_error, edited)
+        lesson.refresh_from_db()
+        self.assertEqual(lesson.title, 'Starting the urn')
+
+        _, read = self.call('get_training_module', module_id=module.pk)
+        self.assertEqual(read['sources'][0]['title'], 'Hall notes')
+        self.assertEqual(read['plan']['steps'][1]['written'], False)
+
+        guide = TrainingModule.objects.create(title='Guide', description='x', icon='x', system_key='test_guide')
+        is_error, _ = self.call('add_training_source', module_id=guide.pk, title='x', origin='message', content='x')
+        self.assertTrue(is_error)
+
     def test_people_are_read_only(self):
         _, found = self.call('search_people', query='cooking')
         self.assertEqual([p['user_id'] for p in found], [self.vol.pk])

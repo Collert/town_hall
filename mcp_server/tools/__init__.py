@@ -4,10 +4,11 @@ Each module registers its tools with ``@tool``. A tool is a function ``f(ctx, **
 that returns something JSON-serializable, or raises ToolError with a message the AI can
 act on. Arguments are checked against the tool's schema before the call.
 
-What the tools may change is deliberately limited to event planning: events, their role
-slots, areas, invitations and task lists, role templates, and quizzes. Nothing is ever
-deleted, people's profiles are read-only, and training lessons are read-only (only the
-organization knows how it really operates, so people write that material).
+What the tools may change is deliberately limited to event planning and training: events,
+their role slots, areas, invitations and task lists, role templates, training modules,
+lessons and quizzes. Nothing is ever deleted and people's profiles are read-only. Only the
+organization knows how it really operates, so lessons may only restate material people
+gave the AI, stored word for word and quoted (see training.py).
 """
 from dataclasses import dataclass, field
 from datetime import datetime

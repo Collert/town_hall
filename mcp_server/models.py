@@ -62,3 +62,36 @@ class AccessToken(models.Model):
     @property
     def active(self):
         return not self.revoked and self.refresh_expires_at > timezone.now()
+
+
+class TrainingSource(models.Model):
+    """Material a person gave the AI to build training from, stored word for word.
+
+    Lessons the AI writes must quote it, and the tools check every quote against this text
+    (mcp_server/tools/training.py), so a lesson can only say what the organization said."""
+    ORIGINS = [
+        ('message', 'Typed or pasted by the user'),
+        ('document', 'From a document the user shared'),
+        ('answer', "The user's answer to a question"),
+    ]
+    module = models.ForeignKey('education.TrainingModule', on_delete=models.CASCADE, related_name='ai_sources')
+    title = models.CharField(max_length=200)
+    origin = models.CharField(max_length=20, choices=ORIGINS)
+    content = models.TextField()
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class ModulePlan(models.Model):
+    """The lesson plan the user approved before the AI writes a module's lessons.
+
+    ``steps`` is a list of {title, teaches, source_ids, lesson_id, written}; lessons are
+    written one step at a time, in order."""
+    module = models.OneToOneField('education.TrainingModule', on_delete=models.CASCADE, related_name='ai_plan')
+    goal = models.TextField()
+    steps = models.JSONField(default=list)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
+    updated_at = models.DateTimeField(auto_now=True)

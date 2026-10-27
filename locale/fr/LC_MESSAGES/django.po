@@ -10754,8 +10754,8 @@ msgid "Create role templates and attach existing training"
 msgstr "Créer des modèles de rôle et y rattacher la formation existante"
 
 #: .\mcp_server\templates\mcp_server\authorize.html:36
-msgid "Write quizzes based on your training lessons"
-msgstr "Rédiger des questionnaires à partir de vos leçons de formation"
+msgid "Write training lessons and quizzes from material you give it"
+msgstr "Rédiger des leçons et des questionnaires de formation à partir des documents que vous lui fournissez"
 
 #: .\mcp_server\templates\mcp_server\authorize.html:37
 msgid "Invite volunteers to shifts (they choose whether to accept)"
@@ -10778,8 +10778,8 @@ msgid "Change anyone's profile"
 msgstr "Modifier le profil de qui que ce soit"
 
 #: .\mcp_server\templates\mcp_server\authorize.html:46
-msgid "Write or change training lessons"
-msgstr "Rédiger ou modifier des leçons de formation"
+msgid "Publish new training modules"
+msgstr "Publier de nouveaux modules de formation"
 
 #: .\mcp_server\templates\mcp_server\authorize.html:47
 msgid "Change organization settings"

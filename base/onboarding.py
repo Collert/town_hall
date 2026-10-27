@@ -616,8 +616,11 @@ Town Hall includes a **Claude connector**, so staff can plan events by chatting 
 staff account and approve.
 
 Claude can then read your events, roles, training and volunteers, and create or update events, role
-slots, areas, invitations, task lists, role templates and quizzes. It never deletes anything, and it
-can't change people, lessons or settings. Only active staff can connect, and **Connected apps** on the
+slots, areas, invitations, task lists, role templates and quizzes. It can also build training modules,
+but only from material you give it: it asks until it understands the subject, agrees a lesson plan
+with you, then writes the lessons one at a time, quoting your material in each. New modules stay
+unpublished until you review and publish them. It never deletes anything, and it can't change people
+or settings. Only active staff can connect, and **Connected apps** on the
 same page lets you disconnect any of them.
 
 ## The Django admin

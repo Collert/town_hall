@@ -32,7 +32,7 @@ Built with Django 6, HTMX and plain CSS. No SPA and no build step.
 Put a tablet at the door. Volunteers enter their 6-digit ID code to start and end shifts, either for an event or at a venue for permanent roles. The kiosk never logs anyone into the site.
 
 ### Plan events with Claude 🤖
-Town Hall includes an **MCP server** with its own OAuth 2.1 server. Add `https://<your-host>/mcp` as a custom connector in Claude (Settings → Connectors), and staff can ask Claude to draft an event, estimate headcounts from past events, set up areas, build task lists, write quizzes from existing lessons, and invite volunteers. The scope is deliberately limited: nothing can be deleted, and people's profiles, lessons and settings are read-only.
+Town Hall includes an **MCP server** with its own OAuth 2.1 server. Add `https://<your-host>/mcp` as a custom connector in Claude (Settings → Connectors), and staff can ask Claude to draft an event, estimate headcounts from past events, set up areas, build task lists, build training modules from material you provide (it agrees a lesson plan with you, then writes lessons one at a time that must quote your material, and leaves new modules unpublished for review), write quizzes from lessons, and invite volunteers. The scope is deliberately limited: nothing can be deleted, and people's profiles and settings are read-only.
 
 ### Task lists with Bell Tower 🔔
 Connect your organization's [Bell Tower](#integrations) server and every event gets a planning list, day-of lists, and one list per role. Volunteers join their role's list automatically when they sign up. In the console you can drag tasks between lists and merge lists.
