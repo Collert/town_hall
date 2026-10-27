@@ -1,6 +1,6 @@
 {% extends 'education/education_layout.html' %}
 {% load static %}
-{% load i18n %}
+{% load i18n md_extras %}
 
 {% block education_css %}
 <link rel="stylesheet" href="{% static 'education/training_directory.css' %}">
@@ -36,7 +36,7 @@
                 <div class="edu-card-hero-content">
                     <span class="edu-badge">{% trans "Last Opened" %}</span>
                     <h3 class="edu-hero-title">{{ last_viewed.title }}</h3>
-                    <p class="edu-hero-desc">{{ last_viewed.description|truncatewords:20 }}</p>
+                    <p class="edu-hero-desc">{{ last_viewed.description|render_markdown|striptags|truncatewords:20 }}</p>
                     <div class="edu-progress-container edu-progress-dark">
                         <div class="edu-progress-header">
                             <span class="edu-progress-label">{% trans "Current Progress" %}</span>
@@ -56,7 +56,7 @@
                     <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
                 </div>
                 <h3 class="edu-module-title">{{ module.title }}</h3>
-                <p class="edu-module-desc">{{ module.description|truncatewords:15 }}</p>
+                <p class="edu-module-desc">{{ module.description|render_markdown|striptags|truncatewords:15 }}</p>
                 <div class="edu-progress-container">
                     <div class="edu-progress-header">
                         <span class="edu-progress-label">{% trans "Current Progress" %}</span>
@@ -86,7 +86,7 @@
                     <span class="material-symbols-outlined">{{ module.icon|default:"school" }}</span>
                 </div>
                 <h3 class="edu-module-title">{{ module.title }}</h3>
-                <p class="edu-module-desc">{{ module.description|truncatewords:15 }}</p>
+                <p class="edu-module-desc">{{ module.description|render_markdown|striptags|truncatewords:15 }}</p>
                 <div class="edu-progress-container">
                     <div class="edu-progress-header">
                         <span class="edu-progress-label">{% trans "Current Progress" %}</span>
@@ -140,7 +140,7 @@
                     {% endif %}
                 </div>
                 <h4 class="edu-module-title edu-module-title-small">{{ module.title }}</h4>
-                <p class="edu-module-desc">{{ module.description|truncatewords:15 }}</p>
+                <p class="edu-module-desc">{{ module.description|render_markdown|striptags|truncatewords:15 }}</p>
                 <div class="edu-module-meta">
                     <div class="edu-duration-label">
                         <span class="material-symbols-outlined edu-duration-icon">schedule</span>

@@ -1,6 +1,6 @@
 {% extends "education/education_layout.html" %}
 {% load static %}
-{% load i18n %}
+{% load i18n md_extras %}
 
 {% block education_css %}
     <link rel="stylesheet" href="{% static 'education/completed_module.css' %}">
@@ -57,7 +57,7 @@
                 <div class="module-info-card">
                     <h3 class="module-info-label">{% trans "About this Module" %}</h3>
                     <div class="module-info-desc">
-                        {{ module.description|linebreaks }}
+                        {{ module.description|render_markdown }}
                     </div>
                     <div class="module-info-meta">
                         <div class="meta-item">

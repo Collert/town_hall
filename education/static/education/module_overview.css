@@ -255,6 +255,12 @@
     margin: 0;
 }
 
+.overview-text a {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 
 /* Roles Section */
 .roles-section {

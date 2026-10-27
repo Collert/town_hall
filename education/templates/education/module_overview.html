@@ -1,6 +1,6 @@
 {% extends "education/module_layout.html" %}
 {% load static %}
-{% load i18n %}
+{% load i18n md_extras %}
 
 {% block module_css %}
     <link rel="stylesheet" href="{% static 'education/module_overview.css' %}">
@@ -82,7 +82,7 @@
             {% trans "Module Overview" %}
         </h2>
         <div class="overview-text">
-            {{ module.description|linebreaks }}
+            {{ module.description|render_markdown }}
         </div>
     </div>
 </section>

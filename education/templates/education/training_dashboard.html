@@ -1,6 +1,6 @@
 {% extends 'education/education_layout.html' %}
 {% load static %}
-{% load i18n %}
+{% load i18n md_extras %}
 
 {% block education_css %}
 <link rel="stylesheet" href="{% static 'education/training_dashboard.css' %}">
@@ -110,7 +110,7 @@
                         </div>
                         <div class="td-module-card-body">
                             <h3 class="td-module-title">{{ module.title }}</h3>
-                            <p class="td-module-desc">{{ module.description|truncatewords:15 }}</p>
+                            <p class="td-module-desc">{{ module.description|render_markdown|striptags|truncatewords:15 }}</p>
                             <div class="td-module-progress-row">
                                 <div class="td-module-progress-bar">
                                     <div class="td-module-progress-fill" style="width: {{ module.user_progress }}%;"></div>
@@ -140,7 +140,7 @@
                         </div>
                         <div class="td-module-card-body">
                             <h3 class="td-module-title">{{ completion.training_module.title }}</h3>
-                            <p class="td-module-desc">{{ completion.training_module.description|truncatewords:12 }}</p>
+                            <p class="td-module-desc">{{ completion.training_module.description|render_markdown|striptags|truncatewords:12 }}</p>
                             <span class="td-completed-badge">
                                 <span class="material-symbols-outlined">verified</span>
                                 {% blocktrans with date=completion.completed_at|date:"M j" %}Completed on {{ date }}{% endblocktrans %}
@@ -173,7 +173,7 @@
                         </div>
                         <div class="td-suggested-body">
                             <h4 class="td-suggested-title">{{ module.title }}</h4>
-                            <p class="td-suggested-desc">{{ module.description|truncatewords:12 }}</p>
+                            <p class="td-suggested-desc">{{ module.description|render_markdown|striptags|truncatewords:12 }}</p>
                         </div>
                         <a href="{% url 'module_overview' module.id %}" class="td-btn td-btn--start">
                             {% trans "Start" %}

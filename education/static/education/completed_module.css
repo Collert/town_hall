@@ -206,6 +206,12 @@
     margin: 0 0 0.75rem 0;
 }
 
+.module-info-desc a {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
 .module-info-meta {
     display: flex;
     flex-wrap: wrap;
