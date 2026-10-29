@@ -439,6 +439,34 @@ class VolunteerPageTests(ConsoleFixture):
             with self.subTest(url=url):
                 self.assertEqual(self.client.get(url).status_code, 200)
 
+    def test_finished_shifts_are_listed_with_time_worked_before_the_event_ends(self):
+        # Clocked out of the live event after 50 minutes; its 3.5 h slot is still running
+        shift = Shift.objects.create(user=self.vol, event_role_slot=self.slot)
+        Shift.objects.filter(pk=shift.pk).update(start_time=timezone.now() - timedelta(minutes=50))
+        shift.refresh_from_db()
+        shift.end_time = shift.start_time + timedelta(minutes=50)
+        shift.save()
+
+        page = self.client.get(reverse('my_events'))
+        self.assertEqual(list(page.context['past_shifts']), [shift, self.vol.shifts.get(event_role_slot=self.past_slot)])
+        self.assertContains(page, reverse('event_thank_you', args=[self.live.pk]))
+        self.assertContains(page, '0.8 Hours')
+        self.assertContains(page, '3.0 Hours')
+
+        own = self.client.get(reverse('profile_view', args=[self.vol.username]))
+        self.assertEqual([(a['event_title'], a['hours']) for a in own.context['activity_history']],
+                         [('Fall Festival', 0.8), ('Spring Cleanup', 3.0)])
+        self.assertContains(own, f'href="{reverse("event_thank_you", args=[self.live.pk])}"')
+
+        self.client.force_login(self.mate)
+        other = self.client.get(reverse('profile_view', args=[self.vol.username]))
+        certificate = reverse('event_certificate', args=[self.live.pk, self.vol.username])
+        self.assertContains(other, f'href="{certificate}"')
+        self.assertEqual(self.client.get(certificate).status_code, 200)
+        # Signed up but never clocked out: no history row and no certificate before the event ends
+        self.assertEqual(self.client.get(reverse('my_events')).context['past_shifts'].count(), 0)
+        self.assertEqual(self.client.get(reverse('event_certificate', args=[self.live.pk, 'mate'])).status_code, 404)
+
     def test_anonymous_public_pages(self):
         self.client.logout()
         for url in [reverse('home'), reverse('endorsements_feed'), reverse('impact_record', args=[self.vol.username]),
@@ -2829,3 +2857,59 @@ class ShiftReminderTests(ConsoleFixture):
         response = self.client.get(reverse('opportunity_detail', args=[self.event.pk]))
         self.assertContains(response, date_format(timezone.localtime(next_day.start_time), 'D, M j'))
         self.assertNotContains(response, date_format(timezone.localtime(self.start), 'D, M j') + ' ·')
+
+
+class ShiftThanksTests(ConsoleFixture):
+    def check_in(self, user):
+        return Shift.objects.create(user=user, event_role_slot=self.slot)
+
+    def kiosk_check_out(self, user):
+        mail.outbox = []
+        session = self.client.session
+        session['kiosk_user_id'] = user.pk
+        session.save()
+        self.client.post(reverse('kiosk_check_out'), {'kind': 'event', 'place': self.live.pk})
+
+    def test_kiosk_check_out_thanks_once_per_event(self):
+        self.check_in(self.vol)
+        self.kiosk_check_out(self.vol)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['vol@example.com'])
+        self.assertIn('[shift_thanks]', mail.outbox[0].subject)
+        summary = f'http://testserver/en/opportunities/{self.live.pk}/thank-you/'
+        self.assertIn(f'link: {summary}\n', mail.outbox[0].body)
+        self.assertIn(f'feedback_link: {summary}#feedback', mail.outbox[0].body)
+        self.assertIn('role: Greeter', mail.outbox[0].body)
+
+        self.check_in(self.vol)  # checked in again by mistake
+        self.kiosk_check_out(self.vol)
+        self.assertEqual(mail.outbox, [])
+
+    def test_waits_for_the_last_shift_at_the_event(self):
+        later = EventRoleSlot.objects.create(event=self.live, role=self.role, start_time=timezone.now() + timedelta(hours=4),
+                                             end_time=timezone.now() + timedelta(hours=5))
+        later.add_signup(self.vol)
+        self.check_in(self.vol)
+        self.kiosk_check_out(self.vol)
+        self.assertEqual(mail.outbox, [])
+
+        Shift.objects.create(user=self.vol, event_role_slot=later)
+        self.kiosk_check_out(self.vol)
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_console_check_out_sends_and_trigger_can_be_switched_off(self):
+        self.client.force_login(self.staff)
+        shift = self.check_in(self.mate)
+        mail.outbox = []
+        self.client.post(reverse('console_manual_check_in', args=[self.live.pk]), {'shift_id': shift.pk})
+        self.assertEqual([m.to for m in mail.outbox], [['mate@example.com']])
+
+        EmailTrigger.objects.update_or_create(key='shift_thanks', defaults={'enabled': False})
+        self.check_in(self.vol)
+        self.kiosk_check_out(self.vol)
+        self.assertEqual(mail.outbox, [])
+
+    def test_permanent_role_shift_is_not_thanked(self):
+        Shift.objects.create(user=self.vol, role=self.perm_role)
+        self.kiosk_check_out(self.vol)
+        self.assertEqual(mail.outbox, [])

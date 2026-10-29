@@ -551,6 +551,9 @@ uses in each language. **Reset to default** restores Town Hall's version of a te
 - **Shift reminder** goes out by itself at 9 AM the day before each shift, to everyone signed up for
   it, with the role, time and place. People who sign up after 9 AM that day aren't reminded, because
   their sign-up confirmation just told them the same thing.
+- **Thank you after a shift** goes out when a volunteer clocks out of their last shift at an event
+  (at the kiosk or from the check-in monitor). It shows their hours and points, asks for feedback,
+  and links to their post-event summary. Each person gets it once per event.
 - When a Town Hall update adds a new kind of email, choose **Re-create missing templates** so it gets
   a template in each language.
 """),

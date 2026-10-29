@@ -351,6 +351,20 @@ class ShiftReminder(models.Model):
         return f"Reminded {self.user} about {self.slot}"
 
 
+class ShiftThanks(models.Model):
+    """The thank-you email went out after this person clocked out at this event
+    (events/reminders.py). Created before sending, so it goes out once per event."""
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='shift_thanks')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shift_thanks')
+    sent_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('event', 'user')
+
+    def __str__(self):
+        return f"Thanked {self.user} for {self.event}"
+
+
 class SlotCancellation(models.Model):
     """A volunteer took themselves off a slot. Cancelling less than 24 hours before it
     starts (`late`) counts against their reliability like a no-show (events/reliability.py)."""

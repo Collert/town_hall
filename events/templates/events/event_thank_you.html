@@ -63,7 +63,7 @@
     {% endif %}
 
     <div class="ty-split">
-        <section class="ty-feedback">
+        <section class="ty-feedback" id="feedback">
             <h2>{% trans "Share Your Experience" %}</h2>
             <p class="ty-sub">{% trans "Help us make the next event even better." %}</p>
             <form method="post">
@@ -100,7 +100,7 @@
         <h2>{% trans "Ready for your next spark?" %}</h2>
         <div class="ty-cta-actions">
             <a href="{% url 'explore_opportunities' %}" class="btn btn-dark btn-rounded btn-lg">{% trans "Find Your Next Opportunity" %}</a>
-            {% if event.is_past %}
+            {% if event.is_past or me.verified %}
             <a href="{% url 'event_certificate' event.pk user.username %}" class="btn btn-dark btn-rounded btn-lg"><span class="material-symbols-outlined">workspace_premium</span>{% trans "My Certificate" %}</a>
             {% endif %}
             <a href="{% url 'impact_record' user.username %}" class="btn btn-rounded btn-lg ty-cta-light">{% trans "View My Impact Record" %}</a>

@@ -370,7 +370,14 @@
     gap: 1.25rem;
     padding: 1.125rem 1.5rem;
     background: var(--color-bg-secondary);
+    color: inherit;
+    text-decoration: none;
     transition: background 0.15s;
+}
+
+.past-event-row:hover .btn-report {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
 }
 
 .past-event-row+.past-event-row {

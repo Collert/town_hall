@@ -16,7 +16,7 @@ Built with Django 6, HTMX and plain CSS. No SPA and no build step.
 - **Earn impact points and level up.** Shifts, training and endorsements earn points. Points set your level, and the Recognition page shows the whole ladder.
 - **A record you can share.** Profile, endorsements from peers and staff, external certificates, and a printable volunteer résumé.
 - **Know your team.** On large events you see your area lead and shift lead, plus a link to your own task list.
-- **Reminders.** Shift reminder emails go out the day before each shift, and there are gentle nudges to finish your profile.
+- **Reminders.** Shift reminder emails go out the day before each shift, a thank-you email asking for feedback follows a volunteer's last shift at an event, and there are gentle nudges to finish your profile.
 
 ### For staff (the Console)
 - **Events and staffing.** Add role slots with headcounts and overstaffing limits, use public or invite-only slots, send invite links, watch check-ins live, and get reports.

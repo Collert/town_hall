@@ -665,6 +665,27 @@
     color: var(--color-text-primary);
 }
 
+/* The event link stretches over its whole row so the row is clickable */
+.activity-table tbody tr.activity-row {
+    position: relative;
+    cursor: pointer;
+}
+
+.activity-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.activity-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+.activity-row:hover .activity-link {
+    color: var(--color-accent);
+}
+
 .activity-table tbody td.td-role {
     color: var(--color-text-secondary);
     font-weight: 500;

@@ -10,6 +10,10 @@ until the shift starts.
 People who sign up after their reminder time are skipped: the sign-up confirmation they
 just got already has the details. A ``ShiftReminder`` row is created before each email,
 so nobody is reminded twice about the same shift, even with several workers.
+
+After a volunteer clocks out of their last shift at an event (kiosk or check-in
+monitor), ``send_shift_thanks`` emails them a thank-you that links to their post-event
+summary and its feedback form. A ``ShiftThanks`` row keeps it to one per event.
 """
 from datetime import datetime, time, timedelta
 
@@ -17,7 +21,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError, transaction
 from django.urls import reverse
-from django.utils import timezone, translation
+from django.utils import formats, timezone, translation
 
 CHECK_EVERY = 300  # seconds between middleware passes
 SEND_AT = time(9)  # local time, the day before the shift
@@ -86,6 +90,42 @@ def reminder_data(slot, user, base_url):
         'event': event.title, 'role': slot.role.name, 'date': short_datetime(slot.start_time, lang),
         'location': location, 'link': link,
     }
+
+
+def send_shift_thanks(shift, base_url):
+    """Thank a volunteer who just clocked out of an event shift ("Thank you after a
+    shift"). Skipped while they have another shift at the event still to start, so
+    someone working two shifts hears from us once, at the end. Returns True if sent."""
+    from base import triggers
+    from base.email import notify
+
+    from .models import ShiftThanks
+
+    slot = shift.event_role_slot
+    user = shift.user
+    if not slot or not shift.end_time or not triggers.setting('shift_thanks')[0]:
+        return False
+    event = slot.event
+    if not event.published or not user.is_active or not user.email:
+        return False
+    if event.role_slots.filter(signups=user, start_time__gt=shift.end_time).exclude(pk=slot.pk).exists():
+        return False  # coming back for another shift
+    try:
+        with transaction.atomic():
+            ShiftThanks.objects.create(event=event, user=user)
+    except IntegrityError:
+        return False  # already thanked for this event
+    profile = getattr(user, 'profile', None)
+    lang = profile.language if profile and profile.language in dict(settings.LANGUAGES) else settings.LANGUAGE_CODE
+    with translation.override(lang):  # the link's language prefix and decimal mark
+        link = base_url.rstrip('/') + reverse('event_thank_you', args=[event.pk])
+        hours = formats.number_format(f'{round(shift.duration(), 1):g}')
+    notify('shift_thanks', user, {
+        'event': event.title, 'role': slot.role.name, 'hours': hours,
+        'points': shift.end_impact_points or 0,
+        'link': link, 'feedback_link': f'{link}#feedback',
+    })
+    return True
 
 
 def run_due_if_idle(request):

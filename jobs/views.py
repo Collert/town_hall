@@ -21,6 +21,7 @@ from base.models import Profile, SiteSettings, Venue
 from base.utils import photos_first, time_range
 from console.decorators import staff_required
 from events.models import Event
+from events.reminders import send_shift_thanks
 
 from .models import Shift
 
@@ -212,6 +213,7 @@ def kiosk_check_out(request):
     shift = Shift.objects.filter(user=user, end_time__isnull=True).select_related('event_role_slot').first() if user else None
     if shift:
         shift.end_shift()
+        send_shift_thanks(shift, request.build_absolute_uri('/'))
         hours = shift.duration()
         messages.success(request, _('Thanks, %(name)s! You logged %(hours)s hours and earned %(points)s impact points.') % {
             'name': user.first_name or user.username,

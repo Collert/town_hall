@@ -304,8 +304,8 @@
         </thead>
         <tbody>
           {% for item in activity_history %}
-          <tr>
-            <td class="td-event">{{ item.event_title }}</td>
+          <tr class="activity-row">
+            <td class="td-event"><a href="{{ item.url }}" class="activity-link">{{ item.event_title }}</a></td>
             <td class="td-role">{{ item.role_name }}</td>
             <td class="td-date">{{ item.date|date:"M d, Y" }}</td>
             <td class="td-hours">{{ item.hours }} hrs</td>

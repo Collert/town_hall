@@ -442,17 +442,21 @@ def profile_view(request, username):
             'status': status,
         })
 
-    # Recent event activity
+    # Recent event activity: finished shifts with the time actually worked. The volunteer
+    # opens their own post-event summary; anyone else sees the public certificate.
+    is_own_profile = request.user == viewed_user
     activity_history = []
-    for slot in EventRoleSlot.objects.filter(
-        signups=viewed_user
-    ).select_related('event', 'role').order_by('-event__start_date')[:8]:
-        duration_h = (slot.end_time - slot.start_time).total_seconds() / 3600
+    for shift in Shift.objects.filter(
+        user=viewed_user, event_role_slot__isnull=False, end_time__isnull=False,
+    ).select_related('event_role_slot__event', 'role').order_by('-start_time')[:8]:
+        event = shift.event_role_slot.event
         activity_history.append({
-            'event_title': slot.event.title,
-            'role_name': slot.role.name,
-            'date': slot.event.start_date,
-            'hours': round(duration_h, 1),
+            'event_title': event.title,
+            'role_name': shift.role.name if shift.role else '',
+            'date': shift.start_time,
+            'hours': round(shift.duration(), 1),
+            'url': (reverse('event_thank_you', args=[event.pk]) if is_own_profile
+                    else reverse('event_certificate', args=[event.pk, viewed_user.username])),
         })
 
     # Impact stats
@@ -494,7 +498,7 @@ def profile_view(request, username):
         'level': profile.level,
         'next_level': profile.next_level,
         'level_progress': profile.level_progress,
-        'is_own_profile': request.user == viewed_user,
+        'is_own_profile': is_own_profile,
         # Only the volunteer sees how their points add up
         'points_history': (PointsEntry.objects.filter(user=viewed_user)
                            .select_related('shift__role', 'shift__event_role_slot__event', 'training_module')[:6]

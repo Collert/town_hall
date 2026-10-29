@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 10:49-0700\n"
+"POT-Creation-Date: 2026-10-29 12:46-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,13 +45,13 @@ msgstr "Voir les rôles et s'inscrire"
 #: .\base\email_templates.py:213
 #, python-format
 msgid ""
-"You're receiving this because you have an account with %(org)s. "
-"[Unsubscribe]({{UnsubscribeURL}})"
+"You're receiving this because you have an account with %(org)s. [Unsubscribe]"
+"({{UnsubscribeURL}})"
 msgstr ""
 "Vous recevez ce message parce que vous avez un compte chez %(org)s. [Se "
 "désabonner]({{UnsubscribeURL}})"
 
-#: .\base\forms.py:9 .\base\triggers.py:90 .\base\triggers.py:113
+#: .\base\forms.py:9 .\base\triggers.py:94 .\base\triggers.py:119
 msgid "Organization name"
 msgstr "Nom de l’organisation"
 
@@ -400,8 +400,8 @@ msgid ""
 msgstr ""
 "Cette action est permanente et difficilement réversible. La désactivation de "
 "votre compte désactivera immédiatement votre profil, vous retirera de toutes "
-"les listes d’événements actifs et masquera définitivement votre historique de"
-" formation au public."
+"les listes d’événements actifs et masquera définitivement votre historique "
+"de formation au public."
 
 #: .\base\templates\base\edit_profile.html:219
 msgid "Are you absolutely sure you want to proceed?"
@@ -572,52 +572,52 @@ msgstr "il y a %(t)s"
 msgid "No endorsements yet. Be the first!"
 msgstr "Aucune recommandation pour l’instant. Soyez le premier !"
 
-#: .\base\templates\base\home.html:45
+#: .\base\templates\base\home.html:49
 msgid "Volunteer Active"
 msgid_plural "Volunteers Active"
 msgstr[0] "Bénévole actif"
 msgstr[1] "Bénévoles actifs"
 
-#: .\base\templates\base\home.html:55
+#: .\base\templates\base\home.html:59
 msgid "Hour Contributed"
 msgid_plural "Hours Contributed"
 msgstr[0] "Heure de contribution"
 msgstr[1] "Heures de contribution"
 
-#: .\base\templates\base\home.html:67
+#: .\base\templates\base\home.html:71
 msgid "Project Completed"
 msgid_plural "Projects Completed"
 msgstr[0] "Projet terminé"
 msgstr[1] "Projets terminés"
 
-#: .\base\templates\base\home.html:78
+#: .\base\templates\base\home.html:82
 msgid "Featured Opportunities"
 msgstr "Occasions à la une"
 
-#: .\base\templates\base\home.html:79
+#: .\base\templates\base\home.html:83
 msgid ""
 "Join these high-impact projects happening right now in your neighborhood."
 msgstr ""
 "Rejoignez ces projets à fort impact qui se déroulent en ce moment dans votre "
 "quartier."
 
-#: .\base\templates\base\home.html:81
+#: .\base\templates\base\home.html:85
 msgid "View all opportunities"
 msgstr "Voir toutes les occasions"
 
-#: .\base\templates\base\home.html:101
+#: .\base\templates\base\home.html:105
 msgid "Learn More"
 msgstr "En savoir plus"
 
-#: .\base\templates\base\home.html:105
+#: .\base\templates\base\home.html:109
 msgid "No featured opportunities at this time."
 msgstr "Aucune occasion à la une pour le moment."
 
-#: .\base\templates\base\home.html:123
+#: .\base\templates\base\home.html:127
 msgid "LEVEL 4 VOLUNTEER"
 msgstr "BÉNÉVOLE DE NIVEAU 4"
 
-#: .\base\templates\base\home.html:132
+#: .\base\templates\base\home.html:136
 #: .\console\templates\console\partials\event_history.html:10
 #: .\console\templates\console\partials\volunteer_table.html:10
 #: .\console\templates\console\volunteer_detail.html:76
@@ -626,7 +626,7 @@ msgstr "BÉNÉVOLE DE NIVEAU 4"
 msgid "Total Hours"
 msgstr "Total d’heures"
 
-#: .\base\templates\base\home.html:136
+#: .\base\templates\base\home.html:140
 #: .\console\templates\console\certificate_edit.html:11
 #: .\console\templates\console\certificate_list.html:13
 #: .\console\templates\console\console_layout.html:43
@@ -636,43 +636,43 @@ msgstr "Total d’heures"
 msgid "Certificates"
 msgstr "Certificats"
 
-#: .\base\templates\base\home.html:137
+#: .\base\templates\base\home.html:141
 msgid "earned"
 msgstr "obtenus"
 
-#: .\base\templates\base\home.html:140
+#: .\base\templates\base\home.html:144
 msgid "Recent Training Progress"
 msgstr "Progression récente de la formation"
 
-#: .\base\templates\base\home.html:145
+#: .\base\templates\base\home.html:149
 msgid "Safety & Ethics"
 msgstr "Sécurité et éthique"
 
-#: .\base\templates\base\home.html:157
+#: .\base\templates\base\home.html:161
 msgid "Your Volunteer Journey,"
 msgstr "Votre parcours de bénévole,"
 
-#: .\base\templates\base\home.html:158
+#: .\base\templates\base\home.html:162
 msgid "Organized & Rewarded."
 msgstr "organisé et récompensé."
 
-#: .\base\templates\base\home.html:166
+#: .\base\templates\base\home.html:170
 msgid "Personalized Dashboard"
 msgstr "Tableau de bord personnalisé"
 
-#: .\base\templates\base\home.html:167
+#: .\base\templates\base\home.html:171
 msgid ""
-"Unlock a tailored experience to track your volunteer hours, schedule upcoming"
-" shifts, and manage your profile in one central hub."
+"Unlock a tailored experience to track your volunteer hours, schedule "
+"upcoming shifts, and manage your profile in one central hub."
 msgstr ""
 "Profitez d’une expérience sur mesure pour suivre vos heures de bénévolat, "
 "planifier vos prochains quarts et gérer votre profil dans un seul espace."
 
-#: .\base\templates\base\home.html:175
+#: .\base\templates\base\home.html:179
 msgid "Skill Certifications"
 msgstr "Certifications de compétences"
 
-#: .\base\templates\base\home.html:176
+#: .\base\templates\base\home.html:180
 msgid ""
 "Complete exclusive training modules to level up your skills. Earn digital "
 "certificates that showcase your achievements to future employers."
@@ -681,11 +681,11 @@ msgstr ""
 "Obtenez des certificats numériques qui mettent en valeur vos réalisations "
 "auprès de futurs employeurs."
 
-#: .\base\templates\base\home.html:184
+#: .\base\templates\base\home.html:188
 msgid "Impact Analytics"
 msgstr "Analyse d’impact"
 
-#: .\base\templates\base\home.html:185
+#: .\base\templates\base\home.html:189
 msgid ""
 "See the real-world difference you're making with detailed impact reports and "
 "community-wide contribution metrics."
@@ -694,7 +694,7 @@ msgstr ""
 "d’impact détaillés et à des indicateurs de contribution à l’échelle de la "
 "communauté."
 
-#: .\base\templates\base\home.html:190
+#: .\base\templates\base\home.html:194
 msgid "Start Your Journey"
 msgstr "Commencez votre parcours"
 
@@ -793,8 +793,8 @@ msgstr "Scannez pour vérifier"
 #: .\base\templates\base\impact_record.html:84
 #, python-format
 msgid ""
-"Certified Volunteer Impact Record &bull; Authentic verification "
-"#%(record_id)s"
+"Certified Volunteer Impact Record &bull; Authentic verification #"
+"%(record_id)s"
 msgstr ""
 "Relevé d’impact bénévole certifié &bull; Vérification d’authenticité n° "
 "%(record_id)s"
@@ -996,7 +996,7 @@ msgstr "Infolettre"
 msgid "Join our list for local updates."
 msgstr "Joignez-vous à notre liste pour recevoir les nouvelles locales."
 
-#: .\base\templates\base\layout.html:337 .\console\forms.py:411
+#: .\base\templates\base\layout.html:337 .\console\forms.py:413
 msgid "Email address"
 msgstr "Adresse e-mail"
 
@@ -1048,8 +1048,8 @@ msgid ""
 "Hi %(name)s, we couldn't verify your <strong>%(certificate)s</strong> "
 "documents. Please upload them again."
 msgstr ""
-"Bonjour %(name)s, nous n'avons pas pu vérifier vos documents pour "
-"<strong>%(certificate)s</strong>. Veuillez les téléverser à nouveau."
+"Bonjour %(name)s, nous n'avons pas pu vérifier vos documents pour <strong>"
+"%(certificate)s</strong>. Veuillez les téléverser à nouveau."
 
 #: .\base\templates\base\listmonk\certificate_rejected.html:6
 msgid "Upload documents"
@@ -1078,7 +1078,7 @@ msgid "Hi %(name)s, the organizers sent an update:"
 msgstr "Bonjour %(name)s, les organisateurs ont envoyé une mise à jour :"
 
 #: .\base\templates\base\listmonk\event_message.html:5
-#: .\events\templates\events\event_impact_card.html:47
+#: .\events\templates\events\event_impact_card.html:56
 #: .\events\templates\events\respond_to_invite.html:47
 msgid "View event"
 msgstr "Voir l'événement"
@@ -1180,11 +1180,11 @@ msgstr "À demain !"
 #: .\base\templates\base\listmonk\shift_reminder.html:3
 #, python-format
 msgid ""
-"Hi %(name)s, this is a reminder that you're volunteering as "
-"<strong>%(role)s</strong> at <strong>%(event)s</strong> tomorrow."
+"Hi %(name)s, this is a reminder that you're volunteering as <strong>"
+"%(role)s</strong> at <strong>%(event)s</strong> tomorrow."
 msgstr ""
-"Bonjour %(name)s, petit rappel : demain, vous êtes bénévole comme "
-"<strong>%(role)s</strong> à <strong>%(event)s</strong>."
+"Bonjour %(name)s, petit rappel : demain, vous êtes bénévole comme <strong>"
+"%(role)s</strong> à <strong>%(event)s</strong>."
 
 #: .\base\templates\base\listmonk\shift_reminder.html:5
 #: .\base\templates\base\listmonk\signup_confirmed.html:5
@@ -1213,6 +1213,46 @@ msgstr ""
 "Vous ne pouvez plus venir ? Annulez dès que possible depuis la page de "
 "l'événement, pour que quelqu'un d'autre puisse prendre votre place."
 
+#: .\base\templates\base\listmonk\shift_thanks.html:2
+#: .\events\templates\events\event_thank_you.html:16
+#, python-format
+msgid "Thank you, %(name)s!"
+msgstr "Merci, %(name)s !"
+
+#: .\base\templates\base\listmonk\shift_thanks.html:3
+#, python-format
+msgid ""
+"Thanks for volunteering as <strong>%(role)s</strong> at <strong>%(event)s</"
+"strong>. Events like this happen because people like you show up."
+msgstr ""
+"Merci d’avoir été bénévole comme <strong>%(role)s</strong> à <strong>"
+"%(event)s</strong>. Des événements comme celui-ci existent grâce à des "
+"personnes comme vous."
+
+#: .\base\templates\base\listmonk\shift_thanks.html:5
+msgid "Hours logged"
+msgstr "Heures consignées"
+
+#: .\base\templates\base\listmonk\shift_thanks.html:7
+#: .\events\templates\events\event_thank_you.html:40
+msgid "Impact points earned"
+msgstr "Points d’impact gagnés"
+
+#: .\base\templates\base\listmonk\shift_thanks.html:10
+#, python-format
+msgid ""
+"How did it go? Tell us what you enjoyed and what we could do better. It "
+"takes a minute and shapes the next event: <a href=\"%(link)s\">share your "
+"feedback</a>."
+msgstr ""
+"Comment ça s’est passé ? Dites-nous ce que vous avez aimé et ce que nous "
+"pourrions améliorer. Cela prend une minute et façonne le prochain "
+"événement : <a href=\"%(link)s\">donnez votre avis</a>."
+
+#: .\base\templates\base\listmonk\shift_thanks.html:11
+msgid "See your event summary"
+msgstr "Voir le résumé de votre événement"
+
 #: .\base\templates\base\listmonk\signup_confirmed.html:2
 msgid "You're on the team!"
 msgstr "Vous faites partie de l'équipe !"
@@ -1220,8 +1260,8 @@ msgstr "Vous faites partie de l'équipe !"
 #: .\base\templates\base\listmonk\signup_confirmed.html:3
 #, python-format
 msgid ""
-"Hi %(name)s, you're signed up as <strong>%(role)s</strong> at "
-"<strong>%(event)s</strong>."
+"Hi %(name)s, you're signed up as <strong>%(role)s</strong> at <strong>"
+"%(event)s</strong>."
 msgstr ""
 "Bonjour %(name)s, votre inscription comme <strong>%(role)s</strong> à "
 "<strong>%(event)s</strong> est confirmée."
@@ -1286,8 +1326,8 @@ msgstr "Trouver une opportunité"
 #, python-format
 msgid "Your kiosk ID for checking in at events is <strong>%(code)s</strong>."
 msgstr ""
-"Votre identifiant de borne pour vous enregistrer aux événements est "
-"<strong>%(code)s</strong>."
+"Votre identifiant de borne pour vous enregistrer aux événements est <strong>"
+"%(code)s</strong>."
 
 #: .\base\templates\base\login.html:12
 msgid "Welcome Back"
@@ -1407,8 +1447,8 @@ msgid ""
 "Type this code on an event kiosk to check in and out. Keep it to yourself: "
 "anyone with it can check in as you."
 msgstr ""
-"Saisissez ce code sur une borne d’événement pour enregistrer votre arrivée et"
-" votre départ. Gardez-le pour vous : toute personne qui le possède peut "
+"Saisissez ce code sur une borne d’événement pour enregistrer votre arrivée "
+"et votre départ. Gardez-le pour vous : toute personne qui le possède peut "
 "s’enregistrer à votre place."
 
 #: .\base\templates\base\partials\kiosk_code_card.html:9
@@ -1472,9 +1512,9 @@ msgid ""
 "Password reset links can only be used once and expire after a few days. "
 "Request a new one below."
 msgstr ""
-"Les liens de réinitialisation du mot de passe ne peuvent être utilisés qu’une"
-" seule fois et expirent après quelques jours. Demandez-en un nouveau ci-"
-"dessous."
+"Les liens de réinitialisation du mot de passe ne peuvent être utilisés "
+"qu’une seule fois et expirent après quelques jours. Demandez-en un nouveau "
+"ci-dessous."
 
 #: .\base\templates\base\password_reset_confirm.html:42
 msgid "Send a New Link"
@@ -1495,8 +1535,8 @@ msgstr ""
 
 #: .\base\templates\base\password_reset_done.html:16
 msgid ""
-"Didn't get it? Check your spam folder, or try again with the email you signed"
-" up with."
+"Didn't get it? Check your spam folder, or try again with the email you "
+"signed up with."
 msgstr ""
 "Vous ne l’avez pas reçu ? Vérifiez votre dossier de courrier indésirable ou "
 "réessayez avec l’adresse e-mail utilisée lors de votre inscription."
@@ -1516,8 +1556,8 @@ msgstr "Mot de passe oublié ?"
 
 #: .\base\templates\base\password_reset_form.html:14
 msgid ""
-"Enter the email address on your account and we'll send you a link to choose a"
-" new password."
+"Enter the email address on your account and we'll send you a link to choose "
+"a new password."
 msgstr ""
 "Saisissez l’adresse e-mail de votre compte et nous vous enverrons un lien "
 "pour choisir un nouveau mot de passe."
@@ -1686,7 +1726,7 @@ msgstr "Date"
 
 #: .\base\templates\base\profile.html:302
 #: .\console\templates\console\event_report.html:44
-#: .\events\templates\events\event_impact_card.html:32
+#: .\events\templates\events\event_impact_card.html:35
 msgid "Hours Logged"
 msgstr "Heures consignées"
 
@@ -1718,8 +1758,8 @@ msgid ""
 "grow you climb the levels below, and each one unlocks new perks."
 msgstr ""
 "Chaque quart, formation et recommandation vous rapporte des points d’impact. "
-"À mesure que vos points augmentent, vous gravissez les niveaux ci-dessous, et"
-" chacun débloque de nouveaux avantages."
+"À mesure que vos points augmentent, vous gravissez les niveaux ci-dessous, "
+"et chacun débloque de nouveaux avantages."
 
 #: .\base\templates\base\recognition.html:21
 msgid "Your level"
@@ -1905,8 +1945,8 @@ msgid ""
 "I agree to the <a href=\"#\">Terms of Service</a> and <a href=\"#\">Privacy "
 "Policy</a>."
 msgstr ""
-"J’accepte les <a href=\"#\">conditions d’utilisation</a> et la <a "
-"href=\"#\">politique de confidentialité</a>."
+"J’accepte les <a href=\"#\">conditions d’utilisation</a> et la <a href=\"#"
+"\">politique de confidentialité</a>."
 
 #: .\base\templates\base\signup.html:84
 msgid "Already have an account?"
@@ -1919,7 +1959,8 @@ msgstr "Cette organisation n’a pas encore publié ses conditions d’utilisati
 #: .\base\templates\base\terms_of_service.html:24
 #, python-format
 msgid "Questions? Contact us at <a href=\"mailto:%(email)s\">%(email)s</a>."
-msgstr "Des questions ? Écrivez-nous à <a href=\"mailto:%(email)s\">%(email)s</a>."
+msgstr ""
+"Des questions ? Écrivez-nous à <a href=\"mailto:%(email)s\">%(email)s</a>."
 
 #: .\base\templates\base\venue_detail.html:18
 #: .\console\templates\console\partials\venue_grid.html:9
@@ -2197,8 +2238,8 @@ msgstr "Inscription confirmée"
 msgid "A volunteer signs up for a role or accepts an invitation."
 msgstr "Un bénévole s’inscrit à un rôle ou accepte une invitation."
 
-#: .\base\triggers.py:56 .\base\triggers.py:72 .\base\triggers.py:75
-#: .\base\triggers.py:78
+#: .\base\triggers.py:56 .\base\triggers.py:64 .\base\triggers.py:76
+#: .\base\triggers.py:79 .\base\triggers.py:82
 msgid "The volunteer"
 msgstr "Le bénévole"
 
@@ -2225,235 +2266,265 @@ msgid "Reminder: %(role)s at %(event)s tomorrow"
 msgstr "Rappel : %(role)s à %(event)s demain"
 
 #: .\base\triggers.py:62
+msgid "Thank you after a shift"
+msgstr "Remerciement après un quart"
+
+#: .\base\triggers.py:63
+msgid ""
+"A volunteer clocks out of their last shift at an event, at the kiosk or from "
+"the check-in monitor."
+msgstr ""
+"Un bénévole termine son dernier quart d’un événement, au kiosque ou depuis "
+"le suivi des arrivées."
+
+#: .\base\triggers.py:64
+#, python-format
+msgid "Thank you for volunteering at %(event)s"
+msgstr "Merci d’avoir été bénévole à %(event)s"
+
+#: .\base\triggers.py:66
 msgid "Message to event volunteers"
 msgstr "Message aux bénévoles de l’événement"
 
-#: .\base\triggers.py:63
+#: .\base\triggers.py:67
 msgid "Staff use \"Message All Volunteers\" on an event."
 msgstr "Le personnel utilise « Message All Volunteers » sur un événement."
 
-#: .\base\triggers.py:63
+#: .\base\triggers.py:67
 msgid "The event's volunteers"
 msgstr "Les bénévoles de l’événement"
 
-#: .\base\triggers.py:64
+#: .\base\triggers.py:68
 #, python-format
 msgid "News about %(event)s"
 msgstr "Des nouvelles de %(event)s"
 
-#: .\base\triggers.py:65
+#: .\base\triggers.py:69
 msgid "Message to a volunteer"
 msgstr "Message à un bénévole"
 
-#: .\base\triggers.py:66
+#: .\base\triggers.py:70
 msgid "Staff send a message from a volunteer's profile."
 msgstr "Le personnel envoie un message depuis le profil d’un bénévole."
 
-#: .\base\triggers.py:66
+#: .\base\triggers.py:70
 msgid "That volunteer"
 msgstr "Ce bénévole"
 
-#: .\base\triggers.py:67
+#: .\base\triggers.py:71
 #, python-format
 msgid "A message from %(org)s"
 msgstr "Un message de %(org)s"
 
-#: .\base\triggers.py:68
+#: .\base\triggers.py:72
 msgid "Endorsement received"
 msgstr "Recommandation reçue"
 
-#: .\base\triggers.py:69
+#: .\base\triggers.py:73
 msgid "Someone endorses a volunteer for a skill."
 msgstr "Quelqu’un recommande un bénévole pour une compétence."
 
-#: .\base\triggers.py:69
+#: .\base\triggers.py:73
 msgid "The endorsed volunteer"
 msgstr "Le bénévole recommandé"
 
-#: .\base\triggers.py:70
+#: .\base\triggers.py:74
 #, python-format
 msgid "%(from_name)s endorsed you"
 msgstr "%(from_name)s vous recommande"
 
-#: .\base\triggers.py:71
+#: .\base\triggers.py:75
 msgid "Training module completed"
 msgstr "Module de formation terminé"
 
-#: .\base\triggers.py:72
+#: .\base\triggers.py:76
 msgid "A volunteer finishes a training module."
 msgstr "Un bénévole termine un module de formation."
 
-#: .\base\triggers.py:73
+#: .\base\triggers.py:77
 #, python-format
 msgid "You completed %(module)s"
 msgstr "Vous avez terminé %(module)s"
 
-#: .\base\triggers.py:74
+#: .\base\triggers.py:78
 msgid "Certificate approved"
 msgstr "Certificat approuvé"
 
-#: .\base\triggers.py:75
+#: .\base\triggers.py:79
 msgid "Staff verify an uploaded certificate."
 msgstr "Le personnel vérifie un certificat téléversé."
 
-#: .\base\triggers.py:76
+#: .\base\triggers.py:80
 #, python-format
 msgid "Your %(certificate)s certificate was verified"
 msgstr "Votre certificat %(certificate)s a été vérifié"
 
-#: .\base\triggers.py:77
+#: .\base\triggers.py:81
 msgid "Certificate rejected"
 msgstr "Certificat rejeté"
 
-#: .\base\triggers.py:78
+#: .\base\triggers.py:82
 msgid "Staff send a certificate back for another upload."
 msgstr "Le personnel renvoie un certificat pour un nouveau téléversement."
 
-#: .\base\triggers.py:79
+#: .\base\triggers.py:83
 #, python-format
 msgid "Your %(certificate)s documents need another look"
 msgstr "Vos documents pour %(certificate)s doivent être revus"
 
-#: .\base\triggers.py:80
+#: .\base\triggers.py:84
 msgid "Test and system emails"
 msgstr "E-mails de test et du système"
 
-#: .\base\triggers.py:81
+#: .\base\triggers.py:85
 msgid "\"Send test email\" and any other message without an event of its own."
 msgstr "« Send test email » et tout autre message sans événement associé."
 
-#: .\base\triggers.py:81
+#: .\base\triggers.py:85
 msgid "Varies"
 msgstr "Variable"
 
-#: .\base\triggers.py:89
+#: .\base\triggers.py:93
 msgid "Recipient's first name (or username)"
 msgstr "Prénom du destinataire (ou nom d’utilisateur)"
 
-#: .\base\triggers.py:91
+#: .\base\triggers.py:95
 msgid ""
-"Main link of the email: the event page, invitation, profile or certificate"
+"Main link of the email: the event page, post-event summary, invitation, "
+"profile or certificate"
 msgstr ""
-"Lien principal de l’e-mail : la page de l’événement, l’invitation, le profil "
-"ou le certificat"
+"Lien principal de l’e-mail : la page de l’événement, le résumé après "
+"l’événement, l’invitation, le profil ou le certificat"
 
-#: .\base\triggers.py:92
+#: .\base\triggers.py:96
 msgid "The volunteer's 6-digit kiosk ID"
 msgstr "L’identifiant de borne à 6 chiffres du bénévole"
 
-#: .\base\triggers.py:93
+#: .\base\triggers.py:97
 msgid "What the profile still lacks, e.g. \"a profile photo, your skills\""
 msgstr ""
 "Ce qui manque encore au profil, p. ex. « une photo de profil, vos "
 "compétences »"
 
-#: .\base\triggers.py:94
-msgid "Impact points for completing the profile; 0 when there is no award"
+#: .\base\triggers.py:98
+msgid ""
+"Impact points earned: for completing the profile, or for the shift; 0 when "
+"there is no award"
 msgstr ""
-"Points d’impact pour un profil complété; 0 s’il n’y a pas de récompense"
+"Points d’impact gagnés : pour un profil complété ou pour le quart; 0 s’il "
+"n’y a pas de récompense"
 
-#: .\base\triggers.py:95
+#: .\base\triggers.py:99
 msgid "Subject line"
 msgstr "Objet"
 
-#: .\base\triggers.py:96
+#: .\base\triggers.py:100
 msgid "Event title"
 msgstr "Titre de l’événement"
 
-#: .\base\triggers.py:97
+#: .\base\triggers.py:101
 msgid "Role name"
 msgstr "Nom du rôle"
 
-#: .\base\triggers.py:98
+#: .\base\triggers.py:102
 msgid "Date and time of the shift"
 msgstr "Date et heure du quart"
 
-#: .\base\triggers.py:99
+#: .\base\triggers.py:103
 msgid "Event location, with the check-in point if there is one"
 msgstr "Lieu de l’événement, avec le point d’enregistrement s’il y en a un"
 
-#: .\base\triggers.py:100
+#: .\base\triggers.py:104
 msgid "Text written by staff, as plain text"
 msgstr "Texte rédigé par le personnel, en texte brut"
 
-#: .\base\triggers.py:101
+#: .\base\triggers.py:105
 msgid ""
-"The same text as HTML. It may be empty, so keep the \"with ... Safe ... end\""
-" wrapper"
+"The same text as HTML. It may be empty, so keep the \"with ... Safe ... end"
+"\" wrapper"
 msgstr ""
-"Le même texte en HTML. Il peut être vide ; conservez donc l’enveloppe « with "
-"... Safe ... end »"
+"Le même texte en HTML. Il peut être vide ; conservez donc l’enveloppe « "
+"with ... Safe ... end »"
 
-#: .\base\triggers.py:102
+#: .\base\triggers.py:106
 msgid "Name of the person who gave the endorsement"
 msgstr "Nom de la personne qui a donné la recommandation"
 
-#: .\base\triggers.py:103
+#: .\base\triggers.py:107
 msgid "Endorsed skills, separated by commas"
 msgstr "Compétences recommandées, séparées par des virgules"
 
-#: .\base\triggers.py:104
+#: .\base\triggers.py:108
+msgid "Hours worked in the shift, e.g. \"3.5\""
+msgstr "Heures travaillées pendant le quart, p. ex. « 3,5 »"
+
+#: .\base\triggers.py:109
+msgid "Link to the feedback form on the volunteer's post-event summary"
+msgstr ""
+"Lien vers le formulaire d’avis dans le résumé après l’événement du bénévole"
+
+#: .\base\triggers.py:110
 msgid "Training module title"
 msgstr "Titre du module de formation"
 
-#: .\base\triggers.py:105
+#: .\base\triggers.py:111
 msgid "Certificate name"
 msgstr "Nom du certificat"
 
-#: .\base\triggers.py:106
+#: .\base\triggers.py:112
 msgid "Reviewer's notes; may be empty"
 msgstr "Notes du réviseur ; peuvent être vides"
 
-#: .\base\triggers.py:107
+#: .\base\triggers.py:113
 msgid "The message as plain text"
 msgstr "Le message en texte brut"
 
-#: .\base\triggers.py:108
+#: .\base\triggers.py:114
 msgid ""
 "The message as HTML. It may be empty, so keep the \"with ... Safe ... end\" "
 "wrapper"
 msgstr ""
-"Le message en HTML. Il peut être vide ; conservez donc l’enveloppe « with ..."
-" Safe ... end »"
+"Le message en HTML. Il peut être vide ; conservez donc l’enveloppe « "
+"with ... Safe ... end »"
 
-#: .\base\triggers.py:114
+#: .\base\triggers.py:120
 msgid "Logo, uploaded to listmonk media; empty when there is no logo"
 msgstr ""
 "Logo, téléversé dans les médias de listmonk ; vide s’il n’y a pas de logo"
 
-#: .\base\triggers.py:115
+#: .\base\triggers.py:121
 msgid "Primary brand colour (headings)"
 msgstr "Couleur principale de la marque (titres)"
 
-#: .\base\triggers.py:116
+#: .\base\triggers.py:122
 msgid "Text colour on primary-coloured backgrounds"
 msgstr "Couleur du texte sur les arrière-plans de couleur principale"
 
-#: .\base\triggers.py:117
+#: .\base\triggers.py:123
 msgid "Accent colour (buttons, highlights)"
 msgstr "Couleur d’accent (boutons, mises en évidence)"
 
-#: .\base\triggers.py:118
+#: .\base\triggers.py:124
 msgid "Text colour on accent-coloured buttons"
 msgstr "Couleur du texte sur les boutons de couleur d’accent"
 
-#: .\base\triggers.py:119
+#: .\base\triggers.py:125
 msgid "Page background around the email card"
 msgstr "Arrière-plan de la page autour de la carte de l’e-mail"
 
-#: .\base\triggers.py:120
+#: .\base\triggers.py:126
 msgid "Background of the email card"
 msgstr "Arrière-plan de la carte de l’e-mail"
 
-#: .\base\triggers.py:121
+#: .\base\triggers.py:127
 msgid "Body text colour"
 msgstr "Couleur du texte principal"
 
-#: .\base\triggers.py:122
+#: .\base\triggers.py:128
 msgid "Secondary text colour (footers, notes)"
 msgstr "Couleur du texte secondaire (pieds de page, notes)"
 
-#: .\base\triggers.py:123
+#: .\base\triggers.py:129
 msgid "Divider and border colour"
 msgstr "Couleur des séparateurs et des bordures"
 
@@ -2461,7 +2532,7 @@ msgstr "Couleur des séparateurs et des bordures"
 msgid "Successfully logged in."
 msgstr "Connexion réussie."
 
-#: .\base\views.py:126 .\jobs\views.py:108
+#: .\base\views.py:126 .\jobs\views.py:109
 msgid "Invalid email or password."
 msgstr "Adresse e-mail ou mot de passe invalide."
 
@@ -2469,7 +2540,7 @@ msgstr "Adresse e-mail ou mot de passe invalide."
 msgid "Email and password are required."
 msgstr "L’adresse e-mail et le mot de passe sont obligatoires."
 
-#: .\base\views.py:151 .\console\forms.py:417
+#: .\base\views.py:151 .\console\forms.py:419
 msgid "An account with that email already exists."
 msgstr "Un compte avec cette adresse e-mail existe déjà."
 
@@ -2482,7 +2553,7 @@ msgid "Welcome to Town Hall! Start with this guide to learn your way around."
 msgstr ""
 "Bienvenue dans Town Hall ! Commencez par ce guide pour vous y retrouver."
 
-#: .\base\views.py:283 .\console\forms.py:383
+#: .\base\views.py:283 .\console\forms.py:385
 msgid "That email address is already in use."
 msgstr "Cette adresse e-mail est déjà utilisée."
 
@@ -2500,8 +2571,8 @@ msgid ""
 "There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try "
 "again."
 msgstr ""
-"Il n’y a pas encore de Gravatar pour %(email)s. Créez-en un sur gravatar.com,"
-" puis réessayez."
+"Il n’y a pas encore de Gravatar pour %(email)s. Créez-en un sur gravatar."
+"com, puis réessayez."
 
 #: .\base\views.py:328
 msgid "Your profile picture now comes from Gravatar."
@@ -2695,310 +2766,310 @@ msgstr "Téléphone"
 msgid "Capacity"
 msgstr "Capacité"
 
-#: .\console\forms.py:184
+#: .\console\forms.py:186
 msgid "Main button link"
 msgstr "Lien du bouton principal"
 
-#: .\console\forms.py:184
+#: .\console\forms.py:186
 msgid "Second link"
 msgstr "Deuxième lien"
 
-#: .\console\forms.py:185
+#: .\console\forms.py:187
 msgid "Main button text"
 msgstr "Texte du bouton principal"
 
-#: .\console\forms.py:186
+#: .\console\forms.py:188
 msgid "Second link text"
 msgstr "Texte du deuxième lien"
 
-#: .\console\forms.py:200
+#: .\console\forms.py:202
 #, python-format
 msgid "%(day)s opens"
 msgstr "Ouverture : %(day)s"
 
-#: .\console\forms.py:203
+#: .\console\forms.py:205
 #, python-format
 msgid "%(day)s closes"
 msgstr "Fermeture : %(day)s"
 
-#: .\console\forms.py:206
+#: .\console\forms.py:208
 #, python-format
 msgid "%(day)s: open to staff outside hours"
 msgstr "%(day)s : ouvert au personnel en dehors des heures"
 
-#: .\console\forms.py:219
+#: .\console\forms.py:221
 msgid "Set both times, or neither for closed."
 msgstr "Indiquez les deux heures, ou aucune pour fermé."
 
-#: .\console\forms.py:221
+#: .\console\forms.py:223
 msgid "Closing time must be after opening time."
 msgstr "L’heure de fermeture doit être postérieure à l’heure d’ouverture."
 
-#: .\console\forms.py:238
+#: .\console\forms.py:240
 #: .\console\templates\console\partials\task_fields.html:11
 msgid "1 day"
 msgstr "1 jour"
 
-#: .\console\forms.py:238
+#: .\console\forms.py:240
 msgid "3 days"
 msgstr "3 jours"
 
-#: .\console\forms.py:238
+#: .\console\forms.py:240
 #: .\console\templates\console\partials\task_fields.html:12
 msgid "1 week"
 msgstr "1 semaine"
 
-#: .\console\forms.py:238
+#: .\console\forms.py:240
 msgid "2 weeks"
 msgstr "2 semaines"
 
-#: .\console\forms.py:238
+#: .\console\forms.py:240
 msgid "30 days"
 msgstr "30 jours"
 
-#: .\console\forms.py:238
+#: .\console\forms.py:240
 msgid "1 year"
 msgstr "1 an"
 
-#: .\console\forms.py:240
+#: .\console\forms.py:242
 msgid "Show for"
 msgstr "Afficher pendant"
 
-#: .\console\forms.py:247
+#: .\console\forms.py:249
 msgid "e.g. Side entrance closed for repairs this week"
 msgstr "p. ex. Entrée latérale fermée pour réparations cette semaine"
 
-#: .\console\forms.py:248
+#: .\console\forms.py:250
 msgid "Note"
 msgstr "Note"
 
-#: .\console\forms.py:266
+#: .\console\forms.py:268
 msgid "e.g. Piano"
 msgstr "p. ex. Piano"
 
-#: .\console\forms.py:286
+#: .\console\forms.py:288
 msgid "Certificate valid for (days)"
 msgstr "Certificat valide pendant (jours)"
 
-#: .\console\forms.py:287
+#: .\console\forms.py:289
 msgid "Complexity (0-4)"
 msgstr "Complexité (0-4)"
 
-#: .\console\forms.py:293
+#: .\console\forms.py:295
 msgid "Complexity must be between 0 and 4."
 msgstr "La complexité doit être comprise entre 0 et 4."
 
-#: .\console\forms.py:304
+#: .\console\forms.py:306
 msgid "Video length (minutes)"
 msgstr "Durée de la vidéo (minutes)"
 
-#: .\console\forms.py:305
+#: .\console\forms.py:307
 msgid ""
 "Video length in minutes. Leave blank to detect it automatically from YouTube."
 msgstr ""
 "Durée de la vidéo en minutes. Laissez vide pour la détecter automatiquement "
 "depuis YouTube."
 
-#: .\console\forms.py:308
+#: .\console\forms.py:310
 msgid "Minutes"
 msgstr "Minutes"
 
-#: .\console\forms.py:320
+#: .\console\forms.py:322
 msgid "Passing score (%)"
 msgstr "Note de passage (%)"
 
-#: .\console\forms.py:350
+#: .\console\forms.py:352
 msgid "Choose True or False as the correct answer."
 msgstr "Choisissez Vrai ou Faux comme bonne réponse."
 
-#: .\console\forms.py:354
+#: .\console\forms.py:356
 msgid "Multiple choice questions need at least two options."
 msgstr "Les questions à choix multiples nécessitent au moins deux options."
 
-#: .\console\forms.py:357
+#: .\console\forms.py:359
 msgid "The correct answer must be one of the filled-in options."
 msgstr "La bonne réponse doit être l’une des options renseignées."
 
-#: .\console\forms.py:366
+#: .\console\forms.py:368
 msgid "Certificate title"
 msgstr "Titre du certificat"
 
-#: .\console\forms.py:367
+#: .\console\forms.py:369
 msgid "Issuing authority"
 msgstr "Autorité émettrice"
 
-#: .\console\forms.py:368
+#: .\console\forms.py:370
 msgid "Public description"
 msgstr "Description publique"
 
-#: .\console\forms.py:369
+#: .\console\forms.py:371
 msgid "Valid for (days)"
 msgstr "Valide pendant (jours)"
 
-#: .\console\forms.py:371
+#: .\console\forms.py:373
 msgid "Leave blank if the certificate never expires."
 msgstr "Laissez vide si le certificat n’expire jamais."
 
-#: .\console\forms.py:378 .\console\templates\console\volunteer_edit.html:47
+#: .\console\forms.py:380 .\console\templates\console\volunteer_edit.html:47
 msgid "Account active"
 msgstr "Compte actif"
 
-#: .\console\forms.py:409
+#: .\console\forms.py:411
 msgid "First name"
 msgstr "Prénom"
 
-#: .\console\forms.py:410
+#: .\console\forms.py:412
 msgid "Last name"
 msgstr "Nom"
 
-#: .\console\forms.py:412
+#: .\console\forms.py:414
 msgid "Temporary password"
 msgstr "Mot de passe temporaire"
 
-#: .\console\forms.py:468
+#: .\console\forms.py:470
 msgid "Enter a hex color like #00434d."
 msgstr "Saisissez une couleur hexadécimale comme #00434d."
 
-#: .\console\forms.py:477
+#: .\console\forms.py:479
 msgid "Level name"
 msgstr "Nom du niveau"
 
-#: .\console\forms.py:478
+#: .\console\forms.py:480
 msgid "Minimum points"
 msgstr "Points minimum"
 
-#: .\console\forms.py:479
+#: .\console\forms.py:481
 msgid "Benefits"
 msgstr "Avantages"
 
-#: .\console\forms.py:482
+#: .\console\forms.py:484
 msgid "e.g. Community Champion"
 msgstr "p. ex. Champion communautaire"
 
-#: .\console\forms.py:484
+#: .\console\forms.py:486
 msgid "Comma-separated, e.g. Priority sign-up, Free T-shirt"
 msgstr ""
 "Séparés par des virgules, p. ex. Inscription prioritaire, T-shirt gratuit"
 
-#: .\console\forms.py:495
+#: .\console\forms.py:497
 msgid "e.g. First Aid"
 msgstr "p. ex. Premiers soins"
 
-#: .\console\forms.py:506
+#: .\console\forms.py:508
 msgid "There is already a skill with this name."
 msgstr "Une compétence portant ce nom existe déjà."
 
-#: .\console\forms.py:521
+#: .\console\forms.py:523
 msgid "Points can't be negative."
 msgstr "Les points ne peuvent pas être négatifs."
 
-#: .\console\forms.py:523
+#: .\console\forms.py:525
 msgid "Two levels can't start at the same number of points."
 msgstr "Deux niveaux ne peuvent pas commencer au même nombre de points."
 
-#: .\console\forms.py:532
+#: .\console\forms.py:534
 msgid "Points per hour"
 msgstr "Points par heure"
 
-#: .\console\forms.py:533
+#: .\console\forms.py:535
 msgid "Top role weight"
 msgstr "Pondération du rôle principal"
 
-#: .\console\forms.py:534
+#: .\console\forms.py:536
 msgid "Reach bonus cap (%)"
 msgstr "Plafond du bonus de portée (%)"
 
-#: .\console\forms.py:535
+#: .\console\forms.py:537
 msgid "Walk-in cover (%)"
 msgstr "Remplacement sans préavis (%)"
 
-#: .\console\forms.py:536
+#: .\console\forms.py:538
 msgid "Last-minute sign-up (%)"
 msgstr "Inscription de dernière minute (%)"
 
-#: .\console\forms.py:537
+#: .\console\forms.py:539
 msgid "Last-minute window (hours)"
 msgstr "Fenêtre de dernière minute (heures)"
 
-#: .\console\forms.py:538
+#: .\console\forms.py:540
 msgid "Early or late shift (%)"
 msgstr "Quart tôt ou tard (%)"
 
-#: .\console\forms.py:539
+#: .\console\forms.py:541
 msgid "Early: starts before (hour)"
 msgstr "Tôt : commence avant (heure)"
 
-#: .\console\forms.py:540
+#: .\console\forms.py:542
 msgid "Late: ends after (hour)"
 msgstr "Tard : se termine après (heure)"
 
-#: .\console\forms.py:541
+#: .\console\forms.py:543
 msgid "Points per training minute"
 msgstr "Points par minute de formation"
 
-#: .\console\forms.py:542
+#: .\console\forms.py:544
 msgid "Minimum per module"
 msgstr "Minimum par module"
 
-#: .\console\forms.py:543
+#: .\console\forms.py:545
 msgid "Maximum per module"
 msgstr "Maximum par module"
 
-#: .\console\forms.py:544
+#: .\console\forms.py:546
 msgid "Points per endorsement"
 msgstr "Points par recommandation"
 
-#: .\console\forms.py:545
+#: .\console\forms.py:547
 msgid "Endorsement awards per 30 days"
 msgstr "Recommandations accordées par 30 jours"
 
-#: .\console\forms.py:546
+#: .\console\forms.py:548
 msgid "Points for a completed profile"
 msgstr "Points pour un profil complété"
 
-#: .\console\forms.py:549
+#: .\console\forms.py:551
 msgid ""
-"Roles with the longest training get this multiplier; untrained roles get 1.0."
-" A role can set its own weight instead."
+"Roles with the longest training get this multiplier; untrained roles get "
+"1.0. A role can set its own weight instead."
 msgstr ""
-"Les rôles ayant la formation la plus longue reçoivent ce multiplicateur ; les"
-" rôles sans formation reçoivent 1,0. Un rôle peut définir sa propre "
+"Les rôles ayant la formation la plus longue reçoivent ce multiplicateur ; "
+"les rôles sans formation reçoivent 1,0. Un rôle peut définir sa propre "
 "pondération."
 
-#: .\console\forms.py:550
+#: .\console\forms.py:552
 msgid ""
 "Serving more people per volunteer adds 10% per doubling, up to this cap."
 msgstr ""
 "Servir plus de personnes par bénévole ajoute 10 % à chaque doublement, "
 "jusqu’à ce plafond."
 
-#: .\console\forms.py:551
+#: .\console\forms.py:553
 msgid "Checking in at the kiosk to cover a slot they had not signed up for."
 msgstr ""
 "S’enregistrer à la borne pour couvrir un créneau auquel on ne s’était pas "
 "inscrit."
 
-#: .\console\forms.py:552
+#: .\console\forms.py:554
 msgid "Signing up for an understaffed slot within the window before it starts."
 msgstr ""
 "S’inscrire à un créneau en sous-effectif dans la fenêtre précédant son début."
 
-#: .\console\forms.py:553
+#: .\console\forms.py:555
 msgid "0-23, local time."
 msgstr "0-23, heure locale."
 
-#: .\console\forms.py:554
+#: .\console\forms.py:556
 msgid "0-23, local time. Shifts that run past midnight also count."
 msgstr "0-23, heure locale. Les quarts qui dépassent minuit comptent aussi."
 
-#: .\console\forms.py:555
+#: .\console\forms.py:557
 msgid ""
 "Given to someone endorsed by a teammate from the same event, once per event."
 msgstr ""
 "Accordé à une personne recommandée par un coéquipier du même événement, une "
 "fois par événement."
 
-#: .\console\forms.py:556
+#: .\console\forms.py:558
 msgid ""
 "Once per person, the first time their profile has a photo, bio, skills and "
 "location. 0 turns it off."
@@ -3006,91 +3077,91 @@ msgstr ""
 "Une fois par personne, la première fois que son profil a une photo, une "
 "biographie, des compétences et un lieu. 0 désactive cette récompense."
 
-#: .\console\forms.py:564
+#: .\console\forms.py:566
 msgid "Use an hour from 0 to 23."
 msgstr "Utilisez une heure de 0 à 23."
 
-#: .\console\forms.py:566
+#: .\console\forms.py:568
 msgid "Use 1.0 or more."
 msgstr "Utilisez 1,0 ou plus."
 
-#: .\console\forms.py:584
+#: .\console\forms.py:586
 msgid "LibreTranslate URL"
 msgstr "URL de LibreTranslate"
 
-#: .\console\forms.py:585
+#: .\console\forms.py:587
 msgid "LibreTranslate API key"
 msgstr "Clé API LibreTranslate"
 
-#: .\console\forms.py:586
+#: .\console\forms.py:588
 msgid "Google Cloud Translation key"
 msgstr "Clé Google Cloud Translation"
 
-#: .\console\forms.py:587
+#: .\console\forms.py:589
 msgid "DeepL API key"
 msgstr "Clé API DeepL"
 
-#: .\console\forms.py:588
+#: .\console\forms.py:590
 msgid "MyMemory contact email"
 msgstr "Adresse e-mail de contact MyMemory"
 
-#: .\console\forms.py:589
+#: .\console\forms.py:591
 msgid "listmonk URL"
 msgstr "URL de listmonk"
 
-#: .\console\forms.py:590
+#: .\console\forms.py:592
 msgid "API user"
 msgstr "Utilisateur API"
 
-#: .\console\forms.py:591
+#: .\console\forms.py:593
 msgid "API token"
 msgstr "Jeton API"
 
-#: .\console\forms.py:592
+#: .\console\forms.py:594
 msgid "From address"
 msgstr "Adresse d’expédition"
 
-#: .\console\forms.py:604
+#: .\console\forms.py:606
 #, python-format
 msgid "Saved (ends in %(tail)s). Leave blank to keep."
 msgstr "Enregistré (se termine par %(tail)s). Laissez vide pour conserver."
 
-#: .\console\forms.py:604 .\console\forms.py:700
+#: .\console\forms.py:606 .\console\forms.py:702
 #: .\console\views\settings.py:358
 msgid "Not set"
 msgstr "Non défini"
 
-#: .\console\forms.py:634
+#: .\console\forms.py:636
 msgid "Switch on at least one language."
 msgstr "Activez au moins une langue."
 
-#: .\console\forms.py:636
+#: .\console\forms.py:638
 msgid "Default language"
 msgstr "Langue par défaut"
 
-#: .\console\forms.py:638
+#: .\console\forms.py:640
 msgid "Time zone"
 msgstr "Fuseau horaire"
 
-#: .\console\forms.py:638
+#: .\console\forms.py:640
 msgid "Event times are entered and shown in this time zone."
 msgstr ""
 "Les heures des événements sont saisies et affichées dans ce fuseau horaire."
 
-#: .\console\forms.py:653
+#: .\console\forms.py:655
 msgid "The default language has to be switched on."
 msgstr "La langue par défaut doit être activée."
 
-#: .\console\forms.py:683
+#: .\console\forms.py:685
 #, python-format
 msgid "Send \"%(label)s\" emails"
 msgstr "Envoyer les e-mails « %(label)s »"
 
-#: .\console\forms.py:699
+#: .\console\forms.py:701
 msgid "listmonk template ID"
 msgstr "ID du modèle listmonk"
 
-#: .\console\forms.py:702
+#: .\console\forms.py:704
 #, python-format
 msgid "#%(id)s (missing in listmonk)"
 msgstr "#%(id)s (introuvable dans listmonk)"
@@ -3121,8 +3192,8 @@ msgid ""
 "lists and AI apps. Values saved here take priority over server environment "
 "variables."
 msgstr ""
-"Connectez les services dont Town Hall dépend : traduction automatique, "
-"e-mail, listes de tâches et applications d’IA. Les valeurs enregistrées ici "
+"Connectez les services dont Town Hall dépend : traduction automatique, e-"
+"mail, listes de tâches et applications d’IA. Les valeurs enregistrées ici "
 "ont priorité sur les variables d’environnement du serveur."
 
 #: .\console\templates\console\backend_settings.html:32
@@ -3152,8 +3223,8 @@ msgstr "Recommandé"
 msgid ""
 "LIBRETRANSLATE_URL is set on the server and is used while this is empty."
 msgstr ""
-"LIBRETRANSLATE_URL est défini sur le serveur et est utilisé tant que ce champ"
-" est vide."
+"LIBRETRANSLATE_URL est défini sur le serveur et est utilisé tant que ce "
+"champ est vide."
 
 #: .\console\templates\console\backend_settings.html:42
 msgid "How to run LibreTranslate"
@@ -3202,12 +3273,12 @@ msgstr "Serveur de courriel (listmonk)"
 #: .\console\templates\console\backend_settings.html:77
 msgid ""
 "Point Town Hall at your listmonk server. Which emails are sent, and with "
-"which templates, is set in Communication &gt; Email. Without a server, emails"
-" are printed in the server console instead (useful for testing)."
+"which templates, is set in Communication &gt; Email. Without a server, "
+"emails are printed in the server console instead (useful for testing)."
 msgstr ""
 "Indiquez à Town Hall votre serveur listmonk. Les e-mails envoyés, et leurs "
-"modèles, se définissent dans Communication &gt; E-mail. Sans serveur, les "
-"e-mails sont affichés dans la console du serveur (utile pour les tests)."
+"modèles, se définissent dans Communication &gt; E-mail. Sans serveur, les e-"
+"mails sont affichés dans la console du serveur (utile pour les tests)."
 
 #: .\console\templates\console\backend_settings.html:84
 msgid "LISTMONK_URL is set on the server and is used while this is empty."
@@ -3257,13 +3328,13 @@ msgstr "Tâches (Bell Tower)"
 
 #: .\console\templates\console\backend_settings.html:101
 msgid ""
-"Bell Tower keeps your organization's shared task lists. Once connected, every"
-" event gets a Tasks tab with a planning list and lists for the day, which "
-"people can work through on their phones, pager devices or AI agents."
+"Bell Tower keeps your organization's shared task lists. Once connected, "
+"every event gets a Tasks tab with a planning list and lists for the day, "
+"which people can work through on their phones, pager devices or AI agents."
 msgstr ""
-"Bell Tower conserve les listes de tâches partagées de votre organisation. Une"
-" fois connecté, chaque événement obtient un onglet Tâches avec une liste de "
-"planification et des listes pour la journée, que les personnes peuvent "
+"Bell Tower conserve les listes de tâches partagées de votre organisation. "
+"Une fois connecté, chaque événement obtient un onglet Tâches avec une liste "
+"de planification et des listes pour la journée, que les personnes peuvent "
 "parcourir sur leur téléphone, leurs téléavertisseurs ou des agents d’IA."
 
 #: .\console\templates\console\backend_settings.html:107
@@ -3282,21 +3353,21 @@ msgid ""
 "created for them. They open their tasks from Town Hall without a Bell Tower "
 "password."
 msgstr ""
-"Chaque personne est associée au compte Bell Tower portant son adresse e-mail,"
-" ou un compte est créé pour elle. Elle ouvre ses tâches depuis Town Hall sans"
-" mot de passe Bell Tower."
+"Chaque personne est associée au compte Bell Tower portant son adresse e-"
+"mail, ou un compte est créé pour elle. Elle ouvre ses tâches depuis Town "
+"Hall sans mot de passe Bell Tower."
 
 #: .\console\templates\console\backend_settings.html:119
 #, python-format
 msgid ""
-"%(user)s isn't Bell Tower staff, so Town Hall can't link people's accounts or"
-" add volunteers to role lists. Make it staff in Bell Tower's admin, then link"
-" accounts."
+"%(user)s isn't Bell Tower staff, so Town Hall can't link people's accounts "
+"or add volunteers to role lists. Make it staff in Bell Tower's admin, then "
+"link accounts."
 msgstr ""
 "%(user)s n’est pas membre du personnel de Bell Tower, donc Town Hall ne peut "
 "pas lier les comptes des personnes ni ajouter des bénévoles aux listes de "
-"rôles. Donnez-lui le statut de personnel dans l’administration de Bell Tower,"
-" puis liez les comptes."
+"rôles. Donnez-lui le statut de personnel dans l’administration de Bell "
+"Tower, puis liez les comptes."
 
 #: .\console\templates\console\backend_settings.html:124
 #: .\console\templates\console\event_tasks.html:33
@@ -3380,8 +3451,8 @@ msgid ""
 "Choose Connect. Sign in to Town Hall with a staff account if asked, and "
 "approve."
 msgstr ""
-"Choisissez Connect. Connectez-vous à Town Hall avec un compte du personnel si"
-" on vous le demande, puis approuvez."
+"Choisissez Connect. Connectez-vous à Town Hall avec un compte du personnel "
+"si on vous le demande, puis approuvez."
 
 #: .\console\templates\console\backend_settings.html:156
 msgid ""
@@ -3467,17 +3538,17 @@ msgstr "Ouvrir listmonk"
 #: .\console\templates\console\backend_settings.html:215
 msgid "Console only: emails are printed in the server log, not delivered."
 msgstr ""
-"Console seulement : les e-mails sont affichés dans le journal du serveur, pas"
-" livrés."
+"Console seulement : les e-mails sont affichés dans le journal du serveur, "
+"pas livrés."
 
 #: .\console\templates\console\backend_settings.html:219
 msgid ""
-"Keys and passwords are stored in the database and are never shown again after"
-" saving. Only staff can open this page."
+"Keys and passwords are stored in the database and are never shown again "
+"after saving. Only staff can open this page."
 msgstr ""
-"Les clés et les mots de passe sont stockés dans la base de données et ne sont"
-" plus jamais affichés après l’enregistrement. Seul le personnel peut ouvrir "
-"cette page."
+"Les clés et les mots de passe sont stockés dans la base de données et ne "
+"sont plus jamais affichés après l’enregistrement. Seul le personnel peut "
+"ouvrir cette page."
 
 #: .\console\templates\console\backend_settings.html:233
 #: .\console\templates\console\event_monitor.html:120
@@ -3507,16 +3578,16 @@ msgstr "Seulement l’adresse du serveur ; tout ce qui suit est ignoré."
 #: .\console\templates\console\backend_settings.html:243
 msgid "You'll go to Bell Tower and sign in, if you aren't already."
 msgstr ""
-"Vous serez dirigé vers Bell Tower et vous vous y connecterez, si ce n’est pas"
-" déjà fait."
+"Vous serez dirigé vers Bell Tower et vous vous y connecterez, si ce n’est "
+"pas déjà fait."
 
 #: .\console\templates\console\backend_settings.html:244
 msgid ""
 "Approve access for Town Hall. Town Hall will act as the Bell Tower account "
 "you approve with."
 msgstr ""
-"Approuvez l’accès pour Town Hall. Town Hall agira au nom du compte Bell Tower"
-" avec lequel vous approuvez."
+"Approuvez l’accès pour Town Hall. Town Hall agira au nom du compte Bell "
+"Tower avec lequel vous approuvez."
 
 #: .\console\templates\console\backend_settings.html:245
 msgid "You'll come straight back here, connected."
@@ -3549,8 +3620,8 @@ msgid ""
 "Describe a standard credential so volunteers know exactly what proof to "
 "upload."
 msgstr ""
-"Décrivez une qualification standard pour que les bénévoles sachent exactement"
-" quelle preuve téléverser."
+"Décrivez une qualification standard pour que les bénévoles sachent "
+"exactement quelle preuve téléverser."
 
 #: .\console\templates\console\certificate_edit.html:27
 msgid "Publish"
@@ -3679,8 +3750,8 @@ msgstr "Connecter listmonk"
 #, python-format
 msgid "listmonk can't be reached, so templates show as raw IDs: %(error)s"
 msgstr ""
-"listmonk est inaccessible, donc les modèles s’affichent sous forme d’ID bruts"
-" : %(error)s"
+"listmonk est inaccessible, donc les modèles s’affichent sous forme d’ID "
+"bruts : %(error)s"
 
 #: .\console\templates\console\communication_email.html:41
 msgid "Check connection"
@@ -3735,8 +3806,8 @@ msgid ""
 "language."
 msgstr ""
 "Désactivé : la campagne attend à l’état de brouillon dans listmonk, où vous "
-"pouvez la modifier visuellement avant l’envoi. Elle utilise le modèle dans la"
-" langue de l’administrateur qui publie."
+"pouvez la modifier visuellement avant l’envoi. Elle utilise le modèle dans "
+"la langue de l’administrateur qui publie."
 
 #: .\console\templates\console\communication_email.html:102
 msgid "Town Hall users"
@@ -3781,8 +3852,8 @@ msgstr ""
 
 #: .\console\templates\console\communication_email.html:117
 msgid ""
-"Available in the template, next to the brand variables at its top ($org_name,"
-" $color_primary, …):"
+"Available in the template, next to the brand variables at its top "
+"($org_name, $color_primary, …):"
 msgstr ""
 "Disponibles dans le modèle, à côté des variables de marque en haut "
 "($org_name, $color_primary, …) :"
@@ -3834,11 +3905,11 @@ msgstr "Comment ça marche"
 
 #: .\console\templates\console\communication_email.html:164
 msgid ""
-"Each email goes out in the language the person last used the site in, falling"
-" back to the default language."
+"Each email goes out in the language the person last used the site in, "
+"falling back to the default language."
 msgstr ""
-"Chaque e-mail est envoyé dans la langue que la personne a utilisée en dernier"
-" sur le site, à défaut dans la langue par défaut."
+"Chaque e-mail est envoyé dans la langue que la personne a utilisée en "
+"dernier sur le site, à défaut dans la langue par défaut."
 
 #: .\console\templates\console\communication_email.html:165
 msgid ""
@@ -3861,8 +3932,8 @@ msgid ""
 "attributes such as language, level and impact_points for segmenting "
 "campaigns."
 msgstr ""
-"Toutes les personnes ayant un compte figurent sur la liste privée « Town Hall"
-" users », avec des attributs comme language, level et impact_points pour "
+"Toutes les personnes ayant un compte figurent sur la liste privée « Town "
+"Hall users », avec des attributs comme language, level et impact_points pour "
 "segmenter les campagnes."
 
 #: .\console\templates\console\console_layout.html:19
@@ -4067,8 +4138,8 @@ msgstr "Modifier l’aperçu de l’événement"
 msgid ""
 "Start with the essentials. You'll add roles and time slots on the next step."
 msgstr ""
-"Commencez par l’essentiel. Vous ajouterez les rôles et les créneaux à l’étape"
-" suivante."
+"Commencez par l’essentiel. Vous ajouterez les rôles et les créneaux à "
+"l’étape suivante."
 
 #: .\console\templates\console\event_edit.html:24
 #: .\console\templates\console\organization_settings.html:99
@@ -4168,13 +4239,12 @@ msgstr "Sensibilisation"
 #: .\console\templates\console\event_invite.html:22
 #, python-format
 msgid ""
-"Personalize your message for <strong class=\"invite-event-"
-"name\">%(title)s</strong>. Volunteers are more likely to respond to tailored "
-"messages."
+"Personalize your message for <strong class=\"invite-event-name\">%(title)s</"
+"strong>. Volunteers are more likely to respond to tailored messages."
 msgstr ""
-"Personnalisez votre message pour <strong class=\"invite-event-"
-"name\">%(title)s</strong>. Les bénévoles répondent plus volontiers aux "
-"messages personnalisés."
+"Personnalisez votre message pour <strong class=\"invite-event-name\">"
+"%(title)s</strong>. Les bénévoles répondent plus volontiers aux messages "
+"personnalisés."
 
 #: .\console\templates\console\event_invite.html:30
 msgid "Inviting For"
@@ -4467,7 +4537,7 @@ msgstr ""
 
 #: .\console\templates\console\event_report.html:30
 #: .\console\templates\console\partials\task_list_card.html:143
-#: .\events\templates\events\event_impact_card.html:45
+#: .\events\templates\events\event_impact_card.html:54
 msgid "Share"
 msgstr "Partager"
 
@@ -4525,8 +4595,8 @@ msgid ""
 "Efficiency compares hours actually logged with hours scheduled for signed-up "
 "volunteers."
 msgstr ""
-"L’efficacité compare les heures réellement consignées aux heures prévues pour"
-" les bénévoles inscrits."
+"L’efficacité compare les heures réellement consignées aux heures prévues "
+"pour les bénévoles inscrits."
 
 #: .\console\templates\console\event_report.html:79
 msgid "hrs, unscheduled"
@@ -4598,8 +4668,8 @@ msgstr "Suggestions"
 
 #: .\console\templates\console\event_report.html:151
 msgid ""
-"No volunteer feedback yet. Volunteers can rate the event from their thank-you"
-" page."
+"No volunteer feedback yet. Volunteers can rate the event from their thank-"
+"you page."
 msgstr ""
 "Aucun commentaire de bénévole pour l’instant. Les bénévoles peuvent évaluer "
 "l’événement depuis leur page de remerciement."
@@ -4651,10 +4721,10 @@ msgid ""
 "areas, give each area a lead, and let shift leads handle questions on the "
 "ground."
 msgstr ""
-"Au-delà de %(n)s personnes, un seul coordonnateur ne peut pas répondre à tout"
-" le monde. Regroupez les rôles en secteurs, donnez un responsable à chaque "
-"secteur et laissez les responsables de quart répondre aux questions sur le "
-"terrain."
+"Au-delà de %(n)s personnes, un seul coordonnateur ne peut pas répondre à "
+"tout le monde. Regroupez les rôles en secteurs, donnez un responsable à "
+"chaque secteur et laissez les responsables de quart répondre aux questions "
+"sur le terrain."
 
 #: .\console\templates\console\event_roles.html:47
 #: .\console\templates\console\event_roles.html:129
@@ -4730,7 +4800,7 @@ msgstr "Responsables de quart"
 #: .\console\templates\console\event_roles.html:102
 #: .\console\templates\console\volunteer_detail.html:11
 #: .\console\templates\console\volunteer_edit.html:11
-#: .\events\templates\events\event_impact_card.html:31
+#: .\events\templates\events\event_impact_card.html:34
 msgid "Volunteers"
 msgstr "Bénévoles"
 
@@ -4754,8 +4824,8 @@ msgid ""
 "Open positions are filled with the signed-up volunteer who has the most "
 "impact points, and you get a reminder to look them over."
 msgstr ""
-"Les postes encore ouverts sont attribués au bénévole inscrit ayant le plus de"
-" points d’impact, et vous recevez un rappel pour les vérifier."
+"Les postes encore ouverts sont attribués au bénévole inscrit ayant le plus "
+"de points d’impact, et vous recevez un rappel pour les vérifier."
 
 #: .\console\templates\console\event_roles.html:115
 msgid "Locked"
@@ -4771,16 +4841,16 @@ msgstr ""
 #: .\console\templates\console\event_roles.html:120
 msgid "Shifts that more than 5 people can sign up for get a shift lead."
 msgstr ""
-"Les quarts auxquels plus de 5 personnes peuvent s’inscrire ont un responsable"
-" de quart."
+"Les quarts auxquels plus de 5 personnes peuvent s’inscrire ont un "
+"responsable de quart."
 
 #: .\console\templates\console\event_roles.html:122
 msgid ""
 "Remove the chain of command? Areas and area leads are deleted; roles and "
 "sign-ups stay."
 msgstr ""
-"Supprimer la chaîne de commandement ? Les secteurs et leurs responsables sont"
-" supprimés ; les rôles et les inscriptions restent."
+"Supprimer la chaîne de commandement ? Les secteurs et leurs responsables "
+"sont supprimés ; les rôles et les inscriptions restent."
 
 #: .\console\templates\console\event_roles.html:129
 msgid "Remove Chain of Command"
@@ -4826,9 +4896,9 @@ msgstr "Tâches"
 
 #: .\console\templates\console\event_tasks.html:29
 msgid ""
-"Plan the event and run the day from shared Bell Tower lists. Anyone you share"
-" a list with can work through it on their phone, a pager device or an AI "
-"agent."
+"Plan the event and run the day from shared Bell Tower lists. Anyone you "
+"share a list with can work through it on their phone, a pager device or an "
+"AI agent."
 msgstr ""
 "Planifiez l’événement et gérez la journée à partir de listes Bell Tower "
 "partagées. Toute personne avec qui vous partagez une liste peut la parcourir "
@@ -4843,9 +4913,9 @@ msgid ""
 "Bell Tower keeps your organization's shared task lists. Once it's connected, "
 "every event gets a planning list and lists for the day itself."
 msgstr ""
-"Bell Tower conserve les listes de tâches partagées de votre organisation. Une"
-" fois connecté, chaque événement obtient une liste de planification et des "
-"listes pour la journée même."
+"Bell Tower conserve les listes de tâches partagées de votre organisation. "
+"Une fois connecté, chaque événement obtient une liste de planification et "
+"des listes pour la journée même."
 
 #: .\console\templates\console\event_tasks.html:43
 msgid "Connect Bell Tower"
@@ -4854,8 +4924,8 @@ msgstr "Connecter Bell Tower"
 #: .\console\templates\console\event_tasks.html:52
 #, python-format
 msgid ""
-"Merge “%%(source)s” into “%%(target)s”? Its tasks and people move over and it"
-" is deleted."
+"Merge “%%(source)s” into “%%(target)s”? Its tasks and people move over and "
+"it is deleted."
 msgstr ""
 "Fusionner « %%(source)s » dans « %%(target)s » ? Ses tâches et ses personnes "
 "sont transférées, puis elle est supprimée."
@@ -4887,13 +4957,13 @@ msgstr "Pendant l’événement"
 #: .\console\templates\console\event_tasks.html:79
 msgid ""
 "Checklists for volunteers and staff on the day, e.g. setup crew, kitchen, "
-"registration desk. Drag a task onto another list to move it, or a list by its"
-" handle onto another to merge them."
+"registration desk. Drag a task onto another list to move it, or a list by "
+"its handle onto another to merge them."
 msgstr ""
 "Listes de contrôle pour les bénévoles et le personnel le jour même, p. ex. "
-"équipe d’installation, cuisine, table d’inscription. Faites glisser une tâche"
-" sur une autre liste pour la déplacer, ou une liste par sa poignée sur une "
-"autre pour les fusionner."
+"équipe d’installation, cuisine, table d’inscription. Faites glisser une "
+"tâche sur une autre liste pour la déplacer, ou une liste par sa poignée sur "
+"une autre pour les fusionner."
 
 #: .\console\templates\console\event_tasks.html:83
 msgid "Planning is hidden because the event has started."
@@ -4940,11 +5010,11 @@ msgstr "Liens des boutons"
 
 #: .\console\templates\console\home_page_settings.html:46
 msgid ""
-"Use a full address (https://…) or a page on this site, like "
-"/en/opportunities/."
+"Use a full address (https://…) or a page on this site, like /en/"
+"opportunities/."
 msgstr ""
-"Utilisez une adresse complète (https://…) ou une page de ce site, comme "
-"/en/opportunities/."
+"Utilisez une adresse complète (https://…) ou une page de ce site, comme /en/"
+"opportunities/."
 
 #: .\console\templates\console\home_page_settings.html:50
 msgid "Banner Image"
@@ -5007,8 +5077,8 @@ msgid ""
 "Paste a YouTube link to embed a video in this lesson. Leave blank for a "
 "reading-only lesson."
 msgstr ""
-"Collez un lien YouTube pour intégrer une vidéo dans cette leçon. Laissez vide"
-" pour une leçon de lecture seulement."
+"Collez un lien YouTube pour intégrer une vidéo dans cette leçon. Laissez "
+"vide pour une leçon de lecture seulement."
 
 #: .\console\templates\console\lesson_edit.html:66
 msgid "Delete this lesson?"
@@ -5333,8 +5403,8 @@ msgstr "%(setup_percent)s %% terminé"
 
 #: .\console\templates\console\organization_settings.html:114
 msgid ""
-"Add a logo, contact email and terms of service so volunteers know who they're"
-" working with."
+"Add a logo, contact email and terms of service so volunteers know who "
+"they're working with."
 msgstr ""
 "Ajoutez un logo, une adresse e-mail de contact et des conditions "
 "d’utilisation pour que les bénévoles sachent avec qui ils travaillent."
@@ -5821,11 +5891,11 @@ msgstr "Écrire"
 
 #: .\console\templates\console\partials\md_editor.html:22
 msgid ""
-"Markdown supported: **bold**, _italic_, ## headings, - lists, "
-"[links](https://...)."
+"Markdown supported: **bold**, _italic_, ## headings, - lists, [links]"
+"(https://...)."
 msgstr ""
-"Markdown pris en charge : **gras**, _italique_, ## titres, - listes, "
-"[liens](https://...)."
+"Markdown pris en charge : **gras**, _italique_, ## titres, - listes, [liens]"
+"(https://...)."
 
 #: .\console\templates\console\partials\module_grid.html:16
 #, python-format
@@ -6124,8 +6194,8 @@ msgstr "Aucun modèle de rôle pour l’instant"
 
 #: .\console\templates\console\partials\role_grid.html:31
 msgid ""
-"Role templates describe a job volunteers can do, and which training they need"
-" first."
+"Role templates describe a job volunteers can do, and which training they "
+"need first."
 msgstr ""
 "Les modèles de rôle décrivent un travail que les bénévoles peuvent faire, et "
 "la formation dont ils ont d’abord besoin."
@@ -6258,8 +6328,8 @@ msgstr ""
 #: .\console\templates\console\partials\slot_edit_dialog.html:60
 #, python-format
 msgid ""
-"Nobody has signed up yet. Once people do, the one with the most impact points"
-" is picked on %(when)s unless you choose someone."
+"Nobody has signed up yet. Once people do, the one with the most impact "
+"points is picked on %(when)s unless you choose someone."
 msgstr ""
 "Personne ne s’est encore inscrit. Une fois que ce sera le cas, la personne "
 "ayant le plus de points d’impact sera choisie le %(when)s, sauf si vous en "
@@ -6271,8 +6341,8 @@ msgid ""
 "Left open, the volunteer with the most impact points is picked on %(when)s. "
 "Leads lock on %(locked)s."
 msgstr ""
-"S’il reste ouvert, le bénévole ayant le plus de points d’impact est choisi le"
-" %(when)s. Les responsables sont verrouillés le %(locked)s."
+"S’il reste ouvert, le bénévole ayant le plus de points d’impact est choisi "
+"le %(when)s. Les responsables sont verrouillés le %(locked)s."
 
 #: .\console\templates\console\partials\slot_edit_dialog.html:68
 msgid "Leave open"
@@ -6608,8 +6678,8 @@ msgstr "Rôles permanents"
 
 #: .\console\templates\console\partials\volunteer_roles.html:6
 msgid ""
-"Ongoing positions this person may start shifts in, at the venue kiosk or on a"
-" device. Click a role to assign or remove it."
+"Ongoing positions this person may start shifts in, at the venue kiosk or on "
+"a device. Click a role to assign or remove it."
 msgstr ""
 "Postes continus dans lesquels cette personne peut commencer des quarts, à la "
 "borne du lieu ou sur un appareil. Cliquez sur un rôle pour l’assigner ou le "
@@ -6625,8 +6695,8 @@ msgstr[1] "%(counter)s assignés"
 #: .\console\templates\console\partials\volunteer_roles.html:29
 #, python-format
 msgid ""
-"No permanent roles exist yet. <a href=\"%(roles_url)s\" "
-"class=\"c-link\">Create one</a> and mark it as a permanent position."
+"No permanent roles exist yet. <a href=\"%(roles_url)s\" class=\"c-link"
+"\">Create one</a> and mark it as a permanent position."
 msgstr ""
 "Aucun rôle permanent n’existe pour l’instant. <a href=\"%(roles_url)s\" "
 "class=\"c-link\">Créez-en un</a> et marquez-le comme poste permanent."
@@ -6696,9 +6766,9 @@ msgid ""
 "Decide how volunteers earn impact points. Each award is recorded when it's "
 "earned, so changes here apply to new points unless you recalculate."
 msgstr ""
-"Décidez comment les bénévoles gagnent des points d’impact. Chaque attribution"
-" est enregistrée au moment où elle est gagnée, donc les changements ici "
-"s’appliquent aux nouveaux points, sauf si vous recalculez."
+"Décidez comment les bénévoles gagnent des points d’impact. Chaque "
+"attribution est enregistrée au moment où elle est gagnée, donc les "
+"changements ici s’appliquent aux nouveaux points, sauf si vous recalculez."
 
 #: .\console\templates\console\points_settings.html:24
 msgid "Save Rules"
@@ -6745,8 +6815,8 @@ msgid ""
 "Encourages new volunteers to fill in their profile. The reminder emails in "
 "Communication > Email mention it."
 msgstr ""
-"Encourage les nouveaux bénévoles à remplir leur profil. Les e-mails de rappel"
-" dans Communication > E-mail le mentionnent."
+"Encourage les nouveaux bénévoles à remplir leur profil. Les e-mails de "
+"rappel dans Communication > E-mail le mentionnent."
 
 #: .\console\templates\console\points_settings.html:83
 msgid "How a Shift Scores"
@@ -6859,8 +6929,8 @@ msgstr "Redémarrez Town Hall pour appliquer vos modifications"
 #: .\console\templates\console\region_settings.html:35
 #, python-format
 msgid ""
-"Until then the site keeps running with %(languages)s (default %(default)s) in"
-" %(zone)s."
+"Until then the site keeps running with %(languages)s (default %(default)s) "
+"in %(zone)s."
 msgstr ""
 "D’ici là, le site continue de fonctionner avec %(languages)s (par défaut : "
 "%(default)s) dans %(zone)s."
@@ -6922,8 +6992,8 @@ msgstr "Redémarrer"
 
 #: .\console\templates\console\region_settings.html:87
 msgid ""
-"Applies the saved settings. Visitors may see an error for a few seconds while"
-" Town Hall comes back."
+"Applies the saved settings. Visitors may see an error for a few seconds "
+"while Town Hall comes back."
 msgstr ""
 "Applique les paramètres enregistrés. Les visiteurs peuvent voir une erreur "
 "pendant quelques secondes le temps que Town Hall revienne."
@@ -6962,8 +7032,8 @@ msgid ""
 "After switching a language on, open Communication > Email to add its email "
 "templates."
 msgstr ""
-"Après avoir activé une langue, ouvrez Communication > E-mail pour ajouter ses"
-" modèles d’e-mail."
+"Après avoir activé une langue, ouvrez Communication > E-mail pour ajouter "
+"ses modèles d’e-mail."
 
 #: .\console\templates\console\region_settings.html:99
 msgid ""
@@ -7141,8 +7211,8 @@ msgid ""
 "modules can teach and teammates can endorse."
 msgstr ""
 "Les compétences que les bénévoles peuvent indiquer sur leur profil, que les "
-"rôles peuvent préférer, que les modules de formation peuvent enseigner et que"
-" les coéquipiers peuvent recommander."
+"rôles peuvent préférer, que les modules de formation peuvent enseigner et "
+"que les coéquipiers peuvent recommander."
 
 #: .\console\templates\console\skill_settings.html:29
 msgid "Skill List"
@@ -7320,8 +7390,8 @@ msgid ""
 "permanent staff check in at the kiosk outside these hours."
 msgstr ""
 "Laissez les deux heures vides les jours où le lieu est fermé. L’accès du "
-"personnel permet au personnel permanent de s’enregistrer à la borne en dehors"
-" de ces heures."
+"personnel permet au personnel permanent de s’enregistrer à la borne en "
+"dehors de ces heures."
 
 #: .\console\templates\console\venue_edit.html:77
 msgid "Day"
@@ -7401,8 +7471,9 @@ msgstr "Répertoire global des lieux"
 
 #: .\console\templates\console\venue_list.html:20
 msgid ""
-"Every place your organization works from. Events and permanent positions pick"
-" their venue from here, so addresses, hours and amenities stay in one place."
+"Every place your organization works from. Events and permanent positions "
+"pick their venue from here, so addresses, hours and amenities stay in one "
+"place."
 msgstr ""
 "Tous les endroits où votre organisation travaille. Les événements et les "
 "postes permanents y choisissent leur lieu, de sorte que les adresses, les "
@@ -7815,8 +7886,8 @@ msgstr "Statut de personnel"
 #: .\console\templates\console\volunteer_detail.html:301
 msgid "Can open this admin console and sign in to the Django admin."
 msgstr ""
-"Peut ouvrir cette console d’administration et se connecter à l’administration"
-" Django."
+"Peut ouvrir cette console d’administration et se connecter à "
+"l’administration Django."
 
 #: .\console\templates\console\volunteer_detail.html:309
 msgid "Has every permission without being assigned it. Give this sparingly."
@@ -7837,8 +7908,8 @@ msgid ""
 "Groups bundle Django permissions. Create them and choose what each can do in "
 "the Django admin."
 msgstr ""
-"Les groupes regroupent des permissions Django. Créez-les et choisissez ce que"
-" chacun peut faire dans l’administration Django."
+"Les groupes regroupent des permissions Django. Créez-les et choisissez ce "
+"que chacun peut faire dans l’administration Django."
 
 #: .\console\templates\console\volunteer_detail.html:329
 msgid "Manage groups"
@@ -8013,12 +8084,12 @@ msgstr "Tous les statuts"
 
 #: .\console\templates\console\volunteer_list.html:88
 msgid ""
-"Share the temporary password with them; they can change it from their account"
-" settings. A 6-digit kiosk ID is generated automatically."
+"Share the temporary password with them; they can change it from their "
+"account settings. A 6-digit kiosk ID is generated automatically."
 msgstr ""
-"Communiquez-leur le mot de passe temporaire ; ils peuvent le changer dans les"
-" paramètres de leur compte. Un identifiant de borne à 6 chiffres est généré "
-"automatiquement."
+"Communiquez-leur le mot de passe temporaire ; ils peuvent le changer dans "
+"les paramètres de leur compte. Un identifiant de borne à 6 chiffres est "
+"généré automatiquement."
 
 #: .\console\utils.py:147
 msgid "checked in for"
@@ -8047,7 +8118,7 @@ msgid "Certificate \"%(name)s\" saved."
 msgstr "Certificat « %(name)s » enregistré."
 
 #: .\console\views\certificates.py:53 .\console\views\communication.py:31
-#: .\console\views\events.py:94 .\console\views\roles.py:83
+#: .\console\views\events.py:95 .\console\views\roles.py:83
 #: .\console\views\settings.py:82 .\console\views\settings.py:108
 #: .\console\views\settings.py:135 .\console\views\settings.py:172
 #: .\console\views\settings.py:229 .\console\views\settings.py:255
@@ -8262,11 +8333,11 @@ msgstr "« %(name)s » supprimée."
 #: .\console\views\event_tasks.py:307
 #, python-format
 msgid ""
-"No Bell Tower account uses %(email)s. They need to sign in to Bell Tower once"
-" with that email."
+"No Bell Tower account uses %(email)s. They need to sign in to Bell Tower "
+"once with that email."
 msgstr ""
-"Aucun compte Bell Tower n’utilise %(email)s. Cette personne doit se connecter"
-" une fois à Bell Tower avec cette adresse e-mail."
+"Aucun compte Bell Tower n’utilise %(email)s. Cette personne doit se "
+"connecter une fois à Bell Tower avec cette adresse e-mail."
 
 #: .\console\views\event_tasks.py:318
 msgid "That task is not in this list."
@@ -8276,74 +8347,74 @@ msgstr "Cette tâche ne figure pas dans cette liste."
 msgid "A task needs a title."
 msgstr "Une tâche doit avoir un titre."
 
-#: .\console\views\events.py:90
+#: .\console\views\events.py:91
 msgid "Event created. Now add the roles you need filled."
 msgstr "Événement créé. Ajoutez maintenant les rôles à pourvoir."
 
-#: .\console\views\events.py:92
+#: .\console\views\events.py:93
 msgid "Event details saved."
 msgstr "Détails de l’événement enregistrés."
 
-#: .\console\views\events.py:177
+#: .\console\views\events.py:178
 msgid "Time slot removed."
 msgstr "Créneau retiré."
 
-#: .\console\views\events.py:187
+#: .\console\views\events.py:188
 #, python-format
 msgid "The listmonk announcement failed: %(error)s"
 msgstr "L’annonce listmonk a échoué : %(error)s"
 
-#: .\console\views\events.py:190
+#: .\console\views\events.py:191
 msgid "Announcement emailed to \"Town Hall users\"."
 msgstr "Annonce envoyée par e-mail à « Town Hall users »."
 
-#: .\console\views\events.py:192
+#: .\console\views\events.py:193
 msgid "An announcement campaign is waiting as a draft in listmonk."
 msgstr "Une campagne d’annonce attend à l’état de brouillon dans listmonk."
 
-#: .\console\views\events.py:203
+#: .\console\views\events.py:204
 #, python-format
 msgid "\"%(title)s\" is now visible to volunteers."
 msgstr "« %(title)s » est maintenant visible par les bénévoles."
 
-#: .\console\views\events.py:205
+#: .\console\views\events.py:206
 #, python-format
 msgid "\"%(title)s\" is hidden from volunteers."
 msgstr "« %(title)s » est masqué aux bénévoles."
 
-#: .\console\views\events.py:215 .\console\views\volunteers.py:345
+#: .\console\views\events.py:216 .\console\views\volunteers.py:345
 msgid "Write a message before sending."
 msgstr "Rédigez un message avant de l’envoyer."
 
-#: .\console\views\events.py:226
+#: .\console\views\events.py:227
 #, python-format
 msgid "Message sent to %(count)d volunteers."
 msgstr "Message envoyé à %(count)d bénévoles."
 
-#: .\console\views\events.py:246
+#: .\console\views\events.py:247
 #, python-format
 msgid "Slot %(n)d has an invalid date or time."
 msgstr "Le créneau %(n)d a une date ou une heure invalide."
 
-#: .\console\views\events.py:249
+#: .\console\views\events.py:250
 #, python-format
 msgid "Slot %(n)d must end after it starts."
 msgstr "Le créneau %(n)d doit se terminer après son début."
 
-#: .\console\views\events.py:256
+#: .\console\views\events.py:257
 msgid "Add at least one time slot."
 msgstr "Ajoutez au moins un créneau."
 
-#: .\console\views\events.py:276
+#: .\console\views\events.py:277
 msgid "Select a role first."
 msgstr "Choisissez d’abord un rôle."
 
-#: .\console\views\events.py:289
+#: .\console\views\events.py:290
 #, python-format
 msgid "Added %(role)s with %(count)d time slot(s)."
 msgstr "%(role)s ajouté avec %(count)d créneau(x)."
 
-#: .\console\views\events.py:291
+#: .\console\views\events.py:292
 #, python-format
 msgid ""
 "This event now needs more than %(n)d volunteers. Consider setting up a chain "
@@ -8353,64 +8424,66 @@ msgstr ""
 "mettre en place une chaîne de commandement avec des secteurs et des "
 "responsables."
 
-#: .\console\views\events.py:404
+#: .\console\views\events.py:405
 msgid "Add a role to this event before inviting volunteers."
 msgstr "Ajoutez un rôle à cet événement avant d’inviter des bénévoles."
 
-#: .\console\views\events.py:411
+#: .\console\views\events.py:412
 #, python-format
 msgid "You are invited to %(event)s"
 msgstr "Vous êtes invité à %(event)s"
 
-#: .\console\views\events.py:416
+#: .\console\views\events.py:417
 #, python-format
 msgid "Sent %(count)d invitation(s) for %(role)s."
 msgstr "%(count)d invitation(s) envoyée(s) pour %(role)s."
 
-#: .\console\views\events.py:418
+#: .\console\views\events.py:419
 msgid "Select at least one volunteer to invite."
 msgstr "Sélectionnez au moins un bénévole à inviter."
 
-#: .\console\views\events.py:423
+#: .\console\views\events.py:424
 #, python-format
 msgid ""
 "Hello [Name],\n"
 "\n"
-"Your skills would make a real difference at %(event)s. We're looking for a %(role)s on %(date)s and thought of you.\n"
+"Your skills would make a real difference at %(event)s. We're looking for a "
+"%(role)s on %(date)s and thought of you.\n"
 "\n"
 "We'd love to have you on the team!"
 msgstr ""
 "Bonjour [Name],\n"
 "\n"
-"Vos compétences feraient une réelle différence à %(event)s. Nous cherchons un(e) %(role)s le %(date)s et avons pensé à vous.\n"
+"Vos compétences feraient une réelle différence à %(event)s. Nous cherchons "
+"un(e) %(role)s le %(date)s et avons pensé à vous.\n"
 "\n"
 "Nous serions ravis de vous compter dans l’équipe !"
 
-#: .\console\views\events.py:434
+#: .\console\views\events.py:435
 #, python-format
 msgid "Be the spark at %(event)s!"
 msgstr "Soyez l’étincelle de %(event)s !"
 
-#: .\console\views\events.py:534
+#: .\console\views\events.py:536
 #, python-format
 msgid "%(name)s checked out."
 msgstr "%(name)s a quitté."
 
-#: .\console\views\events.py:539
+#: .\console\views\events.py:541
 #, python-format
 msgid "%(name)s is already checked in."
 msgstr "%(name)s est déjà enregistré."
 
-#: .\console\views\events.py:546
+#: .\console\views\events.py:548
 msgid "That volunteer is not signed up for this event."
 msgstr "Ce bénévole n’est pas inscrit à cet événement."
 
-#: .\console\views\events.py:549
+#: .\console\views\events.py:551
 #, python-format
 msgid "%(name)s checked in as %(role)s."
 msgstr "%(name)s s’est enregistré comme %(role)s."
 
-#: .\console\views\events.py:583
+#: .\console\views\events.py:585
 msgid "Post-event statement saved."
 msgstr "Déclaration après l’événement enregistrée."
 
@@ -8441,7 +8514,8 @@ msgstr "Modèle de rôle « %(name)s » enregistré."
 
 #: .\console\views\roles.py:118
 #, python-format
-msgid "\"%(name)s\" is used by events or logged shifts, so it can't be deleted."
+msgid ""
+"\"%(name)s\" is used by events or logged shifts, so it can't be deleted."
 msgstr ""
 "« %(name)s » est utilisé par des événements ou des quarts consignés, donc il "
 "ne peut pas être supprimé."
@@ -8592,8 +8666,8 @@ msgid ""
 "Connected to listmonk. Setting up the \"%(name)s\" list and your email "
 "templates; this takes a minute."
 msgstr ""
-"Connecté à listmonk. Configuration de la liste « %(name)s » et de vos modèles"
-" d’e-mail ; cela prend une minute."
+"Connecté à listmonk. Configuration de la liste « %(name)s » et de vos "
+"modèles d’e-mail ; cela prend une minute."
 
 #: .\console\views\settings.py:338
 #, python-format
@@ -8708,8 +8782,8 @@ msgid ""
 "can remove it under Connected apps on your Bell Tower account page."
 msgstr ""
 "Déconnecté. Bell Tower est resté inaccessible pour révoquer la clé de Town "
-"Hall ; vous pouvez la retirer sous Connected apps sur la page de votre compte"
-" Bell Tower."
+"Hall ; vous pouvez la retirer sous Connected apps sur la page de votre "
+"compte Bell Tower."
 
 #: .\console\views\training.py:88
 msgid "Module saved and published, but it has no lessons or quizzes yet."
@@ -8879,11 +8953,13 @@ msgstr "Compte désactivé. Cette personne ne peut plus se connecter."
 #, python-format
 msgid ""
 "\n"
-"                    Congratulations, %(name)s! You've Completed the <span class=\"accent-text\">%(module)s.</span>\n"
+"                    Congratulations, %(name)s! You've Completed the <span "
+"class=\"accent-text\">%(module)s.</span>\n"
 "                    "
 msgstr ""
 "\n"
-"                    Félicitations, %(name)s ! Vous avez terminé le module <span class=\"accent-text\">%(module)s.</span>\n"
+"                    Félicitations, %(name)s ! Vous avez terminé le module "
+"<span class=\"accent-text\">%(module)s.</span>\n"
 "                    "
 
 #: .\education\templates\education\completed_module.html:27
@@ -9109,8 +9185,8 @@ msgstr "Imprimer le certificat"
 
 #: .\education\templates\education\printable_certificate.html:41
 msgid ""
-"This certifies that the above-named individual has successfully completed the"
-" training module."
+"This certifies that the above-named individual has successfully completed "
+"the training module."
 msgstr ""
 "Ceci certifie que la personne susmentionnée a terminé avec succès le module "
 "de formation."
@@ -9156,11 +9232,13 @@ msgstr "Continuez à vous exercer !"
 #, python-format
 msgid ""
 "\n"
-"                You answered %(correct)s out of %(total)s questions correctly.\n"
+"                You answered %(correct)s out of %(total)s questions "
+"correctly.\n"
 "            "
 msgstr ""
 "\n"
-"                Vous avez répondu correctement à %(correct)s questions sur %(total)s.\n"
+"                Vous avez répondu correctement à %(correct)s questions sur "
+"%(total)s.\n"
 "            "
 
 #: .\education\templates\education\quiz_results.html:40
@@ -9227,11 +9305,15 @@ msgstr "Obligatoire"
 #, python-format
 msgid ""
 "\n"
-"                Please upload a clear, legible copy of your %(name)s certificate. Ensure the issue date and expiration date are visible. Allowed formats: PDF, JPG, PNG (Max 5 MB).\n"
+"                Please upload a clear, legible copy of your %(name)s "
+"certificate. Ensure the issue date and expiration date are visible. Allowed "
+"formats: PDF, JPG, PNG (Max 5 MB).\n"
 "                "
 msgstr ""
 "\n"
-"                Veuillez téléverser une copie claire et lisible de votre certificat %(name)s. Assurez-vous que la date d’émission et la date d’expiration sont visibles. Formats acceptés : PDF, JPG, PNG (5 Mo max.).\n"
+"                Veuillez téléverser une copie claire et lisible de votre "
+"certificat %(name)s. Assurez-vous que la date d’émission et la date "
+"d’expiration sont visibles. Formats acceptés : PDF, JPG, PNG (5 Mo max.).\n"
 "                "
 
 #: .\education\templates\education\submit_certificate.html:84
@@ -9396,8 +9478,8 @@ msgid ""
 "modules designed to help you build stronger, safer environments."
 msgstr ""
 "Donnez de l’élan à votre parcours communautaire. Perfectionnez vos "
-"compétences grâce à nos modules soigneusement choisis pour vous aider à bâtir"
-" des milieux plus forts et plus sûrs."
+"compétences grâce à nos modules soigneusement choisis pour vous aider à "
+"bâtir des milieux plus forts et plus sûrs."
 
 #: .\education\templates\education\training_directory.html:20
 msgid "Current training"
@@ -9611,9 +9693,9 @@ msgstr "Ce certificat est fièrement décerné à"
 #: .\events\templates\events\event_certificate.html:37
 #, python-format
 msgid ""
-"In recognition of outstanding contributions to <strong>%(title)s "
-"%(year)s</strong>. Your dedication and service have made a significant impact"
-" on our community's success."
+"In recognition of outstanding contributions to <strong>%(title)s %(year)s</"
+"strong>. Your dedication and service have made a significant impact on our "
+"community's success."
 msgstr ""
 "En reconnaissance de vos contributions exceptionnelles à <strong>%(title)s "
 "%(year)s</strong>. Votre dévouement et votre service ont eu un impact "
@@ -9720,8 +9802,8 @@ msgid ""
 "Check in at <strong>%(location)s</strong> 30 minutes before your shift start "
 "time."
 msgstr ""
-"Enregistrez-vous à <strong>%(location)s</strong> 30 minutes avant le début de"
-" votre quart."
+"Enregistrez-vous à <strong>%(location)s</strong> 30 minutes avant le début "
+"de votre quart."
 
 #: .\events\templates\events\event_detail.html:177
 msgid "Directions"
@@ -9763,8 +9845,8 @@ msgstr "Mon équipe"
 #: .\events\templates\events\event_detail.html:238
 #, python-format
 msgid ""
-"You lead %(area)s. Pass direction from the general coordinator to these shift"
-" leads."
+"You lead %(area)s. Pass direction from the general coordinator to these "
+"shift leads."
 msgstr ""
 "Vous dirigez %(area)s. Transmettez les directives du coordonnateur général à "
 "ces responsables de quart."
@@ -9775,8 +9857,8 @@ msgstr "Aucun responsable de quart n’a encore été choisi dans votre secteur.
 
 #: .\events\templates\events\event_detail.html:249
 msgid ""
-"You lead this shift. Pass direction on to your team, and bring what you can't"
-" answer to your area lead."
+"You lead this shift. Pass direction on to your team, and bring what you "
+"can't answer to your area lead."
 msgstr ""
 "Vous dirigez ce quart. Transmettez les directives à votre équipe et apportez "
 "à votre responsable de secteur ce à quoi vous ne pouvez pas répondre."
@@ -9808,8 +9890,8 @@ msgid_plural "Join %(counter)s other community members making an impact!"
 msgstr[0] ""
 "Joignez-vous à %(counter)s autre membre de la communauté qui a un impact !"
 msgstr[1] ""
-"Joignez-vous à %(counter)s autres membres de la communauté qui ont un impact "
-"!"
+"Joignez-vous à %(counter)s autres membres de la communauté qui ont un "
+"impact !"
 
 #: .\events\templates\events\event_detail.html:305
 msgid "Be the first to volunteer for this event!"
@@ -9935,8 +10017,8 @@ msgstr "Essayez d’abord votre responsable"
 
 #: .\events\templates\events\event_detail.html:545
 msgid ""
-"Your area lead is the person to ask first. They can answer most questions and"
-" bring anything bigger to the coordinators."
+"Your area lead is the person to ask first. They can answer most questions "
+"and bring anything bigger to the coordinators."
 msgid_plural ""
 "Your area leads are the people to ask first. They can answer most questions "
 "and bring anything bigger to the coordinators."
@@ -9968,13 +10050,17 @@ msgstr "Impact de %(title)s"
 msgid "%(v)s volunteers, %(h)s hours of service."
 msgstr "%(v)s bénévoles, %(h)s heures de service."
 
-#: .\events\templates\events\event_impact_card.html:29
+#: .\events\templates\events\event_impact_card.html:32
 msgid "Event Efficiency"
 msgstr "Efficacité de l’événement"
 
-#: .\events\templates\events\event_impact_card.html:44
+#: .\events\templates\events\event_impact_card.html:52
 msgid "Link copied"
 msgstr "Lien copié"
+
+#: .\events\templates\events\event_impact_card.html:53
+msgid "Image saved and link copied"
+msgstr "Image enregistrée et lien copié"
 
 #: .\events\templates\events\event_thank_you.html:4
 msgid "Thank you"
@@ -9987,11 +10073,6 @@ msgstr "Événement terminé"
 #: .\events\templates\events\event_thank_you.html:14
 msgid "Event in progress"
 msgstr "Événement en cours"
-
-#: .\events\templates\events\event_thank_you.html:16
-#, python-format
-msgid "Thank you, %(name)s!"
-msgstr "Merci, %(name)s !"
 
 #: .\events\templates\events\event_thank_you.html:17
 msgid "Your impact was"
@@ -10025,10 +10106,6 @@ msgstr "Heures prévues"
 #: .\events\templates\events\event_thank_you.html:35
 msgid "Community connections"
 msgstr "Liens communautaires"
-
-#: .\events\templates\events\event_thank_you.html:40
-msgid "Impact points earned"
-msgstr "Points d’impact gagnés"
 
 #: .\events\templates\events\event_thank_you.html:47
 msgid "Teammates You Worked With"
@@ -10119,8 +10196,8 @@ msgid ""
 "match your passion and skillset in your local neighborhood."
 msgstr ""
 "Joignez-vous à une communauté de bénévoles qui bâtissent un avenir meilleur. "
-"Trouvez des rôles qui correspondent à votre passion et à vos compétences dans"
-" votre quartier."
+"Trouvez des rôles qui correspondent à votre passion et à vos compétences "
+"dans votre quartier."
 
 #: .\events\templates\events\explore_events.html:28
 msgid "Open Roles"
@@ -10380,8 +10457,8 @@ msgstr ""
 #: .\events\views.py:289
 #, python-format
 msgid ""
-"You cancelled your %(role)s shift. It started less than 24 hours from now, so"
-" it counts against your reliability score."
+"You cancelled your %(role)s shift. It started less than 24 hours from now, "
+"so it counts against your reliability score."
 msgstr ""
 "Vous avez annulé votre quart %(role)s. Comme il commençait dans moins de 24 "
 "heures, cela compte contre votre indice de fiabilité."
@@ -10445,8 +10522,8 @@ msgstr "Configurer cette borne"
 
 #: .\jobs\templates\jobs\kiosk_home.html:17
 msgid ""
-"Choose what this device checks volunteers in to. Bookmark the screen it opens"
-" so the device can go straight there next time."
+"Choose what this device checks volunteers in to. Bookmark the screen it "
+"opens so the device can go straight there next time."
 msgstr ""
 "Choisissez à quoi cet appareil enregistre les bénévoles. Mettez en favori "
 "l’écran qu’il ouvre pour que l’appareil puisse y aller directement la "
@@ -10592,8 +10669,8 @@ msgstr "Bienvenue, %(name)s"
 
 #: .\jobs\templates\jobs\kiosk_role_select.html:13
 msgid ""
-"You aren't scheduled right now, but these roles could use a hand. Stepping in"
-" earns a clutch bonus!"
+"You aren't scheduled right now, but these roles could use a hand. Stepping "
+"in earns a clutch bonus!"
 msgstr ""
 "Vous n’êtes pas prévu pour le moment, mais ces rôles auraient besoin d’aide. "
 "Intervenir rapporte un bonus de dépannage !"
@@ -10696,20 +10773,20 @@ msgstr "Besoin d’aide ?"
 msgid "Ask a staff member at the front desk."
 msgstr "Demandez à un membre du personnel à l’accueil."
 
-#: .\jobs\views.py:95
+#: .\jobs\views.py:96
 msgid "We couldn't find that Volunteer ID. Please try again."
 msgstr ""
 "Nous n’avons pas trouvé cet identifiant de bénévole. Veuillez réessayer."
 
-#: .\jobs\views.py:145 .\jobs\views.py:162
+#: .\jobs\views.py:146 .\jobs\views.py:163
 msgid "Please choose one of the listed roles."
 msgstr "Veuillez choisir l’un des rôles indiqués."
 
-#: .\jobs\views.py:183
+#: .\jobs\views.py:184
 msgid "Your kiosk session has ended."
 msgstr "Votre session à la borne est terminée."
 
-#: .\jobs\views.py:216
+#: .\jobs\views.py:218
 #, python-format
 msgid ""
 "Thanks, %(name)s! You logged %(hours)s hours and earned %(points)s impact "
@@ -10755,7 +10832,9 @@ msgstr "Créer des modèles de rôle et y rattacher la formation existante"
 
 #: .\mcp_server\templates\mcp_server\authorize.html:36
 msgid "Write training lessons and quizzes from material you give it"
-msgstr "Rédiger des leçons et des questionnaires de formation à partir des documents que vous lui fournissez"
+msgstr ""
+"Rédiger des leçons et des questionnaires de formation à partir des documents "
+"que vous lui fournissez"
 
 #: .\mcp_server\templates\mcp_server\authorize.html:37
 msgid "Invite volunteers to shifts (they choose whether to accept)"
@@ -10795,8 +10874,8 @@ msgid ""
 "You'll go back to %(host)s. You can disconnect any time in Organization &gt; "
 "Backend."
 msgstr ""
-"Vous serez redirigé vers %(host)s. Vous pouvez vous déconnecter en tout temps"
-" dans Organisation &gt; Serveur."
+"Vous serez redirigé vers %(host)s. Vous pouvez vous déconnecter en tout "
+"temps dans Organisation &gt; Serveur."
 
 #: .\mcp_server\templates\mcp_server\authorize_error.html:4
 #: .\mcp_server\templates\mcp_server\authorize_error.html:15

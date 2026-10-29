@@ -370,38 +370,18 @@ def my_events(request):
     upcoming_events = list(upcoming_events_map.values())
     today_shifts_count = sum(1 for item in upcoming_events if item['event'].is_today)
 
-    # Past: slots the user signed up for where the event has already ended
-    past_slots = (
-        EventRoleSlot.objects
-        .filter(signups=user, event__end_date__lt=now)
-        .select_related('event__venue', 'role')
-        .order_by('-event__end_date')
+    # Past: one row per finished shift, listed as soon as the volunteer clocks out
+    past_shifts = (
+        Shift.objects
+        .filter(user=user, event_role_slot__isnull=False, end_time__isnull=False)
+        .select_related('event_role_slot__event__venue', 'role')
+        .order_by('-start_time')
     )
-
-    past_events_data = []
-    seen_past = set()
-    for slot in past_slots:
-        eid = slot.event.pk
-        if eid in seen_past:
-            continue
-        seen_past.add(eid)
-
-        # Sum shift hours for this user on this event; fall back to slot duration
-        shifts = Shift.objects.filter(user=user, event_role_slot__event=slot.event)
-        total_hours = sum(s.duration() for s in shifts)
-        if not total_hours:
-            total_hours = (slot.end_time - slot.start_time).total_seconds() / 3600
-
-        past_events_data.append({
-            'event': slot.event,
-            'slot': slot,
-            'hours': round(total_hours, 1),
-        })
 
     profile = getattr(user, 'profile', None)
     return render(request, 'events/my_events.html', {
         'upcoming_events': upcoming_events,
-        'past_events': past_events_data,
+        'past_shifts': past_shifts,
         'today_shifts_count': today_shifts_count,
         'total_available': Event.objects.filter(end_date__gte=now, published=True).count(),
         'upcoming_count': len(upcoming_events),
@@ -499,7 +479,8 @@ def event_certificate(request, event_id, username):
     event = get_object_or_404(Event, pk=event_id)
     volunteer = get_object_or_404(User, username=username, is_active=True)
     participation = _participation(event, volunteer)
-    if not participation or not event.is_past:
+    # Available once the event is over, or as soon as the volunteer's own shift is done
+    if not participation or not (event.is_past or participation['verified']):
         raise Http404
     url = request.build_absolute_uri(reverse('event_certificate', args=[event.pk, volunteer.username]))
     endorsement = Endorsement.objects.filter(endorsed=volunteer, event=event).exclude(text='').first()

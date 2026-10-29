@@ -169,11 +169,11 @@
                     </h2>
                 </div>
 
-                {% if past_events %}
+                {% if past_shifts %}
                 <div class="past-events-table">
-                    {% for item in past_events %}
-                    {% with event=item.event slot=item.slot %}
-                    <div class="past-event-row">
+                    {% for shift in past_shifts %}
+                    {% with event=shift.event_role_slot.event %}
+                    <a href="{% url 'event_thank_you' event.pk %}" class="past-event-row">
                         <div class="past-event-thumb">
                             {% if event.image %}
                             <img src="{{ event.image.url }}" alt="{{ event.title }}">
@@ -194,35 +194,35 @@
 
                         <div class="past-event-date">
                             <span class="material-symbols-outlined">calendar_today</span>
-                            {{ event.end_date|date:"M j, Y" }}
+                            {{ shift.start_time|date:"M j, Y" }}
                         </div>
 
                         <div class="past-event-role">
-                            {% if slot.role.icon %}
-                            <span class="material-symbols-outlined">{{ slot.role.icon }}</span>
+                            {% if shift.role.icon %}
+                            <span class="material-symbols-outlined">{{ shift.role.icon }}</span>
                             {% endif %}
-                            {{ slot.role.name }}
+                            {{ shift.role.name }}
                         </div>
 
                         <div class="past-event-hours">
                             <span class="material-symbols-outlined">timer</span>
-                            {{ item.hours }} {% trans "Hours" %}
+                            {{ shift.duration|floatformat:1 }} {% trans "Hours" %}
                         </div>
 
                         <div class="past-event-action">
-                            <a href="{% url 'event_thank_you' event.pk %}" class="btn-report">
+                            <span class="btn-report">
                                 <span class="material-symbols-outlined">analytics</span>
                                 {% trans "View Report" %}
-                            </a>
+                            </span>
                         </div>
-                    </div>
+                    </a>
                     {% endwith %}
                     {% endfor %}
                 </div>
                 {% else %}
                 <div class="empty-state empty-state-sm">
                     <span class="material-symbols-outlined empty-state-icon">history</span>
-                    <p>{% trans "Your completed events will appear here." %}</p>
+                    <p>{% trans "Your completed shifts will appear here as soon as you clock out." %}</p>
                 </div>
                 {% endif %}
             </section>

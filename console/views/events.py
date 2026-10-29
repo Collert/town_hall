@@ -18,6 +18,7 @@ from base.utils import short_datetime
 from education.models import TrainingModuleCompletion
 from events import leadership
 from events.models import Event, EventArea, EventRoleSlot, EventSlotInvite
+from events.reminders import send_shift_thanks
 from jobs.models import Role, Shift
 
 from ..decorators import staff_required
@@ -531,6 +532,7 @@ def manual_check_in(request, event_id):
     if request.POST.get('shift_id'):
         shift = get_object_or_404(Shift, pk=request.POST['shift_id'], event_role_slot__event=event)
         shift.end_shift()
+        send_shift_thanks(shift, request.build_absolute_uri('/'))
         messages.success(request, _('%(name)s checked out.') % {'name': shift.user.get_full_name() or shift.user.username})
         return redirect('console_event_monitor', event_id=event.pk)
 
