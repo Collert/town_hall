@@ -14,24 +14,34 @@
 {% block content %}
 <header class="shift-top">
     <span class="shift-brand">{{ company_name }}</span>
-    <a href="{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}" class="shift-user" title="{% trans 'Done, keep my shift running' %}">
-        <span>{{ kiosk_user|display_name }}</span>
-        {% avatar kiosk_user 'md' %}
-    </a>
+    <div class="shift-account">
+        <span class="shift-user">
+            <span>{{ kiosk_user|display_name }}</span>
+            {% avatar kiosk_user 'md' %}
+        </span>
+        <a href="{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}" class="shift-lock" title="{% if shift %}{% trans 'Lock the kiosk. Your shift keeps running.' %}{% else %}{% trans 'Lock the kiosk' %}{% endif %}">
+            <span class="material-symbols-outlined">lock</span>{% trans "Lock" %}
+        </a>
+    </div>
 </header>
 
 <main class="shift-page">
+    {% if shift %}
     <span class="shift-active"><span class="shift-dot"></span>{% trans "Active Assignment" %}</span>
-    <h1 class="shift-title">{% if slot %}{{ place.title }}{% elif place %}{{ place.name }}{% else %}{{ shift.role.name }}{% endif %}</h1>
+    {% else %}
+    <span class="shift-active shift-idle">{% blocktrans with name=kiosk_user.first_name|default:kiosk_user.username %}Welcome, {{ name }}{% endblocktrans %}</span>
+    {% endif %}
+    <h1 class="shift-title">{{ title }}</h1>
 
+    {% if shift %}
     <section class="shift-timer-card">
         <span class="shift-label">{% trans "Shift Duration" %}</span>
         <time class="shift-timer" id="shift-timer" data-start="{{ shift.start_time|date:'c' }}">00:00:00</time>
         <form method="post" action="{% url 'kiosk_check_out' %}">
             {% csrf_token %}
             <input type="hidden" name="kind" value="{{ kind }}">
-            <input type="hidden" name="place" value="{{ place.pk|default:'' }}">
-            <button type="submit" class="kiosk-cta shift-checkout"><span class="material-symbols-outlined">logout</span>{% trans "Check Out" %}</button>
+            <input type="hidden" name="place" value="{{ place.pk }}">
+            <button type="submit" class="kiosk-cta shift-checkout"><span class="material-symbols-outlined">logout</span>{% trans "End Shift" %}</button>
         </form>
         <p class="shift-since">{% blocktrans with t=shift.start_time|time %}Checked in at {{ t }}{% endblocktrans %}</p>
     </section>
@@ -39,7 +49,7 @@
     <div class="shift-grid">
         <section class="shift-tile shift-details">
             <h2><span class="material-symbols-outlined">info</span>{% trans "Shift Details" %}</h2>
-            <strong>{{ shift.role.name }}{% if place.report_to_location %} &ndash; {{ place.report_to_location }}{% endif %}</strong>
+            <strong>{{ shift.role.name }}{% if report_to %} &ndash; {{ report_to }}{% endif %}</strong>
             {% if slot %}<p>{{ slot.start_time|date:"M j" }}, {{ slot.start_time|time }} &ndash; {{ slot.end_time|time }}</p>{% endif %}
             <span class="shift-verified"><span class="material-symbols-outlined">{% if shift.clutched %}bolt{% else %}check_circle{% endif %}</span>{% if shift.clutched %}{% trans "Clutch cover &middot; bonus points" %}{% else %}{% trans "Verified Position" %}{% endif %}</span>
         </section>
@@ -61,12 +71,48 @@
             {% endif %}
         </div>
     </div>
+    {% elif options %}
+    <section class="shift-timer-card shift-start-card">
+        <span class="shift-label">{% trans "Ready when you are" %}</span>
+        {% if start_option %}
+        <strong class="shift-start-role">{{ start_name }}</strong>
+        {% if start_detail %}<p class="shift-since">{{ start_detail }}</p>{% endif %}
+        <form method="post" action="{% url 'kiosk_start' kind place.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="choice" value="{{ start_option.pk }}">
+            <button type="submit" class="kiosk-cta shift-checkout"><span class="material-symbols-outlined">play_arrow</span>{% trans "Start Shift" %}</button>
+        </form>
+        {% else %}
+        <p class="shift-since">{% blocktrans count counter=options|length %}{{ counter }} role is open to you right now.{% plural %}{{ counter }} roles are open to you right now.{% endblocktrans %}</p>
+        <a href="{% url 'kiosk_start' kind place.pk %}" class="kiosk-cta shift-checkout"><span class="material-symbols-outlined">play_arrow</span>{% trans "Start Shift" %}</a>
+        {% endif %}
+    </section>
+    {% else %}
+    <section class="shift-timer-card shift-start-card">
+        <span class="material-symbols-outlined shift-empty-icon">event_busy</span>
+        {% if kind == 'venue' %}
+        <strong class="shift-start-role">{% trans "No positions at this venue" %}</strong>
+        <p class="shift-since">{% trans "You don't have a permanent role here yet. Please check in with a staff member." %}</p>
+        {% elif upcoming %}
+        <strong class="shift-start-role">{% trans "You're early!" %}</strong>
+        <p class="shift-since">{% blocktrans with role=upcoming.role.name t=upcoming.start_time|time %}Your {{ role }} shift starts at {{ t }}. Check in up to an hour before it begins.{% endblocktrans %}</p>
+        {% else %}
+        <strong class="shift-start-role">{% trans "No open shifts right now" %}</strong>
+        <p class="shift-since">{% trans "You aren't scheduled for this event and every current role is either full or needs training you haven't completed. Please see a coordinator." %}</p>
+        {% endif %}
+    </section>
+    {% endif %}
 
     {% if supervisor %}
     <section class="shift-supervisor">
         {% avatar supervisor 'lg' %}
         <span><strong>{{ supervisor|display_name }}</strong><small>{% trans "Event Supervisor" %}</small></span>
-        {% if supervisor.profile.phone %}<a href="tel:{{ supervisor.profile.phone }}" class="shift-call" aria-label="{% trans 'Call supervisor' %}"><span class="material-symbols-outlined">call</span></a>{% endif %}
+        {% if supervisor_qr %}
+        <figure class="shift-call-qr">
+            <span class="shift-qr">{{ supervisor_qr|safe }}</span>
+            <figcaption>{% trans "Scan to call from your phone" %}</figcaption>
+        </figure>
+        {% endif %}
     </section>
     {% endif %}
 </main>
@@ -77,18 +123,20 @@
 <script>
     (function () {
         const el = document.getElementById('shift-timer');
-        const start = new Date(el.dataset.start).getTime();
-        const pad = (n) => String(n).padStart(2, '0');
-        const tick = () => {
-            const s = Math.max(0, Math.floor((Date.now() - start) / 1000));
-            el.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
-        };
-        tick();
-        setInterval(tick, 1000);
+        if (el) {
+            const start = new Date(el.dataset.start).getTime();
+            const pad = (n) => String(n).padStart(2, '0');
+            const tick = () => {
+                const s = Math.max(0, Math.floor((Date.now() - start) / 1000));
+                el.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`;
+            };
+            tick();
+            setInterval(tick, 1000);
+        }
 
-        // Shared device: hand the kiosk back after inactivity. The shift keeps running.
+        // Shared device: lock the kiosk after inactivity. A running shift keeps running.
         const timeout = {{ idle_timeout|default:30 }} * 1000;
-        const signOutUrl = "{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk|default:'' }}";
+        const signOutUrl = "{% url 'kiosk_sign_out' %}?kind={{ kind }}&place={{ place.pk }}";
         let timer;
         const reset = () => { clearTimeout(timer); timer = setTimeout(() => { location.href = signOutUrl; }, timeout); };
         ['pointerdown', 'keydown', 'touchstart'].forEach((evt) => document.addEventListener(evt, reset, { passive: true }));

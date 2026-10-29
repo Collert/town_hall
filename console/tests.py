@@ -1458,16 +1458,24 @@ class KioskTests(ConsoleFixture):
 
     def test_event_check_in_and_out_with_id_code(self):
         login_url = reverse('kiosk_login_id_code', args=['event', self.live.pk])
+        me_url = reverse('kiosk_logged_in', args=['event', self.live.pk])
         self.assertEqual(self.client.get(login_url).status_code, 200)
         response = self.client.post(login_url, {'code': self.vol.profile.id_code})
-        self.assertRedirects(response, reverse('kiosk_start', args=['event', self.live.pk]), fetch_redirect_response=False)
+        self.assertRedirects(response, me_url, fetch_redirect_response=False)
 
-        response = self.client.get(reverse('kiosk_start', args=['event', self.live.pk]))
-        self.assertRedirects(response, reverse('kiosk_logged_in'), fetch_redirect_response=False)
+        # Signing in only opens the volunteer's screen; the shift starts when they press Start Shift.
+        response = self.client.get(me_url)
+        self.assertContains(response, 'Start Shift')
+        self.assertContains(response, 'Lock')
+        self.assertFalse(Shift.objects.filter(user=self.vol, end_time__isnull=True).exists())
+        response = self.client.post(reverse('kiosk_start', args=['event', self.live.pk]), {'choice': self.slot.pk})
+        self.assertRedirects(response, me_url, fetch_redirect_response=False)
         shift = Shift.objects.get(user=self.vol, end_time__isnull=True)
         self.assertEqual(shift.event_role_slot, self.slot)
         self.assertFalse(shift.clutched)
-        self.assertEqual(self.client.get(reverse('kiosk_logged_in')).status_code, 200)
+        response = self.client.get(me_url)
+        self.assertContains(response, 'End Shift')
+        self.assertNotContains(response, 'Start Shift')
         # The kiosk never logs the volunteer into the site itself.
         self.assertNotIn('_auth_user_id', self.client.session)
 
@@ -1475,6 +1483,24 @@ class KioskTests(ConsoleFixture):
         shift.refresh_from_db()
         self.assertIsNotNone(shift.end_time)
         self.assertNotIn('kiosk_user_id', self.client.session)
+
+    def test_lock_keeps_the_shift_running(self):
+        self.client.post(reverse('kiosk_login_id_code', args=['event', self.live.pk]), {'code': self.vol.profile.id_code})
+        self.client.post(reverse('kiosk_start', args=['event', self.live.pk]), {'choice': self.slot.pk})
+        response = self.client.get(reverse('kiosk_sign_out'), {'kind': 'event', 'place': self.live.pk})
+        self.assertRedirects(response, reverse('kiosk_login_id_code', args=['event', self.live.pk]), fetch_redirect_response=False)
+        self.assertNotIn('kiosk_user_id', self.client.session)
+        self.assertTrue(Shift.objects.filter(user=self.vol, end_time__isnull=True).exists())
+        response = self.client.get(reverse('kiosk_logged_in', args=['event', self.live.pk]))
+        self.assertRedirects(response, reverse('kiosk_login_id_code', args=['event', self.live.pk]), fetch_redirect_response=False)
+
+    def test_supervisor_phone_is_a_qr_code_not_a_link(self):
+        self.live.coordinators.add(self.staff)
+        Profile.objects.filter(user=self.staff).update(phone='+1 (604) 555-0100')
+        self.client.post(reverse('kiosk_login_id_code', args=['event', self.live.pk]), {'code': self.vol.profile.id_code})
+        response = self.client.get(reverse('kiosk_logged_in', args=['event', self.live.pk]))
+        self.assertContains(response, 'class="shift-qr"><svg')
+        self.assertNotContains(response, 'href="tel:')
 
     def test_wrong_code_is_rejected(self):
         response = self.client.post(reverse('kiosk_login_id_code', args=['event', self.live.pk]), {'code': '000000'}, follow=True)
@@ -1498,12 +1524,12 @@ class KioskTests(ConsoleFixture):
         self.assertContains(self.client.get(start_url), 'Librarian Assistant')
         self.client.post(start_url, {'choice': self.perm_role.pk})
         self.assertTrue(Shift.objects.filter(user=self.vol, role=self.perm_role, end_time__isnull=True).exists())
-        self.assertEqual(self.client.get(reverse('kiosk_logged_in')).status_code, 200)
+        self.assertContains(self.client.get(reverse('kiosk_logged_in', args=['venue', self.venue.pk])), 'End Shift')
 
     def test_unassigned_volunteer_cannot_start_permanent_role(self):
         self.client.post(reverse('kiosk_login_id_code', args=['venue', self.venue.pk]), {'code': self.mate.profile.id_code})
         start_url = reverse('kiosk_start', args=['venue', self.venue.pk])
-        self.assertNotContains(self.client.get(start_url), 'Librarian Assistant')
+        self.assertNotContains(self.client.get(start_url, follow=True), 'Librarian Assistant')
         self.client.post(start_url, {'choice': self.perm_role.pk})
         self.assertFalse(Shift.objects.filter(user=self.mate, end_time__isnull=True).exists())
 

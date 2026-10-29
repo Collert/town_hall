@@ -18,7 +18,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from base.models import Profile, SiteSettings, Venue
-from base.utils import photos_first, time_range
+from base.utils import photos_first, qr_svg, time_range
 from console.decorators import staff_required
 from events.models import Event
 from events.reminders import send_shift_thanks
@@ -71,10 +71,15 @@ def _kiosk_user(request):
 
 def _sign_in(request, kind, place, user):
     request.session[KIOSK_USER] = user.pk
-    return redirect('kiosk_start', kind=kind, place_id=place.pk)
+    return redirect('kiosk_logged_in', kind=kind, place_id=place.pk)
 
 
-@staff_required
+def _tel_link(phone):
+    """`tel:` URI for a typed phone number: keeps the digits and a leading +."""
+    digits = ''.join(ch for ch in phone if ch.isdigit())
+    return f"tel:{'+' if phone.strip().startswith('+') else ''}{digits}" if digits else ''
+
+
 def kiosk_home(request):
     """Staff picks which event or venue this device serves."""
     now = timezone.now()
@@ -121,90 +126,111 @@ def _eligible_event_slots(event, user):
     ]
 
 
-def kiosk_role_select(request, kind, place_id):
-    """After sign-in: start the right shift, or let the volunteer pick a role."""
+def _start_options(kind, place, user):
+    """What the volunteer could start here: (options, clutch, upcoming).
+
+    At an event, their own slots happening now (or within the hour) come first; without one,
+    open slots they're trained for, which earn a clutch bonus. At a venue, their permanent roles.
+    """
+    if kind == 'venue':
+        roles = user.profile.permanent_roles.filter(Q(venue=place) | Q(venue__isnull=True)).distinct()
+        return list(roles), False, None
+    now = timezone.now()
+    mine = list(place.role_slots.filter(signups=user, start_time__lte=now + EARLY_CHECK_IN, end_time__gte=now)
+                .select_related('role').order_by('start_time'))
+    upcoming = place.role_slots.filter(signups=user, start_time__gt=now + EARLY_CHECK_IN).select_related('role').order_by('start_time').first()
+    return (mine, False, upcoming) if mine else (_eligible_event_slots(place, user), True, upcoming)
+
+
+def _start_shift(kind, user, option, clutch):
+    if kind == 'venue':
+        return Shift.objects.create(user=user, role=option)
+    if clutch:
+        option.add_signup(user)
+    return Shift.objects.create(user=user, event_role_slot=option, clutched=clutch)
+
+
+def kiosk_logged_in(request, kind, place_id):
+    """The volunteer's kiosk screen: their running shift with an End Shift button, or a Start Shift button."""
     place = _place(kind, place_id)
     user = _kiosk_user(request)
     if not user:
         return redirect('kiosk_login_id_code', kind=kind, place_id=place.pk)
 
+    context = {**_place_context(kind, place), 'kiosk_user': user}
+    shift = Shift.objects.filter(user=user, end_time__isnull=True).select_related(
+        'role', 'event_role_slot__event', 'event_role_slot__role').first()
+    event = place if kind == 'event' else None
+    if shift:
+        slot = shift.event_role_slot
+        context['shift'] = shift
+        if slot:
+            event = slot.event
+            arrived = Shift.objects.filter(event_role_slot=slot, end_time__isnull=True).values_list('user_id', flat=True)
+            hours = max(1, (slot.end_time - slot.start_time).total_seconds() / 3600)
+            context.update({
+                'slot': slot,
+                'title': event.title,
+                'report_to': event.report_to_location,
+                'team_size': slot.signups.count(),
+                'team_arrived': photos_first(User.objects.filter(pk__in=arrived).select_related('profile')),
+                'estimated_impact': round(hours * max(event.attendees, 1)),
+            })
+        else:
+            context['estimated_impact'] = shift.role.regular_number_of_beneficiaries if shift.role else None
+    else:
+        options, clutch, upcoming = _start_options(kind, place, user)
+        context.update({'options': options, 'upcoming': upcoming})
+        # One obvious choice starts straight from this screen; anything else goes to the role picker.
+        if len(options) == 1 and not clutch:
+            option = options[0]
+            context.update({
+                'start_option': option,
+                'start_name': option.name if kind == 'venue' else option.role.name,
+                'start_detail': time_range(option.start_time, option.end_time) if kind == 'event' else '',
+            })
+    context.setdefault('title', place.title if kind == 'event' else place.name)
+
+    supervisor = event.coordinators.select_related('profile').first() if event else None
+    tel = _tel_link(supervisor.profile.phone) if supervisor else ''
+    context.update({'supervisor': supervisor, 'supervisor_qr': qr_svg(tel) if tel else ''})
+    return render(request, 'jobs/kiosk_logged_in.html', context)
+
+
+def kiosk_role_select(request, kind, place_id):
+    """Pick which role to start when there's more than one (or a clutch cover), then start it."""
+    place = _place(kind, place_id)
+    user = _kiosk_user(request)
+    if not user:
+        return redirect('kiosk_login_id_code', kind=kind, place_id=place.pk)
+    home = redirect('kiosk_logged_in', kind=kind, place_id=place.pk)
     if Shift.objects.filter(user=user, end_time__isnull=True).exists():
-        return redirect('kiosk_logged_in')
+        return home
 
-    now = timezone.now()
+    options, clutch, upcoming = _start_options(kind, place, user)
+    if request.method == 'POST':
+        option = next((o for o in options if str(o.pk) == request.POST.get('choice')), None)
+        if option:
+            _start_shift(kind, user, option, clutch)
+            return home
+        messages.error(request, _('Please choose one of the listed roles.'))
+    if not options:
+        return home
+
     if kind == 'event':
-        mine = place.role_slots.filter(signups=user, start_time__lte=now + EARLY_CHECK_IN, end_time__gte=now).order_by('start_time')
-        if mine.count() == 1 and request.method != 'POST':
-            Shift.objects.create(user=user, event_role_slot=mine.first())
-            return redirect('kiosk_logged_in')
-        options = list(mine) or _eligible_event_slots(place, user)
-        clutch = not mine.exists()
-
-        if request.method == 'POST':
-            slot = next((s for s in options if str(s.pk) == request.POST.get('choice')), None)
-            if not slot:
-                messages.error(request, _('Please choose one of the listed roles.'))
-            else:
-                if clutch:
-                    slot.add_signup(user)
-                Shift.objects.create(user=user, event_role_slot=slot, clutched=clutch)
-                return redirect('kiosk_logged_in')
-
-        upcoming = place.role_slots.filter(signups=user, start_time__gt=now + EARLY_CHECK_IN).order_by('start_time').first()
         choices = [{
             'id': s.pk, 'icon': s.role.icon, 'name': s.role.name, 'description': s.role.description,
             'detail': time_range(s.start_time, s.end_time),
         } for s in options]
     else:
-        roles = list(user.profile.permanent_roles.filter(Q(venue=place) | Q(venue__isnull=True)).distinct())
-        if request.method == 'POST':
-            role = next((r for r in roles if str(r.pk) == request.POST.get('choice')), None)
-            if not role:
-                messages.error(request, _('Please choose one of the listed roles.'))
-            else:
-                Shift.objects.create(user=user, role=role)
-                return redirect('kiosk_logged_in')
-        clutch, upcoming = False, None
-        choices = [{'id': r.pk, 'icon': r.icon, 'name': r.name, 'description': r.description, 'detail': ''} for r in roles]
+        choices = [{'id': r.pk, 'icon': r.icon, 'name': r.name, 'description': r.description, 'detail': ''} for r in options]
 
     return render(request, 'jobs/kiosk_role_select.html', {
         **_place_context(kind, place),
         'kiosk_user': user,
         'choices': choices,
         'clutch': clutch,
-        'upcoming': upcoming,
     })
-
-
-def kiosk_logged_in(request):
-    user = _kiosk_user(request)
-    shift = Shift.objects.filter(user=user, end_time__isnull=True).select_related(
-        'role', 'event_role_slot__event', 'event_role_slot__role').first() if user else None
-    if not shift:
-        messages.info(request, _('Your kiosk session has ended.'))
-        return redirect('kiosk_home') if request.user.is_staff else redirect('home')
-
-    slot = shift.event_role_slot
-    context = {'kiosk_user': user, 'shift': shift, 'idle_timeout': SiteSettings.get_settings().kiosk_idle_timeout_seconds}
-    if slot:
-        event = slot.event
-        team = slot.signups.all()
-        arrived = Shift.objects.filter(event_role_slot=slot, end_time__isnull=True).values_list('user_id', flat=True)
-        hours = max(1, (slot.end_time - slot.start_time).total_seconds() / 3600)
-        context.update({
-            'kind': 'event', 'place': event, 'slot': slot,
-            'team_size': team.count(),
-            'team_arrived': photos_first(User.objects.filter(pk__in=arrived).select_related('profile')),
-            'estimated_impact': round(hours * max(event.attendees, 1)),
-            'supervisor': event.coordinators.select_related('profile').first(),
-        })
-    else:
-        venue = shift.role.venue.first() if shift.role else None
-        context.update({
-            'kind': 'venue', 'place': venue,
-            'estimated_impact': shift.role.regular_number_of_beneficiaries if shift.role else None,
-        })
-    return render(request, 'jobs/kiosk_logged_in.html', context)
 
 
 @require_POST

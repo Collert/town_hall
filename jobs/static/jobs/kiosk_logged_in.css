@@ -12,12 +12,34 @@
     color: var(--color-text-primary);
 }
 
+.shift-account {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
 .shift-user {
     display: flex;
     align-items: center;
     gap: 0.75rem;
     font-weight: 600;
     color: var(--color-text-primary);
+}
+
+.shift-lock {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.4rem;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.shift-lock:active {
+    transform: scale(0.97);
 }
 
 .shift-page {
@@ -50,6 +72,11 @@
     border-radius: 50%;
     background: var(--color-primary-light);
     animation: shift-pulse 1.6s ease-in-out infinite;
+}
+
+.shift-idle {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
 }
 
 @keyframes shift-pulse {
@@ -123,6 +150,23 @@
 
 .shift-since {
     color: var(--color-text-primary);
+    text-align: center;
+}
+
+.shift-start-role {
+    position: relative;
+    z-index: 1;
+    font-family: 'Manrope', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-align: center;
+    color: var(--color-text-primary);
+}
+
+.shift-empty-icon {
+    font-size: 3.5rem;
+    color: var(--color-text-tertiary);
 }
 
 .shift-grid {
@@ -256,19 +300,46 @@
     color: var(--color-text-secondary);
 }
 
-.shift-call {
+.shift-call-qr {
     margin-left: auto;
-    display: grid;
-    place-items: center;
-    width: 3.75rem;
-    height: 3.75rem;
-    border-radius: 50%;
-    background: var(--color-primary);
-    color: var(--color-primary-contrast);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Dark code on a light tile in both themes (these two colors don't swap), so any phone camera reads it. */
+.shift-qr {
+    display: block;
+    width: 8.5rem;
+    padding: 0.4rem;
+    border-radius: 1rem;
+    background: var(--color-primary-contrast);
+    color: var(--color-primary);
+}
+
+.shift-qr svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.shift-call-qr figcaption {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
 }
 
 @media (max-width: 640px) {
     .shift-grid {
         grid-template-columns: 1fr;
+    }
+
+    .shift-user > span {
+        display: none;
+    }
+
+    .shift-supervisor {
+        flex-wrap: wrap;
     }
 }

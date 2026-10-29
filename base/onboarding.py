@@ -373,15 +373,19 @@ The kiosk never signs volunteers into the website; it only records shifts.
 
 - They type their 6-digit **kiosk ID** (shown in their account menu under **Your kiosk ID**), or
   sign in with their email and password.
-- If they are signed up for a shift starting within the next hour, it starts immediately.
-- If they signed up for more than one, they choose which.
+- Signing in opens their own screen with a **Start Shift** button. If they are signed up for a shift
+  starting within the next hour, that's the one it starts; if they signed up for more than one,
+  they choose which.
 - If they aren't signed up at all, the kiosk offers roles that still need people and that they're
   trained for. Stepping in this way is a **clutch cover** and earns bonus points.
 - At a venue kiosk, staff can only start shifts in permanent roles assigned to them.
-- When they leave, they sign in again and choose **Check Out**.
+- When they leave, they sign in again and press **End Shift**.
+- At an event, their screen shows the event supervisor with a QR code; scanning it calls the
+  supervisor from the volunteer's own phone.
 
-After the idle timeout set under **Organization > Identity**, the kiosk signs the volunteer out on
-its own, ready for the next person.
+**Lock** signs the volunteer out of the kiosk right away (a running shift keeps running). After the
+idle timeout set under **Organization > Identity**, the kiosk locks on its own, ready for the next
+person.
 
 ## The Check-in Monitor
 

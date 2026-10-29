@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Town Hall\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 13:08-0700\n"
+"POT-Creation-Date: 2026-10-29 13:40-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
@@ -2519,7 +2519,7 @@ msgstr "Колір роздільників і рамок"
 msgid "Successfully logged in."
 msgstr "Вхід виконано."
 
-#: .\base\views.py:127 .\jobs\views.py:109
+#: .\base\views.py:127 .\jobs\views.py:114
 msgid "Invalid email or password."
 msgstr "Неправильна електронна адреса або пароль."
 
@@ -9616,6 +9616,7 @@ msgid "Volunteer Impact Certificate - %(name)s"
 msgstr "Сертифікат волонтерського впливу — %(name)s"
 
 #: .\events\templates\events\event_certificate.html:12
+#: .\jobs\templates\jobs\kiosk_role_select.html:18
 msgid "Back"
 msgstr "Назад"
 
@@ -9666,7 +9667,7 @@ msgid "Volunteer Role"
 msgstr "Роль волонтера"
 
 #: .\events\templates\events\event_certificate.html:64
-#: .\jobs\templates\jobs\kiosk_logged_in.html:68
+#: .\jobs\templates\jobs\kiosk_logged_in.html:109
 msgid "Event Supervisor"
 msgstr "Керівник події"
 
@@ -10530,50 +10531,119 @@ msgstr "Кіоск волонтера"
 msgid "Shift Check-in"
 msgstr "Реєстрація на зміну"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:17
-msgid "Done, keep my shift running"
-msgstr "Готово, залишити мою зміну активною"
+#: .\jobs\templates\jobs\kiosk_logged_in.html:22
+msgid "Lock the kiosk. Your shift keeps running."
+msgstr "Заблокувати кіоск. Ваша зміна триває."
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:24
+#: .\jobs\templates\jobs\kiosk_logged_in.html:22
+msgid "Lock the kiosk"
+msgstr "Заблокувати кіоск"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:23
+msgid "Lock"
+msgstr "Заблокувати"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:30
 msgid "Active Assignment"
 msgstr "Активне призначення"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:28
+#: .\jobs\templates\jobs\kiosk_logged_in.html:32
+#: .\jobs\templates\jobs\kiosk_role_select.html:10
+#, python-format
+msgid "Welcome, %(name)s"
+msgstr "Вітаємо, %(name)s"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:38
 msgid "Shift Duration"
 msgstr "Тривалість зміни"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:34
-msgid "Check Out"
-msgstr "Відмітити вихід"
+#: .\jobs\templates\jobs\kiosk_logged_in.html:44
+msgid "End Shift"
+msgstr "Завершити зміну"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:36
+#: .\jobs\templates\jobs\kiosk_logged_in.html:46
 #, python-format
 msgid "Checked in at %(t)s"
 msgstr "Відмічено о %(t)s"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:41
+#: .\jobs\templates\jobs\kiosk_logged_in.html:51
 msgid "Shift Details"
 msgstr "Деталі зміни"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:44
+#: .\jobs\templates\jobs\kiosk_logged_in.html:54
 msgid "Clutch cover &middot; bonus points"
 msgstr "Критична заміна &middot; бонусні бали"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:44
+#: .\jobs\templates\jobs\kiosk_logged_in.html:54
 msgid "Verified Position"
 msgstr "Підтверджена посада"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:48
+#: .\jobs\templates\jobs\kiosk_logged_in.html:58
 msgid "Estimated Impact"
 msgstr "Орієнтовний вплив"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:54
+#: .\jobs\templates\jobs\kiosk_logged_in.html:64
 msgid "Team Arrived"
 msgstr "Команда прибула"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:69
-msgid "Call supervisor"
-msgstr "Викликати керівника"
+#: .\jobs\templates\jobs\kiosk_logged_in.html:76
+msgid "Ready when you are"
+msgstr "Почнімо, коли будете готові"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:83
+#: .\jobs\templates\jobs\kiosk_logged_in.html:87
+msgid "Start Shift"
+msgstr "Почати зміну"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:86
+#, python-format
+msgid "%(counter)s role is open to you right now."
+msgid_plural "%(counter)s roles are open to you right now."
+msgstr[0] "%(counter)s роль зараз відкрита для вас."
+msgstr[1] "%(counter)s ролі зараз відкриті для вас."
+msgstr[2] "%(counter)s ролей зараз відкрито для вас."
+msgstr[3] "%(counter)s ролі зараз відкрито для вас."
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:94
+msgid "No positions at this venue"
+msgstr "У цій локації немає посад"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:95
+msgid ""
+"You don't have a permanent role here yet. Please check in with a staff "
+"member."
+msgstr ""
+"У вас ще немає постійної ролі тут. Будь ласка, зверніться до працівника "
+"персоналу."
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:97
+msgid "You're early!"
+msgstr "Ви завчасно!"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:98
+#, python-format
+msgid ""
+"Your %(role)s shift starts at %(t)s. Check in up to an hour before it begins."
+msgstr ""
+"Ваша зміна «%(role)s» починається о %(t)s. Відмітитися можна за годину до "
+"початку."
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:100
+msgid "No open shifts right now"
+msgstr "Зараз немає відкритих змін"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:101
+msgid ""
+"You aren't scheduled for this event and every current role is either full or "
+"needs training you haven't completed. Please see a coordinator."
+msgstr ""
+"Вас не заплановано на цю подію, а всі поточні ролі або заповнені, або "
+"потребують навчання, якого ви не завершили. Будь ласка, зверніться до "
+"координатора."
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:113
+msgid "Scan to call from your phone"
+msgstr "Скануйте, щоб зателефонувати зі свого телефона"
 
 #: .\jobs\templates\jobs\kiosk_login_email_password.html:8
 msgid "Sign In with Email"
@@ -10618,7 +10688,7 @@ msgid "Clear"
 msgstr "Очистити"
 
 #: .\jobs\templates\jobs\kiosk_login_id_code.html:27
-#: .\jobs\templates\jobs\kiosk_role_select.html:38
+#: .\jobs\templates\jobs\kiosk_role_select.html:37
 msgid "Confirm & Start Shift"
 msgstr "Підтвердити й розпочати зміну"
 
@@ -10629,11 +10699,6 @@ msgstr "Забули ID волонтера? Увійдіть за допомог
 #: .\jobs\templates\jobs\kiosk_login_id_code.html:32
 msgid "Secure kiosk mode active"
 msgstr "Захищений режим кіоска активний"
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:10
-#, python-format
-msgid "Welcome, %(name)s"
-msgstr "Вітаємо, %(name)s"
 
 #: .\jobs\templates\jobs\kiosk_role_select.html:13
 msgid ""
@@ -10650,51 +10715,6 @@ msgstr "Будь ласка, оберіть своє основне призна
 #: .\jobs\templates\jobs\kiosk_role_select.html:15
 msgid "You're signed up for more than one shift. Which are you starting?"
 msgstr "Ви записані більш ніж на одну зміну. Яку ви розпочинаєте?"
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:18
-msgid "Cancel and sign out"
-msgstr "Скасувати й вийти"
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:44
-msgid "No positions at this venue"
-msgstr "У цій локації немає посад"
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:45
-msgid ""
-"You don't have a permanent role here yet. Please check in with a staff "
-"member."
-msgstr ""
-"У вас ще немає постійної ролі тут. Будь ласка, зверніться до працівника "
-"персоналу."
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:47
-msgid "You're early!"
-msgstr "Ви завчасно!"
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:48
-#, python-format
-msgid ""
-"Your %(role)s shift starts at %(t)s. Check in up to an hour before it begins."
-msgstr ""
-"Ваша зміна «%(role)s» починається о %(t)s. Відмітитися можна за годину до "
-"початку."
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:50
-msgid "No open shifts right now"
-msgstr "Зараз немає відкритих змін"
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:51
-msgid ""
-"You aren't scheduled for this event and every current role is either full or "
-"needs training you haven't completed. Please see a coordinator."
-msgstr ""
-"Вас не заплановано на цю подію, а всі поточні ролі або заповнені, або "
-"потребують навчання, якого ви не завершили. Будь ласка, зверніться до "
-"координатора."
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:53
-msgid "Done"
-msgstr "Готово"
 
 #: .\jobs\templates\jobs\partials\kiosk_language.html:8
 msgid "Change language"
@@ -10741,19 +10761,15 @@ msgstr "Потрібна допомога?"
 msgid "Ask a staff member at the front desk."
 msgstr "Зверніться до працівника персоналу на стійці реєстрації."
 
-#: .\jobs\views.py:96
+#: .\jobs\views.py:101
 msgid "We couldn't find that Volunteer ID. Please try again."
 msgstr "Нам не вдалося знайти цей ID волонтера. Будь ласка, спробуйте ще раз."
 
-#: .\jobs\views.py:146 .\jobs\views.py:163
+#: .\jobs\views.py:216
 msgid "Please choose one of the listed roles."
 msgstr "Будь ласка, оберіть одну з наведених ролей."
 
-#: .\jobs\views.py:184
-msgid "Your kiosk session has ended."
-msgstr "Ваш сеанс на кіоску завершено."
-
-#: .\jobs\views.py:218
+#: .\jobs\views.py:244
 #, python-format
 msgid ""
 "Thanks, %(name)s! You logged %(hours)s hours and earned %(points)s impact "
@@ -10874,6 +10890,24 @@ msgstr "Традиційна китайська"
 #: .\town_hall\settings.py:178
 msgid "Tagalog"
 msgstr "Тагальська"
+
+#~ msgid "Done, keep my shift running"
+#~ msgstr "Готово, залишити мою зміну активною"
+
+#~ msgid "Check Out"
+#~ msgstr "Відмітити вихід"
+
+#~ msgid "Call supervisor"
+#~ msgstr "Викликати керівника"
+
+#~ msgid "Cancel and sign out"
+#~ msgstr "Скасувати й вийти"
+
+#~ msgid "Done"
+#~ msgstr "Готово"
+
+#~ msgid "Your kiosk session has ended."
+#~ msgstr "Ваш сеанс на кіоску завершено."
 
 #~ msgid "Confirming..."
 #~ msgstr "Підтвердження..."

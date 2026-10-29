@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 13:08-0700\n"
+"POT-Creation-Date: 2026-10-29 13:40-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2480,7 +2480,7 @@ msgstr ""
 msgid "Successfully logged in."
 msgstr ""
 
-#: .\base\views.py:127 .\jobs\views.py:109
+#: .\base\views.py:127 .\jobs\views.py:114
 msgid "Invalid email or password."
 msgstr ""
 
@@ -9213,8 +9213,9 @@ msgid "Volunteer Impact Certificate - %(name)s"
 msgstr ""
 
 #: .\events\templates\events\event_certificate.html:12
+#: .\jobs\templates\jobs\kiosk_role_select.html:18
 msgid "Back"
-msgstr ""
+msgstr "Volver"
 
 #: .\events\templates\events\event_certificate.html:14
 msgid "Print"
@@ -9261,7 +9262,7 @@ msgid "Volunteer Role"
 msgstr ""
 
 #: .\events\templates\events\event_certificate.html:64
-#: .\jobs\templates\jobs\kiosk_logged_in.html:68
+#: .\jobs\templates\jobs\kiosk_logged_in.html:109
 msgid "Event Supervisor"
 msgstr ""
 
@@ -10078,50 +10079,111 @@ msgstr ""
 msgid "Shift Check-in"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:17
-msgid "Done, keep my shift running"
-msgstr ""
+#: .\jobs\templates\jobs\kiosk_logged_in.html:22
+msgid "Lock the kiosk. Your shift keeps running."
+msgstr "Bloquear el quiosco. Tu turno sigue en curso."
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:24
+#: .\jobs\templates\jobs\kiosk_logged_in.html:22
+msgid "Lock the kiosk"
+msgstr "Bloquear el quiosco"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:23
+msgid "Lock"
+msgstr "Bloquear"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:30
 msgid "Active Assignment"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:28
+#: .\jobs\templates\jobs\kiosk_logged_in.html:32
+#: .\jobs\templates\jobs\kiosk_role_select.html:10
+#, python-format
+msgid "Welcome, %(name)s"
+msgstr "Bienvenido/a, %(name)s"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:38
 msgid "Shift Duration"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:34
-msgid "Check Out"
-msgstr ""
+#: .\jobs\templates\jobs\kiosk_logged_in.html:44
+msgid "End Shift"
+msgstr "Terminar turno"
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:36
+#: .\jobs\templates\jobs\kiosk_logged_in.html:46
 #, python-format
 msgid "Checked in at %(t)s"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:41
+#: .\jobs\templates\jobs\kiosk_logged_in.html:51
 msgid "Shift Details"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:44
+#: .\jobs\templates\jobs\kiosk_logged_in.html:54
 msgid "Clutch cover &middot; bonus points"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:44
+#: .\jobs\templates\jobs\kiosk_logged_in.html:54
 msgid "Verified Position"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:48
+#: .\jobs\templates\jobs\kiosk_logged_in.html:58
 msgid "Estimated Impact"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:54
+#: .\jobs\templates\jobs\kiosk_logged_in.html:64
 msgid "Team Arrived"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:69
-msgid "Call supervisor"
+#: .\jobs\templates\jobs\kiosk_logged_in.html:76
+msgid "Ready when you are"
+msgstr "Listo cuando tú lo estés"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:83
+#: .\jobs\templates\jobs\kiosk_logged_in.html:87
+msgid "Start Shift"
+msgstr "Comenzar turno"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:86
+#, python-format
+msgid "%(counter)s role is open to you right now."
+msgid_plural "%(counter)s roles are open to you right now."
+msgstr[0] "%(counter)s puesto está disponible para ti ahora."
+msgstr[1] "%(counter)s puestos están disponibles para ti ahora."
+msgstr[2] "%(counter)s puestos están disponibles para ti ahora."
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:94
+msgid "No positions at this venue"
 msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:95
+msgid ""
+"You don't have a permanent role here yet. Please check in with a staff "
+"member."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:97
+msgid "You're early!"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:98
+#, python-format
+msgid ""
+"Your %(role)s shift starts at %(t)s. Check in up to an hour before it begins."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:100
+msgid "No open shifts right now"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:101
+msgid ""
+"You aren't scheduled for this event and every current role is either full or "
+"needs training you haven't completed. Please see a coordinator."
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:113
+msgid "Scan to call from your phone"
+msgstr "Escanea para llamar desde tu teléfono"
 
 #: .\jobs\templates\jobs\kiosk_login_email_password.html:8
 msgid "Sign In with Email"
@@ -10164,7 +10226,7 @@ msgid "Clear"
 msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_login_id_code.html:27
-#: .\jobs\templates\jobs\kiosk_role_select.html:38
+#: .\jobs\templates\jobs\kiosk_role_select.html:37
 msgid "Confirm & Start Shift"
 msgstr ""
 
@@ -10174,11 +10236,6 @@ msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_login_id_code.html:32
 msgid "Secure kiosk mode active"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:10
-#, python-format
-msgid "Welcome, %(name)s"
 msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_role_select.html:13
@@ -10193,44 +10250,6 @@ msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_role_select.html:15
 msgid "You're signed up for more than one shift. Which are you starting?"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:18
-msgid "Cancel and sign out"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:44
-msgid "No positions at this venue"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:45
-msgid ""
-"You don't have a permanent role here yet. Please check in with a staff "
-"member."
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:47
-msgid "You're early!"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:48
-#, python-format
-msgid ""
-"Your %(role)s shift starts at %(t)s. Check in up to an hour before it begins."
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:50
-msgid "No open shifts right now"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:51
-msgid ""
-"You aren't scheduled for this event and every current role is either full or "
-"needs training you haven't completed. Please see a coordinator."
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_role_select.html:53
-msgid "Done"
 msgstr ""
 
 #: .\jobs\templates\jobs\partials\kiosk_language.html:8
@@ -10277,19 +10296,15 @@ msgstr ""
 msgid "Ask a staff member at the front desk."
 msgstr ""
 
-#: .\jobs\views.py:96
+#: .\jobs\views.py:101
 msgid "We couldn't find that Volunteer ID. Please try again."
 msgstr ""
 
-#: .\jobs\views.py:146 .\jobs\views.py:163
+#: .\jobs\views.py:216
 msgid "Please choose one of the listed roles."
 msgstr ""
 
-#: .\jobs\views.py:184
-msgid "Your kiosk session has ended."
-msgstr ""
-
-#: .\jobs\views.py:218
+#: .\jobs\views.py:244
 #, python-format
 msgid ""
 "Thanks, %(name)s! You logged %(hours)s hours and earned %(points)s impact "
