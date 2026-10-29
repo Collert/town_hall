@@ -15,13 +15,15 @@ body.bare {
 
 .impact-card {
     position: relative;
-    overflow: hidden;
+    container-type: inline-size;
     width: min(36rem, 100%);
+    /* Square when the content fits; grows instead of overlapping when the title is long */
     aspect-ratio: 1;
+    overflow: clip;  /* not hidden: a scroll container would stop the card growing */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: clamp(1.75rem, 6vw, 3.5rem);
+    gap: clamp(1.25rem, 4vw, 2rem);
+    padding: clamp(1.5rem, 6vw, 3rem);
     border-radius: 2.5rem;
     background: var(--color-bg-primary);
     box-shadow: 0 32px 64px rgba(from var(--color-primary-vivid) r g b / 0.15);
@@ -35,9 +37,10 @@ body.bare {
     height: 50%;
     background: linear-gradient(135deg, var(--color-bg-secondary), rgba(from var(--color-accent) r g b / 0.08));
     border-bottom-left-radius: 2.5rem;
+    pointer-events: none;
 }
 
-.impact-card > * {
+.impact-card > :not(.impact-card-tint) {
     position: relative;
 }
 
@@ -45,11 +48,16 @@ body.bare {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+.impact-card-title {
+    flex: 1;
+    min-width: 0;
 }
 
 .impact-card-kicker {
-    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    font-size: max(0.7rem, 2.6cqi);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -58,35 +66,41 @@ body.bare {
 
 .impact-card-head h1 {
     margin-top: 0.5rem;
-    max-width: 18rem;
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(1.75rem, 6vw, 3rem);
+    font-size: max(1.6rem, 8.5cqi);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.05;
     color: var(--color-text-primary);
+    overflow-wrap: anywhere;
 }
 
 .impact-card-brand {
-    display: inline-flex;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 0.5rem;
+    max-width: 35%;
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-size: max(0.85rem, 3.4cqi);
     font-weight: 800;
+    line-height: 1.2;
     color: var(--color-text-primary);
     text-align: right;
 }
 
 .impact-card-brand img {
-    height: 2rem;
+    height: max(2rem, 10cqi);
+    width: auto;
+    border-radius: 1rem;
 }
 
 .impact-card-stats {
+    margin-top: auto;
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
-    gap: clamp(0.5rem, 2vw, 1.25rem);
+    gap: clamp(0.5rem, 3cqi, 1.25rem);
 }
 
 .impact-card-stats div {
@@ -95,22 +109,23 @@ body.bare {
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
-    padding: clamp(1rem, 4vw, 1.75rem) 0.5rem;
+    min-width: 0;
+    padding: clamp(1rem, 5cqi, 1.75rem) 0.5rem;
     border-radius: 1.5rem;
     text-align: center;
 }
 
 .impact-card-stats strong {
     font-family: 'Manrope', sans-serif;
-    font-size: clamp(1.75rem, 6vw, 2.75rem);
+    font-size: max(1.5rem, 8cqi);
     font-weight: 800;
     line-height: 1;
 }
 
 .impact-card-stats span {
-    font-size: clamp(0.6rem, 1.8vw, 0.8rem);
+    font-size: max(0.6rem, 2.1cqi);
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
 }
 
@@ -152,32 +167,40 @@ body.bare {
     display: flex;
 }
 
-.impact-card-icons .material-symbols-outlined {
+.impact-card-icons > span {
     display: grid;
     place-items: center;
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    font-size: 1.1rem;
-    font-variation-settings: 'FILL' 1;
     background: rgba(from var(--color-accent) r g b / 0.15);
     color: var(--color-accent);
     box-shadow: 0 0 0 3px var(--color-bg-primary);
 }
 
-.impact-card-icons .material-symbols-outlined + .material-symbols-outlined {
+.impact-card-icons > span + span {
     margin-left: -0.5rem;
     background: var(--color-bg-tertiary);
     color: var(--color-text-primary);
 }
 
+.impact-card-foot svg {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: currentColor;
+}
+
 .impact-card-place {
     display: inline-flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.35rem;
-    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    min-width: 0;
+    font-size: max(0.7rem, 2.4cqi);
     font-weight: 600;
     letter-spacing: 0.08em;
+    text-align: right;
     text-transform: uppercase;
     color: var(--color-text-secondary);
 }
