@@ -439,32 +439,58 @@ class VolunteerPageTests(ConsoleFixture):
             with self.subTest(url=url):
                 self.assertEqual(self.client.get(url).status_code, 200)
 
-    def test_finished_shifts_are_listed_with_time_worked_before_the_event_ends(self):
-        # Clocked out of the live event after 50 minutes; its 3.5 h slot is still running
-        shift = Shift.objects.create(user=self.vol, event_role_slot=self.slot)
-        Shift.objects.filter(pk=shift.pk).update(start_time=timezone.now() - timedelta(minutes=50))
+    def worked(self, slot, start, minutes):
+        shift = Shift.objects.create(user=self.vol, event_role_slot=slot)
+        Shift.objects.filter(pk=shift.pk).update(start_time=start)
         shift.refresh_from_db()
-        shift.end_time = shift.start_time + timedelta(minutes=50)
+        shift.end_time = start + timedelta(minutes=minutes)
         shift.save()
+        return shift
+
+    def test_finished_shifts_are_grouped_by_slot_and_event_before_the_event_ends(self):
+        now = timezone.now()
+        # Live event (still running): clocked out of the Greeter slot for a break and came
+        # back (20 + 10 min, the break doesn't count), after an hour on Setup earlier
+        self.worked(self.slot, now - timedelta(minutes=50), 20)
+        self.worked(self.slot, now - timedelta(minutes=20), 10)
+        setup = Role.objects.create(name='Setup Crew', icon='construction')
+        setup_slot = EventRoleSlot.objects.create(event=self.live, role=setup, start_time=now - timedelta(hours=2),
+                                                  end_time=now - timedelta(hours=1), required_qty=2)
+        setup_slot.signups.add(self.vol)
+        self.worked(setup_slot, now - timedelta(hours=2), 60)
+        # Past event: a second Greeter slot after the 3 h one is still one job
+        later = EventRoleSlot.objects.create(event=self.past, role=self.role, start_time=self.past.start_date + timedelta(hours=4),
+                                             end_time=self.past.start_date + timedelta(hours=5), required_qty=2)
+        later.signups.add(self.vol)
+        self.worked(later, later.start_time, 60)
 
         page = self.client.get(reverse('my_events'))
-        self.assertEqual(list(page.context['past_shifts']), [shift, self.vol.shifts.get(event_role_slot=self.past_slot)])
+        rows = [(e['event'].title, [r.name for r in e['roles']], round(e['hours'], 1)) for e in page.context['past_events']]
+        self.assertEqual(rows, [('Fall Festival', ['Setup Crew', 'Greeter'], 1.5), ('Spring Cleanup', ['Greeter'], 4.0)])
+        self.assertContains(page, '2 jobs')
+        self.assertContains(page, '1.5 Hours')
+        self.assertContains(page, '4.0 Hours')
         self.assertContains(page, reverse('event_thank_you', args=[self.live.pk]))
-        self.assertContains(page, '0.8 Hours')
-        self.assertContains(page, '3.0 Hours')
 
         own = self.client.get(reverse('profile_view', args=[self.vol.username]))
-        self.assertEqual([(a['event_title'], a['hours']) for a in own.context['activity_history']],
-                         [('Fall Festival', 0.8), ('Spring Cleanup', 3.0)])
+        self.assertEqual([(a['event_title'], a['role_name'], a['hours']) for a in own.context['activity_history']], [
+            ('Fall Festival', 'Greeter', 0.5), ('Fall Festival', 'Setup Crew', 1.0),
+            ('Spring Cleanup', 'Greeter', 1.0), ('Spring Cleanup', 'Greeter', 3.0),
+        ])
         self.assertContains(own, f'href="{reverse("event_thank_you", args=[self.live.pk])}"')
+
+        summary = self.client.get(reverse('event_thank_you', args=[self.live.pk]))
+        self.assertEqual(summary.context['me']['hours'], 1.5)
+        self.assertEqual([i['role'].name for i in summary.context['me']['worked']], ['Setup Crew', 'Greeter'])
+        self.assertContains(summary, 'Setup Crew')
 
         self.client.force_login(self.mate)
         other = self.client.get(reverse('profile_view', args=[self.vol.username]))
         certificate = reverse('event_certificate', args=[self.live.pk, self.vol.username])
         self.assertContains(other, f'href="{certificate}"')
-        self.assertEqual(self.client.get(certificate).status_code, 200)
+        self.assertContains(self.client.get(certificate), 'Setup Crew, Greeter')
         # Signed up but never clocked out: no history row and no certificate before the event ends
-        self.assertEqual(self.client.get(reverse('my_events')).context['past_shifts'].count(), 0)
+        self.assertEqual(self.client.get(reverse('my_events')).context['past_events'], [])
         self.assertEqual(self.client.get(reverse('event_certificate', args=[self.live.pk, 'mate'])).status_code, 404)
 
     def test_anonymous_public_pages(self):
@@ -883,6 +909,7 @@ class RegionSettingsTests(ConsoleFixture):
             self.assertEqual(settings.MODELTRANSLATION_FALLBACK_LANGUAGES, ('fr', 'en', 'es', 'uk', 'zh-hant', 'tl'))
 
     def test_new_languages_have_urls_and_flags(self):
+        self.addCleanup(translation.activate, 'en')  # requests below switch the thread's language
         for prefix, flag in (('zh-hant', 'fi-hk'), ('tl', 'fi-ph')):
             response = self.client.get(f'/{prefix}/')
             self.assertEqual(response.status_code, 200)

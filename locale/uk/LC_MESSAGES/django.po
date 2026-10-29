@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Town Hall\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 12:46-0700\n"
+"POT-Creation-Date: 2026-10-29 13:08-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Ukrainian\n"
@@ -526,7 +526,7 @@ msgstr "Відгук для адміністрації (приватний)"
 
 #: .\base\templates\base\give_endorsement.html:78
 #: .\console\templates\console\volunteer_detail.html:380
-#: .\events\templates\events\event_thank_you.html:75
+#: .\events\templates\events\event_thank_you.html:93
 #, python-format
 msgid "%(n)s stars"
 msgstr "Зірок: %(n)s"
@@ -2515,46 +2515,46 @@ msgstr "Колір другорядного тексту (колонтитули
 msgid "Divider and border colour"
 msgstr "Колір роздільників і рамок"
 
-#: .\base\views.py:124
+#: .\base\views.py:125
 msgid "Successfully logged in."
 msgstr "Вхід виконано."
 
-#: .\base\views.py:126 .\jobs\views.py:109
+#: .\base\views.py:127 .\jobs\views.py:109
 msgid "Invalid email or password."
 msgstr "Неправильна електронна адреса або пароль."
 
-#: .\base\views.py:149
+#: .\base\views.py:150
 msgid "Email and password are required."
 msgstr "Потрібні електронна адреса та пароль."
 
-#: .\base\views.py:151 .\console\forms.py:419
+#: .\base\views.py:152 .\console\forms.py:419
 msgid "An account with that email already exists."
 msgstr "Обліковий запис із такою адресою вже існує."
 
-#: .\base\views.py:167
+#: .\base\views.py:168
 msgid "Account created successfully!"
 msgstr "Обліковий запис створено!"
 
-#: .\base\views.py:227
+#: .\base\views.py:228
 msgid "Welcome to Town Hall! Start with this guide to learn your way around."
 msgstr ""
 "Ласкаво просимо до Town Hall! Почніть із цього посібника, щоб зорієнтуватися."
 
-#: .\base\views.py:283 .\console\forms.py:385
+#: .\base\views.py:284 .\console\forms.py:385
 msgid "That email address is already in use."
 msgstr "Ця електронна адреса вже використовується."
 
-#: .\base\views.py:298
+#: .\base\views.py:299
 msgid "Profile updated successfully!"
 msgstr "Профіль оновлено!"
 
-#: .\base\views.py:323
+#: .\base\views.py:324
 msgid "Add an email address to your profile before using Gravatar."
 msgstr ""
 "Перш ніж використовувати Gravatar, додайте електронну адресу до свого "
 "профілю."
 
-#: .\base\views.py:326
+#: .\base\views.py:327
 #, python-format
 msgid ""
 "There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try "
@@ -2563,65 +2563,65 @@ msgstr ""
 "Для %(email)s ще немає Gravatar. Створіть його на gravatar.com і спробуйте "
 "ще раз."
 
-#: .\base\views.py:328
+#: .\base\views.py:329
 msgid "Your profile picture now comes from Gravatar."
 msgstr "Тепер фото вашого профілю береться з Gravatar."
 
-#: .\base\views.py:330
+#: .\base\views.py:331
 msgid "Gravatar turned off."
 msgstr "Gravatar вимкнено."
 
-#: .\base\views.py:341
+#: .\base\views.py:342
 #, python-format
 msgid "Your profile is complete. You earned %(points)d impact points!"
 msgstr "Ваш профіль заповнено. Ви отримали %(points)d балів впливу!"
 
-#: .\base\views.py:353
+#: .\base\views.py:354
 #, python-format
 msgid "You can only add up to %(max)d skills."
 msgstr "Можна додати не більше %(max)d навичок."
 
-#: .\base\views.py:370
+#: .\base\views.py:371
 msgid "Current password is incorrect."
 msgstr "Поточний пароль неправильний."
 
-#: .\base\views.py:372
+#: .\base\views.py:373
 msgid "New password must be at least 8 characters."
 msgstr "Новий пароль має містити щонайменше 8 символів."
 
-#: .\base\views.py:374
+#: .\base\views.py:375
 msgid "Passwords do not match."
 msgstr "Паролі не збігаються."
 
-#: .\base\views.py:379
+#: .\base\views.py:380
 msgid "Password updated successfully."
 msgstr "Пароль оновлено."
 
-#: .\base\views.py:390
+#: .\base\views.py:391
 msgid "Your kiosk ID was changed. The old one no longer works."
 msgstr "ID вашого кіоска змінено. Старий більше не діє."
 
-#: .\base\views.py:402
+#: .\base\views.py:403
 msgid "Your account has been deactivated."
 msgstr "Ваш обліковий запис деактивовано."
 
-#: .\base\views.py:405
+#: .\base\views.py:406
 msgid "Incorrect password. Account not deactivated."
 msgstr "Неправильний пароль. Обліковий запис не деактивовано."
 
-#: .\base\views.py:532
+#: .\base\views.py:536
 msgid "Newsletter sign-up is not available right now."
 msgstr "Реєстрація на розсилку зараз недоступна."
 
-#: .\base\views.py:539
+#: .\base\views.py:543
 msgid "Please enter a valid email address."
 msgstr "Будь ласка, введіть дійсну електронну адресу."
 
-#: .\base\views.py:543
+#: .\base\views.py:547
 msgid "We could not sign you up right now. Please try again later."
 msgstr "Зараз не вдалося вас підписати. Будь ласка, спробуйте пізніше."
 
-#: .\base\views.py:546
+#: .\base\views.py:550
 msgid ""
 "Thanks for subscribing! If we sent you a confirmation email, open it to "
 "finish."
@@ -2629,36 +2629,36 @@ msgstr ""
 "Дякуємо за підписку! Якщо ми надіслали вам лист із підтвердженням, відкрийте "
 "його, щоб завершити."
 
-#: .\base\views.py:666
+#: .\base\views.py:670
 msgid "Choose at least one skill to endorse."
 msgstr "Оберіть принаймні одну навичку для рекомендації."
 
-#: .\base\views.py:676
+#: .\base\views.py:680
 #, python-format
 msgid "%(name)s endorsed you!"
 msgstr "%(name)s рекомендує вас!"
 
-#: .\base\views.py:680
+#: .\base\views.py:684
 #, python-format
 msgid "Endorsement sent to %(name)s."
 msgstr "Рекомендацію надіслано: %(name)s."
 
-#: .\base\views.py:724
+#: .\base\views.py:728
 #, python-format
 msgid "%(name)s endorsed you for %(skill)s!"
 msgstr "%(name)s рекомендує вас за навичку «%(skill)s»!"
 
-#: .\base\views.py:869
+#: .\base\views.py:873
 msgid "Task lists are not set up yet."
 msgstr "Списки завдань ще не налаштовано."
 
-#: .\base\views.py:876
+#: .\base\views.py:880
 msgid "Add an email address to your account to use task lists."
 msgstr ""
 "Додайте електронну адресу до облікового запису, щоб користуватися списками "
 "завдань."
 
-#: .\base\views.py:882
+#: .\base\views.py:886
 #, python-format
 msgid "Couldn't open your tasks right now: %(error)s"
 msgstr "Не вдалося відкрити ваші завдання: %(error)s"
@@ -3530,7 +3530,7 @@ msgstr ""
 #: .\console\templates\console\volunteer_detail.html:372
 #: .\console\templates\console\volunteer_list.html:79
 #: .\events\templates\events\event_detail.html:496
-#: .\events\templates\events\my_events.html:240
+#: .\events\templates\events\my_events.html:247
 msgid "Close"
 msgstr "Закрити"
 
@@ -4584,6 +4584,7 @@ msgstr "Найкращі учасники"
 #: .\console\templates\console\volunteer_detail.html:155
 #: .\education\templates\education\training_dashboard.html:67
 #: .\events\templates\events\event_thank_you.html:29
+#: .\events\templates\events\event_thank_you.html:49
 msgid "hrs"
 msgstr "год"
 
@@ -6796,7 +6797,7 @@ msgstr "Приклад"
 
 #: .\console\templates\console\points_settings.html:87
 #: .\events\templates\events\event_certificate.html:48
-#: .\events\templates\events\my_events.html:209
+#: .\events\templates\events\my_events.html:216
 msgid "Hours"
 msgstr "Години"
 
@@ -9657,6 +9658,10 @@ msgid "Impact Summary"
 msgstr "Підсумок впливу"
 
 #: .\events\templates\events\event_certificate.html:52
+msgid "Volunteer Roles"
+msgstr "Ролі волонтера"
+
+#: .\events\templates\events\event_certificate.html:52
 msgid "Volunteer Role"
 msgstr "Роль волонтера"
 
@@ -10071,82 +10076,82 @@ msgstr "Заплановані години"
 msgid "Community connections"
 msgstr "Зв’язки в громаді"
 
-#: .\events\templates\events\event_thank_you.html:47
+#: .\events\templates\events\event_thank_you.html:65
 msgid "Teammates You Worked With"
 msgstr "Колеги, з якими ви працювали"
 
-#: .\events\templates\events\event_thank_you.html:48
+#: .\events\templates\events\event_thank_you.html:66
 msgid ""
 "Quickly recognize a peer for their great work. One tap sends an endorsement."
 msgstr ""
 "Швидко відзначте колегу за чудову роботу. Одним дотиком ви надішлете "
 "рекомендацію."
 
-#: .\events\templates\events\event_thank_you.html:67
+#: .\events\templates\events\event_thank_you.html:85
 msgid "Share Your Experience"
 msgstr "Поділіться своїм досвідом"
 
-#: .\events\templates\events\event_thank_you.html:68
+#: .\events\templates\events\event_thank_you.html:86
 msgid "Help us make the next event even better."
 msgstr "Допоможіть зробити наступну подію ще кращою."
 
-#: .\events\templates\events\event_thank_you.html:71
+#: .\events\templates\events\event_thank_you.html:89
 msgid "Overall Experience"
 msgstr "Загальне враження"
 
-#: .\events\templates\events\event_thank_you.html:78
+#: .\events\templates\events\event_thank_you.html:96
 msgid "What did you enjoy most?"
 msgstr "Що вам сподобалось найбільше?"
 
-#: .\events\templates\events\event_thank_you.html:79
+#: .\events\templates\events\event_thank_you.html:97
 msgid "The teamwork, the music, the impact..."
 msgstr "Робота в команді, музика, вплив..."
 
-#: .\events\templates\events\event_thank_you.html:80
+#: .\events\templates\events\event_thank_you.html:98
 msgid "Suggestions for improvement?"
 msgstr "Пропозиції щодо покращення?"
 
-#: .\events\templates\events\event_thank_you.html:81
+#: .\events\templates\events\event_thank_you.html:99
 msgid "Maybe more shade in the volunteer lounge?"
 msgstr "Можливо, більше тіні в кімнаті для волонтерів?"
 
-#: .\events\templates\events\event_thank_you.html:82
+#: .\events\templates\events\event_thank_you.html:100
 msgid "Update Report"
 msgstr "Оновити відгук"
 
-#: .\events\templates\events\event_thank_you.html:82
+#: .\events\templates\events\event_thank_you.html:100
 msgid "Submit Report"
 msgstr "Надіслати відгук"
 
-#: .\events\templates\events\event_thank_you.html:87
+#: .\events\templates\events\event_thank_you.html:105
 msgid "The Bigger Picture"
 msgstr "Загальна картина"
 
-#: .\events\templates\events\event_thank_you.html:88
+#: .\events\templates\events\event_thank_you.html:106
 msgid "Here is what we achieved together."
 msgstr "Ось чого ми досягли разом."
 
-#: .\events\templates\events\event_thank_you.html:90
+#: .\events\templates\events\event_thank_you.html:108
 msgid "Total hours contributed"
 msgstr "Усього годин внеску"
 
-#: .\events\templates\events\event_thank_you.html:91
+#: .\events\templates\events\event_thank_you.html:109
 msgid "Volunteers united"
 msgstr "Об’єднаних волонтерів"
 
-#: .\events\templates\events\event_thank_you.html:100
+#: .\events\templates\events\event_thank_you.html:118
 msgid "Ready for your next spark?"
 msgstr "Готові до наступної іскри?"
 
-#: .\events\templates\events\event_thank_you.html:102
+#: .\events\templates\events\event_thank_you.html:120
 msgid "Find Your Next Opportunity"
 msgstr "Знайдіть наступну можливість"
 
-#: .\events\templates\events\event_thank_you.html:104
+#: .\events\templates\events\event_thank_you.html:122
 msgid "My Certificate"
 msgstr "Мій сертифікат"
 
-#: .\events\templates\events\event_thank_you.html:106
+#: .\events\templates\events\event_thank_you.html:124
 msgid "View My Impact Record"
 msgstr "Переглянути мій звіт про вплив"
 
@@ -10304,19 +10309,28 @@ msgstr "Переглянути можливості"
 msgid "Past Events & Verified Impact"
 msgstr "Минулі події та підтверджений вплив"
 
-#: .\events\templates\events\my_events.html:215
+#: .\events\templates\events\my_events.html:203
+#, python-format
+msgid "%(count)s job"
+msgid_plural "%(count)s jobs"
+msgstr[0] "%(count)s посада"
+msgstr[1] "%(count)s посади"
+msgstr[2] "%(count)s посад"
+msgstr[3] "%(count)s посади"
+
+#: .\events\templates\events\my_events.html:222
 msgid "View Report"
 msgstr "Переглянути звіт"
 
-#: .\events\templates\events\my_events.html:225
-msgid "Your completed events will appear here."
-msgstr "Ваші завершені події з’являться тут."
+#: .\events\templates\events\my_events.html:232
+msgid "Your completed shifts will appear here as soon as you clock out."
+msgstr "Ваші завершені зміни з’являться тут, щойно ви відмітите завершення."
 
-#: .\events\templates\events\my_events.html:246
+#: .\events\templates\events\my_events.html:253
 msgid "Where to Check In"
 msgstr "Де відмітитися"
 
-#: .\events\templates\events\my_events.html:253
+#: .\events\templates\events\my_events.html:260
 msgid "View full event details"
 msgstr "Переглянути всі деталі події"
 
@@ -10374,42 +10388,42 @@ msgstr "Відхилити"
 msgid "Accept & Sign Up"
 msgstr "Прийняти й записатися"
 
-#: .\events\views.py:248
+#: .\events\views.py:249
 msgid "This time slot is invite-only."
 msgstr "Цей часовий слот лише за запрошенням."
 
-#: .\events\views.py:252
+#: .\events\views.py:253
 #, python-format
 msgid "You haven't completed the required training modules for %(role)s."
 msgstr "Ви не завершили обов’язкові навчальні модулі для ролі «%(role)s»."
 
-#: .\events\views.py:256
+#: .\events\views.py:257
 msgid "Sorry, this slot just filled up!"
 msgstr "Вибачте, цей слот щойно заповнився!"
 
-#: .\events\views.py:260 .\events\views.py:320
+#: .\events\views.py:261 .\events\views.py:321
 msgid "You have other commitments that conflict with this slot."
 msgstr "У вас є інші зобов’язання, що конфліктують із цим слотом."
 
-#: .\events\views.py:268
+#: .\events\views.py:269
 #, python-format
 msgid "Successfully signed up for %(role)s at %(event)s!"
 msgstr "Ви успішно записалися на роль «%(role)s» на події «%(event)s»!"
 
-#: .\events\views.py:282
+#: .\events\views.py:283
 msgid "You aren't signed up for that shift."
 msgstr "Ви не записані на цю зміну."
 
-#: .\events\views.py:285
+#: .\events\views.py:286
 msgid ""
 "Area lead shifts are assigned by the coordinators. Ask them to take you off."
 msgstr "Зміни керівників зон призначають координатори. Попросіть їх зняти вас."
 
-#: .\events\views.py:287
+#: .\events\views.py:288
 msgid "That shift has already started or ended, so it can't be cancelled."
 msgstr "Ця зміна вже почалася або завершилася, тому її не можна скасувати."
 
-#: .\events\views.py:289
+#: .\events\views.py:290
 #, python-format
 msgid ""
 "You cancelled your %(role)s shift. It started less than 24 hours from now, "
@@ -10418,47 +10432,47 @@ msgstr ""
 "Ви скасували зміну «%(role)s». До її початку залишалося менше 24 годин, тому "
 "це знижує ваш показник надійності."
 
-#: .\events\views.py:292
+#: .\events\views.py:293
 #, python-format
 msgid "You cancelled your %(role)s shift. Your spot is open for someone else."
 msgstr ""
 "Ви скасували зміну «%(role)s». Ваше місце тепер може зайняти хтось інший."
 
-#: .\events\views.py:302
+#: .\events\views.py:303
 msgid "Log in to respond to your invitation."
 msgstr "Увійдіть, щоб відповісти на запрошення."
 
-#: .\events\views.py:310
+#: .\events\views.py:311
 msgid "Invitation declined. Thanks for letting us know."
 msgstr "Запрошення відхилено. Дякуємо, що повідомили."
 
-#: .\events\views.py:313
+#: .\events\views.py:314
 msgid "You're already signed up for this slot."
 msgstr "Ви вже записані на цей слот."
 
-#: .\events\views.py:315
+#: .\events\views.py:316
 msgid "Finish the required training first, then accept the invitation."
 msgstr "Спершу завершіть обов’язкове навчання, а потім прийміть запрошення."
 
-#: .\events\views.py:318
+#: .\events\views.py:319
 msgid "Sorry, this slot is already full."
 msgstr "Вибачте, цей слот уже заповнений."
 
-#: .\events\views.py:325
+#: .\events\views.py:326
 #, python-format
 msgid "You're on the team! See you at %(event)s."
 msgstr "Ви в команді! До зустрічі на події «%(event)s»."
 
-#: .\events\views.py:453
+#: .\events\views.py:437
 #, python-format
 msgid "You weren't signed up for %(event)s."
 msgstr "Ви не були записані на подію «%(event)s»."
 
-#: .\events\views.py:460
+#: .\events\views.py:444
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Будь ласка, оберіть оцінку від 1 до 5 зірок."
 
-#: .\events\views.py:467
+#: .\events\views.py:451
 msgid "Thanks for sharing your experience!"
 msgstr "Дякуємо, що поділилися своїм досвідом!"
 

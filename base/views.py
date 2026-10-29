@@ -21,6 +21,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from education.models import Skill, TrainingModuleCompletion
+from events.history import finished_shifts, worked_slots
 from events.models import Event, EventFeedback, EventRoleSlot
 from jobs.models import Shift
 
@@ -442,19 +443,18 @@ def profile_view(request, username):
             'status': status,
         })
 
-    # Recent event activity: finished shifts with the time actually worked. The volunteer
-    # opens their own post-event summary; anyone else sees the public certificate.
+    # Recent event activity: one row per role slot worked (clocking out and back in is one
+    # shift), with the time actually worked. The volunteer opens their own post-event
+    # summary; anyone else sees the public certificate.
     is_own_profile = request.user == viewed_user
     activity_history = []
-    for shift in Shift.objects.filter(
-        user=viewed_user, event_role_slot__isnull=False, end_time__isnull=False,
-    ).select_related('event_role_slot__event', 'role').order_by('-start_time')[:8]:
-        event = shift.event_role_slot.event
+    for item in worked_slots(finished_shifts(viewed_user))[:8]:
+        event = item['event']
         activity_history.append({
             'event_title': event.title,
-            'role_name': shift.role.name if shift.role else '',
-            'date': shift.start_time,
-            'hours': round(shift.duration(), 1),
+            'role_name': item['role'].name,
+            'date': item['start'],
+            'hours': round(item['hours'], 1),
             'url': (reverse('event_thank_you', args=[event.pk]) if is_own_profile
                     else reverse('event_certificate', args=[event.pk, viewed_user.username])),
         })

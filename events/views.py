@@ -17,6 +17,7 @@ from education.models import TrainingModule, TrainingModuleCompletion
 from jobs.models import RoleTrainingRequirement, Shift
 
 from . import leadership, reliability
+from .history import finished_shifts, worked_events
 from .models import Event, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite
 
 User = get_user_model()
@@ -370,18 +371,11 @@ def my_events(request):
     upcoming_events = list(upcoming_events_map.values())
     today_shifts_count = sum(1 for item in upcoming_events if item['event'].is_today)
 
-    # Past: one row per finished shift, listed as soon as the volunteer clocks out
-    past_shifts = (
-        Shift.objects
-        .filter(user=user, event_role_slot__isnull=False, end_time__isnull=False)
-        .select_related('event_role_slot__event__venue', 'role')
-        .order_by('-start_time')
-    )
-
     profile = getattr(user, 'profile', None)
     return render(request, 'events/my_events.html', {
         'upcoming_events': upcoming_events,
-        'past_shifts': past_shifts,
+        # One row per event, listed as soon as the volunteer clocks out of their first shift there
+        'past_events': worked_events(finished_shifts(user)),
         'today_shifts_count': today_shifts_count,
         'total_available': Event.objects.filter(end_date__gte=now, published=True).count(),
         'upcoming_count': len(upcoming_events),
@@ -400,20 +394,30 @@ def my_events(request):
 def _participation(event, user):
     """A volunteer's slots and shifts at an event, or None if they weren't part of it."""
     slots = list(event.role_slots.filter(signups=user).select_related('role'))
-    shifts = list(Shift.objects.filter(event_role_slot__event=event, user=user, end_time__isnull=False))
-    if not slots and not shifts:
+    worked = worked_events(finished_shifts(user, event_role_slot__event=event))
+    if not slots and not worked:
         return None
-    hours = sum(s.duration() for s in shifts)
-    if not hours:
-        hours = sum((s.end_time - s.start_time).total_seconds() / 3600 for s in slots)
-    role = shifts[0].role if shifts and shifts[0].role else (slots[0].role if slots else None)
+    if worked:
+        worked = worked[0]
+        return {
+            'slots': slots,
+            'worked': worked['slots'],
+            'hours': round(worked['hours'], 1),
+            'points': worked['points'],
+            'roles': worked['roles'],
+            'verified': True,
+        }
+    roles = []
+    for slot in slots:
+        if slot.role not in roles:
+            roles.append(slot.role)
     return {
         'slots': slots,
-        'shifts': shifts,
-        'hours': round(hours, 1),
-        'points': sum(s.end_impact_points or 0 for s in shifts),
-        'role': role,
-        'verified': bool(shifts),
+        'worked': [],
+        'hours': round(sum((s.end_time - s.start_time).total_seconds() / 3600 for s in slots), 1),
+        'points': 0,
+        'roles': roles,
+        'verified': False,
     }
 
 

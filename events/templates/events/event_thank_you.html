@@ -40,6 +40,24 @@
                 <small>{% trans "Impact points earned" %}</small>
             </div>
         </div>
+        <ul class="ty-shifts">
+            {% if me.verified %}
+            {% for item in me.worked %}
+            <li class="ty-shift">
+                <span class="material-symbols-outlined">{{ item.role.icon|default:"assignment_ind" }}</span>
+                <span class="ty-shift-text"><strong>{{ item.role.name }}</strong><small>{{ item.start|date:"M j" }}, {{ item.start|time }} – {{ item.end|time }}</small></span>
+                <span class="ty-shift-hours">{{ item.hours|floatformat:1 }} {% trans "hrs" %}</span>
+            </li>
+            {% endfor %}
+            {% else %}
+            {% for slot in me.slots %}
+            <li class="ty-shift">
+                <span class="material-symbols-outlined">{{ slot.role.icon|default:"assignment_ind" }}</span>
+                <span class="ty-shift-text"><strong>{{ slot.role.name }}</strong><small>{{ slot.start_time|date:"M j" }}, {{ slot.start_time|time }} – {{ slot.end_time|time }}</small></span>
+            </li>
+            {% endfor %}
+            {% endif %}
+        </ul>
     </section>
 
     {% if teammates %}

@@ -47,10 +47,10 @@
                     <span class="cert-fact-label">{% trans "Total Hours" %}</span>
                     <p class="cert-fact-value"><strong>{{ me.hours|floatformat:"-1" }}</strong><small>{% trans "Hours" %}</small></p>
                 </div>
-                {% if me.role %}
+                {% if me.roles %}
                 <div class="cert-fact">
-                    <span class="cert-fact-label">{% trans "Volunteer Role" %}</span>
-                    <p class="cert-fact-value cert-role"><strong>{{ me.role.name }}</strong></p>
+                    <span class="cert-fact-label">{% if me.roles|length > 1 %}{% trans "Volunteer Roles" %}{% else %}{% trans "Volunteer Role" %}{% endif %}</span>
+                    <p class="cert-fact-value cert-role"><strong>{% for role in me.roles %}{{ role.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</strong></p>
                 </div>
                 {% endif %}
             </div>

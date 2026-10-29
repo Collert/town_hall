@@ -169,10 +169,10 @@
                     </h2>
                 </div>
 
-                {% if past_shifts %}
+                {% if past_events %}
                 <div class="past-events-table">
-                    {% for shift in past_shifts %}
-                    {% with event=shift.event_role_slot.event %}
+                    {% for item in past_events %}
+                    {% with event=item.event %}
                     <a href="{% url 'event_thank_you' event.pk %}" class="past-event-row">
                         <div class="past-event-thumb">
                             {% if event.image %}
@@ -194,19 +194,26 @@
 
                         <div class="past-event-date">
                             <span class="material-symbols-outlined">calendar_today</span>
-                            {{ shift.start_time|date:"M j, Y" }}
+                            {{ item.start|date:"M j, Y" }}
                         </div>
 
                         <div class="past-event-role">
-                            {% if shift.role.icon %}
-                            <span class="material-symbols-outlined">{{ shift.role.icon }}</span>
+                            {% if item.roles|length > 1 %}
+                            <span class="material-symbols-outlined">work</span>
+                            {% blocktrans count count=item.roles|length %}{{ count }} job{% plural %}{{ count }} jobs{% endblocktrans %}
+                            {% else %}
+                            {% with role=item.roles.0 %}
+                            {% if role.icon %}
+                            <span class="material-symbols-outlined">{{ role.icon }}</span>
                             {% endif %}
-                            {{ shift.role.name }}
+                            {{ role.name }}
+                            {% endwith %}
+                            {% endif %}
                         </div>
 
                         <div class="past-event-hours">
                             <span class="material-symbols-outlined">timer</span>
-                            {{ shift.duration|floatformat:1 }} {% trans "Hours" %}
+                            {{ item.hours|floatformat:1 }} {% trans "Hours" %}
                         </div>
 
                         <div class="past-event-action">

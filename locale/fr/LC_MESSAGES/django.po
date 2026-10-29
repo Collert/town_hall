@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 12:46-0700\n"
+"POT-Creation-Date: 2026-10-29 13:08-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -529,7 +529,7 @@ msgstr "Retour pour l’administration (privé)"
 
 #: .\base\templates\base\give_endorsement.html:78
 #: .\console\templates\console\volunteer_detail.html:380
-#: .\events\templates\events\event_thank_you.html:75
+#: .\events\templates\events\event_thank_you.html:93
 #, python-format
 msgid "%(n)s stars"
 msgstr "%(n)s étoiles"
@@ -2528,44 +2528,44 @@ msgstr "Couleur du texte secondaire (pieds de page, notes)"
 msgid "Divider and border colour"
 msgstr "Couleur des séparateurs et des bordures"
 
-#: .\base\views.py:124
+#: .\base\views.py:125
 msgid "Successfully logged in."
 msgstr "Connexion réussie."
 
-#: .\base\views.py:126 .\jobs\views.py:109
+#: .\base\views.py:127 .\jobs\views.py:109
 msgid "Invalid email or password."
 msgstr "Adresse e-mail ou mot de passe invalide."
 
-#: .\base\views.py:149
+#: .\base\views.py:150
 msgid "Email and password are required."
 msgstr "L’adresse e-mail et le mot de passe sont obligatoires."
 
-#: .\base\views.py:151 .\console\forms.py:419
+#: .\base\views.py:152 .\console\forms.py:419
 msgid "An account with that email already exists."
 msgstr "Un compte avec cette adresse e-mail existe déjà."
 
-#: .\base\views.py:167
+#: .\base\views.py:168
 msgid "Account created successfully!"
 msgstr "Compte créé avec succès !"
 
-#: .\base\views.py:227
+#: .\base\views.py:228
 msgid "Welcome to Town Hall! Start with this guide to learn your way around."
 msgstr ""
 "Bienvenue dans Town Hall ! Commencez par ce guide pour vous y retrouver."
 
-#: .\base\views.py:283 .\console\forms.py:385
+#: .\base\views.py:284 .\console\forms.py:385
 msgid "That email address is already in use."
 msgstr "Cette adresse e-mail est déjà utilisée."
 
-#: .\base\views.py:298
+#: .\base\views.py:299
 msgid "Profile updated successfully!"
 msgstr "Profil mis à jour avec succès !"
 
-#: .\base\views.py:323
+#: .\base\views.py:324
 msgid "Add an email address to your profile before using Gravatar."
 msgstr "Ajoutez une adresse e-mail à votre profil avant d’utiliser Gravatar."
 
-#: .\base\views.py:326
+#: .\base\views.py:327
 #, python-format
 msgid ""
 "There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try "
@@ -2574,67 +2574,67 @@ msgstr ""
 "Il n’y a pas encore de Gravatar pour %(email)s. Créez-en un sur gravatar."
 "com, puis réessayez."
 
-#: .\base\views.py:328
+#: .\base\views.py:329
 msgid "Your profile picture now comes from Gravatar."
 msgstr "Votre photo de profil provient maintenant de Gravatar."
 
-#: .\base\views.py:330
+#: .\base\views.py:331
 msgid "Gravatar turned off."
 msgstr "Gravatar désactivé."
 
-#: .\base\views.py:341
+#: .\base\views.py:342
 #, python-format
 msgid "Your profile is complete. You earned %(points)d impact points!"
 msgstr "Votre profil est complet. Vous avez gagné %(points)d points d’impact !"
 
-#: .\base\views.py:353
+#: .\base\views.py:354
 #, python-format
 msgid "You can only add up to %(max)d skills."
 msgstr "Vous ne pouvez ajouter que %(max)d compétences au maximum."
 
-#: .\base\views.py:370
+#: .\base\views.py:371
 msgid "Current password is incorrect."
 msgstr "Le mot de passe actuel est incorrect."
 
-#: .\base\views.py:372
+#: .\base\views.py:373
 msgid "New password must be at least 8 characters."
 msgstr "Le nouveau mot de passe doit comporter au moins 8 caractères."
 
-#: .\base\views.py:374
+#: .\base\views.py:375
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: .\base\views.py:379
+#: .\base\views.py:380
 msgid "Password updated successfully."
 msgstr "Mot de passe mis à jour avec succès."
 
-#: .\base\views.py:390
+#: .\base\views.py:391
 msgid "Your kiosk ID was changed. The old one no longer works."
 msgstr "Votre identifiant de borne a été modifié. L’ancien ne fonctionne plus."
 
-#: .\base\views.py:402
+#: .\base\views.py:403
 msgid "Your account has been deactivated."
 msgstr "Votre compte a été désactivé."
 
-#: .\base\views.py:405
+#: .\base\views.py:406
 msgid "Incorrect password. Account not deactivated."
 msgstr "Mot de passe incorrect. Le compte n’a pas été désactivé."
 
-#: .\base\views.py:532
+#: .\base\views.py:536
 msgid "Newsletter sign-up is not available right now."
 msgstr "L’inscription à l’infolettre n’est pas disponible pour le moment."
 
-#: .\base\views.py:539
+#: .\base\views.py:543
 msgid "Please enter a valid email address."
 msgstr "Veuillez saisir une adresse e-mail valide."
 
-#: .\base\views.py:543
+#: .\base\views.py:547
 msgid "We could not sign you up right now. Please try again later."
 msgstr ""
 "Nous n’avons pas pu vous inscrire pour le moment. Veuillez réessayer plus "
 "tard."
 
-#: .\base\views.py:546
+#: .\base\views.py:550
 msgid ""
 "Thanks for subscribing! If we sent you a confirmation email, open it to "
 "finish."
@@ -2642,35 +2642,35 @@ msgstr ""
 "Merci de votre abonnement ! Si nous vous avons envoyé un e-mail de "
 "confirmation, ouvrez-le pour terminer."
 
-#: .\base\views.py:666
+#: .\base\views.py:670
 msgid "Choose at least one skill to endorse."
 msgstr "Choisissez au moins une compétence à recommander."
 
-#: .\base\views.py:676
+#: .\base\views.py:680
 #, python-format
 msgid "%(name)s endorsed you!"
 msgstr "%(name)s vous a recommandé !"
 
-#: .\base\views.py:680
+#: .\base\views.py:684
 #, python-format
 msgid "Endorsement sent to %(name)s."
 msgstr "Recommandation envoyée à %(name)s."
 
-#: .\base\views.py:724
+#: .\base\views.py:728
 #, python-format
 msgid "%(name)s endorsed you for %(skill)s!"
 msgstr "%(name)s vous a recommandé pour %(skill)s !"
 
-#: .\base\views.py:869
+#: .\base\views.py:873
 msgid "Task lists are not set up yet."
 msgstr "Les listes de tâches ne sont pas encore configurées."
 
-#: .\base\views.py:876
+#: .\base\views.py:880
 msgid "Add an email address to your account to use task lists."
 msgstr ""
 "Ajoutez une adresse e-mail à votre compte pour utiliser les listes de tâches."
 
-#: .\base\views.py:882
+#: .\base\views.py:886
 #, python-format
 msgid "Couldn't open your tasks right now: %(error)s"
 msgstr "Impossible d’ouvrir vos tâches pour le moment : %(error)s"
@@ -3563,7 +3563,7 @@ msgstr ""
 #: .\console\templates\console\volunteer_detail.html:372
 #: .\console\templates\console\volunteer_list.html:79
 #: .\events\templates\events\event_detail.html:496
-#: .\events\templates\events\my_events.html:240
+#: .\events\templates\events\my_events.html:247
 msgid "Close"
 msgstr "Fermer"
 
@@ -4625,6 +4625,7 @@ msgstr "Meilleurs éléments"
 #: .\console\templates\console\volunteer_detail.html:155
 #: .\education\templates\education\training_dashboard.html:67
 #: .\events\templates\events\event_thank_you.html:29
+#: .\events\templates\events\event_thank_you.html:49
 msgid "hrs"
 msgstr "h"
 
@@ -6835,7 +6836,7 @@ msgstr "Exemple"
 
 #: .\console\templates\console\points_settings.html:87
 #: .\events\templates\events\event_certificate.html:48
-#: .\events\templates\events\my_events.html:209
+#: .\events\templates\events\my_events.html:216
 msgid "Hours"
 msgstr "Heures"
 
@@ -9706,6 +9707,10 @@ msgid "Impact Summary"
 msgstr "Résumé de l’impact"
 
 #: .\events\templates\events\event_certificate.html:52
+msgid "Volunteer Roles"
+msgstr "Rôles de bénévole"
+
+#: .\events\templates\events\event_certificate.html:52
 msgid "Volunteer Role"
 msgstr "Rôle de bénévole"
 
@@ -10107,82 +10112,82 @@ msgstr "Heures prévues"
 msgid "Community connections"
 msgstr "Liens communautaires"
 
-#: .\events\templates\events\event_thank_you.html:47
+#: .\events\templates\events\event_thank_you.html:65
 msgid "Teammates You Worked With"
 msgstr "Coéquipiers avec qui vous avez travaillé"
 
-#: .\events\templates\events\event_thank_you.html:48
+#: .\events\templates\events\event_thank_you.html:66
 msgid ""
 "Quickly recognize a peer for their great work. One tap sends an endorsement."
 msgstr ""
 "Reconnaissez rapidement un pair pour son excellent travail. Un seul geste "
 "envoie une recommandation."
 
-#: .\events\templates\events\event_thank_you.html:67
+#: .\events\templates\events\event_thank_you.html:85
 msgid "Share Your Experience"
 msgstr "Partagez votre expérience"
 
-#: .\events\templates\events\event_thank_you.html:68
+#: .\events\templates\events\event_thank_you.html:86
 msgid "Help us make the next event even better."
 msgstr "Aidez-nous à rendre le prochain événement encore meilleur."
 
-#: .\events\templates\events\event_thank_you.html:71
+#: .\events\templates\events\event_thank_you.html:89
 msgid "Overall Experience"
 msgstr "Expérience globale"
 
-#: .\events\templates\events\event_thank_you.html:78
+#: .\events\templates\events\event_thank_you.html:96
 msgid "What did you enjoy most?"
 msgstr "Qu’avez-vous le plus apprécié ?"
 
-#: .\events\templates\events\event_thank_you.html:79
+#: .\events\templates\events\event_thank_you.html:97
 msgid "The teamwork, the music, the impact..."
 msgstr "Le travail d’équipe, la musique, l’impact..."
 
-#: .\events\templates\events\event_thank_you.html:80
+#: .\events\templates\events\event_thank_you.html:98
 msgid "Suggestions for improvement?"
 msgstr "Des suggestions d’amélioration ?"
 
-#: .\events\templates\events\event_thank_you.html:81
+#: .\events\templates\events\event_thank_you.html:99
 msgid "Maybe more shade in the volunteer lounge?"
 msgstr "Peut-être plus d’ombre dans le salon des bénévoles ?"
 
-#: .\events\templates\events\event_thank_you.html:82
+#: .\events\templates\events\event_thank_you.html:100
 msgid "Update Report"
 msgstr "Mettre à jour le rapport"
 
-#: .\events\templates\events\event_thank_you.html:82
+#: .\events\templates\events\event_thank_you.html:100
 msgid "Submit Report"
 msgstr "Soumettre le rapport"
 
-#: .\events\templates\events\event_thank_you.html:87
+#: .\events\templates\events\event_thank_you.html:105
 msgid "The Bigger Picture"
 msgstr "Vue d’ensemble"
 
-#: .\events\templates\events\event_thank_you.html:88
+#: .\events\templates\events\event_thank_you.html:106
 msgid "Here is what we achieved together."
 msgstr "Voici ce que nous avons accompli ensemble."
 
-#: .\events\templates\events\event_thank_you.html:90
+#: .\events\templates\events\event_thank_you.html:108
 msgid "Total hours contributed"
 msgstr "Total des heures de contribution"
 
-#: .\events\templates\events\event_thank_you.html:91
+#: .\events\templates\events\event_thank_you.html:109
 msgid "Volunteers united"
 msgstr "Bénévoles unis"
 
-#: .\events\templates\events\event_thank_you.html:100
+#: .\events\templates\events\event_thank_you.html:118
 msgid "Ready for your next spark?"
 msgstr "Prêt pour votre prochaine étincelle ?"
 
-#: .\events\templates\events\event_thank_you.html:102
+#: .\events\templates\events\event_thank_you.html:120
 msgid "Find Your Next Opportunity"
 msgstr "Trouvez votre prochaine occasion"
 
-#: .\events\templates\events\event_thank_you.html:104
+#: .\events\templates\events\event_thank_you.html:122
 msgid "My Certificate"
 msgstr "Mon certificat"
 
-#: .\events\templates\events\event_thank_you.html:106
+#: .\events\templates\events\event_thank_you.html:124
 msgid "View My Impact Record"
 msgstr "Voir mon relevé d’impact"
 
@@ -10343,19 +10348,28 @@ msgstr "Parcourir les occasions"
 msgid "Past Events & Verified Impact"
 msgstr "Événements passés et impact vérifié"
 
-#: .\events\templates\events\my_events.html:215
+#: .\events\templates\events\my_events.html:203
+#, python-format
+msgid "%(count)s job"
+msgid_plural "%(count)s jobs"
+msgstr[0] "%(count)s poste"
+msgstr[1] "%(count)s postes"
+
+#: .\events\templates\events\my_events.html:222
 msgid "View Report"
 msgstr "Voir le rapport"
 
-#: .\events\templates\events\my_events.html:225
-msgid "Your completed events will appear here."
-msgstr "Vos événements terminés apparaîtront ici."
+#: .\events\templates\events\my_events.html:232
+msgid "Your completed shifts will appear here as soon as you clock out."
+msgstr ""
+"Vos quarts de travail terminés apparaîtront ici dès que vous pointerez votre "
+"départ."
 
-#: .\events\templates\events\my_events.html:246
+#: .\events\templates\events\my_events.html:253
 msgid "Where to Check In"
 msgstr "Où s’enregistrer"
 
-#: .\events\templates\events\my_events.html:253
+#: .\events\templates\events\my_events.html:260
 msgid "View full event details"
 msgstr "Voir tous les détails de l’événement"
 
@@ -10416,45 +10430,45 @@ msgstr "Refuser"
 msgid "Accept & Sign Up"
 msgstr "Accepter et s’inscrire"
 
-#: .\events\views.py:248
+#: .\events\views.py:249
 msgid "This time slot is invite-only."
 msgstr "Ce créneau est sur invitation seulement."
 
-#: .\events\views.py:252
+#: .\events\views.py:253
 #, python-format
 msgid "You haven't completed the required training modules for %(role)s."
 msgstr "Vous n’avez pas terminé les modules de formation requis pour %(role)s."
 
-#: .\events\views.py:256
+#: .\events\views.py:257
 msgid "Sorry, this slot just filled up!"
 msgstr "Désolé, ce créneau vient d’être comblé !"
 
-#: .\events\views.py:260 .\events\views.py:320
+#: .\events\views.py:261 .\events\views.py:321
 msgid "You have other commitments that conflict with this slot."
 msgstr "Vous avez d’autres engagements qui entrent en conflit avec ce créneau."
 
-#: .\events\views.py:268
+#: .\events\views.py:269
 #, python-format
 msgid "Successfully signed up for %(role)s at %(event)s!"
 msgstr "Inscription réussie à %(role)s pour %(event)s !"
 
-#: .\events\views.py:282
+#: .\events\views.py:283
 msgid "You aren't signed up for that shift."
 msgstr "Vous n’êtes pas inscrit à ce quart."
 
-#: .\events\views.py:285
+#: .\events\views.py:286
 msgid ""
 "Area lead shifts are assigned by the coordinators. Ask them to take you off."
 msgstr ""
 "Les quarts de responsable de secteur sont attribués par les coordonnateurs. "
 "Demandez-leur de vous retirer."
 
-#: .\events\views.py:287
+#: .\events\views.py:288
 msgid "That shift has already started or ended, so it can't be cancelled."
 msgstr ""
 "Ce quart a déjà commencé ou est terminé ; il ne peut donc pas être annulé."
 
-#: .\events\views.py:289
+#: .\events\views.py:290
 #, python-format
 msgid ""
 "You cancelled your %(role)s shift. It started less than 24 hours from now, "
@@ -10463,48 +10477,48 @@ msgstr ""
 "Vous avez annulé votre quart %(role)s. Comme il commençait dans moins de 24 "
 "heures, cela compte contre votre indice de fiabilité."
 
-#: .\events\views.py:292
+#: .\events\views.py:293
 #, python-format
 msgid "You cancelled your %(role)s shift. Your spot is open for someone else."
 msgstr ""
 "Vous avez annulé votre quart %(role)s. Votre place est libre pour quelqu’un "
 "d’autre."
 
-#: .\events\views.py:302
+#: .\events\views.py:303
 msgid "Log in to respond to your invitation."
 msgstr "Connectez-vous pour répondre à votre invitation."
 
-#: .\events\views.py:310
+#: .\events\views.py:311
 msgid "Invitation declined. Thanks for letting us know."
 msgstr "Invitation refusée. Merci de nous en avoir informés."
 
-#: .\events\views.py:313
+#: .\events\views.py:314
 msgid "You're already signed up for this slot."
 msgstr "Vous êtes déjà inscrit à ce créneau."
 
-#: .\events\views.py:315
+#: .\events\views.py:316
 msgid "Finish the required training first, then accept the invitation."
 msgstr "Terminez d’abord la formation requise, puis acceptez l’invitation."
 
-#: .\events\views.py:318
+#: .\events\views.py:319
 msgid "Sorry, this slot is already full."
 msgstr "Désolé, ce créneau est déjà complet."
 
-#: .\events\views.py:325
+#: .\events\views.py:326
 #, python-format
 msgid "You're on the team! See you at %(event)s."
 msgstr "Vous faites partie de l’équipe ! À bientôt à %(event)s."
 
-#: .\events\views.py:453
+#: .\events\views.py:437
 #, python-format
 msgid "You weren't signed up for %(event)s."
 msgstr "Vous n’étiez pas inscrit à %(event)s."
 
-#: .\events\views.py:460
+#: .\events\views.py:444
 msgid "Please choose a rating from 1 to 5 stars."
 msgstr "Veuillez choisir une cote de 1 à 5 étoiles."
 
-#: .\events\views.py:467
+#: .\events\views.py:451
 msgid "Thanks for sharing your experience!"
 msgstr "Merci d’avoir partagé votre expérience !"
 
