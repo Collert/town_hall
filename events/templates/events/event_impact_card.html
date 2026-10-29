@@ -24,6 +24,9 @@
                 <span>{{ company_name }}</span>
             </span>
         </header>
+        {% if event.post_event_statement %}
+        <blockquote class="impact-card-statement">{{ event.post_event_statement|truncatewords:60 }}</blockquote>
+        {% endif %}
         <div class="impact-card-stats">
             {% if efficiency %}
             <div class="light"><strong>{{ efficiency }}%</strong><span>{% trans "Event Efficiency" %}</span></div>

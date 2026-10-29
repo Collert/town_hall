@@ -67,12 +67,13 @@ body.bare {
 .impact-card-head h1 {
     margin-top: 0.5rem;
     font-family: 'Manrope', sans-serif;
-    font-size: max(1.6rem, 8.5cqi);
+    font-size: max(1.35rem, 8.5cqi);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.05;
     color: var(--color-text-primary);
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .impact-card-brand {
@@ -93,6 +94,41 @@ body.bare {
     height: max(2rem, 10cqi);
     width: auto;
     border-radius: 1rem;
+}
+
+.impact-card-statement {
+    margin: auto 0 0;
+    padding-left: 1rem;
+    box-shadow: inset 3px 0 0 var(--color-accent);
+    font-size: max(0.9rem, 3.2cqi);
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    white-space: pre-line;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
+}
+
+/* Narrow cards: the brand moves above the title so long words fit */
+@container (width < 28rem) {
+    .impact-card-head {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    .impact-card-brand {
+        flex-direction: row;
+        align-items: center;
+        max-width: none;
+        text-align: left;
+    }
+
+    .impact-card-brand img {
+        height: 2rem;
+    }
 }
 
 .impact-card-stats {
