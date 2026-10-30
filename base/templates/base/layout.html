@@ -525,6 +525,7 @@
             }
         });
     </script>
+    {% if user.is_authenticated %}{% include 'base/partials/push_prompt.html' %}{% endif %}
     {% block extra_js %}{% endblock %}
 </body>
 

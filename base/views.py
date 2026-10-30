@@ -181,14 +181,17 @@ def web_manifest(request):
     site = SiteSettings.get_settings()
     icons = [
         {'src': static(f'base/favicon/web-app-manifest-{size}x{size}.png'), 'sizes': f'{size}x{size}',
-         'type': 'image/png', 'purpose': 'maskable'}
-        for size in (192, 512)
+         'type': 'image/png', 'purpose': purpose}
+        for purpose in ('any', 'maskable') for size in (192, 512)
     ]
     manifest = {
+        'id': '/',
         'name': site.company_name,
         'short_name': site.company_name,
+        'description': str(_('Volunteer opportunities, shifts and training with %(org)s') % {'org': site.company_name}),
         'icons': icons,
         'start_url': '/',
+        'scope': '/',
         'theme_color': site.color_primary,
         'background_color': site.color_bg_primary,
         'display': 'standalone',

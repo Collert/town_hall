@@ -112,7 +112,7 @@ class FirstRunMiddleware:
             return None
         # The setup page itself, media, icons, the language switcher and the machine-facing MCP/OAuth endpoints.
         name = request.resolver_match.url_name if request.resolver_match else None
-        if name in ('first_run_setup', 'set_language', 'favicon', 'web_manifest') or view_func.__module__.startswith(('django.views.static', 'mcp_server')):
+        if name in ('first_run_setup', 'set_language', 'favicon', 'web_manifest', 'service_worker', 'offline') or view_func.__module__.startswith(('django.views.static', 'mcp_server')):
             return None
         from django.shortcuts import redirect
 

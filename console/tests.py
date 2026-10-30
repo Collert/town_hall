@@ -2898,6 +2898,11 @@ class ShiftReminderTests(ConsoleFixture):
 
         ShiftReminder.objects.all().delete()
         EmailTrigger.objects.update_or_create(key='shift_reminder', defaults={'enabled': False})
+        self.assertEqual(self.run_reminders(self.due + timedelta(hours=3)), 1)  # still pushed
+        self.assertEqual(mail.outbox, [])
+        ShiftReminder.objects.all().delete()
+        SiteSettings.objects.filter(pk=1).update(push_categories={'shift_reminder': False})
+        cache.clear()
         self.assertEqual(self.run_reminders(self.due + timedelta(hours=3)), 0)
         EmailTrigger.objects.filter(key='shift_reminder').update(enabled=True)
         Event.objects.filter(pk=self.event.pk).update(published=False)

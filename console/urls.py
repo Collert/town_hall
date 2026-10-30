@@ -133,4 +133,7 @@ urlpatterns = [
     path('communication/email/seed/', communication.seed_missing, name='console_listmonk_seed'),
     path('communication/email/reset/<str:key>/', communication.reset_template, name='console_listmonk_reset'),
     path('communication/email/sync/', communication.sync_users, name='console_listmonk_sync'),
+    path('communication/notifications/', communication.notification_settings, name='console_communication_notifications'),
+    path('communication/notifications/test/', communication.notification_test, name='console_push_test'),
+    path('communication/notifications/listmonk/', communication.notification_listmonk_setup, name='console_push_listmonk_setup'),
 ]

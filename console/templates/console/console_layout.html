@@ -44,7 +44,7 @@
                 {% pending_verification_count as pending_count %}
                 {% if pending_count %}<span class="console-nav-badge" title="{% trans 'Submissions waiting for review' %}">{{ pending_count }}</span>{% endif %}
             </a>
-            <a href="{% url 'console_communication_email' %}" class="console-nav-link {% if 'communication' in url_name or 'listmonk' in url_name %}active{% endif %}">
+            <a href="{% url 'console_communication_email' %}" class="console-nav-link {% if 'communication' in url_name or 'listmonk' in url_name or 'console_push' in url_name %}active{% endif %}">
                 <span class="material-symbols-outlined">forum</span>{% trans "Communication" %}
             </a>
             <a href="{% url 'console_settings' %}" class="console-nav-link {% if 'console_settings' in url_name %}active{% endif %}">

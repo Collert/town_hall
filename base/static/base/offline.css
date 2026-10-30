@@ -1,0 +1,40 @@
+.offline-page {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+    background: var(--color-bg-primary);
+}
+
+.offline-card {
+    max-width: 26rem;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-ambient);
+    text-align: center;
+}
+
+.offline-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+    font-size: 2rem;
+}
+
+.offline-card h1 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.6rem;
+    color: var(--color-text-primary);
+}
+
+.offline-card p {
+    margin: 0.75rem 0 1.75rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}

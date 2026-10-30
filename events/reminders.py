@@ -1,8 +1,8 @@
 """Day-before shift reminders.
 
-Everyone signed up for a shift gets the "Shift reminder" email from 9 AM (the
-organization's time zone) the day before it starts: a Friday 5 PM shift is reminded at
-9 AM on Thursday. ``run_due_reminders`` sends whatever is due; ``ShiftReminderMiddleware``
+Everyone signed up for a shift gets the "Shift reminder" email and push notification
+(base/push.py) from 9 AM (the organization's time zone) the day before it starts: a
+Friday 5 PM shift is reminded at 9 AM on Thursday. ``run_due_reminders`` sends whatever is due; ``ShiftReminderMiddleware``
 runs it at most every few minutes as requests come in, so it works without a scheduler,
 and ``manage.py send_shift_reminders`` runs it by hand. A pass that runs late still sends
 until the shift starts.
@@ -36,12 +36,12 @@ def reminder_time(start):
 def run_due_reminders(base_url, now=None):
     """Send the shift reminders that are due. ``base_url`` (scheme and host) makes the
     link absolute. Returns how many were sent."""
-    from base import triggers
+    from base import push, triggers
     from base.email import notify
 
     from .models import EventRoleSlot, ShiftReminder, SlotSignup
 
-    if not triggers.setting('shift_reminder')[0]:
+    if not triggers.setting('shift_reminder')[0] and not push.is_on('shift_reminder'):
         return 0  # switched off: nobody is marked, so switching it on still reaches upcoming shifts
     now = now or timezone.now()
     # A reminder is due at most 39 hours before its shift (9 AM the day before an 11:59 PM start).
@@ -62,7 +62,7 @@ def run_due_reminders(base_url, now=None):
     for slot in slots:
         due = reminder_time(slot.start_time)
         for user in slot.signups.all():
-            if (slot.pk, user.pk) in done or not user.is_active or not user.email:
+            if (slot.pk, user.pk) in done or not user.is_active:
                 continue
             joined = signed_up_at.get((slot.pk, user.pk))
             if joined and joined >= due:
@@ -96,17 +96,17 @@ def send_shift_thanks(shift, base_url):
     """Thank a volunteer who just clocked out of an event shift ("Thank you after a
     shift"). Skipped while they have another shift at the event still to start, so
     someone working two shifts hears from us once, at the end. Returns True if sent."""
-    from base import triggers
+    from base import push, triggers
     from base.email import notify
 
     from .models import ShiftThanks
 
     slot = shift.event_role_slot
     user = shift.user
-    if not slot or not shift.end_time or not triggers.setting('shift_thanks')[0]:
+    if not slot or not shift.end_time or not (triggers.setting('shift_thanks')[0] or push.is_on('shift_thanks')):
         return False
     event = slot.event
-    if not event.published or not user.is_active or not user.email:
+    if not event.published or not user.is_active:
         return False
     if event.role_slots.filter(signups=user, start_time__gt=shift.end_time).exclude(pk=slot.pk).exists():
         return False  # coming back for another shift

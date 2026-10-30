@@ -1,0 +1,122 @@
+/* Communication > Notifications. Notices, event rows and the sidebar come from communication_email.css. */
+.push-category {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.push-intro {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.push-intro code,
+.push-steps code {
+    padding: 0.1rem 0.45rem;
+    border-radius: 9999px;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
+}
+
+.push-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin: 1.25rem 0 1.5rem;
+    padding-left: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+}
+
+.push-steps li::marker {
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+}
+
+.push-manual {
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.push-manual summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.push-manual > p {
+    margin-top: 0.75rem;
+}
+
+.push-credentials {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem 1rem;
+    margin: 1rem 0 0.5rem;
+}
+
+.push-credentials dt {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.push-credentials .c-input {
+    width: 100%;
+    font-family: ui-monospace, monospace;
+}
+
+.push-copy {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.push-copy .c-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.push-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    list-style: none;
+}
+
+.push-checks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.push-checks li > .material-symbols-outlined {
+    color: var(--color-text-tertiary);
+}
+
+.push-checks li.ok > .material-symbols-outlined {
+    color: var(--color-success);
+}
+
+.push-checks small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+    .push-category {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .push-credentials {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

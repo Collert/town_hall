@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 18:58-0700\n"
+"POT-Creation-Date: 2026-10-30 12:17-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,6 +75,7 @@ msgstr "Adresse e-mail"
 
 #: .\base\forms.py:13 .\base\templates\base\login.html:26
 #: .\base\templates\base\signup.html:65
+#: .\console\templates\console\communication_notifications.html:94
 #: .\jobs\templates\jobs\kiosk_login_email_password.html:18
 msgid "Password"
 msgstr "Mot de passe"
@@ -87,70 +88,70 @@ msgstr "Confirmer le mot de passe"
 msgid "The passwords don't match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: .\base\models.py:150
+#: .\base\models.py:175
 msgid "Facilities"
 msgstr "Installations"
 
-#: .\base\models.py:151
+#: .\base\models.py:176
 msgid "Accessibility"
 msgstr "Accessibilité"
 
-#: .\base\models.py:152
+#: .\base\models.py:177
 msgid "Equipment & tech"
 msgstr "Équipement et technologie"
 
-#: .\base\models.py:153
+#: .\base\models.py:178
 msgid "Getting there"
 msgstr "Comment s’y rendre"
 
-#: .\base\models.py:259
+#: .\base\models.py:284
 msgid "Monday"
 msgstr "Lundi"
 
-#: .\base\models.py:259
+#: .\base\models.py:284
 msgid "Tuesday"
 msgstr "Mardi"
 
-#: .\base\models.py:259
+#: .\base\models.py:284
 msgid "Wednesday"
 msgstr "Mercredi"
 
-#: .\base\models.py:259
+#: .\base\models.py:284
 msgid "Thursday"
 msgstr "Jeudi"
 
-#: .\base\models.py:260
+#: .\base\models.py:285
 msgid "Friday"
 msgstr "Vendredi"
 
-#: .\base\models.py:260
+#: .\base\models.py:285
 msgid "Saturday"
 msgstr "Samedi"
 
-#: .\base\models.py:260
+#: .\base\models.py:285
 msgid "Sunday"
 msgstr "Dimanche"
 
-#: .\base\models.py:345 .\base\points.py:200
+#: .\base\models.py:370 .\base\points.py:200
 #: .\console\templates\console\volunteer_detail.html:150
 msgid "Shift"
 msgstr "Quart de travail"
 
-#: .\base\models.py:346 .\base\templates\base\layout.html:30
+#: .\base\models.py:371 .\base\templates\base\layout.html:30
 #: .\base\templates\base\layout.html:165 .\base\templates\base\layout.html:292
 #: .\base\triggers.py:34 .\console\templates\console\points_settings.html:54
 msgid "Training"
 msgstr "Formation"
 
-#: .\base\models.py:347
+#: .\base\models.py:372
 msgid "Endorsement"
 msgstr "Recommandation"
 
-#: .\base\models.py:348
+#: .\base\models.py:373
 msgid "Profile completed"
 msgstr "Profil complété"
 
-#: .\base\models.py:349 .\base\points.py:210
+#: .\base\models.py:374 .\base\points.py:210
 msgid "Adjustment"
 msgstr "Ajustement"
 
@@ -224,6 +225,185 @@ msgstr "vos compétences"
 msgid "your location"
 msgstr "votre lieu"
 
+#: .\base\push.py:60 .\base\triggers.py:49
+msgid "New event published"
+msgstr "Nouvel événement publié"
+
+#: .\base\push.py:61 .\base\triggers.py:50
+msgid "An event becomes visible to volunteers."
+msgstr "Un événement devient visible pour les bénévoles."
+
+#: .\base\push.py:61
+msgid "Everyone with notifications on"
+msgstr "Toutes les personnes ayant activé les notifications"
+
+#: .\base\push.py:62 .\base\triggers.py:51
+#, python-format
+msgid "New opportunity: %(event)s"
+msgstr "Nouvelle opportunité : %(event)s"
+
+#: .\base\push.py:63 .\base\triggers.py:58
+msgid "Shift reminder"
+msgstr "Rappel de quart"
+
+#: .\base\push.py:64
+msgid "At 9 AM the day before a volunteer's shift, like the reminder email."
+msgstr "À 9 h la veille du quart d’un bénévole, comme l’e-mail de rappel."
+
+#: .\base\push.py:65 .\base\triggers.py:59
+msgid "Each volunteer signed up for the shift"
+msgstr "Chaque bénévole inscrit au quart"
+
+#: .\base\push.py:66
+#, python-format
+msgid "Tomorrow: %(role)s at %(event)s"
+msgstr "Demain : %(role)s à %(event)s"
+
+#: .\base\push.py:67 .\base\triggers.py:52
+msgid "Invitation received"
+msgstr "Invitation reçue"
+
+#: .\base\push.py:68 .\base\triggers.py:53
+msgid "Staff invite a volunteer to a role from the console."
+msgstr "Le personnel invite un bénévole à un rôle depuis la console."
+
+#: .\base\push.py:68 .\base\triggers.py:53
+msgid "The invited volunteer"
+msgstr "Le bénévole invité"
+
+#: .\base\push.py:69
+#, python-format
+msgid "You're invited: %(role)s"
+msgstr "Vous êtes invité : %(role)s"
+
+#: .\base\push.py:70
+msgid "Leadership"
+msgstr "Encadrement"
+
+#: .\base\push.py:71
+msgid ""
+"Someone is made a shift lead or area lead, or shift leads are picked "
+"automatically."
+msgstr ""
+"Quelqu’un est nommé responsable de quart ou responsable de secteur, ou les "
+"responsables de quart sont choisis automatiquement."
+
+#: .\base\push.py:72
+msgid "The new lead, or the general coordinators"
+msgstr "Le nouveau responsable, ou les coordonnateurs généraux"
+
+#: .\base\push.py:73 .\base\triggers.py:66
+msgid "Message to event volunteers"
+msgstr "Message aux bénévoles de l’événement"
+
+#: .\base\push.py:74 .\base\triggers.py:67
+msgid "Staff use \"Message All Volunteers\" on an event."
+msgstr "Le personnel utilise « Message All Volunteers » sur un événement."
+
+#: .\base\push.py:74 .\base\triggers.py:67
+msgid "The event's volunteers"
+msgstr "Les bénévoles de l’événement"
+
+#: .\base\push.py:76 .\base\triggers.py:69
+msgid "Message to a volunteer"
+msgstr "Message à un bénévole"
+
+#: .\base\push.py:77 .\base\triggers.py:70
+msgid "Staff send a message from a volunteer's profile."
+msgstr "Le personnel envoie un message depuis le profil d’un bénévole."
+
+#: .\base\push.py:77 .\base\triggers.py:70
+msgid "That volunteer"
+msgstr "Ce bénévole"
+
+#: .\base\push.py:78
+#, python-format
+msgid "Message from %(org)s"
+msgstr "Message de %(org)s"
+
+#: .\base\push.py:79 .\base\triggers.py:72
+msgid "Endorsement received"
+msgstr "Recommandation reçue"
+
+#: .\base\push.py:80 .\base\triggers.py:73
+msgid "Someone endorses a volunteer for a skill."
+msgstr "Quelqu’un recommande un bénévole pour une compétence."
+
+#: .\base\push.py:80 .\base\triggers.py:73
+msgid "The endorsed volunteer"
+msgstr "Le bénévole recommandé"
+
+#: .\base\push.py:81 .\base\triggers.py:74
+#, python-format
+msgid "%(from_name)s endorsed you"
+msgstr "%(from_name)s vous recommande"
+
+#: .\base\push.py:82 .\base\triggers.py:62
+msgid "Thank you after a shift"
+msgstr "Remerciement après un quart"
+
+#: .\base\push.py:83
+msgid "A volunteer clocks out of their last shift at an event."
+msgstr "Un bénévole termine son dernier quart lors d’un événement."
+
+#: .\base\push.py:83 .\base\push.py:86 .\base\push.py:89 .\base\triggers.py:56
+#: .\base\triggers.py:64 .\base\triggers.py:76 .\base\triggers.py:79
+#: .\base\triggers.py:82
+msgid "The volunteer"
+msgstr "Le bénévole"
+
+#: .\base\push.py:84 .\base\triggers.py:64
+#, python-format
+msgid "Thank you for volunteering at %(event)s"
+msgstr "Merci d’avoir été bénévole à %(event)s"
+
+#: .\base\push.py:84
+#, python-format
+msgid "%(hours)s hours as %(role)s. Tell us how it went."
+msgstr "%(hours)s heures comme %(role)s. Dites-nous comment ça s’est passé."
+
+#: .\base\push.py:85 .\base\triggers.py:78
+msgid "Certificate approved"
+msgstr "Certificat approuvé"
+
+#: .\base\push.py:86 .\base\triggers.py:79
+msgid "Staff verify an uploaded certificate."
+msgstr "Le personnel vérifie un certificat téléversé."
+
+#: .\base\push.py:87
+#: .\base\templates\base\listmonk\certificate_approved.html:2
+msgid "Certificate verified"
+msgstr "Certificat vérifié"
+
+#: .\base\push.py:88 .\base\triggers.py:81
+msgid "Certificate rejected"
+msgstr "Certificat rejeté"
+
+#: .\base\push.py:89 .\base\triggers.py:82
+msgid "Staff send a certificate back for another upload."
+msgstr "Le personnel renvoie un certificat pour un nouveau téléversement."
+
+#: .\base\push.py:90
+msgid "Your certificate needs another look"
+msgstr "Votre certificat doit être revu"
+
+#: .\base\push.py:91
+msgid "listmonk campaigns"
+msgstr "Campagnes listmonk"
+
+#: .\base\push.py:92
+msgid "Plain-text campaigns sent from listmonk with the Town Hall messenger."
+msgstr ""
+"Campagnes en texte brut envoyées depuis listmonk avec le messager Town Hall."
+
+#: .\base\push.py:93
+msgid "Subscribers of the campaign's lists who turned notifications on"
+msgstr "Abonnés des listes de la campagne qui ont activé les notifications"
+
+#: .\base\push.py:321
+msgid "Notifications work on this device."
+msgstr "Les notifications fonctionnent sur cet appareil."
+
 #: .\base\templates\base\edit_profile.html:13
 msgid "Edit Your Profile"
 msgstr "Modifier votre profil"
@@ -266,12 +446,12 @@ msgid "Security & Login"
 msgstr "Sécurité et connexion"
 
 #: .\base\templates\base\edit_profile.html:72
-#: .\base\templates\base\edit_profile.html:156
+#: .\base\templates\base\edit_profile.html:175
 msgid "Change Password"
 msgstr "Changer le mot de passe"
 
 #: .\base\templates\base\edit_profile.html:77
-#: .\base\templates\base\edit_profile.html:207
+#: .\base\templates\base\edit_profile.html:226
 msgid "Deactivate Account"
 msgstr "Désactiver le compte"
 
@@ -323,8 +503,8 @@ msgid "Skills"
 msgstr "Compétences"
 
 #: .\base\templates\base\edit_profile.html:145
-#: .\base\templates\base\edit_profile.html:199
-#: .\base\templates\base\edit_profile.html:233
+#: .\base\templates\base\edit_profile.html:218
+#: .\base\templates\base\edit_profile.html:252
 #: .\console\templates\console\backend_settings.html:249
 #: .\console\templates\console\certificate_edit.html:26
 #: .\console\templates\console\event_invite.html:93
@@ -355,6 +535,7 @@ msgstr "Annuler"
 #: .\console\templates\console\backend_settings.html:24
 #: .\console\templates\console\certificate_edit.html:27
 #: .\console\templates\console\communication_email.html:24
+#: .\console\templates\console\communication_notifications.html:26
 #: .\console\templates\console\event_edit.html:113
 #: .\console\templates\console\home_page_settings.html:28
 #: .\console\templates\console\home_page_settings.html:71
@@ -365,34 +546,76 @@ msgstr "Annuler"
 msgid "Save Changes"
 msgstr "Enregistrer les modifications"
 
+#: .\base\templates\base\edit_profile.html:152
+#: .\base\templates\base\layout.html:76 .\base\templates\base\layout.html:230
+#: .\console\templates\console\communication_notifications.html:4
+#: .\console\templates\console\communication_notifications.html:15
+#: .\console\templates\console\partials\communication_tabs.html:5
+msgid "Notifications"
+msgstr "Notifications"
+
+#: .\base\templates\base\edit_profile.html:156
+msgid "Notifications on this device"
+msgstr "Notifications sur cet appareil"
+
+#: .\base\templates\base\edit_profile.html:157
+msgid ""
+"Shift reminders, invitations, new opportunities, endorsements and messages "
+"from the team, even when the site is closed."
+msgstr ""
+"Rappels de quart, invitations, nouvelles opportunités, recommandations et "
+"messages de l’équipe, même lorsque le site est fermé."
+
 #: .\base\templates\base\edit_profile.html:164
+msgid ""
+"Notifications are blocked for this site. Allow them in your browser's site "
+"settings, then reload this page."
+msgstr ""
+"Les notifications sont bloquées pour ce site. Autorisez-les dans les "
+"paramètres du site de votre navigateur, puis rechargez cette page."
+
+#: .\base\templates\base\edit_profile.html:165
+#, python-format
+msgid ""
+"On iPhone and iPad, tap Share, choose “Add to Home Screen”, and open %(org)s "
+"from your home screen to turn notifications on."
+msgstr ""
+"Sur iPhone et iPad, touchez Partager, choisissez « Sur l’écran d’accueil », "
+"puis ouvrez %(org)s depuis votre écran d’accueil pour activer les "
+"notifications."
+
+#: .\base\templates\base\edit_profile.html:166
+msgid "This browser can't show notifications."
+msgstr "Ce navigateur ne peut pas afficher de notifications."
+
+#: .\base\templates\base\edit_profile.html:183
 msgid "Update your password to keep your account secure."
 msgstr "Mettez à jour votre mot de passe pour protéger votre compte."
 
-#: .\base\templates\base\edit_profile.html:167
+#: .\base\templates\base\edit_profile.html:186
 msgid "Current Password"
 msgstr "Mot de passe actuel"
 
-#: .\base\templates\base\edit_profile.html:177
+#: .\base\templates\base\edit_profile.html:196
 #: .\base\templates\base\password_reset_confirm.html:21
 msgid "New Password"
 msgstr "Nouveau mot de passe"
 
-#: .\base\templates\base\edit_profile.html:184
+#: .\base\templates\base\edit_profile.html:203
 msgid "Must be at least 8 characters long and include a number and symbol."
 msgstr "Doit comporter au moins 8 caractères, dont un chiffre et un symbole."
 
-#: .\base\templates\base\edit_profile.html:188
+#: .\base\templates\base\edit_profile.html:207
 #: .\base\templates\base\password_reset_confirm.html:27
 msgid "Confirm New Password"
 msgstr "Confirmer le nouveau mot de passe"
 
-#: .\base\templates\base\edit_profile.html:198
+#: .\base\templates\base\edit_profile.html:217
 #: .\base\templates\base\password_reset_confirm.html:33
 msgid "Update Password"
 msgstr "Mettre à jour le mot de passe"
 
-#: .\base\templates\base\edit_profile.html:217
+#: .\base\templates\base\edit_profile.html:236
 msgid ""
 "This action is permanent and cannot be easily undone. Deactivating your "
 "account will immediately disable your profile, remove you from all active "
@@ -403,15 +626,15 @@ msgstr ""
 "les listes d’événements actifs et masquera définitivement votre historique "
 "de formation au public."
 
-#: .\base\templates\base\edit_profile.html:219
+#: .\base\templates\base\edit_profile.html:238
 msgid "Are you absolutely sure you want to proceed?"
 msgstr "Êtes-vous absolument sûr de vouloir continuer ?"
 
-#: .\base\templates\base\edit_profile.html:222
+#: .\base\templates\base\edit_profile.html:241
 msgid "Type your password to confirm deactivation"
 msgstr "Saisissez votre mot de passe pour confirmer la désactivation"
 
-#: .\base\templates\base\edit_profile.html:232
+#: .\base\templates\base\edit_profile.html:251
 msgid "Deactivate My Account"
 msgstr "Désactiver mon compte"
 
@@ -832,10 +1055,6 @@ msgstr "Communauté"
 msgid "Recognition"
 msgstr "Reconnaissance"
 
-#: .\base\templates\base\layout.html:76 .\base\templates\base\layout.html:230
-msgid "Notifications"
-msgstr "Notifications"
-
 #: .\base\templates\base\layout.html:77 .\base\templates\base\layout.html:231
 msgid "Clear all"
 msgstr "Tout effacer"
@@ -1016,10 +1235,6 @@ msgstr "Carrières"
 #, python-format
 msgid "You're getting this email because you have an account with %(org)s."
 msgstr "Vous recevez cet e-mail parce que vous avez un compte chez %(org)s."
-
-#: .\base\templates\base\listmonk\certificate_approved.html:2
-msgid "Certificate verified"
-msgstr "Certificat vérifié"
 
 #: .\base\templates\base\listmonk\certificate_approved.html:3
 #, python-format
@@ -1361,6 +1576,23 @@ msgstr "Vous n’avez pas de compte ?"
 msgid "Sign Up"
 msgstr "S’inscrire"
 
+#: .\base\templates\base\offline.html:4 .\base\templates\base\offline.html:14
+msgid "You're offline"
+msgstr "Vous êtes hors ligne"
+
+#: .\base\templates\base\offline.html:15
+#, python-format
+msgid ""
+"%(org)s needs a connection to load this page. Check your Wi-Fi or mobile "
+"data and try again."
+msgstr ""
+"%(org)s a besoin d’une connexion pour charger cette page. Vérifiez votre Wi-"
+"Fi ou vos données mobiles, puis réessayez."
+
+#: .\base\templates\base\offline.html:16
+msgid "Try again"
+msgstr "Réessayer"
+
 #: .\base\templates\base\partials\endorse_people.html:3
 #: .\console\templates\console\partials\skill_suggestions.html:3
 msgid "Matches"
@@ -1477,6 +1709,48 @@ msgid "You've reached the skill limit. Remove one to add another."
 msgstr ""
 "Vous avez atteint la limite de compétences. Retirez-en une pour en ajouter "
 "une autre."
+
+#: .\base\templates\base\partials\push_prompt.html:10
+msgid "Notifications are on for this device."
+msgstr "Les notifications sont activées sur cet appareil."
+
+#: .\base\templates\base\partials\push_prompt.html:11
+msgid "Notifications are off for this device."
+msgstr "Les notifications sont désactivées sur cet appareil."
+
+#: .\base\templates\base\partials\push_prompt.html:12
+msgid "Notifications couldn't be turned on. Try again later."
+msgstr "Impossible d’activer les notifications. Réessayez plus tard."
+
+#: .\base\templates\base\partials\push_prompt.html:16
+msgid "Stay in the loop"
+msgstr "Restez informé"
+
+#: .\base\templates\base\partials\push_prompt.html:17
+msgid ""
+"Get a notification the day before your shifts, when new opportunities open "
+"and when someone endorses you."
+msgstr ""
+"Recevez une notification la veille de vos quarts, quand de nouvelles "
+"opportunités s’ouvrent et quand quelqu’un vous recommande."
+
+#: .\base\templates\base\partials\push_prompt.html:18
+#, python-format
+msgid ""
+"To get notifications on iPhone or iPad, tap Share, choose “Add to Home "
+"Screen”, then open %(org)s from your home screen."
+msgstr ""
+"Pour recevoir des notifications sur iPhone ou iPad, touchez Partager, "
+"choisissez « Sur l’écran d’accueil », puis ouvrez %(org)s depuis votre écran "
+"d’accueil."
+
+#: .\base\templates\base\partials\push_prompt.html:21
+msgid "Turn on"
+msgstr "Activer"
+
+#: .\base\templates\base\partials\push_prompt.html:22
+msgid "Not now"
+msgstr "Plus tard"
 
 #: .\base\templates\base\partials\quick_endorse_chip.html:3
 #, python-format
@@ -2130,6 +2404,7 @@ msgid "Accounts"
 msgstr "Comptes"
 
 #: .\base\triggers.py:34 .\console\forms.py:160
+#: .\console\templates\console\communication_notifications.html:112
 msgid "People"
 msgstr "Personnes"
 
@@ -2202,35 +2477,10 @@ msgstr "Une semaine après l’inscription, si le profil est toujours incomplet.
 msgid "Your %(org)s profile is almost there"
 msgstr "Votre profil %(org)s est presque complet"
 
-#: .\base\triggers.py:49
-msgid "New event published"
-msgstr "Nouvel événement publié"
-
-#: .\base\triggers.py:50
-msgid "An event becomes visible to volunteers."
-msgstr "Un événement devient visible pour les bénévoles."
-
 #: .\base\triggers.py:50
 msgid "Everyone on \"Town Hall users\", plus any lists you add"
 msgstr ""
 "Tous les membres de « Town Hall users », plus les listes que vous ajoutez"
-
-#: .\base\triggers.py:51
-#, python-format
-msgid "New opportunity: %(event)s"
-msgstr "Nouvelle opportunité : %(event)s"
-
-#: .\base\triggers.py:52
-msgid "Invitation received"
-msgstr "Invitation reçue"
-
-#: .\base\triggers.py:53
-msgid "Staff invite a volunteer to a role from the console."
-msgstr "Le personnel invite un bénévole à un rôle depuis la console."
-
-#: .\base\triggers.py:53
-msgid "The invited volunteer"
-msgstr "Le bénévole invité"
 
 #: .\base\triggers.py:55
 msgid "Sign-up confirmed"
@@ -2240,36 +2490,19 @@ msgstr "Inscription confirmée"
 msgid "A volunteer signs up for a role or accepts an invitation."
 msgstr "Un bénévole s’inscrit à un rôle ou accepte une invitation."
 
-#: .\base\triggers.py:56 .\base\triggers.py:64 .\base\triggers.py:76
-#: .\base\triggers.py:79 .\base\triggers.py:82
-msgid "The volunteer"
-msgstr "Le bénévole"
-
 #: .\base\triggers.py:57
 #, python-format
 msgid "You're signed up: %(event)s"
 msgstr "Inscription confirmée : %(event)s"
 
-#: .\base\triggers.py:58
-msgid "Shift reminder"
-msgstr "Rappel de quart"
-
 #: .\base\triggers.py:59
 msgid "At 9 AM the day before a volunteer's shift."
 msgstr "À 9 h la veille du quart d'un bénévole."
-
-#: .\base\triggers.py:59
-msgid "Each volunteer signed up for the shift"
-msgstr "Chaque bénévole inscrit au quart"
 
 #: .\base\triggers.py:60
 #, python-format
 msgid "Reminder: %(role)s at %(event)s tomorrow"
 msgstr "Rappel : %(role)s à %(event)s demain"
-
-#: .\base\triggers.py:62
-msgid "Thank you after a shift"
-msgstr "Remerciement après un quart"
 
 #: .\base\triggers.py:63
 msgid ""
@@ -2279,61 +2512,15 @@ msgstr ""
 "Un bénévole termine son dernier quart d’un événement, au kiosque ou depuis "
 "le suivi des arrivées."
 
-#: .\base\triggers.py:64
-#, python-format
-msgid "Thank you for volunteering at %(event)s"
-msgstr "Merci d’avoir été bénévole à %(event)s"
-
-#: .\base\triggers.py:66
-msgid "Message to event volunteers"
-msgstr "Message aux bénévoles de l’événement"
-
-#: .\base\triggers.py:67
-msgid "Staff use \"Message All Volunteers\" on an event."
-msgstr "Le personnel utilise « Message All Volunteers » sur un événement."
-
-#: .\base\triggers.py:67
-msgid "The event's volunteers"
-msgstr "Les bénévoles de l’événement"
-
 #: .\base\triggers.py:68
 #, python-format
 msgid "News about %(event)s"
 msgstr "Des nouvelles de %(event)s"
 
-#: .\base\triggers.py:69
-msgid "Message to a volunteer"
-msgstr "Message à un bénévole"
-
-#: .\base\triggers.py:70
-msgid "Staff send a message from a volunteer's profile."
-msgstr "Le personnel envoie un message depuis le profil d’un bénévole."
-
-#: .\base\triggers.py:70
-msgid "That volunteer"
-msgstr "Ce bénévole"
-
 #: .\base\triggers.py:71
 #, python-format
 msgid "A message from %(org)s"
 msgstr "Un message de %(org)s"
-
-#: .\base\triggers.py:72
-msgid "Endorsement received"
-msgstr "Recommandation reçue"
-
-#: .\base\triggers.py:73
-msgid "Someone endorses a volunteer for a skill."
-msgstr "Quelqu’un recommande un bénévole pour une compétence."
-
-#: .\base\triggers.py:73
-msgid "The endorsed volunteer"
-msgstr "Le bénévole recommandé"
-
-#: .\base\triggers.py:74
-#, python-format
-msgid "%(from_name)s endorsed you"
-msgstr "%(from_name)s vous recommande"
 
 #: .\base\triggers.py:75
 msgid "Training module completed"
@@ -2348,26 +2535,10 @@ msgstr "Un bénévole termine un module de formation."
 msgid "You completed %(module)s"
 msgstr "Vous avez terminé %(module)s"
 
-#: .\base\triggers.py:78
-msgid "Certificate approved"
-msgstr "Certificat approuvé"
-
-#: .\base\triggers.py:79
-msgid "Staff verify an uploaded certificate."
-msgstr "Le personnel vérifie un certificat téléversé."
-
 #: .\base\triggers.py:80
 #, python-format
 msgid "Your %(certificate)s certificate was verified"
 msgstr "Votre certificat %(certificate)s a été vérifié"
-
-#: .\base\triggers.py:81
-msgid "Certificate rejected"
-msgstr "Certificat rejeté"
-
-#: .\base\triggers.py:82
-msgid "Staff send a certificate back for another upload."
-msgstr "Le personnel renvoie un certificat pour un nouveau téléversement."
 
 #: .\base\triggers.py:83
 #, python-format
@@ -2550,24 +2721,29 @@ msgstr "Un compte avec cette adresse e-mail existe déjà."
 msgid "Account created successfully!"
 msgstr "Compte créé avec succès !"
 
-#: .\base\views.py:228
+#: .\base\views.py:191
+#, python-format
+msgid "Volunteer opportunities, shifts and training with %(org)s"
+msgstr "Opportunités de bénévolat, quarts et formation avec %(org)s"
+
+#: .\base\views.py:231
 msgid "Welcome to Town Hall! Start with this guide to learn your way around."
 msgstr ""
 "Bienvenue dans Town Hall ! Commencez par ce guide pour vous y retrouver."
 
-#: .\base\views.py:284 .\console\forms.py:385
+#: .\base\views.py:287 .\console\forms.py:385
 msgid "That email address is already in use."
 msgstr "Cette adresse e-mail est déjà utilisée."
 
-#: .\base\views.py:299
+#: .\base\views.py:302
 msgid "Profile updated successfully!"
 msgstr "Profil mis à jour avec succès !"
 
-#: .\base\views.py:324
+#: .\base\views.py:327
 msgid "Add an email address to your profile before using Gravatar."
 msgstr "Ajoutez une adresse e-mail à votre profil avant d’utiliser Gravatar."
 
-#: .\base\views.py:327
+#: .\base\views.py:330
 #, python-format
 msgid ""
 "There is no Gravatar for %(email)s yet. Create one at gravatar.com, then try "
@@ -2576,67 +2752,67 @@ msgstr ""
 "Il n’y a pas encore de Gravatar pour %(email)s. Créez-en un sur gravatar."
 "com, puis réessayez."
 
-#: .\base\views.py:329
+#: .\base\views.py:332
 msgid "Your profile picture now comes from Gravatar."
 msgstr "Votre photo de profil provient maintenant de Gravatar."
 
-#: .\base\views.py:331
+#: .\base\views.py:334
 msgid "Gravatar turned off."
 msgstr "Gravatar désactivé."
 
-#: .\base\views.py:342
+#: .\base\views.py:345
 #, python-format
 msgid "Your profile is complete. You earned %(points)d impact points!"
 msgstr "Votre profil est complet. Vous avez gagné %(points)d points d’impact !"
 
-#: .\base\views.py:354
+#: .\base\views.py:357
 #, python-format
 msgid "You can only add up to %(max)d skills."
 msgstr "Vous ne pouvez ajouter que %(max)d compétences au maximum."
 
-#: .\base\views.py:371
+#: .\base\views.py:374
 msgid "Current password is incorrect."
 msgstr "Le mot de passe actuel est incorrect."
 
-#: .\base\views.py:373
+#: .\base\views.py:376
 msgid "New password must be at least 8 characters."
 msgstr "Le nouveau mot de passe doit comporter au moins 8 caractères."
 
-#: .\base\views.py:375
+#: .\base\views.py:378
 msgid "Passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
-#: .\base\views.py:380
+#: .\base\views.py:383
 msgid "Password updated successfully."
 msgstr "Mot de passe mis à jour avec succès."
 
-#: .\base\views.py:391
+#: .\base\views.py:394
 msgid "Your kiosk ID was changed. The old one no longer works."
 msgstr "Votre identifiant de borne a été modifié. L’ancien ne fonctionne plus."
 
-#: .\base\views.py:403
+#: .\base\views.py:406
 msgid "Your account has been deactivated."
 msgstr "Votre compte a été désactivé."
 
-#: .\base\views.py:406
+#: .\base\views.py:409
 msgid "Incorrect password. Account not deactivated."
 msgstr "Mot de passe incorrect. Le compte n’a pas été désactivé."
 
-#: .\base\views.py:536
+#: .\base\views.py:539
 msgid "Newsletter sign-up is not available right now."
 msgstr "L’inscription à l’infolettre n’est pas disponible pour le moment."
 
-#: .\base\views.py:543
+#: .\base\views.py:546
 msgid "Please enter a valid email address."
 msgstr "Veuillez saisir une adresse e-mail valide."
 
-#: .\base\views.py:547
+#: .\base\views.py:550
 msgid "We could not sign you up right now. Please try again later."
 msgstr ""
 "Nous n’avons pas pu vous inscrire pour le moment. Veuillez réessayer plus "
 "tard."
 
-#: .\base\views.py:550
+#: .\base\views.py:553
 msgid ""
 "Thanks for subscribing! If we sent you a confirmation email, open it to "
 "finish."
@@ -2644,35 +2820,35 @@ msgstr ""
 "Merci de votre abonnement ! Si nous vous avons envoyé un e-mail de "
 "confirmation, ouvrez-le pour terminer."
 
-#: .\base\views.py:670
+#: .\base\views.py:673
 msgid "Choose at least one skill to endorse."
 msgstr "Choisissez au moins une compétence à recommander."
 
-#: .\base\views.py:680
+#: .\base\views.py:683
 #, python-format
 msgid "%(name)s endorsed you!"
 msgstr "%(name)s vous a recommandé !"
 
-#: .\base\views.py:684
+#: .\base\views.py:687
 #, python-format
 msgid "Endorsement sent to %(name)s."
 msgstr "Recommandation envoyée à %(name)s."
 
-#: .\base\views.py:728
+#: .\base\views.py:731
 #, python-format
 msgid "%(name)s endorsed you for %(skill)s!"
 msgstr "%(name)s vous a recommandé pour %(skill)s !"
 
-#: .\base\views.py:873
+#: .\base\views.py:876
 msgid "Task lists are not set up yet."
 msgstr "Les listes de tâches ne sont pas encore configurées."
 
-#: .\base\views.py:880
+#: .\base\views.py:883
 msgid "Add an email address to your account to use task lists."
 msgstr ""
 "Ajoutez une adresse e-mail à votre compte pour utiliser les listes de tâches."
 
-#: .\base\views.py:886
+#: .\base\views.py:889
 #, python-format
 msgid "Couldn't open your tasks right now: %(error)s"
 msgstr "Impossible d’ouvrir vos tâches pour le moment : %(error)s"
@@ -3426,10 +3602,14 @@ msgid "Connector URL"
 msgstr "URL du connecteur"
 
 #: .\console\templates\console\backend_settings.html:144
+#: .\console\templates\console\communication_notifications.html:88
+#: .\console\templates\console\communication_notifications.html:97
 msgid "Copied"
 msgstr "Copié"
 
 #: .\console\templates\console\backend_settings.html:145
+#: .\console\templates\console\communication_notifications.html:89
+#: .\console\templates\console\communication_notifications.html:98
 msgid "Copy"
 msgstr "Copier"
 
@@ -3721,6 +3901,8 @@ msgstr "E-mail"
 
 #: .\console\templates\console\communication_email.html:11
 #: .\console\templates\console\communication_email.html:21
+#: .\console\templates\console\communication_notifications.html:13
+#: .\console\templates\console\communication_notifications.html:23
 #: .\console\templates\console\console_layout.html:48
 msgid "Communication"
 msgstr "Communication"
@@ -3746,6 +3928,7 @@ msgstr ""
 "Organisation > Serveur ; les modèles sont créés pour vous."
 
 #: .\console\templates\console\communication_email.html:35
+#: .\console\templates\console\communication_notifications.html:76
 msgid "Connect listmonk"
 msgstr "Connecter listmonk"
 
@@ -3772,6 +3955,7 @@ msgid "Re-create missing templates"
 msgstr "Recréer les modèles manquants"
 
 #: .\console\templates\console\communication_email.html:53
+#: .\console\templates\console\communication_notifications.html:36
 #, python-format
 msgid "The last listmonk job failed: %(task_error)s"
 msgstr "La dernière tâche listmonk a échoué : %(task_error)s"
@@ -3875,6 +4059,7 @@ msgid "Reset to default"
 msgstr "Réinitialiser aux valeurs par défaut"
 
 #: .\console\templates\console\communication_email.html:139
+#: .\console\templates\console\communication_notifications.html:130
 msgid "listmonk"
 msgstr "listmonk"
 
@@ -3887,6 +4072,7 @@ msgid "Users list"
 msgstr "Liste des utilisateurs"
 
 #: .\console\templates\console\communication_email.html:144
+#: .\console\templates\console\communication_notifications.html:139
 msgid "Not created yet"
 msgstr "Pas encore créée"
 
@@ -3903,6 +4089,7 @@ msgid "Not connected: emails are printed in the server log."
 msgstr "Non connecté : les e-mails sont affichés dans le journal du serveur."
 
 #: .\console\templates\console\communication_email.html:162
+#: .\console\templates\console\communication_notifications.html:159
 msgid "How it works"
 msgstr "Comment ça marche"
 
@@ -3938,6 +4125,228 @@ msgstr ""
 "Toutes les personnes ayant un compte figurent sur la liste privée « Town "
 "Hall users », avec des attributs comme language, level et impact_points pour "
 "segmenter les campagnes."
+
+#: .\console\templates\console\communication_notifications.html:24
+msgid ""
+"Choose which app events send a push notification. Volunteers turn "
+"notifications on for each phone or computer when they're signed in, and can "
+"install the site as an app."
+msgstr ""
+"Choisissez quels événements de l’application envoient une notification push. "
+"Les bénévoles activent les notifications sur chaque téléphone ou ordinateur "
+"une fois connectés, et peuvent installer le site comme une application."
+
+#: .\console\templates\console\communication_notifications.html:43
+msgid "Notification events"
+msgstr "Événements de notification"
+
+#: .\console\templates\console\communication_notifications.html:55
+#, python-format
+msgid "Send “%(label)s” notifications"
+msgstr "Envoyer les notifications « %(label)s »"
+
+#: .\console\templates\console\communication_notifications.html:64
+msgid "Custom notifications from listmonk"
+msgstr "Notifications personnalisées depuis listmonk"
+
+#: .\console\templates\console\communication_notifications.html:65
+#, python-format
+msgid ""
+"When someone turns notifications on, their devices are saved in their "
+"listmonk subscriber attribute <code>%(attrib)s</code>. A plain-text campaign "
+"sent with the Town Hall messenger reaches everyone on its lists who has "
+"notifications on; the others are skipped."
+msgstr ""
+"Lorsqu’une personne active les notifications, ses appareils sont enregistrés "
+"dans son attribut d’abonné listmonk <code>%(attrib)s</code>. Une campagne en "
+"texte brut envoyée avec le messager Town Hall atteint toutes les personnes "
+"de ses listes qui ont activé les notifications ; les autres sont ignorées."
+
+#: .\console\templates\console\communication_notifications.html:67
+msgid ""
+"In listmonk, create a campaign and pick your lists, for example a "
+"volunteering opportunities list."
+msgstr ""
+"Dans listmonk, créez une campagne et choisissez vos listes, par exemple une "
+"liste d’opportunités de bénévolat."
+
+#: .\console\templates\console\communication_notifications.html:68
+#, python-format
+msgid ""
+"Set <strong>Messenger</strong> to <code>%(name)s</code>, <strong>Format</"
+"strong> to Plain text, and <strong>Template</strong> to “%(template_name)s”."
+msgstr ""
+"Réglez <strong>Messenger</strong> sur <code>%(name)s</code>, <strong>Format</"
+"strong> sur Plain text et <strong>Template</strong> sur « %(template_name)s "
+"»."
+
+#: .\console\templates\console\communication_notifications.html:69
+msgid ""
+"The subject becomes the notification's title and the message its text. Keep "
+"it short: phones show about two lines."
+msgstr ""
+"L’objet devient le titre de la notification et le message son texte. Soyez "
+"bref : les téléphones affichent environ deux lignes."
+
+#: .\console\templates\console\communication_notifications.html:70
+msgid ""
+"To open a page when the notification is clicked, put its address on the last "
+"line with <code>@TrackLink</code> right after it, e.g. <code>https://example."
+"org/en/opportunities/@TrackLink</code>. Without a link, the home page opens. "
+"Either way listmonk counts the clicks, and shown notifications count as "
+"views."
+msgstr ""
+"Pour ouvrir une page quand on clique sur la notification, mettez son adresse "
+"sur la dernière ligne, immédiatement suivie de <code>@TrackLink</code>, p. "
+"ex. <code>https://example.org/en/opportunities/@TrackLink</code>. Sans lien, "
+"la page d’accueil s’ouvre. Dans les deux cas, listmonk compte les clics, et "
+"les notifications affichées comptent comme des vues."
+
+#: .\console\templates\console\communication_notifications.html:75
+msgid "Connect listmonk in Organization > Backend first."
+msgstr "Connectez d’abord listmonk dans Organisation > Serveur."
+
+#: .\console\templates\console\communication_notifications.html:80
+msgid "Set up the messenger by hand"
+msgstr "Configurer le messager manuellement"
+
+#: .\console\templates\console\communication_notifications.html:81
+msgid ""
+"“Set up in listmonk” does this for you if its API user may manage settings. "
+"Otherwise add a messenger in listmonk under Settings > Messengers:"
+msgstr ""
+"« Configurer dans listmonk » le fait pour vous si son utilisateur API peut "
+"gérer les paramètres. Sinon, ajoutez un messager dans listmonk sous Settings "
+"> Messengers :"
+
+#: .\console\templates\console\communication_notifications.html:83
+#: .\console\templates\console\partials\area_dialog.html:11
+msgid "Name"
+msgstr "Nom"
+
+#: .\console\templates\console\communication_notifications.html:85
+msgid "URL"
+msgstr "URL"
+
+#: .\console\templates\console\communication_notifications.html:92
+msgid "Username"
+msgstr "Nom d’utilisateur"
+
+#: .\console\templates\console\communication_notifications.html:102
+msgid ""
+"listmonk must be able to reach this URL. “Set up in listmonk” still creates "
+"the campaign template when it isn't allowed to change settings."
+msgstr ""
+"listmonk doit pouvoir joindre cette URL. « Configurer dans listmonk » crée "
+"quand même le modèle de campagne lorsqu’il n’a pas le droit de modifier les "
+"paramètres."
+
+#: .\console\templates\console\communication_notifications.html:110
+#: .\console\templates\console\communication_notifications.html:114
+msgid "Devices"
+msgstr "Appareils"
+
+#: .\console\templates\console\communication_notifications.html:116
+msgid "Yours"
+msgstr "Les vôtres"
+
+#: .\console\templates\console\communication_notifications.html:120
+msgid "Turn notifications on in Account settings first"
+msgstr "Activez d’abord les notifications dans Paramètres du compte"
+
+#: .\console\templates\console\communication_notifications.html:121
+msgid "Send me a test"
+msgstr "M’envoyer un test"
+
+#: .\console\templates\console\communication_notifications.html:124
+msgid "My notification settings"
+msgstr "Mes paramètres de notification"
+
+#: .\console\templates\console\communication_notifications.html:132
+msgid "Not connected"
+msgstr "Non connecté"
+
+#: .\console\templates\console\communication_notifications.html:134
+#, python-format
+msgid "Can't reach listmonk: %(error)s"
+msgstr "Impossible de joindre listmonk : %(error)s"
+
+#: .\console\templates\console\communication_notifications.html:139
+msgid "Campaign template"
+msgstr "Modèle de campagne"
+
+#: .\console\templates\console\communication_notifications.html:143
+#, python-format
+msgid "Messenger “%(name)s”"
+msgstr "Messager « %(name)s »"
+
+#: .\console\templates\console\communication_notifications.html:143
+#: .\jobs\templates\jobs\partials\kiosk_place_card.html:15
+msgid "Registered"
+msgstr "Inscrits"
+
+#: .\console\templates\console\communication_notifications.html:143
+msgid "Can't check: the API user may not read settings"
+msgstr ""
+"Vérification impossible : l’utilisateur API n’a pas le droit de lire les "
+"paramètres"
+
+#: .\console\templates\console\communication_notifications.html:143
+msgid "Not registered with this URL"
+msgstr "Non enregistré avec cette URL"
+
+#: .\console\templates\console\communication_notifications.html:148
+msgid ""
+"Create or refresh the campaign template and register the Town Hall "
+"messenger? listmonk reloads its settings, which pauses running campaigns for "
+"a moment."
+msgstr ""
+"Créer ou actualiser le modèle de campagne et enregistrer le messager Town "
+"Hall ? listmonk recharge ses paramètres, ce qui met brièvement en pause les "
+"campagnes en cours."
+
+#: .\console\templates\console\communication_notifications.html:149
+msgid "Refresh listmonk setup"
+msgstr "Actualiser la configuration listmonk"
+
+#: .\console\templates\console\communication_notifications.html:149
+msgid "Set up in listmonk"
+msgstr "Configurer dans listmonk"
+
+#: .\console\templates\console\communication_notifications.html:152
+msgid "New campaign in listmonk"
+msgstr "Nouvelle campagne dans listmonk"
+
+#: .\console\templates\console\communication_notifications.html:161
+msgid ""
+"Signed-in volunteers are asked once whether to turn notifications on, and "
+"can switch them off for each device in Account settings."
+msgstr ""
+"Les bénévoles connectés se voient proposer une seule fois d’activer les "
+"notifications, et peuvent les désactiver pour chaque appareil dans "
+"Paramètres du compte."
+
+#: .\console\templates\console\communication_notifications.html:162
+msgid "Notifications go out in the language the person last used the site in."
+msgstr ""
+"Les notifications sont envoyées dans la langue que la personne a utilisée en "
+"dernier sur le site."
+
+#: .\console\templates\console\communication_notifications.html:163
+msgid ""
+"On iPhone and iPad, notifications work once the site is added to the home "
+"screen."
+msgstr ""
+"Sur iPhone et iPad, les notifications fonctionnent une fois le site ajouté à "
+"l’écran d’accueil."
+
+#: .\console\templates\console\communication_notifications.html:164
+msgid ""
+"Signing out stops notifications on that device until the person signs in "
+"again."
+msgstr ""
+"La déconnexion arrête les notifications sur cet appareil jusqu’à ce que la "
+"personne se reconnecte."
 
 #: .\console\templates\console\console_layout.html:19
 msgid "Admin Portal"
@@ -5483,10 +5892,6 @@ msgstr "Modifier le secteur"
 #: .\console\templates\console\partials\area_dialog.html:6
 msgid "New Area"
 msgstr "Nouveau secteur"
-
-#: .\console\templates\console\partials\area_dialog.html:11
-msgid "Name"
-msgstr "Nom"
 
 #: .\console\templates\console\partials\area_dialog.html:13
 msgid "e.g. Kitchen, Stage, Kids Zone"
@@ -8121,7 +8526,7 @@ msgstr "s’est joint à"
 msgid "Certificate \"%(name)s\" saved."
 msgstr "Certificat « %(name)s » enregistré."
 
-#: .\console\views\certificates.py:53 .\console\views\communication.py:31
+#: .\console\views\certificates.py:53 .\console\views\communication.py:35
 #: .\console\views\events.py:95 .\console\views\roles.py:83
 #: .\console\views\settings.py:82 .\console\views\settings.py:108
 #: .\console\views\settings.py:135 .\console\views\settings.py:172
@@ -8257,33 +8662,67 @@ msgstr "%(n)d bénévoles sont déjà inscrits ; laissez de la place pour eux."
 msgid "Time slot saved."
 msgstr "Créneau enregistré."
 
-#: .\console\views\communication.py:29
+#: .\console\views\communication.py:33
 msgid "Email settings saved."
 msgstr "Paramètres d’e-mail enregistrés."
 
-#: .\console\views\communication.py:63
+#: .\console\views\communication.py:67
 msgid "Creating missing templates"
 msgstr "Création des modèles manquants"
 
-#: .\console\views\communication.py:76
+#: .\console\views\communication.py:80
 #, python-format
 msgid "Reset failed: %(error)s"
 msgstr "La réinitialisation a échoué : %(error)s"
 
-#: .\console\views\communication.py:78
+#: .\console\views\communication.py:82
 #, python-format
 msgid "\"%(event)s\" templates were reset to the Town Hall defaults."
 msgstr ""
 "Les modèles de « %(event)s » ont été réinitialisés aux valeurs par défaut de "
 "Town Hall."
 
-#: .\console\views\communication.py:87
+#: .\console\views\communication.py:91
 msgid "Syncing users"
 msgstr "Synchronisation des utilisateurs"
 
-#: .\console\views\communication.py:88
+#: .\console\views\communication.py:92
 msgid "Syncing users to listmonk in the background."
 msgstr "Synchronisation des utilisateurs avec listmonk en arrière-plan."
+
+#: .\console\views\communication.py:101
+msgid "Notification settings saved."
+msgstr "Paramètres de notification enregistrés."
+
+#: .\console\views\communication.py:139
+#, python-format
+msgid "Test notification sent to %(count)d device(s)."
+msgstr "Notification de test envoyée à %(count)d appareil(s)."
+
+#: .\console\views\communication.py:141
+msgid ""
+"None of your devices took the notification. Turn notifications on in Account "
+"settings first."
+msgstr ""
+"Aucun de vos appareils n’a reçu la notification. Activez d’abord les "
+"notifications dans Paramètres du compte."
+
+#: .\console\views\communication.py:162
+#, python-format
+msgid "listmonk setup failed: %(error)s"
+msgstr "Échec de la configuration de listmonk : %(error)s"
+
+#: .\console\views\communication.py:164
+msgid "Syncing people with notifications"
+msgstr "Synchronisation des personnes avec notifications"
+
+#: .\console\views\communication.py:165
+msgid ""
+"listmonk is set up for notifications. It reloads its settings, so give it a "
+"few seconds."
+msgstr ""
+"listmonk est configuré pour les notifications. Il recharge ses paramètres : "
+"patientez quelques secondes."
 
 #: .\console\views\event_tasks.py:70
 #, python-format
@@ -8363,62 +8802,62 @@ msgstr "Détails de l’événement enregistrés."
 msgid "Time slot removed."
 msgstr "Créneau retiré."
 
-#: .\console\views\events.py:188
+#: .\console\views\events.py:190
 #, python-format
 msgid "The listmonk announcement failed: %(error)s"
 msgstr "L’annonce listmonk a échoué : %(error)s"
 
-#: .\console\views\events.py:191
+#: .\console\views\events.py:193
 msgid "Announcement emailed to \"Town Hall users\"."
 msgstr "Annonce envoyée par e-mail à « Town Hall users »."
 
-#: .\console\views\events.py:193
+#: .\console\views\events.py:195
 msgid "An announcement campaign is waiting as a draft in listmonk."
 msgstr "Une campagne d’annonce attend à l’état de brouillon dans listmonk."
 
-#: .\console\views\events.py:204
+#: .\console\views\events.py:206
 #, python-format
 msgid "\"%(title)s\" is now visible to volunteers."
 msgstr "« %(title)s » est maintenant visible par les bénévoles."
 
-#: .\console\views\events.py:206
+#: .\console\views\events.py:208
 #, python-format
 msgid "\"%(title)s\" is hidden from volunteers."
 msgstr "« %(title)s » est masqué aux bénévoles."
 
-#: .\console\views\events.py:216 .\console\views\volunteers.py:345
+#: .\console\views\events.py:218 .\console\views\volunteers.py:345
 msgid "Write a message before sending."
 msgstr "Rédigez un message avant de l’envoyer."
 
-#: .\console\views\events.py:227
+#: .\console\views\events.py:229
 #, python-format
 msgid "Message sent to %(count)d volunteers."
 msgstr "Message envoyé à %(count)d bénévoles."
 
-#: .\console\views\events.py:247
+#: .\console\views\events.py:249
 #, python-format
 msgid "Slot %(n)d has an invalid date or time."
 msgstr "Le créneau %(n)d a une date ou une heure invalide."
 
-#: .\console\views\events.py:250
+#: .\console\views\events.py:252
 #, python-format
 msgid "Slot %(n)d must end after it starts."
 msgstr "Le créneau %(n)d doit se terminer après son début."
 
-#: .\console\views\events.py:257
+#: .\console\views\events.py:259
 msgid "Add at least one time slot."
 msgstr "Ajoutez au moins un créneau."
 
-#: .\console\views\events.py:277
+#: .\console\views\events.py:279
 msgid "Select a role first."
 msgstr "Choisissez d’abord un rôle."
 
-#: .\console\views\events.py:290
+#: .\console\views\events.py:292
 #, python-format
 msgid "Added %(role)s with %(count)d time slot(s)."
 msgstr "%(role)s ajouté avec %(count)d créneau(x)."
 
-#: .\console\views\events.py:292
+#: .\console\views\events.py:294
 #, python-format
 msgid ""
 "This event now needs more than %(n)d volunteers. Consider setting up a chain "
@@ -8428,25 +8867,25 @@ msgstr ""
 "mettre en place une chaîne de commandement avec des secteurs et des "
 "responsables."
 
-#: .\console\views\events.py:405
+#: .\console\views\events.py:407
 msgid "Add a role to this event before inviting volunteers."
 msgstr "Ajoutez un rôle à cet événement avant d’inviter des bénévoles."
 
-#: .\console\views\events.py:412
+#: .\console\views\events.py:414
 #, python-format
 msgid "You are invited to %(event)s"
 msgstr "Vous êtes invité à %(event)s"
 
-#: .\console\views\events.py:417
+#: .\console\views\events.py:419
 #, python-format
 msgid "Sent %(count)d invitation(s) for %(role)s."
 msgstr "%(count)d invitation(s) envoyée(s) pour %(role)s."
 
-#: .\console\views\events.py:419
+#: .\console\views\events.py:421
 msgid "Select at least one volunteer to invite."
 msgstr "Sélectionnez au moins un bénévole à inviter."
 
-#: .\console\views\events.py:424
+#: .\console\views\events.py:426
 #, python-format
 msgid ""
 "Hello [Name],\n"
@@ -8463,31 +8902,31 @@ msgstr ""
 "\n"
 "Nous serions ravis de vous compter dans l’équipe !"
 
-#: .\console\views\events.py:435
+#: .\console\views\events.py:437
 #, python-format
 msgid "Be the spark at %(event)s!"
 msgstr "Soyez l’étincelle de %(event)s !"
 
-#: .\console\views\events.py:536
+#: .\console\views\events.py:538
 #, python-format
 msgid "%(name)s checked out."
 msgstr "%(name)s a quitté."
 
-#: .\console\views\events.py:541
+#: .\console\views\events.py:543
 #, python-format
 msgid "%(name)s is already checked in."
 msgstr "%(name)s est déjà enregistré."
 
-#: .\console\views\events.py:548
+#: .\console\views\events.py:550
 msgid "That volunteer is not signed up for this event."
 msgstr "Ce bénévole n’est pas inscrit à cet événement."
 
-#: .\console\views\events.py:551
+#: .\console\views\events.py:553
 #, python-format
 msgid "%(name)s checked in as %(role)s."
 msgstr "%(name)s s’est enregistré comme %(role)s."
 
-#: .\console\views\events.py:585
+#: .\console\views\events.py:587
 msgid "Post-event statement saved."
 msgstr "Déclaration après l’événement enregistrée."
 
@@ -9647,7 +10086,7 @@ msgstr ""
 "Les responsables de quart de %(event)s ont été choisis automatiquement. "
 "Vérifiez-les avant qu’ils ne soient verrouillés 24 heures à l’avance."
 
-#: .\events\leadership.py:230
+#: .\events\leadership.py:232
 #, python-format
 msgid "You are the area lead for %(area)s at %(event)s."
 msgstr "Vous êtes responsable de secteur pour %(area)s à %(event)s."
@@ -10780,10 +11219,6 @@ msgstr "Événement à venir"
 #: .\jobs\templates\jobs\partials\kiosk_place_card.html:11
 msgid "Shift timings"
 msgstr "Horaires des quarts"
-
-#: .\jobs\templates\jobs\partials\kiosk_place_card.html:15
-msgid "Registered"
-msgstr "Inscrits"
 
 #: .\jobs\templates\jobs\partials\kiosk_place_card.html:20
 msgid "Live Impact Tracking"

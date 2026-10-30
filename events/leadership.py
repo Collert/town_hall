@@ -175,11 +175,13 @@ def drop_lead_if_gone(slot_ids, user_ids):
 
 
 def notify_person(user, message, params, link):
+    from base import push
     from base.models import Notification
     lang = getattr(getattr(user, 'profile', None), 'language', '') or None
     with translation.override(lang or translation.get_language()):
         text = str(message) % params
     Notification.objects.create(user=user, message=text[:255], link=link)
+    push.notify('leadership', user, {**params, 'message': text, 'link': link})
 
 
 # ---------------------------------------------------------------------------

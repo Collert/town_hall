@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.db import models
 from django.core.cache import cache
 from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_out
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -26,6 +27,30 @@ class Notification(models.Model):
         from django.utils import timezone
         cutoff = timezone.now() - timezone.timedelta(days=30)
         Notification.objects.filter(user=self.user, timestamp__lt=cutoff, read=True).delete()
+
+
+class PushSubscription(models.Model):
+    """A browser or installed app that gets web push notifications for ``user`` (base/push.py).
+    Its endpoint is also listed in the user's listmonk attribute ``town_hall_webpush``."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='push_subscriptions')
+    endpoint = models.URLField(max_length=1000, unique=True)
+    p256dh = models.CharField(max_length=200)
+    auth = models.CharField(max_length=100)
+    user_agent = models.CharField(max_length=300, blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Push device for {self.user.username}'
+
+
+@receiver(user_logged_out)
+def forget_push_device(sender, request, user, **kwargs):
+    """Signing out stops this browser's notifications; signing in again turns them back on
+    (base/static/base/push.js re-registers the device)."""
+    endpoint = request.session.get('push_endpoint') if request is not None else None
+    if user is not None and endpoint and PushSubscription.objects.filter(user=user, endpoint=endpoint).delete()[0]:
+        from . import listmonk
+        listmonk.queue_sync(user)
 
 
 class EmailTrigger(models.Model):
@@ -645,6 +670,14 @@ class SiteSettings(models.Model):
     listmonk_logo_source = models.CharField(max_length=255, blank=True, default='', help_text='Logo file the listmonk copy was made from')
     listmonk_brand = models.JSONField(default=dict, blank=True)
     default_from_email = models.CharField(max_length=200, blank=True, default='', help_text='Sender, e.g. "Town Hall <hello@example.org>". Blank uses listmonk\'s default.')
+    # Web push (base/push.py): VAPID keys and the listmonk messenger's password, made on
+    # first use; which notification categories are on (missing keys use their defaults);
+    # and the "Town Hall push notification" campaign template in listmonk.
+    vapid_private_key = models.TextField(blank=True, default='')
+    vapid_public_key = models.CharField(max_length=100, blank=True, default='')
+    push_messenger_password = models.CharField(max_length=100, blank=True, default='')
+    push_categories = models.JSONField(default=dict, blank=True)
+    listmonk_push_template_id = models.PositiveIntegerField(null=True, blank=True)
     # Bell Tower: shared task lists (base/belltower.py). Set by the connect flow in
     # Organization > Backend, never typed in: the API key is issued by Bell Tower.
     belltower_url = models.URLField(blank=True, default='', help_text='Bell Tower server, e.g. https://tasks.example.org')

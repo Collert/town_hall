@@ -1,0 +1,170 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Notifications" %}{% endblock %}
+
+{% block extra_css %}
+{# Shares the Communication page styles (notices, event rows, sidebar) with the Email tab. #}
+<link rel="stylesheet" href="{% static 'console/communication_email.css' %}">
+<link rel="stylesheet" href="{% static 'console/communication_notifications.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<span>{% trans "Communication" %}</span>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "Notifications" %}</span>
+{% endblock %}
+
+{% block content %}
+<form method="post" data-unsaved-warning>
+    {% csrf_token %}
+    <header class="page-header">
+        <div>
+            <h1 class="page-title">{% trans "Communication" %}</h1>
+            <p class="page-lead">{% trans "Choose which app events send a push notification. Volunteers turn notifications on for each phone or computer when they're signed in, and can install the site as an app." %}</p>
+        </div>
+        <button type="submit" class="c-btn c-btn-primary c-btn-lg"><span class="material-symbols-outlined">save</span>{% trans "Save Changes" %}</button>
+    </header>
+
+    {% include 'console/partials/communication_tabs.html' %}
+
+    {% if task %}
+    {% include 'console/partials/listmonk_task.html' %}
+    {% elif task_error %}
+    <div class="comm-notice is-error">
+        <span class="material-symbols-outlined">error</span>
+        <p>{% blocktrans %}The last listmonk job failed: {{ task_error }}{% endblocktrans %}</p>
+    </div>
+    {% endif %}
+
+    <div class="c-split">
+        <div class="c-stack">
+            <section class="c-card">
+                <h2 class="c-card-title">{% trans "Notification events" %}</h2>
+                <ul class="trigger-list">
+                    {% for category, enabled in categories %}
+                    <li class="trigger push-category">
+                        <span class="trigger-icon material-symbols-outlined" aria-hidden="true">{{ category.icon }}</span>
+                        <div class="trigger-main">
+                            <strong>{{ category.label }}</strong>
+                            <small>{{ category.description }}</small>
+                            <small class="trigger-audience"><span class="material-symbols-outlined">group</span>{{ category.audience }}</small>
+                        </div>
+                        <label class="c-toggle trigger-switch">
+                            <input type="checkbox" name="push_{{ category.key }}" {% if enabled %}checked{% endif %}
+                                   aria-label="{% blocktrans with label=category.label %}Send “{{ label }}” notifications{% endblocktrans %}">
+                            <span></span>
+                        </label>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section class="c-card" id="listmonk">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">outgoing_mail</span>{% trans "Custom notifications from listmonk" %}</h2>
+                <p class="push-intro">{% blocktrans with attrib=attrib %}When someone turns notifications on, their devices are saved in their listmonk subscriber attribute <code>{{ attrib }}</code>. A plain-text campaign sent with the Town Hall messenger reaches everyone on its lists who has notifications on; the others are skipped.{% endblocktrans %}</p>
+                <ol class="push-steps">
+                    <li>{% blocktrans %}In listmonk, create a campaign and pick your lists, for example a volunteering opportunities list.{% endblocktrans %}</li>
+                    <li>{% blocktrans with name=messenger_name %}Set <strong>Messenger</strong> to <code>{{ name }}</code>, <strong>Format</strong> to Plain text, and <strong>Template</strong> to “{{ template_name }}”.{% endblocktrans %}</li>
+                    <li>{% trans "The subject becomes the notification's title and the message its text. Keep it short: phones show about two lines." %}</li>
+                    <li>{% blocktrans %}To open a page when the notification is clicked, put its address on the last line with <code>@TrackLink</code> right after it, e.g. <code>https://example.org/en/opportunities/@TrackLink</code>. Without a link, the home page opens. Either way listmonk counts the clicks, and shown notifications count as views.{% endblocktrans %}</li>
+                </ol>
+                {% if not configured %}
+                <div class="comm-notice">
+                    <span class="material-symbols-outlined">link_off</span>
+                    <p>{% trans "Connect listmonk in Organization > Backend first." %}</p>
+                    <a href="{% url 'console_settings_backend' %}" class="c-btn c-btn-dark c-btn-sm">{% trans "Connect listmonk" %}</a>
+                </div>
+                {% else %}
+                <details class="push-manual">
+                    <summary>{% trans "Set up the messenger by hand" %}</summary>
+                    <p>{% trans "“Set up in listmonk” does this for you if its API user may manage settings. Otherwise add a messenger in listmonk under Settings > Messengers:" %}</p>
+                    <dl class="push-credentials">
+                        <dt><label for="push-name">{% trans "Name" %}</label></dt>
+                        <dd><input type="text" id="push-name" class="c-input" value="{{ messenger_name }}" readonly onclick="this.select()"></dd>
+                        <dt><label for="push-url">{% trans "URL" %}</label></dt>
+                        <dd class="push-copy">
+                            <input type="text" id="push-url" class="c-input" value="{{ messenger_url }}" readonly onclick="this.select()">
+                            <button type="button" class="c-btn c-btn-surface c-btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('push-url').value); this.querySelector('span:last-child').textContent = '{% trans "Copied" %}'">
+                                <span class="material-symbols-outlined">content_copy</span><span>{% trans "Copy" %}</span>
+                            </button>
+                        </dd>
+                        <dt><label for="push-user">{% trans "Username" %}</label></dt>
+                        <dd><input type="text" id="push-user" class="c-input" value="{{ messenger_user }}" readonly onclick="this.select()"></dd>
+                        <dt><label for="push-password">{% trans "Password" %}</label></dt>
+                        <dd class="push-copy">
+                            <input type="password" id="push-password" class="c-input" value="{{ messenger_password }}" readonly onclick="this.type = 'text'; this.select()">
+                            <button type="button" class="c-btn c-btn-surface c-btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('push-password').value); this.querySelector('span:last-child').textContent = '{% trans "Copied" %}'">
+                                <span class="material-symbols-outlined">content_copy</span><span>{% trans "Copy" %}</span>
+                            </button>
+                        </dd>
+                    </dl>
+                    <p class="c-help">{% trans "listmonk must be able to reach this URL. “Set up in listmonk” still creates the campaign template when it isn't allowed to change settings." %}</p>
+                </details>
+                {% endif %}
+            </section>
+        </div>
+
+        <aside class="c-stack">
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">devices</span>{% trans "Devices" %}</h2>
+                <dl class="comm-facts">
+                    <dt>{% trans "People" %}</dt>
+                    <dd>{{ people_count }}</dd>
+                    <dt>{% trans "Devices" %}</dt>
+                    <dd>{{ device_count }}</dd>
+                    <dt>{% trans "Yours" %}</dt>
+                    <dd>{{ my_device_count }}</dd>
+                </dl>
+                <div class="comm-actions">
+                    <button type="button" class="c-btn c-btn-surface c-btn-block" hx-post="{% url 'console_push_test' %}" hx-swap="none" {% if not my_device_count %}disabled title="{% trans 'Turn notifications on in Account settings first' %}"{% endif %}>
+                        <span class="material-symbols-outlined">notifications_active</span>{% trans "Send me a test" %}
+                    </button>
+                    <a href="{% url 'edit_profile' %}" class="c-btn c-btn-ghost c-btn-block">
+                        <span class="material-symbols-outlined">settings</span>{% trans "My notification settings" %}
+                    </a>
+                </div>
+            </section>
+
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">mark_email_read</span>{% trans "listmonk" %}</h2>
+                {% if not configured %}
+                <p class="comm-status"><span class="material-symbols-outlined">link_off</span>{% trans "Not connected" %}</p>
+                {% elif error %}
+                <p class="comm-status error"><span class="material-symbols-outlined">error</span>{% blocktrans %}Can't reach listmonk: {{ error }}{% endblocktrans %}</p>
+                {% else %}
+                <ul class="push-checks">
+                    <li class="{% if status.template %}ok{% endif %}">
+                        <span class="material-symbols-outlined">{% if status.template %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+                        <span>{% trans "Campaign template" %}<small>{{ status.template|default:_("Not created yet") }}</small></span>
+                    </li>
+                    <li class="{% if status.messenger %}ok{% endif %}">
+                        <span class="material-symbols-outlined">{% if status.messenger %}check_circle{% elif status.messenger is None %}help{% else %}radio_button_unchecked{% endif %}</span>
+                        <span>{% blocktrans with name=messenger_name %}Messenger “{{ name }}”{% endblocktrans %}<small>{% if status.messenger %}{% trans "Registered" %}{% elif status.messenger is None %}{% trans "Can't check: the API user may not read settings" %}{% else %}{% trans "Not registered with this URL" %}{% endif %}</small></span>
+                    </li>
+                </ul>
+                <div class="comm-actions">
+                    <button type="button" class="c-btn c-btn-dark c-btn-block" hx-post="{% url 'console_push_listmonk_setup' %}" hx-swap="none"
+                            hx-confirm="{% trans 'Create or refresh the campaign template and register the Town Hall messenger? listmonk reloads its settings, which pauses running campaigns for a moment.' %}">
+                        <span class="material-symbols-outlined">build</span>{% if status.template and status.messenger %}{% trans "Refresh listmonk setup" %}{% else %}{% trans "Set up in listmonk" %}{% endif %}
+                    </button>
+                    <a href="{{ listmonk_url }}/admin/campaigns/new" class="c-btn c-btn-ghost c-btn-block" target="_blank" rel="noopener">
+                        <span class="material-symbols-outlined">open_in_new</span>{% trans "New campaign in listmonk" %}
+                    </a>
+                </div>
+                {% endif %}
+            </section>
+
+            <section class="c-card c-card-tonal">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">info</span>{% trans "How it works" %}</h2>
+                <ul class="comm-howto">
+                    <li>{% trans "Signed-in volunteers are asked once whether to turn notifications on, and can switch them off for each device in Account settings." %}</li>
+                    <li>{% trans "Notifications go out in the language the person last used the site in." %}</li>
+                    <li>{% trans "On iPhone and iPad, notifications work once the site is added to the home screen." %}</li>
+                    <li>{% trans "Signing out stops notifications on that device until the person signs in again." %}</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+</form>
+{% endblock %}

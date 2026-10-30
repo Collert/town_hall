@@ -1,0 +1,24 @@
+{% load static i18n %}
+{% comment %}Signed-in pages only (base/layout.html): asks to turn on push notifications for this device (base/push.py).{% endcomment %}
+<link rel="stylesheet" href="{% static 'base/push_prompt.css' %}">
+<div id="push-config" hidden
+     data-public-key="{{ push_public_key }}"
+     data-subscribe-url="{% url 'push_subscribe' %}"
+     data-unsubscribe-url="{% url 'push_unsubscribe' %}"
+     data-registered="{{ request.session.push_endpoint|default:'' }}"
+     data-on-message="{% trans 'Notifications are on for this device.' %}"
+     data-off-message="{% trans 'Notifications are off for this device.' %}"
+     data-error-message="{% trans "Notifications couldn't be turned on. Try again later." %}"></div>
+<aside class="push-prompt" id="push-prompt" aria-labelledby="push-prompt-title" hidden>
+    <span class="push-prompt-icon material-symbols-outlined" aria-hidden="true">notifications_active</span>
+    <div class="push-prompt-text">
+        <strong id="push-prompt-title">{% trans "Stay in the loop" %}</strong>
+        <p data-push-variant="ask">{% trans "Get a notification the day before your shifts, when new opportunities open and when someone endorses you." %}</p>
+        <p data-push-variant="ios" hidden>{% blocktrans with org=company_name %}To get notifications on iPhone or iPad, tap Share, choose “Add to Home Screen”, then open {{ org }} from your home screen.{% endblocktrans %}</p>
+    </div>
+    <div class="push-prompt-actions">
+        <button type="button" class="btn btn-accent btn-rounded" data-push-enable data-no-busy>{% trans "Turn on" %}</button>
+        <button type="button" class="push-prompt-later" data-push-dismiss>{% trans "Not now" %}</button>
+    </div>
+</aside>
+<script src="{% static 'base/push.js' %}" defer></script>

@@ -817,3 +817,116 @@ dialog.account-dialog.dialog-closing::backdrop {
     color: var(--color-primary-vivid);
     font-variation-settings: 'FILL' 1;
 }
+
+/* ---------- Notifications on this device (push.js) ---------- */
+.push-device {
+    margin-top: 2rem;
+}
+
+.push-device-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: var(--color-surface);
+}
+
+.push-device-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 1rem;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-secondary);
+}
+
+.push-device-text label {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.push-device-text p {
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+.push-switch {
+    position: relative;
+    display: inline-flex;
+    width: 3rem;
+    height: 1.65rem;
+}
+
+.push-switch input {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.push-switch input:disabled {
+    cursor: not-allowed;
+}
+
+.push-switch span {
+    width: 100%;
+    border-radius: 9999px;
+    background: var(--color-bg-tertiary);
+    transition: background-color 200ms ease;
+    pointer-events: none;
+}
+
+.push-switch span::after {
+    content: '';
+    position: absolute;
+    top: 0.2rem;
+    left: 0.2rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+    transition: transform 200ms ease;
+}
+
+.push-switch input:checked + span {
+    background: var(--color-primary-vivid);
+}
+
+.push-switch input:checked + span::after {
+    transform: translateX(1.35rem);
+}
+
+.push-switch input:disabled + span {
+    opacity: 0.5;
+}
+
+.push-switch input:focus-visible + span {
+    outline: 2px solid var(--color-primary-vivid);
+    outline-offset: 2px;
+}
+
+.push-device-note {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 600px) {
+    .push-device-icon {
+        display: none;
+    }
+
+    .push-device-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+}

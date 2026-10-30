@@ -57,7 +57,7 @@ The console sidebar has these sections, each covered in its own lesson:
 - **Volunteer Pool**: everyone with an account.
 - **Venues**: the places you hold events.
 - **Training Modules** and **Certificates**: what volunteers learn and prove.
-- **Communication**: which emails the app sends.
+- **Communication**: which emails and push notifications the app sends.
 - **Organization**: your name, colors, home page, levels, skills, points, languages and integrations.
 - **Kiosk Mode**: turns a device into a check-in station.
 
@@ -515,12 +515,26 @@ shows as its own perk. The Recognition link stays hidden until you add your firs
 """),
 
     ('Communication and email', """
-Town Hall talks to volunteers in two ways.
+Town Hall talks to volunteers in three ways.
 
 ## In-app notifications
 
 The bell icon in the header. Messages you send from the console (to one volunteer, or to everyone at
 an event) arrive here, along with reminders such as lead assignments. They work without any setup.
+
+## Push notifications
+
+Volunteers can install the site as an app on their phone or computer, and signed-in volunteers are
+asked once whether to turn on notifications for that device (they can change it later in **Account
+settings**). On iPhone and iPad this works after adding the site to the home screen. Notifications
+need no setup: **Communication > Notifications** switches each kind on or off (shift reminders, new
+events, invitations, endorsements, lead assignments, messages from staff and more), and **Send me a
+test** checks your own device. Signing out stops notifications on that device.
+
+To send your own notifications from listmonk, choose **Set up in listmonk** there. Then, in listmonk,
+create a campaign for any list with **Messenger** set to *townhall*, **Format** set to *Plain text* and
+the *Town Hall push notification* template. Everyone on the list who turned notifications on gets the
+subject and message as a notification; the tab explains how to choose the page it opens.
 
 ## Email through listmonk
 

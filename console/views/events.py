@@ -11,7 +11,7 @@ from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from base import listmonk
+from base import listmonk, push
 from base.email import announce_event, notify, text_to_html
 from base.models import Notification
 from base.utils import short_datetime
@@ -180,7 +180,9 @@ def delete_slot(request, event_id, slot_id):
 
 
 def _announce_event(request, event):
-    """'New event published' campaign, if that trigger is on, in the publishing admin's language."""
+    """'New event published' campaign, if that trigger is on, in the publishing admin's
+    language, and a push notification to everyone who turned them on."""
+    push.announce_event(event, request.build_absolute_uri('/'))
     link = request.build_absolute_uri(reverse('opportunity_detail', args=[event.pk]))
     try:
         result = announce_event(event, link, translation.get_language())

@@ -16,7 +16,7 @@ from django.urls import reverse
 from django.utils import formats, timezone, translation
 from django.utils.html import linebreaks, urlize
 
-from . import email_templates, listmonk, triggers
+from . import email_templates, listmonk, push, triggers
 from .models import EmailTemplate, SiteSettings
 
 
@@ -53,16 +53,19 @@ def deliver(trigger, emails, data, lang=None):
 
 def notify(trigger, user, data=None):
     """Email ``user`` about an app event, if that trigger is switched on in
-    Communication > Email, in the language they last used the site in.
+    Communication > Email, in the language they last used the site in. Events with a
+    push category (base/push.py) also go to the devices they turned notifications on
+    for, if that category is on in Communication > Notifications.
 
     With listmonk, the email is sent in the background after the transaction
     commits, so a slow or offline server never holds up the request.
     """
+    data = {'name': user.first_name or user.username, **(data or {})}
+    push.notify(trigger, user, data)
     if not user.email or not triggers.setting(trigger)[0]:
         return
     profile = getattr(user, 'profile', None)
     lang = (profile and profile.language) or settings.LANGUAGE_CODE
-    data = {'name': user.first_name or user.username, **(data or {})}
     if not listmonk.is_configured():
         deliver(trigger, [user.email], data, lang)
         return

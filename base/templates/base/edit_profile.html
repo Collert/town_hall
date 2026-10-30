@@ -146,6 +146,25 @@
                     <button type="submit" class="btn btn-primary btn-rounded">{% trans "Save Changes" %}</button>
                 </div>
             </form>
+
+            <!-- Push notifications on this device (base/static/base/push.js) -->
+            <section class="account-section-card push-device" data-push-device>
+                <h2 class="account-section-title">{% trans "Notifications" %}</h2>
+                <div class="push-device-row">
+                    <span class="push-device-icon material-symbols-outlined" aria-hidden="true">notifications</span>
+                    <div class="push-device-text">
+                        <label for="push-device-toggle">{% trans "Notifications on this device" %}</label>
+                        <p>{% trans "Shift reminders, invitations, new opportunities, endorsements and messages from the team, even when the site is closed." %}</p>
+                    </div>
+                    <span class="push-switch">
+                        <input type="checkbox" id="push-device-toggle" data-push-toggle disabled>
+                        <span></span>
+                    </span>
+                </div>
+                <p class="push-device-note" data-push-note="denied" hidden>{% trans "Notifications are blocked for this site. Allow them in your browser's site settings, then reload this page." %}</p>
+                <p class="push-device-note" data-push-note="ios" hidden>{% blocktrans with org=company_name %}On iPhone and iPad, tap Share, choose “Add to Home Screen”, and open {{ org }} from your home screen to turn notifications on.{% endblocktrans %}</p>
+                <p class="push-device-note" data-push-note="unsupported" hidden>{% trans "This browser can't show notifications." %}</p>
+            </section>
         </div>
     </div>
 </div>

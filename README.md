@@ -16,6 +16,7 @@ Built with Django 6, HTMX and plain CSS. No SPA and no build step.
 - **Earn impact points and level up.** Shifts, training and endorsements earn points. Points set your level, and the Recognition page shows the whole ladder.
 - **A record you can share.** Profile, endorsements from peers and staff, external certificates, and a printable volunteer résumé.
 - **Know your team.** On large events you see your area lead and shift lead, plus a link to your own task list.
+- **Install it, get notified.** The site installs as an app (PWA), and signed-in volunteers can turn on push notifications for shift reminders, new opportunities, invitations, endorsements and messages from staff.
 - **Reminders.** Shift reminder emails go out the day before each shift, a thank-you email asking for feedback follows a volunteer's last shift at an event, and there are gentle nudges to finish your profile.
 
 ### For staff (the Console)
@@ -25,7 +26,7 @@ Built with Django 6, HTMX and plain CSS. No SPA and no build step.
 - **Venues.** Addresses are geocoded automatically. Venues have features, opening hours, short-lived notices, and their own kiosk.
 - **Permanent staff.** Ongoing roles, optionally tied to a venue, that only assigned people can clock into.
 - **Points rules.** Adjust points per hour, role weights, reach caps and "clutch" bonuses (walk-ins, last-minute sign-ups, early or late shifts), then recalculate history.
-- **Communication.** Transactional emails and event announcements through [listmonk](https://listmonk.app), with per-language templates that follow your brand colors.
+- **Communication.** Transactional emails and event announcements through [listmonk](https://listmonk.app), with per-language templates that follow your brand colors. Push notifications can be switched on or off per kind, and Town Hall acts as a listmonk messenger, so plain-text campaigns reach the devices of list subscribers who turned notifications on.
 - **Make it yours.** Theme colors, logo, home page hero, languages and time zone, all from the console.
 
 ### Kiosk check-in 🖥️

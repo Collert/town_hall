@@ -7,6 +7,11 @@ def _newsletter_enabled():
     return bool(newsletter_lists())
 
 
+def _push_public_key():
+    from .push import public_key
+    return public_key()
+
+
 def site_settings(request):
     """
     Context processor that adds site settings (including theme colors)
@@ -21,6 +26,8 @@ def site_settings(request):
         'newsletter_enabled': _newsletter_enabled,
         # The Recognition link only shows once the organization has set up levels.
         'has_levels': lambda: Level.objects.exists(),
+        # Web push key for the notifications prompt (made on first use).
+        'push_public_key': _push_public_key,
         'theme_colors': {
             # Primary Colors
             'primary': settings.color_primary,

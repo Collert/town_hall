@@ -1,0 +1,96 @@
+/* "Stay in the loop": the notifications prompt for signed-in pages (base/partials/push_prompt.html). */
+.push-prompt {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+    width: min(32rem, calc(100% - 2rem));
+    padding: 1.25rem;
+    border-radius: 1.5rem;
+    background: rgba(from var(--color-surface) r g b / 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(-50%);
+    animation: push-prompt-in 350ms ease-out;
+}
+
+.push-prompt[hidden] {
+    display: none;
+}
+
+.push-prompt-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 1rem;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.push-prompt-text strong {
+    display: block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.05rem;
+    color: var(--color-text-primary);
+}
+
+.push-prompt-text p {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+}
+
+.push-prompt-actions {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+}
+
+.push-prompt-later {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 9999px;
+    background: none;
+    color: var(--color-text-secondary);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.push-prompt-later:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+@keyframes push-prompt-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 1rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .push-prompt {
+        animation: none;
+    }
+}
+
+/* Clear the bottom navigation bar on phones. */
+@media (orientation: portrait) {
+    .push-prompt {
+        bottom: calc(10vh + 3rem + env(safe-area-inset-bottom));
+    }
+
+    .push-prompt-actions {
+        grid-column: 1 / -1;
+    }
+}

@@ -1,0 +1,19 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "You're offline" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'base/offline.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="offline-page">
+    <div class="offline-card">
+        <span class="material-symbols-outlined offline-icon" aria-hidden="true">cloud_off</span>
+        <h1>{% trans "You're offline" %}</h1>
+        <p>{% blocktrans with org=company_name %}{{ org }} needs a connection to load this page. Check your Wi-Fi or mobile data and try again.{% endblocktrans %}</p>
+        <button type="button" class="btn btn-accent btn-rounded" onclick="location.reload()">{% trans "Try again" %}</button>
+    </div>
+</main>
+{% endblock %}

@@ -10,7 +10,8 @@ to LISTMONK_URL / LISTMONK_API_USER / LISTMONK_API_TOKEN.
 - Emails go through POST /api/tx (base.email.ListmonkEmailBackend) with the template
   for the trigger and the recipient's language; data is available as {{ .Tx.Data.* }}.
 - "New event published" creates a visual campaign to "Town Hall users" and any extra lists.
-- Every user is mirrored as a subscriber of "Town Hall users".
+- Every user is mirrored as a subscriber of "Town Hall users", with their push
+  notification endpoints in the ``town_hall_webpush`` attribute (base/push.py).
 
 API reference: https://listmonk.app/docs/apis/apis/
 """
@@ -349,7 +350,11 @@ def create_visual_campaign(name, subject, body, body_source, list_ids, send=Fals
 # ---------------------------------------------------------------------------
 
 def subscriber_attribs(user):
-    attribs = {'town_hall_id': user.pk, 'username': user.username, 'staff': user.is_staff}
+    from .push import ATTRIB
+
+    attribs = {'town_hall_id': user.pk, 'username': user.username, 'staff': user.is_staff,
+               # Devices with notifications on, for campaigns sent with the Town Hall messenger (base/push.py)
+               ATTRIB: list(user.push_subscriptions.values_list('endpoint', flat=True))}
     profile = getattr(user, 'profile', None)
     if profile:
         level = profile.level
