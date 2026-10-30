@@ -1,4 +1,4 @@
-{% load i18n humanize %}
+{% load i18n humanize static %}
 {% if kind == 'event' %}
 <article class="place-card">
     <div class="place-card-hero" {% if place.image %}style="background-image: url('{{ place.image.url }}')"{% endif %}>
@@ -28,7 +28,7 @@
 {% else %}
 <article class="place-card place-card-venue">
     <div class="place-card-hero" {% if place.photo %}style="background-image: url('{{ place.photo.url }}')"{% endif %}>
-        <span class="place-brand"><span class="material-symbols-outlined">account_balance</span>{{ company_name }}</span>
+        <span class="place-brand"><img src="{% if site_settings.logo %}{{ site_settings.logo.url }}{% else %}{% static 'base/town-hall.svg' %}{% endif %}" alt="">{{ company_name }}</span>
         <h1>{{ place.name }}</h1>
         {% if place.address %}<p class="place-address"><span class="material-symbols-outlined">location_on</span>{{ place.address }}</p>{% endif %}
     </div>

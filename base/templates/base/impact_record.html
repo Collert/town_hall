@@ -20,7 +20,7 @@
     <div class="record-head">
         <div>
             <span class="record-org">
-                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<span class="material-symbols-outlined">account_balance</span>{% endif %}
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<img src="{% static 'base/town-hall.svg' %}" alt="">{% endif %}
                 {{ company_name }}
             </span>
             <h1>{% trans "Certified Volunteer Impact Record" %}</h1>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Town Hall">
+  <title>Town Hall</title>
+  <rect width="64" height="64" rx="17" fill="#2b3a67"/>
+  <path d="M10.5 27L32 11.5L53.5 27Z" fill="#f6e9d2" stroke="#f6e9d2" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="15" y="27" width="34" height="25" rx="2.5" fill="#f6e9d2"/>
+  <circle cx="32" cy="27.5" r="7.2" fill="#2b3a67"/>
+  <path d="M32 23.6V27.5L34.8 29.4" fill="none" stroke="#f6e9d2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M27.5 52V43.5A4.5 4.5 0 0 1 36.5 43.5V52Z" fill="#2b3a67"/>
+</svg>

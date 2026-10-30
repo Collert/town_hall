@@ -30,7 +30,7 @@
 
         <header class="cert-header">
             <div class="cert-org-row">
-                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="" class="cert-org-logo">{% else %}<span class="material-symbols-outlined cert-org-icon">volunteer_activism</span>{% endif %}
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="" class="cert-org-logo">{% else %}<img src="{% static 'base/town-hall.svg' %}" alt="" class="cert-org-logo">{% endif %}
                 <h1 class="cert-org-name">{{ company_name }}</h1>
             </div>
             <p class="cert-type-label">{% trans "Certificate of Completion" %}</p>

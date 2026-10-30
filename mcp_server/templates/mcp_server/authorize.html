@@ -12,7 +12,7 @@
     <section class="connect-card">
         <header class="connect-head">
             <span class="connect-mark">
-                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<span class="material-symbols-outlined">architecture</span>{% endif %}
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<img src="{% static 'base/town-hall.svg' %}" alt="">{% endif %}
             </span>
             <span class="material-symbols-outlined connect-link-icon">sync_alt</span>
             <span class="connect-mark connect-mark-app"><span class="material-symbols-outlined">smart_toy</span></span>

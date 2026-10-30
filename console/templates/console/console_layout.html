@@ -12,7 +12,7 @@
     <aside class="console-sidebar" id="console-sidebar">
         <a href="{% url 'console_dashboard' %}" class="console-brand">
             <span class="console-brand-mark">
-                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<span class="material-symbols-outlined">architecture</span>{% endif %}
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<img src="{% static 'base/town-hall.svg' %}" alt="">{% endif %}
             </span>
             <span class="console-brand-text">
                 <strong>{{ company_name }}</strong>
