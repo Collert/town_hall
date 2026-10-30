@@ -108,12 +108,24 @@
         {% avatar supervisor 'lg' %}
         <span><strong>{{ supervisor|display_name }}</strong><small>{% trans "Event Supervisor" %}</small></span>
         {% if supervisor_qr %}
-        <figure class="shift-call-qr">
-            <span class="shift-qr">{{ supervisor_qr|safe }}</span>
-            <figcaption>{% trans "Scan to call from your phone" %}</figcaption>
-        </figure>
+        <button type="button" class="shift-call" id="call-open" aria-label="{% trans 'Call supervisor' %}"><span class="material-symbols-outlined">call</span></button>
         {% endif %}
     </section>
+    {% if supervisor_qr %}
+    {# The kiosk is a shared device, so the call happens on the volunteer's own phone. #}
+    <dialog class="shift-call-dialog" id="call-dialog">
+        <form method="dialog" class="shift-call-close">
+            <button type="submit" aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </form>
+        {% avatar supervisor 'lg' %}
+        <strong>{{ supervisor|display_name }}</strong>
+        <span class="shift-qr">{{ supervisor_qr|safe }}</span>
+        <p>{% trans "Scan to call from your phone" %}</p>
+        <form method="dialog">
+            <button type="submit" class="kiosk-cta"><span class="material-symbols-outlined">arrow_back</span>{% trans "Back" %}</button>
+        </form>
+    </dialog>
+    {% endif %}
     {% endif %}
 </main>
 {% include 'jobs/partials/kiosk_language.html' %}
@@ -132,6 +144,12 @@
             };
             tick();
             setInterval(tick, 1000);
+        }
+
+        const dialog = document.getElementById('call-dialog');
+        if (dialog) {
+            document.getElementById('call-open').addEventListener('click', () => dialog.showModal());
+            dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });  // tap outside
         }
 
         // Shared device: lock the kiosk after inactivity. A running shift keeps running.

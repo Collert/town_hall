@@ -1499,6 +1499,7 @@ class KioskTests(ConsoleFixture):
         Profile.objects.filter(user=self.staff).update(phone='+1 (604) 555-0100')
         self.client.post(reverse('kiosk_login_id_code', args=['event', self.live.pk]), {'code': self.vol.profile.id_code})
         response = self.client.get(reverse('kiosk_logged_in', args=['event', self.live.pk]))
+        self.assertContains(response, 'id="call-dialog"')
         self.assertContains(response, 'class="shift-qr"><svg')
         self.assertNotContains(response, 'href="tel:')
 

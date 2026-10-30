@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-29 13:40-0700\n"
+"POT-Creation-Date: 2026-10-29 18:58-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1279,8 +1279,10 @@ msgstr ""
 
 #: .\base\templates\base\login.html:34
 #: .\base\templates\base\password_reset_complete.html:16
+#: .\jobs\templates\jobs\kiosk_login_email_password.html:27
+#: .\jobs\templates\jobs\kiosk_login_id_code.html:27
 msgid "Sign In"
-msgstr ""
+msgstr "登入"
 
 #: .\base\templates\base\login.html:39
 msgid "secure connection established"
@@ -3340,8 +3342,9 @@ msgstr ""
 #: .\console\templates\console\volunteer_list.html:79
 #: .\events\templates\events\event_detail.html:496
 #: .\events\templates\events\my_events.html:247
+#: .\jobs\templates\jobs\kiosk_logged_in.html:118
 msgid "Close"
-msgstr ""
+msgstr "關閉"
 
 #: .\console\templates\console\backend_settings.html:237
 msgid "Bell Tower address"
@@ -9042,6 +9045,7 @@ msgid "Volunteer Impact Certificate - %(name)s"
 msgstr ""
 
 #: .\events\templates\events\event_certificate.html:12
+#: .\jobs\templates\jobs\kiosk_logged_in.html:125
 #: .\jobs\templates\jobs\kiosk_role_select.html:18
 msgid "Back"
 msgstr "返回"
@@ -9999,7 +10003,11 @@ msgid ""
 "needs training you haven't completed. Please see a coordinator."
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_logged_in.html:113
+#: .\jobs\templates\jobs\kiosk_logged_in.html:111
+msgid "Call supervisor"
+msgstr "致電主管"
+
+#: .\jobs\templates\jobs\kiosk_logged_in.html:123
 msgid "Scan to call from your phone"
 msgstr "用手機掃描即可撥打電話"
 
@@ -10013,10 +10021,6 @@ msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_login_email_password.html:21
 msgid "Show password"
-msgstr ""
-
-#: .\jobs\templates\jobs\kiosk_login_email_password.html:27
-msgid "Sign In & Start Shift"
 msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_login_email_password.html:30
@@ -10043,11 +10047,6 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: .\jobs\templates\jobs\kiosk_login_id_code.html:27
-#: .\jobs\templates\jobs\kiosk_role_select.html:37
-msgid "Confirm & Start Shift"
-msgstr ""
-
 #: .\jobs\templates\jobs\kiosk_login_id_code.html:31
 msgid "Forgot your Volunteer ID? Sign in with email"
 msgstr ""
@@ -10068,6 +10067,10 @@ msgstr ""
 
 #: .\jobs\templates\jobs\kiosk_role_select.html:15
 msgid "You're signed up for more than one shift. Which are you starting?"
+msgstr ""
+
+#: .\jobs\templates\jobs\kiosk_role_select.html:37
+msgid "Confirm & Start Shift"
 msgstr ""
 
 #: .\jobs\templates\jobs\partials\kiosk_language.html:8

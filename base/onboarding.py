@@ -380,8 +380,8 @@ The kiosk never signs volunteers into the website; it only records shifts.
   trained for. Stepping in this way is a **clutch cover** and earns bonus points.
 - At a venue kiosk, staff can only start shifts in permanent roles assigned to them.
 - When they leave, they sign in again and press **End Shift**.
-- At an event, their screen shows the event supervisor with a QR code; scanning it calls the
-  supervisor from the volunteer's own phone.
+- At an event, their screen shows the event supervisor. The call button opens a QR code; scanning
+  it calls the supervisor from the volunteer's own phone.
 
 **Lock** signs the volunteer out of the kiosk right away (a running shift keeps running). After the
 idle timeout set under **Organization > Identity**, the kiosk locks on its own, ready for the next

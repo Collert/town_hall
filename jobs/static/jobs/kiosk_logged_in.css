@@ -300,20 +300,85 @@
     color: var(--color-text-secondary);
 }
 
-.shift-call-qr {
+.shift-call {
     margin-left: auto;
+    display: grid;
+    place-items: center;
+    width: 3.75rem;
+    height: 3.75rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    cursor: pointer;
+}
+
+.shift-call-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(26rem, calc(100% - 2rem));
+    padding: 2.5rem 2rem 2rem;
+    border: none;
+    border-radius: 2rem;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-ambient);
+}
+
+.shift-call-dialog[open] {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
+    gap: 1rem;
+    text-align: center;
+}
+
+.shift-call-dialog::backdrop {
+    background: rgba(from var(--color-primary) r g b / 0.55);
+}
+
+.shift-call-dialog strong {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.4rem;
+}
+
+.shift-call-dialog p {
+    font-size: 1.05rem;
+    color: var(--color-text-secondary);
+}
+
+.shift-call-dialog form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.shift-call-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: auto !important;
+}
+
+.shift-call-close button {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    cursor: pointer;
 }
 
 /* Dark code on a light tile in both themes (these two colors don't swap), so any phone camera reads it. */
 .shift-qr {
     display: block;
-    width: 8.5rem;
-    padding: 0.4rem;
-    border-radius: 1rem;
+    width: min(16rem, 100%);
+    padding: 0.75rem;
+    border-radius: 1.25rem;
     background: var(--color-primary-contrast);
     color: var(--color-primary);
 }
@@ -324,12 +389,6 @@
     height: auto;
 }
 
-.shift-call-qr figcaption {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-}
-
 @media (max-width: 640px) {
     .shift-grid {
         grid-template-columns: 1fr;
@@ -337,9 +396,5 @@
 
     .shift-user > span {
         display: none;
-    }
-
-    .shift-supervisor {
-        flex-wrap: wrap;
     }
 }
