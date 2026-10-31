@@ -53,7 +53,6 @@ body.kiosk {
     overflow: hidden;
     background: var(--color-surface);
     box-shadow: 0 32px 64px color-mix(in srgb, var(--color-primary-vivid) 10%, transparent);
-    box-shadow: 0 32px 64px rgba(from var(--color-primary-vivid) r g b / 0.1);
 }
 
 .place-card-hero {
@@ -74,7 +73,6 @@ body.kiosk {
     position: absolute;
     inset: 0;
     background: linear-gradient(0deg, color-mix(in srgb, var(--color-primary) 85%, transparent), color-mix(in srgb, var(--color-primary) 0%, transparent) 70%);
-    background: linear-gradient(0deg, rgba(from var(--color-primary) r g b / 0.85), rgba(from var(--color-primary) r g b / 0) 70%);
 }
 
 .place-card-hero > * {
@@ -206,9 +204,6 @@ body.kiosk {
     background:
         linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 60%, transparent), color-mix(in srgb, var(--color-primary) 0%, transparent) 35%),
         linear-gradient(0deg, color-mix(in srgb, var(--color-primary) 85%, transparent), color-mix(in srgb, var(--color-primary) 0%, transparent) 70%);
-    background:
-        linear-gradient(180deg, rgba(from var(--color-primary) r g b / 0.6), rgba(from var(--color-primary) r g b / 0) 35%),
-        linear-gradient(0deg, rgba(from var(--color-primary) r g b / 0.85), rgba(from var(--color-primary) r g b / 0) 70%);
 }
 
 .place-brand {
@@ -334,7 +329,6 @@ body.kiosk {
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 16px 32px color-mix(in srgb, var(--color-accent) 30%, transparent);
-    box-shadow: 0 16px 32px rgba(from var(--color-accent) r g b / 0.3);
     transition: transform 150ms ease, opacity 200ms ease;
 }
 
@@ -417,7 +411,6 @@ body.kiosk {
     padding: 0.5rem;
     border-radius: 1.5rem;
     background: color-mix(in srgb, var(--color-surface) 90%, transparent);
-    background: rgba(from var(--color-surface) r g b / 0.9);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow: var(--shadow-lg);
@@ -473,7 +466,6 @@ body.kiosk {
 /* Notices: one compact panel that scrolls on its own, so a long list never pushes the keypad down. */
 .place-notices {
     background: color-mix(in srgb, var(--color-accent) 10%, transparent);
-    background: rgba(from var(--color-accent) r g b / 0.1);
 }
 
 .place-notices h2 {
