@@ -1484,6 +1484,16 @@ class KioskTests(ConsoleFixture):
         self.assertIsNotNone(shift.end_time)
         self.assertNotIn('kiosk_user_id', self.client.session)
 
+    def test_place_card_refreshes_without_signing_out(self):
+        self.client.post(reverse('kiosk_login_id_code', args=['event', self.live.pk]), {'code': self.vol.profile.id_code})
+        card_url = reverse('kiosk_place_card', args=['event', self.live.pk])
+        self.assertContains(self.client.get(reverse('kiosk_start', args=['event', self.live.pk])), f'hx-get="{card_url}"')
+        response = self.client.get(card_url)
+        self.assertContains(response, 'Hours Logged Today')
+        self.assertNotContains(response, '<html')
+        self.assertIn('kiosk_user_id', self.client.session)
+        self.assertContains(self.client.get(reverse('kiosk_place_card', args=['venue', self.venue.pk])), 'Operating Hours')
+
     def test_lock_keeps_the_shift_running(self):
         self.client.post(reverse('kiosk_login_id_code', args=['event', self.live.pk]), {'code': self.vol.profile.id_code})
         self.client.post(reverse('kiosk_start', args=['event', self.live.pk]), {'choice': self.slot.pk})

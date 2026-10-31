@@ -1,6 +1,6 @@
 {% load i18n humanize static %}
 {% if kind == 'event' %}
-<article class="place-card">
+<article class="place-card" hx-get="{% url 'kiosk_place_card' kind place.pk %}" hx-trigger="every 60s" hx-swap="outerHTML">
     <div class="place-card-hero" {% if place.image %}style="background-image: url('{{ place.image.url }}')"{% endif %}>
         <span class="place-chip">{% if place.is_live %}{% trans "Active event" %}{% elif place.is_past %}{% trans "Event ended" %}{% else %}{% trans "Upcoming event" %}{% endif %}</span>
         <h1>{{ place.title }}</h1>
@@ -26,7 +26,7 @@
     </div>
 </article>
 {% else %}
-<article class="place-card place-card-venue">
+<article class="place-card place-card-venue" hx-get="{% url 'kiosk_place_card' kind place.pk %}" hx-trigger="every 60s" hx-swap="outerHTML">
     <div class="place-card-hero" {% if place.photo %}style="background-image: url('{{ place.photo.url }}')"{% endif %}>
         <span class="place-brand"><img src="{% if site_settings.logo %}{{ site_settings.logo.url }}{% else %}{% static 'base/town-hall.svg' %}{% endif %}" alt="">{{ company_name }}</span>
         <h1>{{ place.name }}</h1>

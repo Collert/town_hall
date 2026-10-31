@@ -90,6 +90,11 @@ def kiosk_home(request):
     })
 
 
+def kiosk_place_card(request, kind, place_id):
+    """The info card on its own, polled by the kiosk so the live numbers stay current."""
+    return render(request, 'jobs/partials/kiosk_place_card.html', _place_context(kind, _place(kind, place_id)))
+
+
 def kiosk_login_id_code(request, kind, place_id):
     place = _place(kind, place_id)
     request.session.pop(KIOSK_USER, None)

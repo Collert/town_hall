@@ -1,3 +1,28 @@
+/* Kiosk devices can run older Chrome (before 119) without relative colors, so the theme's
+   derived shades in the shared head come out empty there. Approximate them with color-mix. */
+@supports not (color: oklch(from red l c h)) {
+    body.kiosk {
+        --color-primary-dark: color-mix(in oklab, var(--color-primary), black 20%);
+        --color-primary-light: color-mix(in oklab, var(--color-primary), white 30%);
+        --color-accent-dark: color-mix(in oklab, var(--color-accent), black 20%);
+        --color-accent-light: color-mix(in oklab, var(--color-accent), white 30%);
+        --color-primary-vivid: var(--color-primary);
+        --shadow-sm: 0 2px 4px color-mix(in srgb, var(--color-primary) 10%, transparent);
+        --shadow-md: 0 4px 12px color-mix(in srgb, var(--color-primary) 15%, transparent);
+        --shadow-lg: 0 8px 24px color-mix(in srgb, var(--color-primary) 20%, transparent);
+        --shadow-ambient: 0 12px 32px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        body.kiosk {
+            --color-primary-vivid: var(--color-primary-light);
+            --shadow-sm: 0 2px 4px var(--color-primary-dark);
+            --shadow-md: 0 4px 12px color-mix(in srgb, var(--color-dark-bg-primary) 60%, transparent);
+            --shadow-lg: 0 8px 24px color-mix(in srgb, var(--color-dark-bg-primary) 70%, transparent);
+        }
+    }
+}
+
 body.kiosk {
     font-family: 'Inter', sans-serif;
     min-height: 100dvh;
@@ -27,6 +52,7 @@ body.kiosk {
     border-radius: 2.5rem;
     overflow: hidden;
     background: var(--color-surface);
+    box-shadow: 0 32px 64px color-mix(in srgb, var(--color-primary-vivid) 10%, transparent);
     box-shadow: 0 32px 64px rgba(from var(--color-primary-vivid) r g b / 0.1);
 }
 
@@ -47,6 +73,7 @@ body.kiosk {
     content: '';
     position: absolute;
     inset: 0;
+    background: linear-gradient(0deg, color-mix(in srgb, var(--color-primary) 85%, transparent), color-mix(in srgb, var(--color-primary) 0%, transparent) 70%);
     background: linear-gradient(0deg, rgba(from var(--color-primary) r g b / 0.85), rgba(from var(--color-primary) r g b / 0) 70%);
 }
 
@@ -177,6 +204,9 @@ body.kiosk {
 /* With a photo, also shade the top so the brand line stays readable. */
 .place-card-venue .place-card-hero[style]::before {
     background:
+        linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 60%, transparent), color-mix(in srgb, var(--color-primary) 0%, transparent) 35%),
+        linear-gradient(0deg, color-mix(in srgb, var(--color-primary) 85%, transparent), color-mix(in srgb, var(--color-primary) 0%, transparent) 70%);
+    background:
         linear-gradient(180deg, rgba(from var(--color-primary) r g b / 0.6), rgba(from var(--color-primary) r g b / 0) 35%),
         linear-gradient(0deg, rgba(from var(--color-primary) r g b / 0.85), rgba(from var(--color-primary) r g b / 0) 70%);
 }
@@ -303,6 +333,7 @@ body.kiosk {
     font-size: 1.35rem;
     font-weight: 700;
     cursor: pointer;
+    box-shadow: 0 16px 32px color-mix(in srgb, var(--color-accent) 30%, transparent);
     box-shadow: 0 16px 32px rgba(from var(--color-accent) r g b / 0.3);
     transition: transform 150ms ease, opacity 200ms ease;
 }
@@ -385,6 +416,7 @@ body.kiosk {
     min-width: 15rem;
     padding: 0.5rem;
     border-radius: 1.5rem;
+    background: color-mix(in srgb, var(--color-surface) 90%, transparent);
     background: rgba(from var(--color-surface) r g b / 0.9);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -440,6 +472,7 @@ body.kiosk {
 
 /* Notices: one compact panel that scrolls on its own, so a long list never pushes the keypad down. */
 .place-notices {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
     background: rgba(from var(--color-accent) r g b / 0.1);
 }
 
