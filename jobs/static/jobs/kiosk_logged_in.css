@@ -217,7 +217,7 @@
     margin-top: 2rem;
     padding: 0.35rem 0.9rem;
     border-radius: 9999px;
-    background: color-mix(in srgb, var(--color-primary-light) 40%, transparent);
+    background: rgba(from var(--color-primary-light) r g b / 0.4);
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-text-primary);
@@ -335,7 +335,7 @@
 }
 
 .shift-call-dialog::backdrop {
-    background: color-mix(in srgb, var(--color-primary) 55%, transparent);
+    background: rgba(from var(--color-primary) r g b / 0.55);
 }
 
 .shift-call-dialog strong {
