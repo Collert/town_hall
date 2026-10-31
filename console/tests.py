@@ -577,6 +577,20 @@ class VolunteerPageTests(ConsoleFixture):
         self.assertIn(self.staff, later.signups.all())
         self.assertNotIn(self.staff, self.slot.signups.all())
 
+    def test_signed_up_volunteer_can_pick_another_slot_of_the_same_role(self):
+        # vol already holds self.slot, the role's first slot; the dialog must still offer the later one.
+        later = EventRoleSlot.objects.create(event=self.live, role=self.role,
+                                             start_time=self.live.start_date + timedelta(hours=4),
+                                             end_time=self.live.start_date + timedelta(hours=5))
+        self.client.force_login(self.vol)
+        data = self.client.get(reverse('opportunity_detail', args=[self.live.pk])).context['role_slots_data'][self.slot.pk]
+        self.assertTrue(data['user_can_signup'])
+        by_id = {ts['id']: ts for ts in data['slots']}
+        self.assertFalse(by_id[self.slot.pk]['selectable'])
+        self.assertTrue(by_id[later.pk]['selectable'] and by_id[later.pk]['is_selected'])
+        self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
+        self.assertIn(self.vol, later.signups.all())
+
 
 class AutoTranslateTests(ConsoleFixture):
     def setUp(self):

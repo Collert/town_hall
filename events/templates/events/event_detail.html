@@ -438,9 +438,9 @@
                     <h3>{% trans "Available Time Slots" %}</h3>
                     <div class="timeslot-list">
                         {% for ts in data.slots %}
-                            <label class="timeslot-item {% if ts.is_full and not ts.user_signed_up %}full{% endif %} {% if ts.is_selected %}selected{% endif %}"
-                                {% if ts.is_full and not ts.user_signed_up %}style="pointer-events:none;"{% endif %}>
-                                <input type="radio" name="slot_id" value="{{ ts.id }}" {% if ts.is_selected %}checked{% endif %} {% if ts.is_full and not ts.user_signed_up %}disabled{% endif %} style="display:none;">
+                            <label class="timeslot-item {% if not ts.selectable and not ts.user_signed_up %}full{% endif %} {% if ts.is_selected %}selected{% endif %}"
+                                {% if not ts.selectable %}style="pointer-events:none;"{% endif %}>
+                                <input type="radio" name="slot_id" value="{{ ts.id }}" {% if ts.is_selected %}checked{% endif %} {% if not ts.selectable %}disabled{% endif %} style="display:none;">
                                 <div class="timeslot-content">
                                     <div class="timeslot-time">{{ ts.when }}{% if ts.area %} <span class="timeslot-area">{{ ts.area }}</span>{% endif %}</div>
                                     <div class="timeslot-info">
@@ -448,6 +448,8 @@
                                             <span style="color: var(--color-success); font-weight: 600;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size:1.25rem;">check_circle</span> {% trans "Signed up" %}</span>
                                         {% elif ts.is_full %}
                                             <span class="text-muted">{% trans "Full" %}</span> <span class="material-symbols-outlined text-muted" style="font-size:1.25rem;">block</span>
+                                        {% elif ts.conflict %}
+                                            <span class="text-muted">{% trans "Overlaps another shift of yours" %}</span> <span class="material-symbols-outlined text-muted" style="font-size:1.25rem;">event_busy</span>
                                         {% else %}
                                             <span class="{% if ts.available <= 2 %}text-accent{% else %}text-primary{% endif %}" style="font-weight: 600;">
                                                 {{ ts.available }} {% blocktranslate count counter=ts.available %}spot left{% plural %}spots left{% endblocktranslate %}
@@ -456,7 +458,7 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                                {% if not ts.is_full or ts.user_signed_up %}
+                                {% if ts.selectable %}
                                     <div class="timeslot-radio-indicator"></div>
                                 {% endif %}
                             </label>

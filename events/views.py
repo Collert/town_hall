@@ -128,19 +128,31 @@ def event_detail(request, event_id):
         TrainingModuleCompletion.objects.filter(user=user).values_list('training_module', flat=True)
     ) if user.is_authenticated else set()
 
+    # Every shift the user holds, at any event, for the overlap check below.
+    user_windows = list(EventRoleSlot.objects.filter(signups=user).values_list('start_time', 'end_time')) if user.is_authenticated else []
+    for s in all_role_slots:
+        s.user_signed_up_here = s.user_signed_up(user) if user.is_authenticated else False
+        s.is_full = s.is_fully_staffed()
+        s.conflict = not s.user_signed_up_here and any(s.start_time < end and s.end_time > start for start, end in user_windows)
+        s.open_to_user = not (s.user_signed_up_here or s.is_full or s.conflict)
+
     role_slots_data = {}
     for slot in all_role_slots:
         same_role = [s for s in all_role_slots if s.role_id == slot.role_id]
+        # Preselect this slot if the user can take it, else the first one of the role they can.
+        selected = slot if slot.open_to_user else next((s for s in same_role if s.open_to_user), None)
         timeslot_data = [{
             'id': s.pk,
             'start_time': s.start_time,
             'end_time': s.end_time,
             'when': slot_when(s.start_time, s.end_time, event.start_date),
             'available': s.available_slots(),
-            'is_full': s.is_fully_staffed(),
-            'is_selected': s.pk == slot.pk,
+            'is_full': s.is_full,
+            'is_selected': selected is not None and s.pk == selected.pk,
             'area': s.area.name if event.chain_of_command and s.area_id else '',
-            'user_signed_up': s.user_signed_up(user) if user.is_authenticated else False,
+            'user_signed_up': s.user_signed_up_here,
+            'conflict': s.conflict,
+            'selectable': s.open_to_user,
         } for s in same_role]
 
         mandatory_module_ids = set(RoleTrainingRequirement.objects.filter(
@@ -169,8 +181,7 @@ def event_detail(request, event_id):
             'slots': timeslot_data,
             'training': training_data,
             'all_completed': all_completed,
-            'user_can_signup': (user.is_authenticated and all_completed and not slot.is_fully_staffed()
-                                and not slot.user_has_conflict(user)),
+            'user_can_signup': user.is_authenticated and all_completed and selected is not None,
         }
 
     return render(request, 'events/event_detail.html', {
