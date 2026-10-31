@@ -14,7 +14,7 @@
     <div class="push-prompt-text">
         <strong id="push-prompt-title">{% trans "Stay in the loop" %}</strong>
         <p data-push-variant="ask">{% trans "Get a notification the day before your shifts, when new opportunities open and when someone endorses you." %}</p>
-        <p data-push-variant="ios" hidden>{% blocktrans with org=company_name %}To get notifications on iPhone or iPad, tap Share, choose “Add to Home Screen”, then open {{ org }} from your home screen.{% endblocktrans %}</p>
+        <p data-push-variant="ios" hidden>{% blocktrans with org=company_name %}iPhone and iPad only show notifications from the home screen. Tap Share (in Chrome it's in the address bar), choose “Add to Home Screen”, then open {{ org }} from your home screen.{% endblocktrans %}</p>
     </div>
     <div class="push-prompt-actions">
         <button type="button" class="btn btn-accent btn-rounded" data-push-enable data-no-busy>{% trans "Turn on" %}</button>

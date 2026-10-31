@@ -162,7 +162,7 @@
                     </span>
                 </div>
                 <p class="push-device-note" data-push-note="denied" hidden>{% trans "Notifications are blocked for this site. Allow them in your browser's site settings, then reload this page." %}</p>
-                <p class="push-device-note" data-push-note="ios" hidden>{% blocktrans with org=company_name %}On iPhone and iPad, tap Share, choose “Add to Home Screen”, and open {{ org }} from your home screen to turn notifications on.{% endblocktrans %}</p>
+                <p class="push-device-note" data-push-note="ios" hidden>{% blocktrans with org=company_name %}iPhone and iPad only show notifications from the home screen. Tap Share (in Chrome it's in the address bar), choose “Add to Home Screen”, and open {{ org }} from your home screen to turn notifications on.{% endblocktrans %}</p>
                 <p class="push-device-note" data-push-note="unsupported" hidden>{% trans "This browser can't show notifications." %}</p>
             </section>
         </div>
