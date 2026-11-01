@@ -1,4 +1,5 @@
 import csv
+import hashlib
 from datetime import datetime, timedelta
 
 from django.contrib import messages
@@ -490,6 +491,11 @@ def _monitor_context(event, action='', query=''):
         q = query.lower()
         log = [e for e in log if q in (e['shift'].user.get_full_name() or e['shift'].user.username).lower()]
     log.sort(key=lambda e: e['time'], reverse=True)
+    # Fingerprint of what the activity table shows; its 15 s poll sends it back so an
+    # unchanged table isn't re-rendered (swapping it makes the page jump).
+    log_version = hashlib.md5(repr((len(log), [
+        (e['shift'].pk, e['action'], e['time'], bool(e['shift'].end_time)) for e in log[:25]
+    ])).encode()).hexdigest()[:12]
 
     total_checked = len(checked_in_ids)
     return {
@@ -505,6 +511,7 @@ def _monitor_context(event, action='', query=''):
         'shortage': shortages[0] if shortages else None,
         'log': log[:25],
         'log_total': len(log),
+        'log_version': log_version,
         'action': action,
         'query': query,
         'checked_in_ids': checked_in_ids,
@@ -524,6 +531,8 @@ def event_monitor(request, event_id):
 def monitor_activity(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     context = _monitor_context(event, request.GET.get('action', ''), request.GET.get('q', '').strip())
+    if request.GET.get('v') == context['log_version']:
+        return HttpResponse(status=204)  # nothing new: htmx leaves the table alone
     return render(request, 'console/partials/monitor_activity.html', context)
 
 

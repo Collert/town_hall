@@ -328,6 +328,15 @@ class ConsoleFlowTests(ConsoleFixture):
         shift.refresh_from_db()
         self.assertIsNotNone(shift.end_time)
 
+    def test_monitor_poll_skips_unchanged_activity(self):
+        url = reverse('console_monitor_activity', args=[self.live.pk])
+        version = self.client.get(url).context['log_version']
+        self.assertEqual(self.client.get(url, {'v': version}).status_code, 204)
+        Shift.objects.create(user=self.mate, event_role_slot=self.slot)
+        response = self.client.get(url, {'v': version})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Checked In')
+
     def test_role_template_saves_skills_and_training(self):
         response = self.client.post(reverse('console_role_create'), {
             'name_en': 'Medic', 'description_en': 'Help people.', 'icon': 'person', 'icon_custom': 'medical_services',

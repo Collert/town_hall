@@ -1,6 +1,6 @@
 {% load i18n avatar_tags %}
 <div id="monitor-activity" class="c-table-wrap"
-     hx-get="{% url 'console_monitor_activity' event.pk %}?action={{ action }}&q={{ query|urlencode }}"
+     hx-get="{% url 'console_monitor_activity' event.pk %}?action={{ action }}&q={{ query|urlencode }}&v={{ log_version }}"
      hx-trigger="every 15s" hx-swap="outerHTML">
     {% if log %}
     <table class="c-table">
