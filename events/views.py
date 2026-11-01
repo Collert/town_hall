@@ -92,20 +92,25 @@ def event_detail(request, event_id):
     seen_roles = {}
     for slot in all_role_slots:
         signed_up = slot.user_signed_up(user) if user.is_authenticated else False
+        # Shifts that are over count as closed: no spots, nothing to select.
+        spots = 0 if slot.has_ended else slot.available_slots()
+        closed = slot.has_ended or slot.is_fully_staffed()
         if slot.role_id not in seen_roles:
             seen_roles[slot.role_id] = slot
             slot.user_signed_up_any = signed_up
-            slot.total_available_spots = slot.available_slots()
+            slot.total_available_spots = spots
             slot.multiple_slots = False
-            slot.all_fully_staffed = slot.is_fully_staffed()
+            slot.all_fully_staffed = closed
+            slot.all_ended = slot.has_ended
             slot.when = slot_when(slot.start_time, slot.end_time, event.start_date)
             unique_role_slots.append(slot)
         else:
             first_slot = seen_roles[slot.role_id]
             first_slot.user_signed_up_any = first_slot.user_signed_up_any or signed_up
-            first_slot.total_available_spots += slot.available_slots()
+            first_slot.total_available_spots += spots
             first_slot.multiple_slots = True
-            first_slot.all_fully_staffed = first_slot.all_fully_staffed and slot.is_fully_staffed()
+            first_slot.all_fully_staffed = first_slot.all_fully_staffed and closed
+            first_slot.all_ended = first_slot.all_ended and slot.has_ended
 
     my_slots = list(
         event.role_slots.filter(signups=user).select_related('role', 'area', 'lead__profile')
@@ -133,8 +138,9 @@ def event_detail(request, event_id):
     for s in all_role_slots:
         s.user_signed_up_here = s.user_signed_up(user) if user.is_authenticated else False
         s.is_full = s.is_fully_staffed()
+        s.ended = s.has_ended
         s.conflict = not s.user_signed_up_here and any(s.start_time < end and s.end_time > start for start, end in user_windows)
-        s.open_to_user = not (s.user_signed_up_here or s.is_full or s.conflict)
+        s.open_to_user = not (s.user_signed_up_here or s.ended or s.is_full or s.conflict)
 
     role_slots_data = {}
     for slot in all_role_slots:
@@ -148,6 +154,7 @@ def event_detail(request, event_id):
             'when': slot_when(s.start_time, s.end_time, event.start_date),
             'available': s.available_slots(),
             'is_full': s.is_full,
+            'ended': s.ended,
             'is_selected': selected is not None and s.pk == selected.pk,
             'area': s.area.name if event.chain_of_command and s.area_id else '',
             'user_signed_up': s.user_signed_up_here,
@@ -260,6 +267,10 @@ def role_slot_signup(request, slot_id):
         messages.error(request, _('This time slot is invite-only.'))
         return redirect('opportunity_detail', event_id=event_id)
 
+    if slot.has_ended:
+        messages.error(request, _('This shift has already ended.'))
+        return redirect('opportunity_detail', event_id=event_id)
+
     if not slot.role.has_user_completed_required_training(request.user):
         messages.error(request, _("You haven't completed the required training modules for %(role)s.") % {'role': slot.role.name})
         return redirect('opportunity_detail', event_id=event_id)
@@ -323,6 +334,8 @@ def respond_to_invite(request, token):
             return redirect('explore_opportunities')
         if slot.user_signed_up(request.user):
             messages.info(request, _("You're already signed up for this slot."))
+        elif slot.has_ended:
+            messages.error(request, _('This shift has already ended.'))
         elif not slot.role.has_user_completed_required_training(request.user):
             messages.error(request, _('Finish the required training first, then accept the invitation.'))
             return redirect('respond_to_invite', token=token)

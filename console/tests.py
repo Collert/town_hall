@@ -600,6 +600,20 @@ class VolunteerPageTests(ConsoleFixture):
         self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
         self.assertIn(self.vol, later.signups.all())
 
+    def test_cannot_sign_up_for_a_shift_that_has_ended(self):
+        # The event is still on, but this shift of the role is over.
+        now = timezone.now()
+        over = EventRoleSlot.objects.create(event=self.live, role=self.role,
+                                            start_time=now - timedelta(hours=2), end_time=now - timedelta(minutes=1))
+        self.client.force_login(self.staff)
+        TrainingModuleCompletion.objects.create(training_module=self.module, user=self.staff)
+        data = self.client.get(reverse('opportunity_detail', args=[self.live.pk])).context['role_slots_data'][over.pk]
+        ts = next(ts for ts in data['slots'] if ts['id'] == over.pk)
+        self.assertTrue(ts['ended'])
+        self.assertFalse(ts['selectable'])
+        self.client.post(reverse('role_slot_signup', args=[over.pk]))
+        self.assertNotIn(self.staff, over.signups.all())
+
 
 class AutoTranslateTests(ConsoleFixture):
     def setUp(self):

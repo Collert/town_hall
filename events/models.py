@@ -285,6 +285,11 @@ class EventRoleSlot(models.Model):
         """Whoever holds a one-person slot such as an area lead shift (uses prefetched signups)."""
         return next(iter(self.signups.all()), None)
 
+    @property
+    def has_ended(self):
+        """The shift is over, so nobody can sign up for it any more."""
+        return self.end_time <= timezone.now()
+
     def is_fully_staffed(self):
         return self.signups.count() >= self.required_qty
     

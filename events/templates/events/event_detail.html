@@ -116,7 +116,9 @@
                         </div>
                         <div class="role-actions">
                             <div class="role-availability">
-                                {% if slot.all_fully_staffed %}
+                                {% if slot.all_ended %}
+                                <p class="text-muted">{% trans "Ended" %}</p>
+                                {% elif slot.all_fully_staffed %}
                                 <p class="text-muted">{% trans "Full" %}</p>
                                 {% else %}
                                 <p class="text-accent">
@@ -446,6 +448,8 @@
                                     <div class="timeslot-info">
                                         {% if ts.user_signed_up %}
                                             <span style="color: var(--color-success); font-weight: 600;"><span class="material-symbols-outlined" style="vertical-align: middle; font-size:1.25rem;">check_circle</span> {% trans "Signed up" %}</span>
+                                        {% elif ts.ended %}
+                                            <span class="text-muted">{% trans "Ended" %}</span> <span class="material-symbols-outlined text-muted" style="font-size:1.25rem;">history</span>
                                         {% elif ts.is_full %}
                                             <span class="text-muted">{% trans "Full" %}</span> <span class="material-symbols-outlined text-muted" style="font-size:1.25rem;">block</span>
                                         {% elif ts.conflict %}
