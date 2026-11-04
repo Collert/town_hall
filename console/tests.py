@@ -759,6 +759,23 @@ class BackendSettingsTests(ConsoleFixture):
         self.save(libretranslate_url='', clear_deepl_api_key='on')
         self.assertEqual(SiteSettings.objects.get().deepl_api_key, '')
 
+    def test_docker_internal_hostnames_are_accepted(self):
+        from console.forms import BackendSettingsForm
+        self.save(libretranslate_url='http://libretranslate:5000')
+        self.assertEqual(SiteSettings.objects.get().libretranslate_url, 'http://libretranslate:5000')
+        form = BackendSettingsForm(
+            {'listmonk_url': 'http://listmonk-marketing:9000', 'libretranslate_url': 'http://translate_web:5000'},
+            instance=SiteSettings.get_settings(),
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        bad = BackendSettingsForm({'listmonk_url': 'http://-bad-:9000'}, instance=SiteSettings.get_settings())
+        self.assertIn('listmonk_url', bad.errors)
+
+    def test_belltower_address_without_dots_defaults_to_http(self):
+        from base.belltower import normalize_url
+        self.assertEqual(normalize_url('belltower:8000/lists/'), 'http://belltower:8000')
+        self.assertEqual(normalize_url('tasks.example.org'), 'https://tasks.example.org')
+
     def test_saved_url_beats_environment(self):
         import console.auto_translate as at
         self.save(libretranslate_url='http://saved.local:5000')

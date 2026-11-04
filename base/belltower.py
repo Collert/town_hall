@@ -52,7 +52,7 @@ def normalize_url(raw):
         raise ValueError(_('Enter the address of your Bell Tower server.'))
     if '://' not in raw:
         host = (urllib.parse.urlsplit('//' + raw).hostname or '').lower()
-        local = host in ('localhost', '127.0.0.1', '0.0.0.0', '::1') or host.endswith('.local')
+        local = host in ('localhost', '127.0.0.1', '0.0.0.0', '::1') or host.endswith('.local') or '.' not in host
         raw = ('http://' if local else 'https://') + raw
     parts = urllib.parse.urlsplit(raw)
     if parts.scheme not in ('http', 'https') or not parts.hostname:

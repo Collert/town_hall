@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.db import models
+from base.fields import ServiceURLField
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_out
@@ -453,7 +454,7 @@ class BellTowerLink(models.Model):
     and created there when missing. Scoped to a server, so reconnecting Town Hall to
     another Bell Tower links everyone afresh."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='belltower_links')
-    belltower_url = models.URLField()
+    belltower_url = ServiceURLField()
     username = models.CharField(max_length=150)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -653,14 +654,14 @@ class SiteSettings(models.Model):
 
     # Backend integrations (console > Organization > Backend). Empty means "use the
     # matching environment variable, if any".
-    libretranslate_url = models.URLField(blank=True, default='', help_text='Your LibreTranslate server, e.g. http://translate.internal:5000')
+    libretranslate_url = ServiceURLField(blank=True, default='', help_text='Your LibreTranslate server, e.g. http://translate.internal:5000')
     libretranslate_api_key = models.CharField(max_length=200, blank=True, default='')
     google_translate_api_key = models.CharField(max_length=200, blank=True, default='', help_text='Google Cloud Translation API key')
     deepl_api_key = models.CharField(max_length=200, blank=True, default='', help_text='DeepL API key (free-tier keys end in ":fx")')
     mymemory_email = models.EmailField(blank=True, default='', help_text='Raises the free MyMemory limit to about 50,000 characters a day')
     # Email goes through listmonk (base/listmonk.py). Templates and lists are managed there;
     # these IDs point at them. With no listmonk URL, emails are printed to the server console.
-    listmonk_url = models.URLField(blank=True, default='', help_text='Your listmonk server, e.g. https://lists.example.org')
+    listmonk_url = ServiceURLField(blank=True, default='', help_text='Your listmonk server, e.g. https://lists.example.org or http://listmonk:9000')
     listmonk_api_user = models.CharField(max_length=200, blank=True, default='', help_text='API user created in listmonk (Admin > Users)')
     listmonk_api_token = models.CharField(max_length=200, blank=True, default='')
     listmonk_list_id = models.PositiveIntegerField(null=True, blank=True, help_text='The "Town Hall users" list everyone is synced into')
@@ -680,7 +681,7 @@ class SiteSettings(models.Model):
     listmonk_push_template_id = models.PositiveIntegerField(null=True, blank=True)
     # Bell Tower: shared task lists (base/belltower.py). Set by the connect flow in
     # Organization > Backend, never typed in: the API key is issued by Bell Tower.
-    belltower_url = models.URLField(blank=True, default='', help_text='Bell Tower server, e.g. https://tasks.example.org')
+    belltower_url = ServiceURLField(blank=True, default='', help_text='Bell Tower server, e.g. https://tasks.example.org')
     belltower_api_key = models.CharField(max_length=200, blank=True, default='')
     belltower_username = models.CharField(max_length=150, blank=True, default='', help_text='Bell Tower account Town Hall acts as')
     belltower_endpoints = models.JSONField(default=dict, blank=True, help_text='From /.well-known/belltower')
