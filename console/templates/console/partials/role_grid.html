@@ -17,7 +17,8 @@
         </div>
         {% endif %}
         <div class="role-tile-foot">
-            <span><span class="material-symbols-outlined">school</span>{% blocktrans count counter=role.module_count %}{{ counter }} Training Module Required{% plural %}{{ counter }} Training Modules Required{% endblocktrans %}</span>
+            <span class="role-tile-req"><span class="material-symbols-outlined">school</span>{% blocktrans count counter=role.module_count %}{{ counter }} Training Module Required{% plural %}{{ counter }} Training Modules Required{% endblocktrans %}</span>
+            {% if role.certificate_count %}<span class="role-tile-req"><span class="material-symbols-outlined">workspace_premium</span>{% blocktrans count counter=role.certificate_count %}{{ counter }} Certificate{% plural %}{{ counter }} Certificates{% endblocktrans %}</span>{% endif %}
             <span class="role-tile-level">{{ role.level_label }}</span>
         </div>
     </a>

@@ -57,6 +57,11 @@ def role_details(role, history=None):
             {'module_id': r.training_module_id, 'title': r.training_module.title, 'mandatory': r.mandatory}
             for r in role.roletrainingrequirement_set.all()
         ],
+        # External certificates (e.g. first aid) are managed in Town Hall; read-only here.
+        'certificates': [
+            {'certificate_id': r.certificate_id, 'name': r.certificate.name, 'issuer': r.certificate.issuer, 'mandatory': r.mandatory}
+            for r in role.rolecertificaterequirement_set.all()
+        ],
         'preferred_skills': [s.name for s in role.preferred_skills.all()],
         'history': history,
     }
@@ -68,7 +73,7 @@ def role_details(role, history=None):
       {'query': string('Optional filter on name or description')}, read_only=True)
 def list_roles(ctx, query=''):
     roles = (Role.objects.filter(system_key__isnull=True, permanent=False)
-             .prefetch_related('roletrainingrequirement_set__training_module', 'preferred_skills').order_by('name'))
+             .prefetch_related('roletrainingrequirement_set__training_module', 'rolecertificaterequirement_set__certificate', 'preferred_skills').order_by('name'))
     for word in text(query).split():
         roles = roles.filter(Q(name__icontains=word) | Q(description__icontains=word))
     roles = list(roles.distinct())

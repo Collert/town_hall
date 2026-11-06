@@ -429,7 +429,7 @@ def create_area(ctx, event_id, name, icon=''):
 
 @tool('find_volunteers_for_slot', 'Find volunteers for a shift',
       'Volunteers ranked by fit for a shift\'s role (preferred skills, finished training, experience), with time '
-      'conflicts and pending invitations. Volunteers who have not finished the role\'s required training cannot sign up.',
+      'conflicts and pending invitations. Volunteers who have not finished the role\'s required training or lack its mandatory certificates cannot sign up.',
       {
           'slot_id': integer('The slot'),
           'query': string('Optional filter on name, email or skill'),
@@ -443,6 +443,7 @@ def find_volunteers_for_slot(ctx, slot_id, query='', limit=10):
         **person(r['user']), 'fit_score': r['score'], 'recommended': r['recommended'],
         'skills': [s.name for s in r['matched']], 'impact_points': r['user'].profile.impact_points,
         'training_done': slot.role.has_user_completed_required_training(r['user']),
+        'certificates_held': slot.role.has_user_required_certificates(r['user']),
         'time_conflict': r['conflict'], 'already_invited': r['invited'],
     } for r in ranked] or 'Nobody matches.'
 

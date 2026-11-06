@@ -24,7 +24,7 @@ from education.models import (
 )
 from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
 from events import reliability
-from jobs.models import Role, RoleTrainingRequirement, Shift
+from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement, Shift
 
 MEDIA_ROOT = tempfile.mkdtemp()
 HTMX = {'HTTP_HX_REQUEST': 'true'}
@@ -348,6 +348,33 @@ class ConsoleFlowTests(ConsoleFixture):
         self.assertEqual(list(role.preferred_skills.all()), [self.skill])
         self.assertTrue(RoleTrainingRequirement.objects.get(role=role).mandatory)
 
+    def test_role_template_saves_certificates(self):
+        other = ExternalCertificate.objects.create(name='Food Safe', description='Food.')
+        response = self.client.post(reverse('console_role_create'), {
+            'name_en': 'Medic', 'description_en': 'Help people.', 'icon': 'person',
+            'certificate_ids': [self.cert.pk, other.pk], f'cert_mandatory_{self.cert.pk}': 'on',
+        })
+        self.assertRedirects(response, reverse('console_roles'))
+        role = Role.objects.get(name_en='Medic')
+        reqs = {r.certificate_id: r.mandatory for r in RoleCertificateRequirement.objects.filter(role=role)}
+        self.assertEqual(reqs, {self.cert.pk: True, other.pk: False})
+        self.assertContains(self.client.get(reverse('console_role_edit', args=[role.pk])), 'Food Safe')
+
+        # Leaving a certificate out of the form removes it.
+        self.client.post(reverse('console_role_edit', args=[role.pk]), {
+            'name_en': 'Medic', 'description_en': 'Help people.', 'icon': 'person', 'certificate_ids': [other.pk],
+        })
+        self.assertEqual(list(RoleCertificateRequirement.objects.filter(role=role).values_list('certificate_id', flat=True)), [other.pk])
+
+    def test_role_certificate_search_and_row(self):
+        response = self.client.get(reverse('console_role_certificate_search'), {'certificate_q': 'cpr'}, **HTMX)
+        self.assertContains(response, 'Red Cross')
+        response = self.client.get(reverse('console_role_certificate_search'),
+                                   {'certificate_q': 'cpr', 'certificate_ids': self.cert.pk}, **HTMX)
+        self.assertNotContains(response, 'Red Cross')
+        response = self.client.get(reverse('console_role_certificate_row'), {'certificate_id': self.cert.pk}, **HTMX)
+        self.assertContains(response, f'name="cert_mandatory_{self.cert.pk}" checked')
+
     def test_skill_chip_creates_new_skill(self):
         response = self.client.get(reverse('console_skill_chip') + '?name=Bilingual', **HTMX)
         self.assertContains(response, 'Bilingual')
@@ -599,6 +626,52 @@ class VolunteerPageTests(ConsoleFixture):
         self.assertTrue(by_id[later.pk]['selectable'] and by_id[later.pk]['is_selected'])
         self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
         self.assertIn(self.vol, later.signups.all())
+
+    def test_mandatory_certificate_gates_signup(self):
+        RoleCertificateRequirement.objects.create(role=self.role, certificate=self.cert, mandatory=True)
+        later = EventRoleSlot.objects.create(event=self.live, role=self.role,
+                                             start_time=self.live.start_date + timedelta(hours=4),
+                                             end_time=self.live.start_date + timedelta(hours=5))
+        # vol only submitted documents (pending), so the dialog lists the certificate and blocks sign-up.
+        response = self.client.get(reverse('opportunity_detail', args=[self.live.pk]))
+        data = response.context['role_slots_data'][self.slot.pk]
+        self.assertFalse(data['all_completed'])
+        self.assertFalse(data['user_can_signup'])
+        self.assertEqual(data['certificates'][0]['status'], 'pending')
+        self.assertContains(response, reverse('submit_certificate', args=[self.cert.pk]))
+        self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
+        self.assertNotIn(self.vol, later.signups.all())
+
+        # An expired certificate doesn't count either.
+        UserCertification.objects.filter(pk=self.user_cert.pk).update(verified=True, expiration_date=timezone.now() - timedelta(days=1))
+        self.assertFalse(self.role.meets_requirements(self.vol))
+
+        UserCertification.objects.filter(pk=self.user_cert.pk).update(expiration_date=timezone.now() + timedelta(days=30))
+        self.assertTrue(self.client.get(reverse('opportunity_detail', args=[self.live.pk])).context['role_slots_data'][self.slot.pk]['user_can_signup'])
+        self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
+        self.assertIn(self.vol, later.signups.all())
+
+    def test_recommended_certificate_does_not_block_signup(self):
+        RoleCertificateRequirement.objects.create(role=self.role, certificate=self.cert, mandatory=False)
+        data = self.client.get(reverse('opportunity_detail', args=[self.live.pk])).context['role_slots_data'][self.slot.pk]
+        self.assertTrue(data['all_completed'])
+        self.assertFalse(data['certificates'][0]['required'])
+
+    def test_invite_waits_for_mandatory_certificate(self):
+        RoleCertificateRequirement.objects.create(role=self.role, certificate=self.cert, mandatory=True)
+        private = EventRoleSlot.objects.create(event=self.live, role=self.role, is_public=False,
+                                               start_time=self.slot.end_time,
+                                               end_time=self.slot.end_time + timedelta(hours=1))
+        invite = EventSlotInvite.objects.create(event_role_slot=private, user=self.vol)
+        response = self.client.get(reverse('respond_to_invite', args=[invite.token]))
+        self.assertFalse(response.context['training_ok'])
+        self.assertContains(response, reverse('submit_certificate', args=[self.cert.pk]))
+        self.client.post(reverse('respond_to_invite', args=[invite.token]), {'response': 'accept'})
+        self.assertNotIn(self.vol, private.signups.all())
+
+        UserCertification.objects.filter(pk=self.user_cert.pk).update(verified=True)
+        self.client.post(reverse('respond_to_invite', args=[invite.token]), {'response': 'accept'})
+        self.assertIn(self.vol, private.signups.all())
 
     def test_cannot_sign_up_for_a_shift_that_has_ended(self):
         # The event is still on, but this shift of the role is over.

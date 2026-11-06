@@ -1,0 +1,11 @@
+{% load i18n %}
+{% for certificate in certificates %}
+<button type="button" class="module-result" hx-get="{% url 'console_role_certificate_row' %}?certificate_id={{ certificate.pk }}"
+        hx-target="#certificate-rows" hx-swap="beforeend" hx-on::after-request="this.remove()">
+    <span class="material-symbols-outlined">{{ certificate.icon|default:"workspace_premium" }}</span>
+    <span>{{ certificate.name }}{% if certificate.issuer %} &middot; {{ certificate.issuer }}{% endif %}</span>
+    <span class="material-symbols-outlined">add_circle</span>
+</button>
+{% empty %}
+{% if query %}<p class="c-muted">{% blocktrans %}No certificates match "{{ query }}".{% endblocktrans %} <a class="c-link" href="{% url 'console_certificate_create' %}">{% trans "Create one" %}</a></p>{% endif %}
+{% endfor %}

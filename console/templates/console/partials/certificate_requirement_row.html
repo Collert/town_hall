@@ -1,0 +1,14 @@
+{% load i18n %}
+<div class="c-list-item module-row">
+    <input type="hidden" name="certificate_ids" value="{{ req.certificate.pk }}">
+    <span class="c-icon-tile dark"><span class="material-symbols-outlined">{{ req.certificate.icon|default:"workspace_premium" }}</span></span>
+    <div class="c-list-item-main">
+        <strong>{{ req.certificate.name }}</strong>
+        <small>{% if req.certificate.issuer %}{{ req.certificate.issuer }}{% else %}{% trans "External certificate" %}{% endif %}{% if req.certificate.expires_after_days %} &middot; {% blocktrans with d=req.certificate.expires_after_days %}Valid for {{ d }} days{% endblocktrans %}{% endif %}</small>
+    </div>
+    <label class="module-row-toggle">
+        <span>{% trans "Mandatory" %}</span>
+        <span class="c-toggle"><input type="checkbox" name="cert_mandatory_{{ req.certificate.pk }}" {% if req.mandatory %}checked{% endif %}><span></span></span>
+    </label>
+    <button type="button" class="c-icon-btn danger" data-remove-closest=".module-row" aria-label="{% trans 'Remove certificate' %}"><span class="material-symbols-outlined">delete</span></button>
+</div>

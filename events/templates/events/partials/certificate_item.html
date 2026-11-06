@@ -1,0 +1,22 @@
+{% load i18n %}
+<a href="{% url 'submit_certificate' cert.id %}" class="training-item {{ kind }}">
+    <div class="training-item-content">
+        <div class="training-item-icon-container"><span class="material-symbols-outlined">{{ cert.icon }}</span></div>
+        <div class="training-item-info">
+            <span class="training-item-title">{{ cert.title }}</span>
+            <span class="training-item-desc">
+                {% if kind == 'completed' %}{% trans "Verified" %}
+                {% elif cert.status == 'pending' %}{% trans "Submitted, waiting for review" %}
+                {% elif cert.status == 'rejected' %}{% trans "Rejected, submit again" %}
+                {% elif cert.status == 'expired' %}{% trans "Expired, submit a renewed one" %}
+                {% elif kind == 'mandatory' %}{% trans "Mandatory certificate" %}
+                {% else %}{% trans "Recommended certificate" %}{% endif %}{% if cert.issuer %} &middot; {{ cert.issuer }}{% endif %}
+            </span>
+        </div>
+    </div>
+    {% if kind == 'completed' %}
+    <div class="training-badge"><span class="material-symbols-outlined">check_circle</span> {% trans "Verified" %}</div>
+    {% else %}
+    <span class="material-symbols-outlined training-item-arrow">arrow_forward_ios</span>
+    {% endif %}
+</a>

@@ -900,6 +900,18 @@ Since the background is already primary-light usually, let's keep it that way fo
     align-items: center;
 }
 
+.training-badge .material-symbols-outlined {
+    margin-right: 4px;
+    font-size: 1.25rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+/* Certificate groups hide themselves when nothing falls into them. */
+.cert-group-mandatory:not(:has(.training-item)),
+.cert-group-recommended:not(:has(.training-item)),
+.cert-group-completed:not(:has(.training-item)) {
+    display: none;
+}
 
 /* ========================================
    Responsive

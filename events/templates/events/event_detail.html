@@ -433,6 +433,36 @@
                 </div>
             </div>
 
+            {% if data.certificates %}
+            <!-- Certificate Requirements -->
+            <div class="modal-section">
+                <div class="modal-section-header">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    <h3>{% trans "Certificates" %}</h3>
+                </div>
+                <div class="modal-training-list">
+                    <div class="training-group cert-group-mandatory">
+                        <h4 class="training-group-title">{% trans "Mandatory certificates" %}</h4>
+                        {% for cert in data.certificates %}{% if not cert.completed and cert.required %}
+                            {% include 'events/partials/certificate_item.html' with kind='mandatory' %}
+                        {% endif %}{% endfor %}
+                    </div>
+                    <div class="training-group cert-group-recommended">
+                        <h4 class="training-group-title">{% trans "Recommended certificates" %}</h4>
+                        {% for cert in data.certificates %}{% if not cert.completed and not cert.required %}
+                            {% include 'events/partials/certificate_item.html' with kind='recommended' %}
+                        {% endif %}{% endfor %}
+                    </div>
+                    <div class="training-group cert-group-completed">
+                        <h4 class="training-group-title">{% trans "Verified certificates" %}</h4>
+                        {% for cert in data.certificates %}{% if cert.completed %}
+                            {% include 'events/partials/certificate_item.html' with kind='completed' %}
+                        {% endif %}{% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
             <!-- Time Slots -->
             <form id="role-signup-form-{{ parent_slot_id }}" method="POST" action="{% url 'role_slot_signup' parent_slot_id %}">
                 {% csrf_token %}
@@ -470,7 +500,7 @@
                     </div>
 
                     {% if not data.all_completed %}
-                        <p class="text-warning" style="color:red; margin: 1rem 0 0;">{% trans "You must complete required training to sign up." %}</p>
+                        <p class="text-warning" style="color:red; margin: 1rem 0 0;">{% if data.certificates %}{% trans "You must complete required training and have required certificates verified to sign up." %}{% else %}{% trans "You must complete required training to sign up." %}{% endif %}</p>
                     {% endif %}
                 </div>
             </form>

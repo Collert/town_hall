@@ -54,6 +54,8 @@ urlpatterns = [
     path('roles/<int:role_id>/delete/', roles.role_delete, name='console_role_delete'),
     path('roles/module-search/', roles.module_search, name='console_role_module_search'),
     path('roles/module-row/', roles.module_row, name='console_role_module_row'),
+    path('roles/certificate-search/', roles.certificate_search, name='console_role_certificate_search'),
+    path('roles/certificate-row/', roles.certificate_row, name='console_role_certificate_row'),
 
     # Venues
     path('venues/', venues.venue_list, name='console_venues'),

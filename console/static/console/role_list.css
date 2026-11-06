@@ -83,7 +83,7 @@ h3 {
     color: var(--color-text-primary);
 }
 
-.role-tile-foot>span:first-child {
+.role-tile-req {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;

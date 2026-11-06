@@ -167,6 +167,9 @@ Open **Role Directory > Create New Role Template**:
 - **Name**, **Description** and an **Icon** (a Google Material Symbols name such as `restaurant`).
 - **Required Training Modules**: search for a module and add it. Mark it **mandatory** if volunteers
   must finish it before they can sign up; leave it optional to simply recommend it.
+- **Required Certificates**: external certificates issued by another authority (first aid, food
+  safety, a background check), set up under **Certificates**. A **mandatory** certificate must be
+  verified, and not expired, before a volunteer can sign up; an optional one is only recommended.
 - **Preferred Skills**: skills that make someone a good fit. They are not required, but they help
   match volunteers when you send invitations.
 - **Beneficiaries served per hour**: how many people one volunteer in this role typically helps. It
@@ -313,7 +316,8 @@ Invitations** and can accept or decline.
 ## How volunteers sign up
 
 On the public event page volunteers pick an open role and a time slot. If the role has mandatory
-training they haven't finished, the page tells them which modules to complete first. Once signed up,
+training they haven't finished, or mandatory certificates that aren't verified yet, the page lists
+them with links to the module or to the certificate's upload page. Once signed up,
 the event appears under **My Events** with directions, the check-in point, an **Add to Calendar**
 button and their team.
 """),

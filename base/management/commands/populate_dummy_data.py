@@ -37,7 +37,7 @@ from education.models import (ExternalCertificate, Quiz, QuizQuestion, Skill, Tr
 from events import belltower_sync
 from events.models import (Event, EventArea, EventCategory, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList,
                            SlotSignup)
-from jobs.models import Role, RoleTrainingRequirement, Shift
+from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement, Shift
 
 User = get_user_model()
 
@@ -946,6 +946,9 @@ class Command(BaseCommand):
                 RoleTrainingRequirement.objects.create(role=role, training_module=self.modules[module], mandatory=mandatory)
             self.roles[key] = role
             self.required[role.pk] = [m for m, mandatory in modules if mandatory]
+        # Recommended (not mandatory) certificates, so the seeded sign-ups stay valid.
+        for role_key, cert_key in (('firstaid', 'firstaid'), ('kitchen', 'foodsafe')):
+            RoleCertificateRequirement.objects.create(role=self.roles[role_key], certificate=self.certificates[cert_key])
         # The navigator role's weight is set by hand rather than from training length
         Role.objects.filter(pk=self.roles['navigator'].pk).update(points_weight=2.0)
 
