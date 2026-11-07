@@ -883,12 +883,19 @@ ul {
         border-radius: 0.85rem;
     }
 
+    /* The nav must never be wider than the screen: a fixed element that overflows
+       makes Samsung Internet zoom the whole page out to fit it. */
     .bottom-mobile-nav {
+        box-sizing: border-box;
+        width: calc(100% - 2rem);
+        max-width: 32rem;
+        min-width: 0;
         margin: 1rem;
-        gap: 1rem;
+        margin-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+        gap: 0.5rem;
         z-index: 50;
-        min-height: 10vh;
-        padding: 1rem;
+        padding: 0.6rem;
+        background: color-mix(in srgb, var(--color-bg-primary) 20%, transparent);
         background: rgba(from var(--color-bg-primary) r g b / 0.2);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
@@ -1158,11 +1165,15 @@ span.mobile-avatar.avatar-initials {
 }
 
 .mobile-nav-action-container {
+    box-sizing: border-box;
+    flex: 1 1 0;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 35%;
-    padding: 1rem;
+    justify-content: center;
+    border-radius: 1.25rem;
+    padding: 0.75rem 0.25rem;
     background: var(--color-bg-primary);
     transition: all 300ms ease;
 }
@@ -1171,7 +1182,12 @@ span.mobile-avatar.avatar-initials {
     transition: all 300ms ease;
     height: 0;
     width: 0;
+    max-width: 100%;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: 0.75rem;
     color: var(--color-text-primary);
 }
 
@@ -1181,7 +1197,7 @@ span.mobile-avatar.avatar-initials {
 
 .bottom-mobile-nav.tutorial-shown .mobile-menu-item-title {
     height: auto;
-    width: auto;
+    width: 100%;
 }
 
 .brand-logo-img {

@@ -323,7 +323,7 @@
 <!-- Role Selection Modals -->
 {% for parent_slot_id, data in role_slots_data.items %}
 <dialog class="modal-dialog" id="role-modal-{{ parent_slot_id }}">
-    <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+    <div class="modal-frame">
         <header class="modal-header">
             <div>
                 <h2 class="modal-title">{% trans "Select Your Role" %}: {{ data.role_names }}</h2>
@@ -336,7 +336,7 @@
             </form>
         </header>
 
-        <div class="modal-body" style="overflow-y:auto; flex:1;">
+        <div class="modal-body modal-body-scroll">
             <div class="modal-section">
                 <div class="modal-info-box">
                     <div class="modal-info-icon">
