@@ -82,6 +82,7 @@ MIDDLEWARE = [
     'events.middleware.LeadDeadlineMiddleware',
     'events.middleware.ShiftReminderMiddleware',
     'base.middleware.ProfileReminderMiddleware',
+    'api.middleware.StaleShiftMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

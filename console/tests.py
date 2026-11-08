@@ -1671,20 +1671,17 @@ class KioskTests(ConsoleFixture):
         self.client.post(start_url, {'choice': self.perm_role.pk})
         self.assertFalse(Shift.objects.filter(user=self.mate, end_time__isnull=True).exists())
 
-    def test_device_heartbeat_needs_assigned_permanent_role(self):
-        from django.test import RequestFactory
+    def test_api_shift_needs_assigned_permanent_role(self):
         from api.models import APIKey
-        from api.views import register_heartbeat
-        key = APIKey.objects.create(expires_at=timezone.now() + timedelta(days=1))
+        _key, plaintext = APIKey.create('Library')
 
-        def beat(user):
-            request = RequestFactory().post('/', {'role_id': self.perm_role.pk}, HTTP_X_TOWNHALL_API_KEY=key.key)
-            request.user = user
-            return register_heartbeat(request)
+        def start(user):
+            return self.client.post('/api/v1/shifts/start', {'town_hall_id': user.profile.id_code, 'role_id': self.perm_role.pk},
+                                    HTTP_AUTHORIZATION=f'Bearer {plaintext}')
 
-        self.assertEqual(beat(self.mate).status_code, 403)
+        self.assertEqual(start(self.mate).status_code, 403)
         self.assertFalse(Shift.objects.filter(user=self.mate, role=self.perm_role).exists())
-        self.assertEqual(beat(self.vol).status_code, 200)
+        self.assertEqual(start(self.vol).status_code, 201)
         self.assertTrue(Shift.objects.filter(user=self.vol, role=self.perm_role, end_time__isnull=True).exists())
 
 

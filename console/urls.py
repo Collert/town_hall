@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    certificates, chain, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
+    api_keys, certificates, chain, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
     volunteers,
 )
 
@@ -114,6 +114,8 @@ urlpatterns = [
     # Organization
     path('settings/', settings_views.organization_settings, name='console_settings'),
     path('settings/backend/', settings_views.backend_settings, name='console_settings_backend'),
+    path('settings/api/', api_keys.api_keys, name='console_settings_api'),
+    path('settings/api/<int:key_id>/revoke/', api_keys.api_key_revoke, name='console_settings_api_revoke'),
     path('settings/home/', settings_views.home_page_settings, name='console_settings_home'),
     path('settings/levels/', settings_views.level_settings, name='console_settings_levels'),
     path('settings/skills/', settings_views.skill_settings, name='console_settings_skills'),
