@@ -27,7 +27,7 @@ from django.db import transaction
 from django.urls import reverse
 from django.utils import timezone, translation
 
-from api.models import APIKey, ShiftHeartbeat
+from api.models import APIKey
 from base import belltower, points
 from base.onboarding import ensure_admin_guide
 from base.models import (AdminFeedback, Endorsement, HeroSection, Level, Notification, OperatingHour,
@@ -1532,8 +1532,7 @@ class Command(BaseCommand):
 
         # Checked in at the Welcome Centre kiosk this morning, still working
         taras = self.people['taras.shevchuk']
-        open_shift = self.make_shift(taras, self.now - timedelta(hours=1, minutes=35), role=self.roles['frontdesk'])
-        ShiftHeartbeat(shift=open_shift, role=self.roles['frontdesk']).save()
+        self.make_shift(taras, self.now - timedelta(hours=1, minutes=35), role=self.roles['frontdesk'])
 
     # ------------------------------------------------------------ certificates and the rest
 
@@ -1673,10 +1672,12 @@ class Command(BaseCommand):
         self.notify(admin, f'{pending} certificates are waiting for review.', reverse('console_verifications'), 1, read=False)
 
     def seed_api_keys(self):
-        APIKey.objects.create(name='Welcome Centre front desk tablet')
-        APIKey.objects.create(name='Parish hall kiosk iPad', expires_at=self.now + timedelta(days=300))
-        old = APIKey.objects.create(name='2025 festival tablet (retired)', expires_at=self.now - timedelta(days=30))
-        APIKey.objects.filter(pk=old.pk).update(created_at=self.now - timedelta(days=420))
+        # Plaintext keys are shown only when created, so these are just for the API page's list
+        admin = self.people['admin']
+        APIKey.create('Welcome Centre front desk tablet', created_by=admin, roles=[self.roles['frontdesk']])
+        APIKey.create('Parish hall kiosk iPad', created_by=admin, expires_at=self.now + timedelta(days=300))
+        old, _plaintext = APIKey.create('2025 festival tablet (retired)', created_by=admin, expires_at=self.now - timedelta(days=30))
+        APIKey.objects.filter(pk=old.pk).update(created_at=self.now - timedelta(days=420), revoked_at=self.now - timedelta(days=30))
 
     # ------------------------------------------------------------ Bell Tower tasks
 

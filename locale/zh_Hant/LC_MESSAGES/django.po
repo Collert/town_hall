@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 00:04-0700\n"
+"POT-Creation-Date: 2026-11-07 23:35-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: api/models.py:34
+msgid "name"
+msgstr "名稱"
+
+#: api/models.py:34
+msgid "Which application uses this key, e.g. \"Library admin site\"."
+msgstr "使用此金鑰的應用程式，例如「圖書館管理網站」。"
 
 #: base/belltower.py:52
 msgid "Enter the address of your Bell Tower server."
@@ -3171,11 +3179,12 @@ msgstr ""
 msgid "#%(id)s (missing in listmonk)"
 msgstr ""
 
-#: console/templates/console/backend_settings.html:4
-#: console/templates/console/backend_settings.html:21
-msgid "Backend Settings"
-msgstr ""
+#: console/templates/console/api_keys.html:4
+#: console/templates/console/api_keys.html:19
+msgid "API Keys"
+msgstr "API 金鑰"
 
+#: console/templates/console/api_keys.html:11
 #: console/templates/console/backend_settings.html:11
 #: console/templates/console/console_layout.html:51
 #: console/templates/console/home_page_settings.html:13
@@ -3184,6 +3193,196 @@ msgstr ""
 #: console/templates/console/region_settings.html:12
 #: console/templates/console/skill_settings.html:11
 msgid "Organization"
+msgstr "組織"
+
+#: console/templates/console/api_keys.html:13
+#: console/templates/console/partials/settings_tabs.html:11
+msgid "API"
+msgstr "API"
+
+#: console/templates/console/api_keys.html:20
+msgid ""
+"Let your other applications start and end shifts in permanent roles, for "
+"example a library's admin site that clocks staff in while they work."
+msgstr "讓您的其他應用程式在常設職務中開始和結束班次，例如圖書館管理網站可在員工工作時為其簽到。"
+
+#: console/templates/console/api_keys.html:28
+msgid "Your new API key"
+msgstr "您的新 API 金鑰"
+
+#: console/templates/console/api_keys.html:29
+msgid ""
+"Copy it now and store it with the application, for example as an environment "
+"variable. For your security it won't be shown again."
+msgstr "請立即複製並與應用程式一起保存，例如設為環境變數。為了安全，它不會再次顯示。"
+
+#: console/templates/console/api_keys.html:32
+#: console/templates/console/backend_settings.html:144
+#: console/templates/console/communication_notifications.html:88
+#: console/templates/console/communication_notifications.html:97
+msgid "Copied"
+msgstr "已複製"
+
+#: console/templates/console/api_keys.html:33
+#: console/templates/console/backend_settings.html:145
+#: console/templates/console/communication_notifications.html:89
+#: console/templates/console/communication_notifications.html:98
+msgid "Copy"
+msgstr "複製"
+
+#: console/templates/console/api_keys.html:43
+msgid "Active keys"
+msgstr "有效的金鑰"
+
+#: console/templates/console/api_keys.html:55
+msgid "Every permanent role"
+msgstr "所有常設職務"
+
+#: console/templates/console/api_keys.html:58
+#, python-format
+msgid "Created by %(person)s on %(when)s"
+msgstr "由 %(person)s 於 %(when)s 建立"
+
+#: console/templates/console/api_keys.html:58
+#, python-format
+msgid "Created on %(when)s"
+msgstr "建立於 %(when)s"
+
+#: console/templates/console/api_keys.html:59
+#: console/templates/console/backend_settings.html:166
+#, python-format
+msgid "used %(ago)s ago"
+msgstr "%(ago)s 前使用"
+
+#: console/templates/console/api_keys.html:59
+msgid "never used"
+msgstr "從未使用"
+
+#: console/templates/console/api_keys.html:60
+#, python-format
+msgid "expires %(when)s"
+msgstr "%(when)s 到期"
+
+#: console/templates/console/api_keys.html:63
+#, python-format
+msgid ""
+"Revoke “%(name)s”? Applications using it stop working right away. This can't "
+"be undone."
+msgstr "要撤銷「%(name)s」嗎？使用它的應用程式會立即停止運作。此操作無法復原。"
+
+#: console/templates/console/api_keys.html:66
+msgid "Revoke"
+msgstr "撤銷"
+
+#: console/templates/console/api_keys.html:74
+msgid "No API keys yet"
+msgstr "尚無 API 金鑰"
+
+#: console/templates/console/api_keys.html:75
+msgid "Create one for each application that should connect to Town Hall."
+msgstr "為每個需要連線到 Town Hall 的應用程式各建立一個。"
+
+#: console/templates/console/api_keys.html:80
+#, python-format
+msgid "%(counter)s revoked or expired key"
+msgid_plural "%(counter)s revoked or expired keys"
+msgstr[0] "%(counter)s 個已撤銷或過期的金鑰"
+
+#: console/templates/console/api_keys.html:88
+#, python-format
+msgid "revoked %(when)s"
+msgstr "於 %(when)s 撤銷"
+
+#: console/templates/console/api_keys.html:88
+#, python-format
+msgid "expired %(when)s"
+msgstr "於 %(when)s 過期"
+
+#: console/templates/console/api_keys.html:100
+msgid "On shift through the API"
+msgstr "透過 API 值班中"
+
+#: console/templates/console/api_keys.html:103
+#, python-format
+msgid ""
+"These shifts stay open while the application sends a heartbeat. If none "
+"arrives for %(minutes)s minutes, the shift ends at the last one."
+msgstr "只要應用程式持續傳送心跳訊號，這些班次就會保持進行中。若 %(minutes)s 分鐘內沒有收到，班次會在最後一次心跳時結束。"
+
+#: console/templates/console/api_keys.html:111
+#, python-format
+msgid "since %(since)s"
+msgstr "自 %(since)s 起"
+
+#: console/templates/console/api_keys.html:113
+#, python-format
+msgid "seen %(ago)s ago"
+msgstr "%(ago)s 前在線"
+
+#: console/templates/console/api_keys.html:118
+msgid "Nobody is on a shift started through the API right now."
+msgstr "目前沒有人在透過 API 開始的班次中。"
+
+#: console/templates/console/api_keys.html:125
+msgid "Create a key"
+msgstr "建立金鑰"
+
+#: console/templates/console/api_keys.html:129
+#: console/templates/console/communication_notifications.html:83
+#: console/templates/console/partials/area_dialog.html:11
+msgid "Name"
+msgstr "名稱"
+
+#: console/templates/console/api_keys.html:130
+msgid "e.g. Library admin site"
+msgstr "例如：圖書館管理網站"
+
+#: console/templates/console/api_keys.html:133
+msgid "Roles it may use"
+msgstr "可使用的職務"
+
+#: console/templates/console/api_keys.html:141
+msgid ""
+"There are no permanent roles yet. Tick “Ongoing position not tied to events” "
+"on a role to make one."
+msgstr "尚無常設職務。在職務上勾選「不綁定活動的長期職位」即可建立。"
+
+#: console/templates/console/api_keys.html:143
+msgid "Leave all unticked to allow every permanent role."
+msgstr "全部不勾選即允許所有常設職務。"
+
+#: console/templates/console/api_keys.html:146
+msgid "Expires (optional)"
+msgstr "到期日（選填）"
+
+#: console/templates/console/api_keys.html:149
+msgid "Create key"
+msgstr "建立金鑰"
+
+#: console/templates/console/api_keys.html:154
+msgid "Connecting an application"
+msgstr "連接應用程式"
+
+#: console/templates/console/api_keys.html:155
+msgid ""
+"Python applications can use the town-hall-connector package. It needs this "
+"site's address, an API key, a role ID and each person's Town Hall ID, which "
+"is their 6-digit kiosk ID (shown on their volunteer page)."
+msgstr ""
+"Python 應用程式可以使用 town-hall-connector 套件。它需要本網站的網址、一把 API 金鑰、職務 ID，以及每個人的 Town "
+"Hall ID，也就是他們的 6 位數自助服務機 ID（顯示在其志工頁面上）。"
+
+#: console/templates/console/api_keys.html:157
+msgid "Town Hall address"
+msgstr "Town Hall 網址"
+
+#: console/templates/console/api_keys.html:169
+msgid "Role IDs"
+msgstr "職務 ID"
+
+#: console/templates/console/backend_settings.html:4
+#: console/templates/console/backend_settings.html:21
+msgid "Backend Settings"
 msgstr ""
 
 #: console/templates/console/backend_settings.html:13
@@ -3383,18 +3582,6 @@ msgstr ""
 msgid "Connector URL"
 msgstr ""
 
-#: console/templates/console/backend_settings.html:144
-#: console/templates/console/communication_notifications.html:88
-#: console/templates/console/communication_notifications.html:97
-msgid "Copied"
-msgstr ""
-
-#: console/templates/console/backend_settings.html:145
-#: console/templates/console/communication_notifications.html:89
-#: console/templates/console/communication_notifications.html:98
-msgid "Copy"
-msgstr ""
-
 #: console/templates/console/backend_settings.html:150
 msgid "How to connect Claude"
 msgstr ""
@@ -3429,11 +3616,6 @@ msgstr ""
 #: console/templates/console/backend_settings.html:166
 #, python-format
 msgid "As %(person)s · connected %(when)s"
-msgstr ""
-
-#: console/templates/console/backend_settings.html:166
-#, python-format
-msgid "used %(ago)s ago"
 msgstr ""
 
 #: console/templates/console/backend_settings.html:169
@@ -3928,11 +4110,6 @@ msgid ""
 msgstr ""
 "如果 listmonk 的 API 使用者可以管理設定，「在 listmonk 中設定」會為您完成這項工作。否則，請在 listmonk 的 "
 "Settings > Messengers 中新增傳訊器："
-
-#: console/templates/console/communication_notifications.html:83
-#: console/templates/console/partials/area_dialog.html:11
-msgid "Name"
-msgstr ""
 
 #: console/templates/console/communication_notifications.html:85
 msgid "URL"
@@ -7997,6 +8174,25 @@ msgstr ""
 msgid "joined the"
 msgstr ""
 
+#: console/views/api_keys.py:34
+msgid "Give the key a name, so you know later which application uses it."
+msgstr "請為金鑰命名，以便日後知道是哪個應用程式在使用。"
+
+#: console/views/api_keys.py:36
+msgid "The expiry date must be in the future."
+msgstr "到期日必須是未來的日期。"
+
+#: console/views/api_keys.py:40
+#, python-format
+msgid "API key “%(name)s” created."
+msgstr "已建立 API 金鑰「%(name)s」。"
+
+#: console/views/api_keys.py:63
+#, python-format
+msgid ""
+"“%(name)s” is revoked. Applications using it can no longer reach Town Hall."
+msgstr "「%(name)s」已撤銷。使用它的應用程式無法再連線到 Town Hall。"
+
 #: console/views/certificates.py:51
 #, python-format
 msgid "Certificate \"%(name)s\" saved."
@@ -10711,26 +10907,26 @@ msgstr ""
 msgid "Go to Town Hall"
 msgstr ""
 
-#: town_hall/settings.py:173
+#: town_hall/settings.py:174
 msgid "English"
 msgstr ""
 
-#: town_hall/settings.py:174
+#: town_hall/settings.py:175
 msgid "Spanish"
 msgstr ""
 
-#: town_hall/settings.py:175
+#: town_hall/settings.py:176
 msgid "French"
 msgstr ""
 
-#: town_hall/settings.py:176
+#: town_hall/settings.py:177
 msgid "Ukrainian"
 msgstr ""
 
-#: town_hall/settings.py:177
+#: town_hall/settings.py:178
 msgid "Traditional Chinese"
 msgstr ""
 
-#: town_hall/settings.py:178
+#: town_hall/settings.py:179
 msgid "Tagalog"
 msgstr ""

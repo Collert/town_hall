@@ -77,7 +77,7 @@ The rest of this guide follows that order.
     ('Your organization: identity, home page and region', """
 Everything about how your organization presents itself lives under **Organization** in the console.
 The page has tabs along the top: **Identity**, **Home Page**, **Levels**, **Skills**, **Points**,
-**Region** and **Backend**.
+**Region**, **Backend** and **API**.
 
 ## Identity
 
@@ -121,7 +121,7 @@ Categories (such as *Food Security* or *Youth & Family*) let volunteers filter e
 as you go: the event editor's **Categories** panel has an **Add category** box under the existing
 ones (see the Creating an event lesson).
 
-Levels, Points and Backend have their own lessons later in this guide.
+Levels, Points, Backend and API have their own lessons later in this guide.
 """),
 
     ('Venues', """
@@ -647,6 +647,19 @@ with you, then writes the lessons one at a time, quoting your material in each. 
 unpublished until you review and publish them. It never deletes anything, and it can't change people
 or settings. Only active staff can connect, and **Connected apps** on the
 same page lets you disconnect any of them.
+
+## API keys for your other applications
+
+Under **Organization > API** you can create **API keys** so another application can clock staff
+in and out of **permanent roles**: for example a library's admin site that starts a librarian's
+shift while they have it open. Give each key a name and, optionally, the roles it may use; the key
+is shown once, so copy it into the other application straight away. The page also lists each
+permanent role's **ID**; the application identifies people by their 6-digit **kiosk ID**, and they
+must be assigned to the role. Python applications use the `town-hall-connector` package.
+
+While someone works, the application sends a heartbeat about once a minute. If none arrives for
+5 minutes, Town Hall ends the shift at the last heartbeat. **On shift through the API** shows who is
+on such a shift now, and **Revoke** stops a key working immediately.
 
 ## The Django admin
 

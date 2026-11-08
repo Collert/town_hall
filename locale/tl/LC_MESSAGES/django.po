@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 00:04-0700\n"
+"POT-Creation-Date: 2026-11-07 23:35-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: api/models.py:34
+msgid "name"
+msgstr "pangalan"
+
+#: api/models.py:34
+msgid "Which application uses this key, e.g. \"Library admin site\"."
+msgstr ""
+"Aling application ang gumagamit ng key na ito, hal. \"Admin site ng "
+"aklatan\"."
 
 #: base/belltower.py:52
 msgid "Enter the address of your Bell Tower server."
@@ -3199,11 +3209,12 @@ msgstr ""
 msgid "#%(id)s (missing in listmonk)"
 msgstr ""
 
-#: console/templates/console/backend_settings.html:4
-#: console/templates/console/backend_settings.html:21
-msgid "Backend Settings"
-msgstr ""
+#: console/templates/console/api_keys.html:4
+#: console/templates/console/api_keys.html:19
+msgid "API Keys"
+msgstr "Mga API Key"
 
+#: console/templates/console/api_keys.html:11
 #: console/templates/console/backend_settings.html:11
 #: console/templates/console/console_layout.html:51
 #: console/templates/console/home_page_settings.html:13
@@ -3212,6 +3223,213 @@ msgstr ""
 #: console/templates/console/region_settings.html:12
 #: console/templates/console/skill_settings.html:11
 msgid "Organization"
+msgstr "Organisasyon"
+
+#: console/templates/console/api_keys.html:13
+#: console/templates/console/partials/settings_tabs.html:11
+msgid "API"
+msgstr "API"
+
+#: console/templates/console/api_keys.html:20
+msgid ""
+"Let your other applications start and end shifts in permanent roles, for "
+"example a library's admin site that clocks staff in while they work."
+msgstr ""
+"Hayaang magsimula at magtapos ng mga shift sa mga permanenteng tungkulin ang "
+"iba mong application, halimbawa ang admin site ng isang aklatan na nagta-time"
+" in sa staff habang nagtatrabaho sila."
+
+#: console/templates/console/api_keys.html:28
+msgid "Your new API key"
+msgstr "Ang bago mong API key"
+
+#: console/templates/console/api_keys.html:29
+msgid ""
+"Copy it now and store it with the application, for example as an environment "
+"variable. For your security it won't be shown again."
+msgstr ""
+"Kopyahin ito ngayon at itabi kasama ng application, halimbawa bilang "
+"environment variable. Para sa iyong seguridad, hindi na ito ipapakita ulit."
+
+#: console/templates/console/api_keys.html:32
+#: console/templates/console/backend_settings.html:144
+#: console/templates/console/communication_notifications.html:88
+#: console/templates/console/communication_notifications.html:97
+msgid "Copied"
+msgstr "Nakopya"
+
+#: console/templates/console/api_keys.html:33
+#: console/templates/console/backend_settings.html:145
+#: console/templates/console/communication_notifications.html:89
+#: console/templates/console/communication_notifications.html:98
+msgid "Copy"
+msgstr "Kopyahin"
+
+#: console/templates/console/api_keys.html:43
+msgid "Active keys"
+msgstr "Mga aktibong key"
+
+#: console/templates/console/api_keys.html:55
+msgid "Every permanent role"
+msgstr "Lahat ng permanenteng tungkulin"
+
+#: console/templates/console/api_keys.html:58
+#, python-format
+msgid "Created by %(person)s on %(when)s"
+msgstr "Ginawa ni %(person)s noong %(when)s"
+
+#: console/templates/console/api_keys.html:58
+#, python-format
+msgid "Created on %(when)s"
+msgstr "Ginawa noong %(when)s"
+
+#: console/templates/console/api_keys.html:59
+#: console/templates/console/backend_settings.html:166
+#, python-format
+msgid "used %(ago)s ago"
+msgstr "ginamit %(ago)s na ang nakalipas"
+
+#: console/templates/console/api_keys.html:59
+msgid "never used"
+msgstr "hindi pa nagamit"
+
+#: console/templates/console/api_keys.html:60
+#, python-format
+msgid "expires %(when)s"
+msgstr "mag-e-expire sa %(when)s"
+
+#: console/templates/console/api_keys.html:63
+#, python-format
+msgid ""
+"Revoke “%(name)s”? Applications using it stop working right away. This can't "
+"be undone."
+msgstr ""
+"Bawiin ang “%(name)s”? Agad na titigil sa paggana ang mga application na "
+"gumagamit nito. Hindi na ito maibabalik."
+
+#: console/templates/console/api_keys.html:66
+msgid "Revoke"
+msgstr "Bawiin"
+
+#: console/templates/console/api_keys.html:74
+msgid "No API keys yet"
+msgstr "Wala pang API key"
+
+#: console/templates/console/api_keys.html:75
+msgid "Create one for each application that should connect to Town Hall."
+msgstr ""
+"Gumawa ng isa para sa bawat application na dapat kumonekta sa Town Hall."
+
+#: console/templates/console/api_keys.html:80
+#, python-format
+msgid "%(counter)s revoked or expired key"
+msgid_plural "%(counter)s revoked or expired keys"
+msgstr[0] "%(counter)s binawi o nag-expire na key"
+msgstr[1] "%(counter)s binawi o nag-expire na key"
+
+#: console/templates/console/api_keys.html:88
+#, python-format
+msgid "revoked %(when)s"
+msgstr "binawi noong %(when)s"
+
+#: console/templates/console/api_keys.html:88
+#, python-format
+msgid "expired %(when)s"
+msgstr "nag-expire noong %(when)s"
+
+#: console/templates/console/api_keys.html:100
+msgid "On shift through the API"
+msgstr "Naka-shift sa pamamagitan ng API"
+
+#: console/templates/console/api_keys.html:103
+#, python-format
+msgid ""
+"These shifts stay open while the application sends a heartbeat. If none "
+"arrives for %(minutes)s minutes, the shift ends at the last one."
+msgstr ""
+"Mananatiling bukas ang mga shift na ito habang nagpapadala ang application ng"
+" heartbeat. Kung walang dumating sa loob ng %(minutes)s minuto, magtatapos "
+"ang shift sa huling heartbeat."
+
+#: console/templates/console/api_keys.html:111
+#, python-format
+msgid "since %(since)s"
+msgstr "mula %(since)s"
+
+#: console/templates/console/api_keys.html:113
+#, python-format
+msgid "seen %(ago)s ago"
+msgstr "nakita %(ago)s na ang nakalipas"
+
+#: console/templates/console/api_keys.html:118
+msgid "Nobody is on a shift started through the API right now."
+msgstr "Walang naka-shift na sinimulan sa pamamagitan ng API ngayon."
+
+#: console/templates/console/api_keys.html:125
+msgid "Create a key"
+msgstr "Gumawa ng key"
+
+#: console/templates/console/api_keys.html:129
+#: console/templates/console/communication_notifications.html:83
+#: console/templates/console/partials/area_dialog.html:11
+msgid "Name"
+msgstr "Pangalan"
+
+#: console/templates/console/api_keys.html:130
+msgid "e.g. Library admin site"
+msgstr "hal. Admin site ng aklatan"
+
+#: console/templates/console/api_keys.html:133
+msgid "Roles it may use"
+msgstr "Mga tungkuling maaaring gamitin"
+
+#: console/templates/console/api_keys.html:141
+msgid ""
+"There are no permanent roles yet. Tick “Ongoing position not tied to events” "
+"on a role to make one."
+msgstr ""
+"Wala pang permanenteng tungkulin. Lagyan ng tsek ang “Tuloy-tuloy na posisyon"
+" na hindi nakatali sa mga event” sa isang tungkulin para gumawa nito."
+
+#: console/templates/console/api_keys.html:143
+msgid "Leave all unticked to allow every permanent role."
+msgstr ""
+"Iwanang walang tsek lahat para payagan ang bawat permanenteng tungkulin."
+
+#: console/templates/console/api_keys.html:146
+msgid "Expires (optional)"
+msgstr "Mag-e-expire (opsyonal)"
+
+#: console/templates/console/api_keys.html:149
+msgid "Create key"
+msgstr "Gumawa ng key"
+
+#: console/templates/console/api_keys.html:154
+msgid "Connecting an application"
+msgstr "Pagkonekta ng application"
+
+#: console/templates/console/api_keys.html:155
+msgid ""
+"Python applications can use the town-hall-connector package. It needs this "
+"site's address, an API key, a role ID and each person's Town Hall ID, which "
+"is their 6-digit kiosk ID (shown on their volunteer page)."
+msgstr ""
+"Maaaring gamitin ng mga Python application ang package na town-hall-"
+"connector. Kailangan nito ang address ng site na ito, isang API key, isang "
+"role ID at ang Town Hall ID ng bawat tao, na kanilang 6-digit na kiosk ID "
+"(makikita sa kanilang volunteer page)."
+
+#: console/templates/console/api_keys.html:157
+msgid "Town Hall address"
+msgstr "Address ng Town Hall"
+
+#: console/templates/console/api_keys.html:169
+msgid "Role IDs"
+msgstr "Mga role ID"
+
+#: console/templates/console/backend_settings.html:4
+#: console/templates/console/backend_settings.html:21
+msgid "Backend Settings"
 msgstr ""
 
 #: console/templates/console/backend_settings.html:13
@@ -3411,18 +3629,6 @@ msgstr ""
 msgid "Connector URL"
 msgstr ""
 
-#: console/templates/console/backend_settings.html:144
-#: console/templates/console/communication_notifications.html:88
-#: console/templates/console/communication_notifications.html:97
-msgid "Copied"
-msgstr ""
-
-#: console/templates/console/backend_settings.html:145
-#: console/templates/console/communication_notifications.html:89
-#: console/templates/console/communication_notifications.html:98
-msgid "Copy"
-msgstr ""
-
 #: console/templates/console/backend_settings.html:150
 msgid "How to connect Claude"
 msgstr ""
@@ -3457,11 +3663,6 @@ msgstr ""
 #: console/templates/console/backend_settings.html:166
 #, python-format
 msgid "As %(person)s · connected %(when)s"
-msgstr ""
-
-#: console/templates/console/backend_settings.html:166
-#, python-format
-msgid "used %(ago)s ago"
 msgstr ""
 
 #: console/templates/console/backend_settings.html:169
@@ -3970,11 +4171,6 @@ msgstr ""
 "Gagawin ito para sa iyo ng “I-set up sa listmonk” kung pinapayagan ang API "
 "user nito na mag-manage ng settings. Kung hindi, magdagdag ng messenger sa "
 "listmonk sa ilalim ng Settings > Messengers:"
-
-#: console/templates/console/communication_notifications.html:83
-#: console/templates/console/partials/area_dialog.html:11
-msgid "Name"
-msgstr ""
 
 #: console/templates/console/communication_notifications.html:85
 msgid "URL"
@@ -8060,6 +8256,29 @@ msgstr ""
 msgid "joined the"
 msgstr ""
 
+#: console/views/api_keys.py:34
+msgid "Give the key a name, so you know later which application uses it."
+msgstr ""
+"Bigyan ng pangalan ang key para malaman mo sa susunod kung aling application "
+"ang gumagamit nito."
+
+#: console/views/api_keys.py:36
+msgid "The expiry date must be in the future."
+msgstr "Dapat nasa hinaharap ang petsa ng pag-expire."
+
+#: console/views/api_keys.py:40
+#, python-format
+msgid "API key “%(name)s” created."
+msgstr "Nagawa ang API key na “%(name)s”."
+
+#: console/views/api_keys.py:63
+#, python-format
+msgid ""
+"“%(name)s” is revoked. Applications using it can no longer reach Town Hall."
+msgstr ""
+"Binawi na ang “%(name)s”. Hindi na makakakonekta sa Town Hall ang mga "
+"application na gumagamit nito."
+
 #: console/views/certificates.py:51
 #, python-format
 msgid "Certificate \"%(name)s\" saved."
@@ -10786,26 +11005,26 @@ msgstr ""
 msgid "Go to Town Hall"
 msgstr ""
 
-#: town_hall/settings.py:173
+#: town_hall/settings.py:174
 msgid "English"
 msgstr ""
 
-#: town_hall/settings.py:174
+#: town_hall/settings.py:175
 msgid "Spanish"
 msgstr ""
 
-#: town_hall/settings.py:175
+#: town_hall/settings.py:176
 msgid "French"
 msgstr ""
 
-#: town_hall/settings.py:176
+#: town_hall/settings.py:177
 msgid "Ukrainian"
 msgstr ""
 
-#: town_hall/settings.py:177
+#: town_hall/settings.py:178
 msgid "Traditional Chinese"
 msgstr ""
 
-#: town_hall/settings.py:178
+#: town_hall/settings.py:179
 msgid "Tagalog"
 msgstr ""

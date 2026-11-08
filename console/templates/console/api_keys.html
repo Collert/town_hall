@@ -1,0 +1,179 @@
+{% extends 'console/console_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% trans "API Keys" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'console/api_keys.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}
+<a href="{% url 'console_settings' %}">{% trans "Organization" %}</a>
+<span class="material-symbols-outlined crumb-sep">chevron_right</span>
+<span class="crumb-current">{% trans "API" %}</span>
+{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <div>
+        <h1 class="page-title">{% trans "API Keys" %}</h1>
+        <p class="page-lead">{% trans "Let your other applications start and end shifts in permanent roles, for example a library's admin site that clocks staff in while they work." %}</p>
+    </div>
+</header>
+
+{% include 'console/partials/settings_tabs.html' %}
+
+{% if new_key %}
+<section class="c-card api-new-key" id="new-key">
+    <h2 class="c-card-title"><span class="material-symbols-outlined">key</span>{% trans "Your new API key" %}</h2>
+    <p class="c-muted">{% trans "Copy it now and store it with the application, for example as an environment variable. For your security it won't be shown again." %}</p>
+    <div class="api-copy">
+        <input type="text" id="api-new-key" class="c-input api-mono" value="{{ new_key.key }}" readonly onclick="this.select()">
+        <button type="button" class="c-btn c-btn-primary" onclick="navigator.clipboard.writeText(document.getElementById('api-new-key').value); this.querySelector('span:last-child').textContent = '{% trans "Copied" %}'">
+            <span class="material-symbols-outlined">content_copy</span><span>{% trans "Copy" %}</span>
+        </button>
+    </div>
+</section>
+{% endif %}
+
+<div class="c-split">
+    <div class="c-stack">
+        <section class="c-card">
+            <h2 class="c-card-title">
+                <span class="material-symbols-outlined">key</span>{% trans "Active keys" %}
+                <span class="c-badge c-card-title-aside">{{ active_keys|length }}</span>
+            </h2>
+            {% if active_keys %}
+            <ul class="c-list api-key-list">
+                {% for key in active_keys %}
+                <li class="c-list-item api-key-row">
+                    <span class="material-symbols-outlined api-key-icon">vpn_key</span>
+                    <div class="c-list-item-main">
+                        <strong>{{ key.name }}</strong>
+                        <small>
+                            <code class="api-mono">{{ key.prefix }}…</code>
+                            · {% for role in key.roles.all %}{{ role.name }}{% if not forloop.last %}, {% endif %}{% empty %}{% trans "Every permanent role" %}{% endfor %}
+                        </small>
+                        <small>
+                            {% if key.created_by %}{% blocktrans with person=key.created_by|display_name when=key.created_at|date:"DATE_FORMAT" %}Created by {{ person }} on {{ when }}{% endblocktrans %}{% else %}{% blocktrans with when=key.created_at|date:"DATE_FORMAT" %}Created on {{ when }}{% endblocktrans %}{% endif %}
+                            · {% if key.last_used_at %}{% blocktrans with ago=key.last_used_at|timesince %}used {{ ago }} ago{% endblocktrans %}{% else %}{% trans "never used" %}{% endif %}
+                            {% if key.expires_at %}· {% blocktrans with when=key.expires_at|date:"DATE_FORMAT" %}expires {{ when }}{% endblocktrans %}{% endif %}
+                        </small>
+                    </div>
+                    {% blocktrans with name=key.name|safe asvar revoke_confirm %}Revoke “{{ name }}”? Applications using it stop working right away. This can't be undone.{% endblocktrans %}
+                    <form method="post" action="{% url 'console_settings_api_revoke' key.pk %}" onsubmit="return confirm('{{ revoke_confirm|escapejs }}')">
+                        {% csrf_token %}
+                        <button type="submit" class="c-btn c-btn-ghost c-btn-sm api-revoke"><span class="material-symbols-outlined">block</span>{% trans "Revoke" %}</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="c-empty">
+                <span class="material-symbols-outlined">key</span>
+                <h3>{% trans "No API keys yet" %}</h3>
+                <p>{% trans "Create one for each application that should connect to Town Hall." %}</p>
+            </div>
+            {% endif %}
+            {% if inactive_keys %}
+            <details class="api-inactive">
+                <summary>{% blocktrans count counter=inactive_keys|length %}{{ counter }} revoked or expired key{% plural %}{{ counter }} revoked or expired keys{% endblocktrans %}</summary>
+                <ul class="c-list api-key-list">
+                    {% for key in inactive_keys %}
+                    <li class="c-list-item api-key-row is-inactive">
+                        <span class="material-symbols-outlined api-key-icon">key_off</span>
+                        <div class="c-list-item-main">
+                            <strong>{{ key.name }}</strong>
+                            <small><code class="api-mono">{{ key.prefix }}…</code> ·
+                                {% if key.revoked_at %}{% blocktrans with when=key.revoked_at|date:"DATE_FORMAT" %}revoked {{ when }}{% endblocktrans %}{% else %}{% blocktrans with when=key.expires_at|date:"DATE_FORMAT" %}expired {{ when }}{% endblocktrans %}{% endif %}
+                            </small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </details>
+            {% endif %}
+        </section>
+
+        <section class="c-card">
+            <h2 class="c-card-title">
+                <span class="material-symbols-outlined">monitor_heart</span>{% trans "On shift through the API" %}
+                <span class="c-badge c-card-title-aside">{{ tracked|length }}</span>
+            </h2>
+            <p class="c-muted api-intro">{% blocktrans with minutes=timeout_minutes %}These shifts stay open while the application sends a heartbeat. If none arrives for {{ minutes }} minutes, the shift ends at the last one.{% endblocktrans %}</p>
+            {% if tracked %}
+            <ul class="c-list">
+                {% for beat in tracked %}
+                <li class="c-list-item api-shift-row">
+                    {% avatar beat.shift.user 'sm' %}
+                    <div class="c-list-item-main">
+                        <strong>{{ beat.shift.user|display_name }}</strong>
+                        <small>{{ beat.shift.role.name }} · {% blocktrans with since=beat.shift.start_time|time:"TIME_FORMAT" %}since {{ since }}{% endblocktrans %}{% if beat.api_key %} · {{ beat.api_key.name }}{% endif %}</small>
+                    </div>
+                    <span class="c-badge c-badge-live">{% blocktrans with ago=beat.last_seen|timesince %}seen {{ ago }} ago{% endblocktrans %}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="c-help">{% trans "Nobody is on a shift started through the API right now." %}</p>
+            {% endif %}
+        </section>
+    </div>
+
+    <aside class="c-stack">
+        <section class="c-card c-card-tonal">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">add_circle</span>{% trans "Create a key" %}</h2>
+            <form method="post" class="c-form">
+                {% csrf_token %}
+                <div class="c-field">
+                    <label class="c-label" for="api-name">{% trans "Name" %}</label>
+                    <input type="text" id="api-name" name="name" class="c-input" maxlength="100" required placeholder="{% trans 'e.g. Library admin site' %}">
+                </div>
+                <fieldset class="c-field api-roles">
+                    <legend class="c-label">{% trans "Roles it may use" %}</legend>
+                    {% for role in permanent_roles %}
+                    <label class="api-role-option">
+                        <input type="checkbox" name="roles" value="{{ role.pk }}">
+                        <span class="material-symbols-outlined">{{ role.icon|default:"badge" }}</span>
+                        <span>{{ role.name }}</span>
+                    </label>
+                    {% empty %}
+                    <p class="c-help">{% trans "There are no permanent roles yet. Tick “Ongoing position not tied to events” on a role to make one." %}</p>
+                    {% endfor %}
+                    {% if permanent_roles %}<p class="c-help">{% trans "Leave all unticked to allow every permanent role." %}</p>{% endif %}
+                </fieldset>
+                <div class="c-field">
+                    <label class="c-label" for="api-expires">{% trans "Expires (optional)" %}</label>
+                    <input type="date" id="api-expires" name="expires" class="c-input">
+                </div>
+                <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">key</span>{% trans "Create key" %}</button>
+            </form>
+        </section>
+
+        <section class="c-card c-card-tonal">
+            <h2 class="c-card-title"><span class="material-symbols-outlined">integration_instructions</span>{% trans "Connecting an application" %}</h2>
+            <p class="c-help api-connect-help">{% trans "Python applications can use the town-hall-connector package. It needs this site's address, an API key, a role ID and each person's Town Hall ID, which is their 6-digit kiosk ID (shown on their volunteer page)." %}</p>
+            <div class="c-field">
+                <label class="c-label" for="api-site-url">{% trans "Town Hall address" %}</label>
+                <div class="api-copy">
+                    <input type="text" id="api-site-url" class="c-input api-mono" value="{{ site_url }}" readonly onclick="this.select()">
+                </div>
+            </div>
+            <pre class="api-code">pip install town-hall-connector
+
+from townhall_connector import TownHall
+th = TownHall("{{ site_url }}", api_key)
+th.start_shift(town_hall_id, role_id)
+th.end_shift(town_hall_id, role_id)</pre>
+            {% if permanent_roles %}
+            <h3 class="api-subhead">{% trans "Role IDs" %}</h3>
+            <ul class="api-role-ids">
+                {% for role in permanent_roles %}
+                <li><span>{{ role.name }}</span><code class="api-mono">{{ role.pk }}</code></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </section>
+    </aside>
+</div>
+{% endblock %}
