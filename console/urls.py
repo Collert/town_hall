@@ -13,6 +13,7 @@ urlpatterns = [
     path('events/search/', events.event_history, name='console_event_history'),
     path('events/new/', events.event_edit, name='console_event_create'),
     path('events/<int:event_id>/', events.event_edit, name='console_event_edit'),
+    path('events/<int:event_id>/duplicate/', events.event_duplicate, name='console_event_duplicate'),
     path('events/<int:event_id>/roles/', events.event_roles, name='console_event_roles'),
     path('events/<int:event_id>/roles/add/', events.add_role_slots, name='console_add_role_slots'),
     path('events/<int:event_id>/roles/slot-row/', events.slot_row, name='console_slot_row'),

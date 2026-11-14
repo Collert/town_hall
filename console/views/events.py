@@ -18,12 +18,13 @@ from base.models import Notification
 from base.utils import short_datetime
 from education.models import TrainingModuleCompletion
 from events import leadership
+from events.duplicate import default_start, duplicate_event
 from events.models import Event, EventArea, EventRoleSlot, EventSlotInvite
 from events.reminders import send_shift_thanks
 from jobs.models import Role, Shift
 
 from ..decorators import staff_required
-from ..forms import EventForm
+from ..forms import DATETIME_FORMAT, EventForm
 from ..utils import activity_feed, page_window, paginate, role_staffing, slots_with_counts
 
 
@@ -100,7 +101,28 @@ def event_edit(request, event_id=None):
             start = (timezone.localtime() + timedelta(days=7)).replace(hour=9, minute=0, second=0, microsecond=0)
             initial = {'start_date': start, 'end_date': start.replace(hour=17), 'published': False}
         form = EventForm(instance=event, initial=initial)
-    return render(request, 'console/event_edit.html', {'form': form, 'event': event})
+    return render(request, 'console/event_edit.html', {
+        'form': form, 'event': event,
+        'duplicate_start': default_start(event).strftime(DATETIME_FORMAT) if event else '',
+    })
+
+
+@staff_required
+@require_POST
+def event_duplicate(request, event_id):
+    """Copy the event with its areas and role slots, moved to start at the chosen time.
+    The copy starts unpublished and without sign-ups, leads, invites, tasks or the
+    post-event statement."""
+    event = get_object_or_404(Event, pk=event_id)
+    raw = request.POST.get('start_date', '').strip()
+    try:
+        new_start = timezone.make_aware(datetime.strptime(raw, DATETIME_FORMAT), timezone.get_current_timezone())
+    except ValueError:
+        messages.error(request, _('Choose when the copy starts.'))
+        return redirect('console_event_edit', event_id=event.pk)
+    copy = duplicate_event(event, new_start)
+    messages.success(request, _('Event duplicated. The copy is unpublished until you publish it.'))
+    return redirect('console_event_edit', event_id=copy.pk)
 
 
 # ---------------------------------------------------------------------------

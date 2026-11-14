@@ -20,9 +20,14 @@
         {% if not event %}<p class="page-lead">{% trans "Start with the essentials. You'll add roles and time slots on the next step." %}</p>{% endif %}
     </div>
     {% if event %}
-    <a href="{% url 'opportunity_detail' event.pk %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener">
-        <span class="material-symbols-outlined">visibility</span>{% trans "View public page" %}
-    </a>
+    <div class="event-header-actions">
+        <button type="button" class="c-btn c-btn-ghost" data-dialog-open="duplicate-dialog">
+            <span class="material-symbols-outlined">content_copy</span>{% trans "Duplicate event" %}
+        </button>
+        <a href="{% url 'opportunity_detail' event.pk %}" class="c-btn c-btn-ghost" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">visibility</span>{% trans "View public page" %}
+        </a>
+    </div>
     {% endif %}
 </header>
 
@@ -117,4 +122,27 @@
         </a>
     </aside>
 </form>
+
+{% if event %}
+<dialog class="c-dialog duplicate-dialog" id="duplicate-dialog">
+    <form method="post" action="{% url 'console_event_duplicate' event.pk %}">
+        {% csrf_token %}
+        <div class="c-dialog-head">
+            <h2>{% trans "Duplicate event" %}</h2>
+            <button type="button" class="c-icon-btn" data-dialog-close aria-label="{% trans 'Close' %}"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="c-dialog-body c-stack">
+            <p class="c-muted">{% blocktranslate trimmed %}The copy gets the same details, venue, coordinators, areas and role slots, moved to the new start time. Sign-ups, leads, invites, tasks and the post-event statement are not copied, and the copy stays unpublished until you publish it.{% endblocktranslate %}</p>
+            <div class="c-field">
+                <label class="c-label" for="duplicate-start">{% trans "The copy starts" %}</label>
+                <input type="datetime-local" name="start_date" id="duplicate-start" class="c-input" value="{{ duplicate_start }}" required>
+            </div>
+        </div>
+        <div class="c-dialog-foot">
+            <button type="button" class="c-btn c-btn-ghost" data-dialog-close>{% trans "Cancel" %}</button>
+            <button type="submit" class="c-btn c-btn-primary"><span class="material-symbols-outlined">content_copy</span>{% trans "Duplicate" %}</button>
+        </div>
+    </form>
+</dialog>
+{% endif %}
 {% endblock %}

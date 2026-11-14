@@ -272,6 +272,13 @@ Events are created and run from the **Event Planner** in the console. Click **Cr
 Saving takes you to the event's tabs: **Overview**, **Roles & Staffing**, **Tasks**,
 **Check-in Monitor** and **Impact Report**. The following lessons cover each one.
 
+## Repeating an event
+
+To run an event again, open it (past events too) and click **Duplicate event** on its **Overview**.
+Choose when the copy starts; it gets the same details, venue, coordinators, areas and roles, moved
+to that date. Sign-ups, leads, invitations, tasks and the post-event statement stay with the
+original, and the copy is unpublished until you publish it.
+
 ## Finding events
 
 The **Event Planner** lists upcoming events with their staffing progress, and has a search for past
