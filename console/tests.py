@@ -3127,6 +3127,8 @@ class DuplicateEventTests(ConsoleFixture):
         self.past.coordinators.add(self.staff)
         self.past.venue = self.venue
         self.past.chain_of_command = True
+        self.past.published = True
+        self.past.title_es = 'Limpieza de primavera'
         self.past.save()
         area = EventArea.objects.create(event=self.past, name='Kitchen', icon='restaurant')
         self.past_slot.area = area
@@ -3141,7 +3143,8 @@ class DuplicateEventTests(ConsoleFixture):
         copy = Event.objects.exclude(pk__in=[self.past.pk, self.live.pk]).get()
         self.assertRedirects(response, reverse('console_event_edit', args=[copy.pk]))
 
-        self.assertEqual(copy.title, 'Spring Cleanup')
+        self.assertEqual(copy.title_en, 'Copy of Spring Cleanup')
+        self.assertEqual(copy.title_es, 'Copia de Limpieza de primavera')
         self.assertEqual(copy.description, self.past.description)
         self.assertEqual(copy.venue, self.venue)
         self.assertTrue(copy.chain_of_command)
@@ -3165,6 +3168,10 @@ class DuplicateEventTests(ConsoleFixture):
         # The original is untouched.
         self.assertEqual(self.past.role_slots.count(), 2)
         self.assertEqual(set(self.past_slot.signups.all()), {self.vol, self.mate})
+
+    def test_copy_title_fits_the_field(self):
+        from events.duplicate import copy_title
+        self.assertEqual(len(copy_title('x' * 100, 'en')), 100)
 
     def test_duplicate_needs_a_start(self):
         response = self.client.post(reverse('console_event_duplicate', args=[self.past.pk]), {'start_date': 'soon'})

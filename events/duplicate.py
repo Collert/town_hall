@@ -9,7 +9,8 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.db import transaction
-from django.utils import timezone
+from django.utils import timezone, translation
+from django.utils.translation import gettext
 
 from modeltranslation.utils import build_localized_fieldname
 
@@ -25,6 +26,13 @@ def default_start(event, now=None):
     while _aware(start + timedelta(weeks=weeks)) <= now:
         weeks += 1
     return _aware(start + timedelta(weeks=weeks))
+
+
+def copy_title(title, language):
+    """'Copy of <title>' in the title's own language, cut to fit the field."""
+    with translation.override(language):
+        name = gettext('Copy of %(title)s') % {'title': title}
+    return name[:Event._meta.get_field('title').max_length]
 
 
 def _aware(naive):
@@ -54,6 +62,10 @@ def duplicate_event(event, new_start):
     copy.leads_auto_assigned_at = None
     for code in settings.MODELTRANSLATION_LANGUAGES:
         setattr(copy, build_localized_fieldname('post_event_statement', code), None)
+        title_field = build_localized_fieldname('title', code)
+        title = getattr(event, title_field)
+        if title:
+            setattr(copy, title_field, copy_title(title, code))
     copy.post_event_statement = None
     copy.save()
     copy.coordinators.set(event.coordinators.all())
