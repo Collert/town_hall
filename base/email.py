@@ -5,6 +5,7 @@ wording lives in the listmonk template for that trigger and the recipient's lang
 so views pass data only. Anything sent through Django's own mail API (the console's
 "Send test email", say) goes out with the "system" trigger's template.
 """
+import logging
 import threading
 
 from django.conf import settings
@@ -18,6 +19,8 @@ from django.utils.html import linebreaks, urlize
 
 from . import email_templates, listmonk, push, triggers
 from .models import EmailTemplate, SiteSettings
+
+logger = logging.getLogger(__name__)
 
 
 def text_to_html(text):
@@ -70,14 +73,19 @@ def notify(trigger, user, data=None):
         deliver(trigger, [user.email], data, lang)
         return
     transaction.on_commit(lambda: threading.Thread(
-        target=_deliver_in_background, args=(trigger, user.email, data, lang), daemon=True).start())
+        target=_deliver_in_background, args=(trigger, user.pk, user.email, data, lang), daemon=True).start())
 
 
-def _deliver_in_background(trigger, email, data, lang):
+def _deliver_in_background(trigger, user_pk, email, data, lang):
+    # Logged rather than printed: gunicorn buffers a worker's stdout, so a print from this
+    # thread rarely reaches the host's logs, and logged errors also go to Bugsink. The
+    # message names the user by ID so error reports carry no email address.
     try:
         deliver(trigger, [email], data, lang)
     except listmonk.ListmonkError as exc:
-        print(f'[listmonk] Could not send "{trigger}" email to {email}: {exc}')
+        logger.error('Could not send "%s" email to user %s: %s', trigger, user_pk, exc)
+    except Exception:
+        logger.exception('Could not send "%s" email to user %s', trigger, user_pk)
     finally:
         connection.close()
 

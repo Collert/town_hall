@@ -1302,7 +1302,7 @@ class ListmonkTemplateTests(ConsoleFixture):
         self.vol.refresh_from_db()
         with patch('base.email.threading.Thread') as thread, self.captureOnCommitCallbacks(execute=True):
             notify('volunteer_message', self.vol, {'message': 'Hola'})
-        trigger, email, data, lang = thread.call_args.kwargs['args']
+        trigger, _user_pk, email, data, lang = thread.call_args.kwargs['args']
         self.assertEqual((trigger, email, lang, data['name']), ('volunteer_message', 'vol@example.com', 'es', 'Val'))
         deliver(trigger, [email], data, lang)
         self.assertEqual(self.fake.tx[-1]['template_id'], 2)
@@ -1522,6 +1522,29 @@ class PasswordResetTests(ConsoleFixture):
         self.assertRedirects(response, reverse('password_reset_complete'))
         self.vol.refresh_from_db()
         self.assertTrue(self.vol.check_password('a-much-better-pass-42'))
+
+    def test_listmonk_failure_is_logged(self):
+        """A refused send is logged (stderr and Bugsink), not printed where gunicorn buffers it."""
+        from base import email as base_email, listmonk
+
+        def refuse(method, path, payload=None, **kwargs):
+            raise listmonk.ListmonkError('listmonk returned 400: subscriber not found', 400)
+
+        class Inline:
+            def __init__(self, target, args=(), **kwargs):
+                self.target, self.args = target, args
+
+            def start(self):
+                self.target(*self.args)
+
+        with self.assertLogs(base_email.logger, 'ERROR') as logs, \
+                patch('base.listmonk.is_configured', return_value=True), \
+                patch('base.email.template_for', return_value=7), patch('base.listmonk.api', refuse), \
+                patch('base.email.threading.Thread', Inline), self.captureOnCommitCallbacks(execute=True):
+            self.client.post(reverse('password_reset'), {'email': 'vol@example.com'})
+        self.assertIn('password_reset', logs.output[0])
+        self.assertIn('subscriber not found', logs.output[0])
+        self.assertNotIn('vol@example.com', logs.output[0])
 
     def test_unknown_email_looks_the_same(self):
         response = self.client.post(reverse('password_reset'), {'email': 'nobody@example.com'})
