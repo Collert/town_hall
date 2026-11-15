@@ -175,3 +175,14 @@
 .event-pick-group div[id] > div > label {
     background: var(--color-bg-secondary);
 }
+
+/* Header actions: Duplicate event + View public page */
+.event-header-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.duplicate-dialog {
+    width: min(34rem, calc(100vw - 2rem));
+}

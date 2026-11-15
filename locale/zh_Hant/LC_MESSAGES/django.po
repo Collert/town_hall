@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-07 23:35-0700\n"
+"POT-Creation-Date: 2026-11-14 16:00-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,8 +53,8 @@ msgstr ""
 #: base/email_templates.py:213
 #, python-format
 msgid ""
-"You're receiving this because you have an account with %(org)s. "
-"[Unsubscribe]({{UnsubscribeURL}})"
+"You're receiving this because you have an account with %(org)s. [Unsubscribe]"
+"({{UnsubscribeURL}})"
 msgstr ""
 
 #: base/forms.py:9 base/triggers.py:94 base/triggers.py:119
@@ -507,6 +507,7 @@ msgstr ""
 #: base/templates/base/edit_profile.html:252
 #: console/templates/console/backend_settings.html:249
 #: console/templates/console/certificate_edit.html:26
+#: console/templates/console/event_edit.html:142
 #: console/templates/console/event_invite.html:93
 #: console/templates/console/event_monitor.html:143
 #: console/templates/console/event_roles.html:161
@@ -536,7 +537,7 @@ msgstr ""
 #: console/templates/console/certificate_edit.html:27
 #: console/templates/console/communication_email.html:24
 #: console/templates/console/communication_notifications.html:26
-#: console/templates/console/event_edit.html:113
+#: console/templates/console/event_edit.html:118
 #: console/templates/console/home_page_settings.html:28
 #: console/templates/console/home_page_settings.html:71
 #: console/templates/console/organization_settings.html:24
@@ -568,7 +569,8 @@ msgstr "班次提醒、邀請、新機會、推薦以及團隊訊息，即使網
 msgid ""
 "Notifications are blocked for this site. Allow them in your browser's site "
 "settings, then reload this page."
-msgstr "此網站的通知已被封鎖。請在瀏覽器的網站設定中允許通知，然後重新載入此頁面。"
+msgstr ""
+"此網站的通知已被封鎖。請在瀏覽器的網站設定中允許通知，然後重新載入此頁面。"
 
 #: base/templates/base/edit_profile.html:165
 #, python-format
@@ -577,8 +579,8 @@ msgid ""
 "Chrome it's in the address bar), choose “Add to Home Screen”, and open "
 "%(org)s from your home screen to turn notifications on."
 msgstr ""
-"iPhone 和 iPad 只會顯示從主畫面開啟的通知。點一下「分享」（在 Chrome 中位於網址列），選擇「加入主畫面」，然後從主畫面開啟 "
-"%(org)s 即可開啟通知。"
+"iPhone 和 iPad 只會顯示從主畫面開啟的通知。點一下「分享」（在 Chrome 中位於網"
+"址列），選擇「加入主畫面」，然後從主畫面開啟 %(org)s 即可開啟通知。"
 
 #: base/templates/base/edit_profile.html:166
 msgid "This browser can't show notifications."
@@ -864,8 +866,8 @@ msgstr ""
 
 #: base/templates/base/home.html:171
 msgid ""
-"Unlock a tailored experience to track your volunteer hours, schedule upcoming"
-" shifts, and manage your profile in one central hub."
+"Unlock a tailored experience to track your volunteer hours, schedule "
+"upcoming shifts, and manage your profile in one central hub."
 msgstr ""
 
 #: base/templates/base/home.html:179
@@ -1386,12 +1388,11 @@ msgstr "謝謝您，%(name)s！"
 #: base/templates/base/listmonk/shift_thanks.html:3
 #, python-format
 msgid ""
-"Thanks for volunteering as <strong>%(role)s</strong> at "
-"<strong>%(event)s</strong>. Events like this happen because people like you "
-"show up."
+"Thanks for volunteering as <strong>%(role)s</strong> at <strong>%(event)s</"
+"strong>. Events like this happen because people like you show up."
 msgstr ""
-"感謝您在 <strong>%(event)s</strong> 擔任 <strong>%(role)s</strong> "
-"志工。正因為有像您這樣的人，這樣的活動才得以實現。"
+"感謝您在 <strong>%(event)s</strong> 擔任 <strong>%(role)s</strong> 志工。正因"
+"為有像您這樣的人，這樣的活動才得以實現。"
 
 #: base/templates/base/listmonk/shift_thanks.html:5
 msgid "Hours logged"
@@ -1405,12 +1406,12 @@ msgstr "獲得的影響力點數"
 #: base/templates/base/listmonk/shift_thanks.html:10
 #, python-format
 msgid ""
-"How did it go? Tell us what you enjoyed and what we could do better. It takes"
-" a minute and shapes the next event: <a href=\"%(link)s\">share your "
+"How did it go? Tell us what you enjoyed and what we could do better. It "
+"takes a minute and shapes the next event: <a href=\"%(link)s\">share your "
 "feedback</a>."
 msgstr ""
-"這次體驗如何？告訴我們您喜歡什麼，以及我們可以改進的地方。只需一分鐘，就能讓下一次活動更好：<a "
-"href=\"%(link)s\">分享您的意見</a>。"
+"這次體驗如何？告訴我們您喜歡什麼，以及我們可以改進的地方。只需一分鐘，就能讓"
+"下一次活動更好：<a href=\"%(link)s\">分享您的意見</a>。"
 
 #: base/templates/base/listmonk/shift_thanks.html:11
 msgid "See your event summary"
@@ -1521,9 +1522,11 @@ msgstr "您目前離線"
 #: base/templates/base/offline.html:15
 #, python-format
 msgid ""
-"%(org)s needs a connection to load this page. Check your Wi-Fi or mobile data"
-" and try again."
-msgstr "%(org)s 需要網路連線才能載入此頁面。請檢查您的 Wi-Fi 或行動數據，然後再試一次。"
+"%(org)s needs a connection to load this page. Check your Wi-Fi or mobile "
+"data and try again."
+msgstr ""
+"%(org)s 需要網路連線才能載入此頁面。請檢查您的 Wi-Fi 或行動數據，然後再試一"
+"次。"
 
 #: base/templates/base/offline.html:16
 msgid "Try again"
@@ -1664,8 +1667,8 @@ msgid ""
 "Chrome it's in the address bar), choose “Add to Home Screen”, then open "
 "%(org)s from your home screen."
 msgstr ""
-"iPhone 和 iPad 只會顯示從主畫面開啟的通知。點一下「分享」（在 Chrome 中位於網址列），選擇「加入主畫面」，然後從主畫面開啟 "
-"%(org)s。"
+"iPhone 和 iPad 只會顯示從主畫面開啟的通知。點一下「分享」（在 Chrome 中位於網"
+"址列），選擇「加入主畫面」，然後從主畫面開啟 %(org)s。"
 
 #: base/templates/base/partials/push_prompt.html:21
 msgid "Turn on"
@@ -1725,8 +1728,8 @@ msgstr ""
 
 #: base/templates/base/password_reset_done.html:16
 msgid ""
-"Didn't get it? Check your spam folder, or try again with the email you signed"
-" up with."
+"Didn't get it? Check your spam folder, or try again with the email you "
+"signed up with."
 msgstr ""
 
 #: base/templates/base/password_reset_done.html:18
@@ -1744,8 +1747,8 @@ msgstr ""
 
 #: base/templates/base/password_reset_form.html:14
 msgid ""
-"Enter the email address on your account and we'll send you a link to choose a"
-" new password."
+"Enter the email address on your account and we'll send you a link to choose "
+"a new password."
 msgstr ""
 
 #: base/templates/base/password_reset_form.html:25
@@ -2488,8 +2491,8 @@ msgstr ""
 
 #: base/triggers.py:105
 msgid ""
-"The same text as HTML. It may be empty, so keep the \"with ... Safe ... end\""
-" wrapper"
+"The same text as HTML. It may be empty, so keep the \"with ... Safe ... "
+"end\" wrapper"
 msgstr ""
 
 #: base/triggers.py:106
@@ -2718,11 +2721,11 @@ msgstr ""
 msgid "Add category"
 msgstr ""
 
-#: console/forms.py:77 console/templates/console/event_edit.html:45
+#: console/forms.py:77 console/templates/console/event_edit.html:50
 msgid "Venue"
 msgstr ""
 
-#: console/forms.py:78 console/templates/console/event_edit.html:61
+#: console/forms.py:78 console/templates/console/event_edit.html:66
 #: console/templates/console/venue_edit.html:37
 msgid "Address"
 msgstr ""
@@ -3056,8 +3059,8 @@ msgstr ""
 
 #: console/forms.py:551
 msgid ""
-"Roles with the longest training get this multiplier; untrained roles get 1.0."
-" A role can set its own weight instead."
+"Roles with the longest training get this multiplier; untrained roles get "
+"1.0. A role can set its own weight instead."
 msgstr ""
 
 #: console/forms.py:552
@@ -3204,7 +3207,9 @@ msgstr "API"
 msgid ""
 "Let your other applications start and end shifts in permanent roles, for "
 "example a library's admin site that clocks staff in while they work."
-msgstr "讓您的其他應用程式在常設職務中開始和結束班次，例如圖書館管理網站可在員工工作時為其簽到。"
+msgstr ""
+"讓您的其他應用程式在常設職務中開始和結束班次，例如圖書館管理網站可在員工工作"
+"時為其簽到。"
 
 #: console/templates/console/api_keys.html:28
 msgid "Your new API key"
@@ -3214,7 +3219,8 @@ msgstr "您的新 API 金鑰"
 msgid ""
 "Copy it now and store it with the application, for example as an environment "
 "variable. For your security it won't be shown again."
-msgstr "請立即複製並與應用程式一起保存，例如設為環境變數。為了安全，它不會再次顯示。"
+msgstr ""
+"請立即複製並與應用程式一起保存，例如設為環境變數。為了安全，它不會再次顯示。"
 
 #: console/templates/console/api_keys.html:32
 #: console/templates/console/backend_settings.html:144
@@ -3307,7 +3313,9 @@ msgstr "透過 API 值班中"
 msgid ""
 "These shifts stay open while the application sends a heartbeat. If none "
 "arrives for %(minutes)s minutes, the shift ends at the last one."
-msgstr "只要應用程式持續傳送心跳訊號，這些班次就會保持進行中。若 %(minutes)s 分鐘內沒有收到，班次會在最後一次心跳時結束。"
+msgstr ""
+"只要應用程式持續傳送心跳訊號，這些班次就會保持進行中。若 %(minutes)s 分鐘內沒"
+"有收到，班次會在最後一次心跳時結束。"
 
 #: console/templates/console/api_keys.html:111
 #, python-format
@@ -3369,8 +3377,9 @@ msgid ""
 "site's address, an API key, a role ID and each person's Town Hall ID, which "
 "is their 6-digit kiosk ID (shown on their volunteer page)."
 msgstr ""
-"Python 應用程式可以使用 town-hall-connector 套件。它需要本網站的網址、一把 API 金鑰、職務 ID，以及每個人的 Town "
-"Hall ID，也就是他們的 6 位數自助服務機 ID（顯示在其志工頁面上）。"
+"Python 應用程式可以使用 town-hall-connector 套件。它需要本網站的網址、一把 "
+"API 金鑰、職務 ID，以及每個人的 Town Hall ID，也就是他們的 6 位數自助服務機 "
+"ID（顯示在其志工頁面上）。"
 
 #: console/templates/console/api_keys.html:157
 msgid "Town Hall address"
@@ -3463,8 +3472,8 @@ msgstr ""
 #: console/templates/console/backend_settings.html:77
 msgid ""
 "Point Town Hall at your listmonk server. Which emails are sent, and with "
-"which templates, is set in Communication &gt; Email. Without a server, emails"
-" are printed in the server console instead (useful for testing)."
+"which templates, is set in Communication &gt; Email. Without a server, "
+"emails are printed in the server console instead (useful for testing)."
 msgstr ""
 
 #: console/templates/console/backend_settings.html:84
@@ -3507,9 +3516,9 @@ msgstr ""
 
 #: console/templates/console/backend_settings.html:101
 msgid ""
-"Bell Tower keeps your organization's shared task lists. Once connected, every"
-" event gets a Tasks tab with a planning list and lists for the day, which "
-"people can work through on their phones, pager devices or AI agents."
+"Bell Tower keeps your organization's shared task lists. Once connected, "
+"every event gets a Tasks tab with a planning list and lists for the day, "
+"which people can work through on their phones, pager devices or AI agents."
 msgstr ""
 
 #: console/templates/console/backend_settings.html:107
@@ -3532,9 +3541,9 @@ msgstr ""
 #: console/templates/console/backend_settings.html:119
 #, python-format
 msgid ""
-"%(user)s isn't Bell Tower staff, so Town Hall can't link people's accounts or"
-" add volunteers to role lists. Make it staff in Bell Tower's admin, then link"
-" accounts."
+"%(user)s isn't Bell Tower staff, so Town Hall can't link people's accounts "
+"or add volunteers to role lists. Make it staff in Bell Tower's admin, then "
+"link accounts."
 msgstr ""
 
 #: console/templates/console/backend_settings.html:124
@@ -3674,11 +3683,12 @@ msgstr ""
 
 #: console/templates/console/backend_settings.html:219
 msgid ""
-"Keys and passwords are stored in the database and are never shown again after"
-" saving. Only staff can open this page."
+"Keys and passwords are stored in the database and are never shown again "
+"after saving. Only staff can open this page."
 msgstr ""
 
 #: console/templates/console/backend_settings.html:233
+#: console/templates/console/event_edit.html:132
 #: console/templates/console/event_monitor.html:120
 #: console/templates/console/event_roles.html:151
 #: console/templates/console/partials/add_role_dialog.html:8
@@ -3957,8 +3967,8 @@ msgstr ""
 
 #: console/templates/console/communication_email.html:117
 msgid ""
-"Available in the template, next to the brand variables at its top ($org_name,"
-" $color_primary, …):"
+"Available in the template, next to the brand variables at its top "
+"($org_name, $color_primary, …):"
 msgstr ""
 
 #: console/templates/console/communication_email.html:124
@@ -4009,8 +4019,8 @@ msgstr ""
 
 #: console/templates/console/communication_email.html:164
 msgid ""
-"Each email goes out in the language the person last used the site in, falling"
-" back to the default language."
+"Each email goes out in the language the person last used the site in, "
+"falling back to the default language."
 msgstr ""
 
 #: console/templates/console/communication_email.html:165
@@ -4035,7 +4045,9 @@ msgid ""
 "Choose which app events send a push notification. Volunteers turn "
 "notifications on for each phone or computer when they're signed in, and can "
 "install the site as an app."
-msgstr "選擇哪些應用程式事件會傳送推播通知。志工登入後可在每支手機或每台電腦上開啟通知，也可以將網站安裝為應用程式。"
+msgstr ""
+"選擇哪些應用程式事件會傳送推播通知。志工登入後可在每支手機或每台電腦上開啟通"
+"知，也可以將網站安裝為應用程式。"
 
 #: console/templates/console/communication_notifications.html:43
 msgid "Notification events"
@@ -4058,8 +4070,9 @@ msgid ""
 "sent with the Town Hall messenger reaches everyone on its lists who has "
 "notifications on; the others are skipped."
 msgstr ""
-"有人開啟通知時，其裝置會儲存在其 listmonk 訂閱者屬性 <code>%(attrib)s</code> 中。透過 Town Hall "
-"傳訊器發送的純文字行銷活動，會送達其名單中所有已開啟通知的人；其他人則會略過。"
+"有人開啟通知時，其裝置會儲存在其 listmonk 訂閱者屬性 <code>%(attrib)s</code> "
+"中。透過 Town Hall 傳訊器發送的純文字行銷活動，會送達其名單中所有已開啟通知的"
+"人；其他人則會略過。"
 
 #: console/templates/console/communication_notifications.html:67
 msgid ""
@@ -4070,30 +4083,32 @@ msgstr "在 listmonk 中建立行銷活動並選擇您的名單，例如志工�
 #: console/templates/console/communication_notifications.html:68
 #, python-format
 msgid ""
-"Set <strong>Messenger</strong> to <code>%(name)s</code>, "
-"<strong>Format</strong> to Plain text, and <strong>Template</strong> to "
-"“%(template_name)s”."
+"Set <strong>Messenger</strong> to <code>%(name)s</code>, <strong>Format</"
+"strong> to Plain text, and <strong>Template</strong> to “%(template_name)s”."
 msgstr ""
-"將 <strong>Messenger</strong> 設為 <code>%(name)s</code>，<strong>Format</strong>"
-" 設為 Plain text，<strong>Template</strong> 設為「%(template_name)s」。"
+"將 <strong>Messenger</strong> 設為 <code>%(name)s</code>，<strong>Format</"
+"strong> 設為 Plain text，<strong>Template</strong> 設為"
+"「%(template_name)s」。"
 
 #: console/templates/console/communication_notifications.html:69
 msgid ""
 "The subject becomes the notification's title and the message its text. Keep "
 "it short: phones show about two lines."
-msgstr "主旨會成為通知的標題，訊息則成為其內文。請保持簡短：手機大約只顯示兩行。"
+msgstr ""
+"主旨會成為通知的標題，訊息則成為其內文。請保持簡短：手機大約只顯示兩行。"
 
 #: console/templates/console/communication_notifications.html:70
 msgid ""
 "To open a page when the notification is clicked, put its address on the last "
-"line with <code>@TrackLink</code> right after it, e.g. "
-"<code>https://example.org/en/opportunities/@TrackLink</code>. Without a link,"
-" the home page opens. Either way listmonk counts the clicks, and shown "
-"notifications count as views."
+"line with <code>@TrackLink</code> right after it, e.g. <code>https://example."
+"org/en/opportunities/@TrackLink</code>. Without a link, the home page opens. "
+"Either way listmonk counts the clicks, and shown notifications count as "
+"views."
 msgstr ""
-"若要在點選通知時開啟某個頁面，請將其網址放在最後一行，並緊接著加上 <code>@TrackLink</code>，例如 "
-"<code>https://example.org/en/opportunities/@TrackLink</code>。沒有連結時會開啟首頁。無論如何，listmonk"
-" 都會計算點擊次數，而已顯示的通知會計為瀏覽次數。"
+"若要在點選通知時開啟某個頁面，請將其網址放在最後一行，並緊接著加上 "
+"<code>@TrackLink</code>，例如 <code>https://example.org/en/opportunities/"
+"@TrackLink</code>。沒有連結時會開啟首頁。無論如何，listmonk 都會計算點擊次"
+"數，而已顯示的通知會計為瀏覽次數。"
 
 #: console/templates/console/communication_notifications.html:75
 msgid "Connect listmonk in Organization > Backend first."
@@ -4108,8 +4123,8 @@ msgid ""
 "“Set up in listmonk” does this for you if its API user may manage settings. "
 "Otherwise add a messenger in listmonk under Settings > Messengers:"
 msgstr ""
-"如果 listmonk 的 API 使用者可以管理設定，「在 listmonk 中設定」會為您完成這項工作。否則，請在 listmonk 的 "
-"Settings > Messengers 中新增傳訊器："
+"如果 listmonk 的 API 使用者可以管理設定，「在 listmonk 中設定」會為您完成這項"
+"工作。否則，請在 listmonk 的 Settings > Messengers 中新增傳訊器："
 
 #: console/templates/console/communication_notifications.html:85
 msgid "URL"
@@ -4123,7 +4138,9 @@ msgstr "使用者名稱"
 msgid ""
 "listmonk must be able to reach this URL. “Set up in listmonk” still creates "
 "the campaign template when it isn't allowed to change settings."
-msgstr "listmonk 必須能夠連線到此 URL。即使沒有變更設定的權限，「在 listmonk 中設定」仍會建立行銷活動範本。"
+msgstr ""
+"listmonk 必須能夠連線到此 URL。即使沒有變更設定的權限，「在 listmonk 中設定」"
+"仍會建立行銷活動範本。"
 
 #: console/templates/console/communication_notifications.html:110
 #: console/templates/console/communication_notifications.html:114
@@ -4179,9 +4196,12 @@ msgstr "未以此 URL 註冊"
 
 #: console/templates/console/communication_notifications.html:148
 msgid ""
-"Create or refresh the campaign template and register the Town Hall messenger?"
-" listmonk reloads its settings, which pauses running campaigns for a moment."
-msgstr "要建立或更新行銷活動範本並註冊 Town Hall 傳訊器嗎？listmonk 會重新載入設定，這會讓進行中的行銷活動暫停片刻。"
+"Create or refresh the campaign template and register the Town Hall "
+"messenger? listmonk reloads its settings, which pauses running campaigns for "
+"a moment."
+msgstr ""
+"要建立或更新行銷活動範本並註冊 Town Hall 傳訊器嗎？listmonk 會重新載入設定，"
+"這會讓進行中的行銷活動暫停片刻。"
 
 #: console/templates/console/communication_notifications.html:149
 msgid "Refresh listmonk setup"
@@ -4197,9 +4217,10 @@ msgstr "在 listmonk 中新增行銷活動"
 
 #: console/templates/console/communication_notifications.html:161
 msgid ""
-"Signed-in volunteers are asked once whether to turn notifications on, and can"
-" switch them off for each device in Account settings."
-msgstr "已登入的志工會被詢問一次是否開啟通知，並可在帳戶設定中為每個裝置關閉通知。"
+"Signed-in volunteers are asked once whether to turn notifications on, and "
+"can switch them off for each device in Account settings."
+msgstr ""
+"已登入的志工會被詢問一次是否開啟通知，並可在帳戶設定中為每個裝置關閉通知。"
 
 #: console/templates/console/communication_notifications.html:162
 msgid "Notifications go out in the language the person last used the site in."
@@ -4401,7 +4422,7 @@ msgid "Edit Event"
 msgstr ""
 
 #: console/templates/console/event_edit.html:4
-#: console/templates/console/event_edit.html:113
+#: console/templates/console/event_edit.html:118
 msgid "Create Event"
 msgstr ""
 
@@ -4418,89 +4439,112 @@ msgid ""
 "Start with the essentials. You'll add roles and time slots on the next step."
 msgstr ""
 
-#: console/templates/console/event_edit.html:24
+#: console/templates/console/event_edit.html:25
+#: console/templates/console/event_edit.html:131
+msgid "Duplicate event"
+msgstr "複製活動"
+
+#: console/templates/console/event_edit.html:28
 #: console/templates/console/organization_settings.html:99
 #: console/templates/console/venue_edit.html:24
 msgid "View public page"
 msgstr ""
 
-#: console/templates/console/event_edit.html:35
+#: console/templates/console/event_edit.html:40
 msgid "Event Details"
 msgstr ""
 
-#: console/templates/console/event_edit.html:39
+#: console/templates/console/event_edit.html:44
 #: console/templates/console/partials/area_lead_dialog.html:26
 #: console/templates/console/partials/slot_edit_dialog.html:12
 msgid "Starts"
 msgstr ""
 
-#: console/templates/console/event_edit.html:40
+#: console/templates/console/event_edit.html:45
 #: console/templates/console/partials/area_lead_dialog.html:30
 #: console/templates/console/partials/slot_edit_dialog.html:16
 msgid "Ends"
 msgstr ""
 
-#: console/templates/console/event_edit.html:56
+#: console/templates/console/event_edit.html:61
 msgid "Add a new venue"
 msgstr ""
 
-#: console/templates/console/event_edit.html:66
+#: console/templates/console/event_edit.html:71
 msgid ""
 "For a one-off location. Places you use again are easier to manage as a venue."
 msgstr ""
 
-#: console/templates/console/event_edit.html:74
+#: console/templates/console/event_edit.html:79
 msgid "Media"
 msgstr ""
 
-#: console/templates/console/event_edit.html:75
+#: console/templates/console/event_edit.html:80
 msgid "Event header image"
 msgstr ""
 
-#: console/templates/console/event_edit.html:81
+#: console/templates/console/event_edit.html:86
 msgid "Click to change header image"
 msgstr ""
 
-#: console/templates/console/event_edit.html:81
+#: console/templates/console/event_edit.html:86
 msgid "Click to upload a header image"
 msgstr ""
 
-#: console/templates/console/event_edit.html:82
+#: console/templates/console/event_edit.html:87
 msgid "Recommended size: 1200 × 400px"
 msgstr ""
 
-#: console/templates/console/event_edit.html:91
+#: console/templates/console/event_edit.html:96
 msgid "Settings"
 msgstr ""
 
-#: console/templates/console/event_edit.html:93
+#: console/templates/console/event_edit.html:98
 msgid "Visible to all community members"
 msgstr ""
 
-#: console/templates/console/event_edit.html:94
+#: console/templates/console/event_edit.html:99
 #: console/templates/console/module_edit.html:79
 #: console/templates/console/module_list.html:34
 #: console/templates/console/partials/module_grid.html:9
 msgid "Published"
 msgstr ""
 
-#: console/templates/console/event_edit.html:95
+#: console/templates/console/event_edit.html:100
 msgid "Highlight on the home page"
 msgstr ""
 
-#: console/templates/console/event_edit.html:96
+#: console/templates/console/event_edit.html:101
 msgid "Featured"
 msgstr ""
 
-#: console/templates/console/event_edit.html:99
+#: console/templates/console/event_edit.html:104
 msgid "Categories"
 msgstr ""
 
-#: console/templates/console/event_edit.html:116
+#: console/templates/console/event_edit.html:121
 #: console/templates/console/partials/quiz_questions.html:93
 #: console/templates/console/venue_edit.html:98
 msgid "Discard"
 msgstr ""
+
+#: console/templates/console/event_edit.html:135
+msgid ""
+"The copy gets the same details, venue, coordinators, areas and role slots, "
+"moved to the new start time. Sign-ups, leads, invites, tasks and the post-"
+"event statement are not copied, and the copy stays unpublished until you "
+"publish it."
+msgstr ""
+"副本會沿用相同的詳細資料、場地、協調人、區域和職務時段，並移到新的開始時間。"
+"報名、負責人、邀請、任務和活動後聲明不會複製，副本在您發佈前會保持未發佈。"
+
+#: console/templates/console/event_edit.html:137
+msgid "The copy starts"
+msgstr "副本開始時間"
+
+#: console/templates/console/event_edit.html:143
+msgid "Duplicate"
+msgstr "複製"
 
 #: console/templates/console/event_invite.html:4
 #: console/templates/console/event_invite.html:21
@@ -4514,9 +4558,8 @@ msgstr ""
 #: console/templates/console/event_invite.html:22
 #, python-format
 msgid ""
-"Personalize your message for <strong class=\"invite-event-"
-"name\">%(title)s</strong>. Volunteers are more likely to respond to tailored "
-"messages."
+"Personalize your message for <strong class=\"invite-event-name\">%(title)s</"
+"strong>. Volunteers are more likely to respond to tailored messages."
 msgstr ""
 
 #: console/templates/console/event_invite.html:30
@@ -4928,8 +4971,8 @@ msgstr ""
 
 #: console/templates/console/event_report.html:151
 msgid ""
-"No volunteer feedback yet. Volunteers can rate the event from their thank-you"
-" page."
+"No volunteer feedback yet. Volunteers can rate the event from their thank-"
+"you page."
 msgstr ""
 
 #: console/templates/console/event_report.html:151
@@ -5139,9 +5182,9 @@ msgstr ""
 
 #: console/templates/console/event_tasks.html:29
 msgid ""
-"Plan the event and run the day from shared Bell Tower lists. Anyone you share"
-" a list with can work through it on their phone, a pager device or an AI "
-"agent."
+"Plan the event and run the day from shared Bell Tower lists. Anyone you "
+"share a list with can work through it on their phone, a pager device or an "
+"AI agent."
 msgstr ""
 
 #: console/templates/console/event_tasks.html:41
@@ -5161,8 +5204,8 @@ msgstr ""
 #: console/templates/console/event_tasks.html:52
 #, python-format
 msgid ""
-"Merge “%%(source)s” into “%%(target)s”? Its tasks and people move over and it"
-" is deleted."
+"Merge “%%(source)s” into “%%(target)s”? Its tasks and people move over and "
+"it is deleted."
 msgstr ""
 
 #: console/templates/console/event_tasks.html:57
@@ -5190,8 +5233,8 @@ msgstr ""
 #: console/templates/console/event_tasks.html:79
 msgid ""
 "Checklists for volunteers and staff on the day, e.g. setup crew, kitchen, "
-"registration desk. Drag a task onto another list to move it, or a list by its"
-" handle onto another to merge them."
+"registration desk. Drag a task onto another list to move it, or a list by "
+"its handle onto another to merge them."
 msgstr ""
 
 #: console/templates/console/event_tasks.html:83
@@ -5237,8 +5280,8 @@ msgstr ""
 
 #: console/templates/console/home_page_settings.html:46
 msgid ""
-"Use a full address (https://…) or a page on this site, like "
-"/en/opportunities/."
+"Use a full address (https://…) or a page on this site, like /en/"
+"opportunities/."
 msgstr ""
 
 #: console/templates/console/home_page_settings.html:50
@@ -5604,8 +5647,8 @@ msgstr ""
 
 #: console/templates/console/organization_settings.html:114
 msgid ""
-"Add a logo, contact email and terms of service so volunteers know who they're"
-" working with."
+"Add a logo, contact email and terms of service so volunteers know who "
+"they're working with."
 msgstr ""
 
 #: console/templates/console/organization_settings.html:121
@@ -6100,8 +6143,8 @@ msgstr ""
 
 #: console/templates/console/partials/md_editor.html:22
 msgid ""
-"Markdown supported: **bold**, _italic_, ## headings, - lists, "
-"[links](https://...)."
+"Markdown supported: **bold**, _italic_, ## headings, - lists, [links]"
+"(https://...)."
 msgstr ""
 
 #: console/templates/console/partials/module_grid.html:16
@@ -6386,8 +6429,8 @@ msgstr ""
 
 #: console/templates/console/partials/role_grid.html:32
 msgid ""
-"Role templates describe a job volunteers can do, and which training they need"
-" first."
+"Role templates describe a job volunteers can do, and which training they "
+"need first."
 msgstr ""
 
 #: console/templates/console/partials/role_grid.html:33
@@ -6510,8 +6553,8 @@ msgstr ""
 #: console/templates/console/partials/slot_edit_dialog.html:60
 #, python-format
 msgid ""
-"Nobody has signed up yet. Once people do, the one with the most impact points"
-" is picked on %(when)s unless you choose someone."
+"Nobody has signed up yet. Once people do, the one with the most impact "
+"points is picked on %(when)s unless you choose someone."
 msgstr ""
 
 #: console/templates/console/partials/slot_edit_dialog.html:62
@@ -6844,8 +6887,8 @@ msgstr ""
 
 #: console/templates/console/partials/volunteer_roles.html:6
 msgid ""
-"Ongoing positions this person may start shifts in, at the venue kiosk or on a"
-" device. Click a role to assign or remove it."
+"Ongoing positions this person may start shifts in, at the venue kiosk or on "
+"a device. Click a role to assign or remove it."
 msgstr ""
 
 #: console/templates/console/partials/volunteer_roles.html:8
@@ -6858,8 +6901,8 @@ msgstr[1] ""
 #: console/templates/console/partials/volunteer_roles.html:29
 #, python-format
 msgid ""
-"No permanent roles exist yet. <a href=\"%(roles_url)s\" "
-"class=\"c-link\">Create one</a> and mark it as a permanent position."
+"No permanent roles exist yet. <a href=\"%(roles_url)s\" class=\"c-"
+"link\">Create one</a> and mark it as a permanent position."
 msgstr ""
 
 #: console/templates/console/partials/volunteer_table.html:7
@@ -7068,8 +7111,8 @@ msgstr ""
 #: console/templates/console/region_settings.html:35
 #, python-format
 msgid ""
-"Until then the site keeps running with %(languages)s (default %(default)s) in"
-" %(zone)s."
+"Until then the site keeps running with %(languages)s (default %(default)s) "
+"in %(zone)s."
 msgstr ""
 
 #: console/templates/console/region_settings.html:43
@@ -7123,8 +7166,8 @@ msgstr ""
 
 #: console/templates/console/region_settings.html:87
 msgid ""
-"Applies the saved settings. Visitors may see an error for a few seconds while"
-" Town Hall comes back."
+"Applies the saved settings. Visitors may see an error for a few seconds "
+"while Town Hall comes back."
 msgstr ""
 
 #: console/templates/console/region_settings.html:90
@@ -7218,7 +7261,9 @@ msgid ""
 "External certificates issued by another authority (first aid, food safety, "
 "background checks). Mandatory ones must be verified, and not expired, before "
 "a volunteer can sign up. Optional ones are recommended."
-msgstr "由其他機構核發的外部證書（急救、食品安全、背景審查）。必要證書須經驗證且未過期，志工才能報名。其他證書為建議項目。"
+msgstr ""
+"由其他機構核發的外部證書（急救、食品安全、背景審查）。必要證書須經驗證且未過"
+"期，志工才能報名。其他證書為建議項目。"
 
 #: console/templates/console/role_edit.html:74
 msgid "Preferred Skills"
@@ -7559,8 +7604,9 @@ msgstr ""
 
 #: console/templates/console/venue_list.html:20
 msgid ""
-"Every place your organization works from. Events and permanent positions pick"
-" their venue from here, so addresses, hours and amenities stay in one place."
+"Every place your organization works from. Events and permanent positions "
+"pick their venue from here, so addresses, hours and amenities stay in one "
+"place."
 msgstr ""
 
 #: console/templates/console/venue_list.html:29
@@ -8149,8 +8195,8 @@ msgstr ""
 
 #: console/templates/console/volunteer_list.html:88
 msgid ""
-"Share the temporary password with them; they can change it from their account"
-" settings. A 6-digit kiosk ID is generated automatically."
+"Share the temporary password with them; they can change it from their "
+"account settings. A 6-digit kiosk ID is generated automatically."
 msgstr ""
 
 #: console/utils.py:147
@@ -8199,7 +8245,7 @@ msgid "Certificate \"%(name)s\" saved."
 msgstr ""
 
 #: console/views/certificates.py:53 console/views/communication.py:35
-#: console/views/events.py:96 console/views/roles.py:91
+#: console/views/events.py:97 console/views/roles.py:91
 #: console/views/settings.py:82 console/views/settings.py:108
 #: console/views/settings.py:135 console/views/settings.py:172
 #: console/views/settings.py:229 console/views/settings.py:255
@@ -8425,8 +8471,8 @@ msgstr ""
 #: console/views/event_tasks.py:307
 #, python-format
 msgid ""
-"No Bell Tower account uses %(email)s. They need to sign in to Bell Tower once"
-" with that email."
+"No Bell Tower account uses %(email)s. They need to sign in to Bell Tower "
+"once with that email."
 msgstr ""
 
 #: console/views/event_tasks.py:318
@@ -8437,133 +8483,142 @@ msgstr ""
 msgid "A task needs a title."
 msgstr ""
 
-#: console/views/events.py:92
+#: console/views/events.py:93
 msgid "Event created. Now add the roles you need filled."
 msgstr ""
 
-#: console/views/events.py:94
+#: console/views/events.py:95
 msgid "Event details saved."
 msgstr ""
 
-#: console/views/events.py:179
+#: console/views/events.py:121
+msgid "Choose when the copy starts."
+msgstr "請選擇副本的開始時間。"
+
+#: console/views/events.py:124
+msgid "Event duplicated. The copy is unpublished until you publish it."
+msgstr "已複製活動。副本在您發佈前不會公開。"
+
+#: console/views/events.py:201
 msgid "Time slot removed."
 msgstr ""
 
-#: console/views/events.py:191
+#: console/views/events.py:213
 #, python-format
 msgid "The listmonk announcement failed: %(error)s"
 msgstr ""
 
-#: console/views/events.py:194
+#: console/views/events.py:216
 msgid "Announcement emailed to \"Town Hall users\"."
 msgstr ""
 
-#: console/views/events.py:196
+#: console/views/events.py:218
 msgid "An announcement campaign is waiting as a draft in listmonk."
 msgstr ""
 
-#: console/views/events.py:207
+#: console/views/events.py:229
 #, python-format
 msgid "\"%(title)s\" is now visible to volunteers."
 msgstr ""
 
-#: console/views/events.py:209
+#: console/views/events.py:231
 #, python-format
 msgid "\"%(title)s\" is hidden from volunteers."
 msgstr ""
 
-#: console/views/events.py:219 console/views/volunteers.py:345
+#: console/views/events.py:241 console/views/volunteers.py:345
 msgid "Write a message before sending."
 msgstr ""
 
-#: console/views/events.py:230
+#: console/views/events.py:252
 #, python-format
 msgid "Message sent to %(count)d volunteers."
 msgstr ""
 
-#: console/views/events.py:250
+#: console/views/events.py:272
 #, python-format
 msgid "Slot %(n)d has an invalid date or time."
 msgstr ""
 
-#: console/views/events.py:253
+#: console/views/events.py:275
 #, python-format
 msgid "Slot %(n)d must end after it starts."
 msgstr ""
 
-#: console/views/events.py:260
+#: console/views/events.py:282
 msgid "Add at least one time slot."
 msgstr ""
 
-#: console/views/events.py:280
+#: console/views/events.py:302
 msgid "Select a role first."
 msgstr ""
 
-#: console/views/events.py:293
+#: console/views/events.py:315
 #, python-format
 msgid "Added %(role)s with %(count)d time slot(s)."
 msgstr ""
 
-#: console/views/events.py:295
+#: console/views/events.py:317
 #, python-format
 msgid ""
 "This event now needs more than %(n)d volunteers. Consider setting up a chain "
 "of command with areas and leads."
 msgstr ""
 
-#: console/views/events.py:408
+#: console/views/events.py:430
 msgid "Add a role to this event before inviting volunteers."
 msgstr ""
 
-#: console/views/events.py:415
+#: console/views/events.py:437
 #, python-format
 msgid "You are invited to %(event)s"
 msgstr ""
 
-#: console/views/events.py:420
+#: console/views/events.py:442
 #, python-format
 msgid "Sent %(count)d invitation(s) for %(role)s."
 msgstr ""
 
-#: console/views/events.py:422
+#: console/views/events.py:444
 msgid "Select at least one volunteer to invite."
 msgstr ""
 
-#: console/views/events.py:427
+#: console/views/events.py:449
 #, python-format
 msgid ""
 "Hello [Name],\n"
 "\n"
-"Your skills would make a real difference at %(event)s. We're looking for a %(role)s on %(date)s and thought of you.\n"
+"Your skills would make a real difference at %(event)s. We're looking for a "
+"%(role)s on %(date)s and thought of you.\n"
 "\n"
 "We'd love to have you on the team!"
 msgstr ""
 
-#: console/views/events.py:438
+#: console/views/events.py:460
 #, python-format
 msgid "Be the spark at %(event)s!"
 msgstr ""
 
-#: console/views/events.py:547
+#: console/views/events.py:569
 #, python-format
 msgid "%(name)s checked out."
 msgstr ""
 
-#: console/views/events.py:552
+#: console/views/events.py:574
 #, python-format
 msgid "%(name)s is already checked in."
 msgstr ""
 
-#: console/views/events.py:559
+#: console/views/events.py:581
 msgid "That volunteer is not signed up for this event."
 msgstr ""
 
-#: console/views/events.py:562
+#: console/views/events.py:584
 #, python-format
 msgid "%(name)s checked in as %(role)s."
 msgstr ""
 
-#: console/views/events.py:596
+#: console/views/events.py:618
 msgid "Post-event statement saved."
 msgstr ""
 
@@ -8594,7 +8649,8 @@ msgstr ""
 
 #: console/views/roles.py:135
 #, python-format
-msgid "\"%(name)s\" is used by events or logged shifts, so it can't be deleted."
+msgid ""
+"\"%(name)s\" is used by events or logged shifts, so it can't be deleted."
 msgstr ""
 
 #: console/views/roles.py:138
@@ -9002,7 +9058,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                    Congratulations, %(name)s! You've Completed the <span class=\"accent-text\">%(module)s.</span>\n"
+"                    Congratulations, %(name)s! You've Completed the <span "
+"class=\"accent-text\">%(module)s.</span>\n"
 "                    "
 msgstr ""
 
@@ -9228,8 +9285,8 @@ msgstr ""
 
 #: education/templates/education/printable_certificate.html:41
 msgid ""
-"This certifies that the above-named individual has successfully completed the"
-" training module."
+"This certifies that the above-named individual has successfully completed "
+"the training module."
 msgstr ""
 
 #: education/templates/education/printable_certificate.html:44
@@ -9273,7 +9330,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                You answered %(correct)s out of %(total)s questions correctly.\n"
+"                You answered %(correct)s out of %(total)s questions "
+"correctly.\n"
 "            "
 msgstr ""
 
@@ -9339,7 +9397,9 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"                Please upload a clear, legible copy of your %(name)s certificate. Ensure the issue date and expiration date are visible. Allowed formats: PDF, JPG, PNG (Max 5 MB).\n"
+"                Please upload a clear, legible copy of your %(name)s "
+"certificate. Ensure the issue date and expiration date are visible. Allowed "
+"formats: PDF, JPG, PNG (Max 5 MB).\n"
 "                "
 msgstr ""
 
@@ -9639,6 +9699,11 @@ msgstr ""
 msgid "%(role)s tasks"
 msgstr ""
 
+#: events/duplicate.py:34
+#, python-format
+msgid "Copy of %(title)s"
+msgstr "%(title)s 的副本"
+
 #: events/leadership.py:123
 #, python-format
 msgid "You are the shift lead for %(role)s at %(event)s."
@@ -9701,9 +9766,9 @@ msgstr ""
 #: events/templates/events/event_certificate.html:37
 #, python-format
 msgid ""
-"In recognition of outstanding contributions to <strong>%(title)s "
-"%(year)s</strong>. Your dedication and service have made a significant impact"
-" on our community's success."
+"In recognition of outstanding contributions to <strong>%(title)s %(year)s</"
+"strong>. Your dedication and service have made a significant impact on our "
+"community's success."
 msgstr ""
 
 #: events/templates/events/event_certificate.html:40
@@ -9857,8 +9922,8 @@ msgstr ""
 #: events/templates/events/event_detail.html:240
 #, python-format
 msgid ""
-"You lead %(area)s. Pass direction from the general coordinator to these shift"
-" leads."
+"You lead %(area)s. Pass direction from the general coordinator to these "
+"shift leads."
 msgstr ""
 
 #: events/templates/events/event_detail.html:248
@@ -9867,8 +9932,8 @@ msgstr ""
 
 #: events/templates/events/event_detail.html:251
 msgid ""
-"You lead this shift. Pass direction on to your team, and bring what you can't"
-" answer to your area lead."
+"You lead this shift. Pass direction on to your team, and bring what you "
+"can't answer to your area lead."
 msgstr ""
 
 #: events/templates/events/event_detail.html:255
@@ -10036,8 +10101,8 @@ msgstr ""
 
 #: events/templates/events/event_detail.html:581
 msgid ""
-"Your area lead is the person to ask first. They can answer most questions and"
-" bring anything bigger to the coordinators."
+"Your area lead is the person to ask first. They can answer most questions "
+"and bring anything bigger to the coordinators."
 msgid_plural ""
 "Your area leads are the people to ask first. They can answer most questions "
 "and bring anything bigger to the coordinators."
@@ -10497,8 +10562,8 @@ msgstr ""
 #: events/views.py:343
 #, python-format
 msgid ""
-"You cancelled your %(role)s shift. It started less than 24 hours from now, so"
-" it counts against your reliability score."
+"You cancelled your %(role)s shift. It started less than 24 hours from now, "
+"so it counts against your reliability score."
 msgstr ""
 
 #: events/views.py:346
@@ -10563,8 +10628,8 @@ msgstr ""
 
 #: jobs/templates/jobs/kiosk_home.html:17
 msgid ""
-"Choose what this device checks volunteers in to. Bookmark the screen it opens"
-" so the device can go straight there next time."
+"Choose what this device checks volunteers in to. Bookmark the screen it "
+"opens so the device can go straight there next time."
 msgstr ""
 
 #: jobs/templates/jobs/kiosk_home.html:20
@@ -10752,8 +10817,8 @@ msgstr ""
 
 #: jobs/templates/jobs/kiosk_role_select.html:13
 msgid ""
-"You aren't scheduled right now, but these roles could use a hand. Stepping in"
-" earns a clutch bonus!"
+"You aren't scheduled right now, but these roles could use a hand. Stepping "
+"in earns a clutch bonus!"
 msgstr ""
 
 #: jobs/templates/jobs/kiosk_role_select.html:14

@@ -23,7 +23,7 @@ from education.models import (
     TrainingModuleCompletion, UserCertification, UserCertificationFile,
 )
 from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
-from events import reliability
+from events import leadership, reliability
 from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement, Shift
 
 MEDIA_ROOT = tempfile.mkdtemp()
@@ -3106,3 +3106,74 @@ class ShiftThanksTests(ConsoleFixture):
         Shift.objects.create(user=self.vol, role=self.perm_role)
         self.kiosk_check_out(self.vol)
         self.assertEqual(mail.outbox, [])
+
+
+class DuplicateEventTests(ConsoleFixture):
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_overview_offers_duplicate_with_a_future_start(self):
+        response = self.client.get(reverse('console_event_edit', args=[self.past.pk]))
+        self.assertContains(response, reverse('console_event_duplicate', args=[self.past.pk]))
+        from events.duplicate import default_start
+        start = default_start(self.past)
+        self.assertGreater(start, timezone.now())
+        self.assertEqual(timezone.localtime(start).weekday(), timezone.localtime(self.past.start_date).weekday())
+
+    def test_duplicate_copies_setup_but_not_people_or_wrap_up(self):
+        from events.models import EventArea, EventCategory
+        category = EventCategory.objects.create(name='Outdoors')
+        self.past.category.add(category)
+        self.past.coordinators.add(self.staff)
+        self.past.venue = self.venue
+        self.past.chain_of_command = True
+        self.past.published = True
+        self.past.title_es = 'Limpieza de primavera'
+        self.past.save()
+        area = EventArea.objects.create(event=self.past, name='Kitchen', icon='restaurant')
+        self.past_slot.area = area
+        self.past_slot.lead = self.vol
+        self.past_slot.save()
+        leadership.assign_area_lead(area, self.mate, self.past.start_date, self.past.end_date)
+        EventSlotInvite.objects.create(event_role_slot=self.past_slot, user=self.staff)
+
+        new_start = timezone.localtime(self.past.start_date) + timedelta(days=30)
+        response = self.client.post(reverse('console_event_duplicate', args=[self.past.pk]),
+                                    {'start_date': new_start.strftime('%Y-%m-%dT%H:%M')})
+        copy = Event.objects.exclude(pk__in=[self.past.pk, self.live.pk]).get()
+        self.assertRedirects(response, reverse('console_event_edit', args=[copy.pk]))
+
+        self.assertEqual(copy.title_en, 'Copy of Spring Cleanup')
+        self.assertEqual(copy.title_es, 'Copia de Limpieza de primavera')
+        self.assertEqual(copy.description, self.past.description)
+        self.assertEqual(copy.venue, self.venue)
+        self.assertTrue(copy.chain_of_command)
+        self.assertFalse(copy.published)
+        self.assertFalse(copy.post_event_statement)
+        self.assertEqual(copy.start_date, new_start.replace(second=0, microsecond=0))
+        self.assertEqual(copy.end_date - copy.start_date, self.past.end_date - self.past.start_date)
+        self.assertEqual(list(copy.category.all()), [category])
+        self.assertIn(self.staff, copy.coordinators.all())
+
+        new_area = copy.areas.get()
+        self.assertEqual((new_area.name, new_area.icon), ('Kitchen', 'restaurant'))
+        slot = copy.role_slots.get()  # the area lead shift is not copied
+        self.assertEqual((slot.role, slot.area, slot.required_qty), (self.role, new_area, 2))
+        self.assertEqual(slot.start_time - copy.start_date, self.past_slot.start_time - self.past.start_date)
+        self.assertIsNone(slot.lead)
+        self.assertFalse(slot.signups.exists())
+        self.assertFalse(slot.invites.exists())
+        self.assertFalse(copy.task_lists.exists())
+        self.assertFalse(copy.feedback.exists())
+        # The original is untouched.
+        self.assertEqual(self.past.role_slots.count(), 2)
+        self.assertEqual(set(self.past_slot.signups.all()), {self.vol, self.mate})
+
+    def test_copy_title_fits_the_field(self):
+        from events.duplicate import copy_title
+        self.assertEqual(len(copy_title('x' * 100, 'en')), 100)
+
+    def test_duplicate_needs_a_start(self):
+        response = self.client.post(reverse('console_event_duplicate', args=[self.past.pk]), {'start_date': 'soon'})
+        self.assertRedirects(response, reverse('console_event_edit', args=[self.past.pk]))
+        self.assertEqual(Event.objects.count(), 2)
