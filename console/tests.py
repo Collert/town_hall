@@ -23,8 +23,8 @@ from education.models import (
     TrainingModuleCompletion, UserCertification, UserCertificationFile,
 )
 from events.models import Event, EventFeedback, EventRoleSlot, EventSlotInvite, EventTaskList, SlotSignup
-from events import reliability
-from jobs.models import Role, RoleTrainingRequirement, Shift
+from events import leadership, reliability
+from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement, Shift
 
 MEDIA_ROOT = tempfile.mkdtemp()
 HTMX = {'HTTP_HX_REQUEST': 'true'}
@@ -348,6 +348,33 @@ class ConsoleFlowTests(ConsoleFixture):
         self.assertEqual(list(role.preferred_skills.all()), [self.skill])
         self.assertTrue(RoleTrainingRequirement.objects.get(role=role).mandatory)
 
+    def test_role_template_saves_certificates(self):
+        other = ExternalCertificate.objects.create(name='Food Safe', description='Food.')
+        response = self.client.post(reverse('console_role_create'), {
+            'name_en': 'Medic', 'description_en': 'Help people.', 'icon': 'person',
+            'certificate_ids': [self.cert.pk, other.pk], f'cert_mandatory_{self.cert.pk}': 'on',
+        })
+        self.assertRedirects(response, reverse('console_roles'))
+        role = Role.objects.get(name_en='Medic')
+        reqs = {r.certificate_id: r.mandatory for r in RoleCertificateRequirement.objects.filter(role=role)}
+        self.assertEqual(reqs, {self.cert.pk: True, other.pk: False})
+        self.assertContains(self.client.get(reverse('console_role_edit', args=[role.pk])), 'Food Safe')
+
+        # Leaving a certificate out of the form removes it.
+        self.client.post(reverse('console_role_edit', args=[role.pk]), {
+            'name_en': 'Medic', 'description_en': 'Help people.', 'icon': 'person', 'certificate_ids': [other.pk],
+        })
+        self.assertEqual(list(RoleCertificateRequirement.objects.filter(role=role).values_list('certificate_id', flat=True)), [other.pk])
+
+    def test_role_certificate_search_and_row(self):
+        response = self.client.get(reverse('console_role_certificate_search'), {'certificate_q': 'cpr'}, **HTMX)
+        self.assertContains(response, 'Red Cross')
+        response = self.client.get(reverse('console_role_certificate_search'),
+                                   {'certificate_q': 'cpr', 'certificate_ids': self.cert.pk}, **HTMX)
+        self.assertNotContains(response, 'Red Cross')
+        response = self.client.get(reverse('console_role_certificate_row'), {'certificate_id': self.cert.pk}, **HTMX)
+        self.assertContains(response, f'name="cert_mandatory_{self.cert.pk}" checked')
+
     def test_skill_chip_creates_new_skill(self):
         response = self.client.get(reverse('console_skill_chip') + '?name=Bilingual', **HTMX)
         self.assertContains(response, 'Bilingual')
@@ -600,6 +627,52 @@ class VolunteerPageTests(ConsoleFixture):
         self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
         self.assertIn(self.vol, later.signups.all())
 
+    def test_mandatory_certificate_gates_signup(self):
+        RoleCertificateRequirement.objects.create(role=self.role, certificate=self.cert, mandatory=True)
+        later = EventRoleSlot.objects.create(event=self.live, role=self.role,
+                                             start_time=self.live.start_date + timedelta(hours=4),
+                                             end_time=self.live.start_date + timedelta(hours=5))
+        # vol only submitted documents (pending), so the dialog lists the certificate and blocks sign-up.
+        response = self.client.get(reverse('opportunity_detail', args=[self.live.pk]))
+        data = response.context['role_slots_data'][self.slot.pk]
+        self.assertFalse(data['all_completed'])
+        self.assertFalse(data['user_can_signup'])
+        self.assertEqual(data['certificates'][0]['status'], 'pending')
+        self.assertContains(response, reverse('submit_certificate', args=[self.cert.pk]))
+        self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
+        self.assertNotIn(self.vol, later.signups.all())
+
+        # An expired certificate doesn't count either.
+        UserCertification.objects.filter(pk=self.user_cert.pk).update(verified=True, expiration_date=timezone.now() - timedelta(days=1))
+        self.assertFalse(self.role.meets_requirements(self.vol))
+
+        UserCertification.objects.filter(pk=self.user_cert.pk).update(expiration_date=timezone.now() + timedelta(days=30))
+        self.assertTrue(self.client.get(reverse('opportunity_detail', args=[self.live.pk])).context['role_slots_data'][self.slot.pk]['user_can_signup'])
+        self.client.post(reverse('role_slot_signup', args=[self.slot.pk]), {'slot_id': later.pk})
+        self.assertIn(self.vol, later.signups.all())
+
+    def test_recommended_certificate_does_not_block_signup(self):
+        RoleCertificateRequirement.objects.create(role=self.role, certificate=self.cert, mandatory=False)
+        data = self.client.get(reverse('opportunity_detail', args=[self.live.pk])).context['role_slots_data'][self.slot.pk]
+        self.assertTrue(data['all_completed'])
+        self.assertFalse(data['certificates'][0]['required'])
+
+    def test_invite_waits_for_mandatory_certificate(self):
+        RoleCertificateRequirement.objects.create(role=self.role, certificate=self.cert, mandatory=True)
+        private = EventRoleSlot.objects.create(event=self.live, role=self.role, is_public=False,
+                                               start_time=self.slot.end_time,
+                                               end_time=self.slot.end_time + timedelta(hours=1))
+        invite = EventSlotInvite.objects.create(event_role_slot=private, user=self.vol)
+        response = self.client.get(reverse('respond_to_invite', args=[invite.token]))
+        self.assertFalse(response.context['training_ok'])
+        self.assertContains(response, reverse('submit_certificate', args=[self.cert.pk]))
+        self.client.post(reverse('respond_to_invite', args=[invite.token]), {'response': 'accept'})
+        self.assertNotIn(self.vol, private.signups.all())
+
+        UserCertification.objects.filter(pk=self.user_cert.pk).update(verified=True)
+        self.client.post(reverse('respond_to_invite', args=[invite.token]), {'response': 'accept'})
+        self.assertIn(self.vol, private.signups.all())
+
     def test_cannot_sign_up_for_a_shift_that_has_ended(self):
         # The event is still on, but this shift of the role is over.
         now = timezone.now()
@@ -758,6 +831,23 @@ class BackendSettingsTests(ConsoleFixture):
 
         self.save(libretranslate_url='', clear_deepl_api_key='on')
         self.assertEqual(SiteSettings.objects.get().deepl_api_key, '')
+
+    def test_docker_internal_hostnames_are_accepted(self):
+        from console.forms import BackendSettingsForm
+        self.save(libretranslate_url='http://libretranslate:5000')
+        self.assertEqual(SiteSettings.objects.get().libretranslate_url, 'http://libretranslate:5000')
+        form = BackendSettingsForm(
+            {'listmonk_url': 'http://listmonk-marketing:9000', 'libretranslate_url': 'http://translate_web:5000'},
+            instance=SiteSettings.get_settings(),
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        bad = BackendSettingsForm({'listmonk_url': 'http://-bad-:9000'}, instance=SiteSettings.get_settings())
+        self.assertIn('listmonk_url', bad.errors)
+
+    def test_belltower_address_without_dots_defaults_to_http(self):
+        from base.belltower import normalize_url
+        self.assertEqual(normalize_url('belltower:8000/lists/'), 'http://belltower:8000')
+        self.assertEqual(normalize_url('tasks.example.org'), 'https://tasks.example.org')
 
     def test_saved_url_beats_environment(self):
         import console.auto_translate as at
@@ -1581,20 +1671,17 @@ class KioskTests(ConsoleFixture):
         self.client.post(start_url, {'choice': self.perm_role.pk})
         self.assertFalse(Shift.objects.filter(user=self.mate, end_time__isnull=True).exists())
 
-    def test_device_heartbeat_needs_assigned_permanent_role(self):
-        from django.test import RequestFactory
+    def test_api_shift_needs_assigned_permanent_role(self):
         from api.models import APIKey
-        from api.views import register_heartbeat
-        key = APIKey.objects.create(expires_at=timezone.now() + timedelta(days=1))
+        _key, plaintext = APIKey.create('Library')
 
-        def beat(user):
-            request = RequestFactory().post('/', {'role_id': self.perm_role.pk}, HTTP_X_TOWNHALL_API_KEY=key.key)
-            request.user = user
-            return register_heartbeat(request)
+        def start(user):
+            return self.client.post('/api/v1/shifts/start', {'town_hall_id': user.profile.id_code, 'role_id': self.perm_role.pk},
+                                    HTTP_AUTHORIZATION=f'Bearer {plaintext}')
 
-        self.assertEqual(beat(self.mate).status_code, 403)
+        self.assertEqual(start(self.mate).status_code, 403)
         self.assertFalse(Shift.objects.filter(user=self.mate, role=self.perm_role).exists())
-        self.assertEqual(beat(self.vol).status_code, 200)
+        self.assertEqual(start(self.vol).status_code, 201)
         self.assertTrue(Shift.objects.filter(user=self.vol, role=self.perm_role, end_time__isnull=True).exists())
 
 
@@ -3019,3 +3106,74 @@ class ShiftThanksTests(ConsoleFixture):
         Shift.objects.create(user=self.vol, role=self.perm_role)
         self.kiosk_check_out(self.vol)
         self.assertEqual(mail.outbox, [])
+
+
+class DuplicateEventTests(ConsoleFixture):
+    def setUp(self):
+        self.client.force_login(self.staff)
+
+    def test_overview_offers_duplicate_with_a_future_start(self):
+        response = self.client.get(reverse('console_event_edit', args=[self.past.pk]))
+        self.assertContains(response, reverse('console_event_duplicate', args=[self.past.pk]))
+        from events.duplicate import default_start
+        start = default_start(self.past)
+        self.assertGreater(start, timezone.now())
+        self.assertEqual(timezone.localtime(start).weekday(), timezone.localtime(self.past.start_date).weekday())
+
+    def test_duplicate_copies_setup_but_not_people_or_wrap_up(self):
+        from events.models import EventArea, EventCategory
+        category = EventCategory.objects.create(name='Outdoors')
+        self.past.category.add(category)
+        self.past.coordinators.add(self.staff)
+        self.past.venue = self.venue
+        self.past.chain_of_command = True
+        self.past.published = True
+        self.past.title_es = 'Limpieza de primavera'
+        self.past.save()
+        area = EventArea.objects.create(event=self.past, name='Kitchen', icon='restaurant')
+        self.past_slot.area = area
+        self.past_slot.lead = self.vol
+        self.past_slot.save()
+        leadership.assign_area_lead(area, self.mate, self.past.start_date, self.past.end_date)
+        EventSlotInvite.objects.create(event_role_slot=self.past_slot, user=self.staff)
+
+        new_start = timezone.localtime(self.past.start_date) + timedelta(days=30)
+        response = self.client.post(reverse('console_event_duplicate', args=[self.past.pk]),
+                                    {'start_date': new_start.strftime('%Y-%m-%dT%H:%M')})
+        copy = Event.objects.exclude(pk__in=[self.past.pk, self.live.pk]).get()
+        self.assertRedirects(response, reverse('console_event_edit', args=[copy.pk]))
+
+        self.assertEqual(copy.title_en, 'Copy of Spring Cleanup')
+        self.assertEqual(copy.title_es, 'Copia de Limpieza de primavera')
+        self.assertEqual(copy.description, self.past.description)
+        self.assertEqual(copy.venue, self.venue)
+        self.assertTrue(copy.chain_of_command)
+        self.assertFalse(copy.published)
+        self.assertFalse(copy.post_event_statement)
+        self.assertEqual(copy.start_date, new_start.replace(second=0, microsecond=0))
+        self.assertEqual(copy.end_date - copy.start_date, self.past.end_date - self.past.start_date)
+        self.assertEqual(list(copy.category.all()), [category])
+        self.assertIn(self.staff, copy.coordinators.all())
+
+        new_area = copy.areas.get()
+        self.assertEqual((new_area.name, new_area.icon), ('Kitchen', 'restaurant'))
+        slot = copy.role_slots.get()  # the area lead shift is not copied
+        self.assertEqual((slot.role, slot.area, slot.required_qty), (self.role, new_area, 2))
+        self.assertEqual(slot.start_time - copy.start_date, self.past_slot.start_time - self.past.start_date)
+        self.assertIsNone(slot.lead)
+        self.assertFalse(slot.signups.exists())
+        self.assertFalse(slot.invites.exists())
+        self.assertFalse(copy.task_lists.exists())
+        self.assertFalse(copy.feedback.exists())
+        # The original is untouched.
+        self.assertEqual(self.past.role_slots.count(), 2)
+        self.assertEqual(set(self.past_slot.signups.all()), {self.vol, self.mate})
+
+    def test_copy_title_fits_the_field(self):
+        from events.duplicate import copy_title
+        self.assertEqual(len(copy_title('x' * 100, 'en')), 100)
+
+    def test_duplicate_needs_a_start(self):
+        response = self.client.post(reverse('console_event_duplicate', args=[self.past.pk]), {'start_date': 'soon'})
+        self.assertRedirects(response, reverse('console_event_edit', args=[self.past.pk]))
+        self.assertEqual(Event.objects.count(), 2)

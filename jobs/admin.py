@@ -1,5 +1,10 @@
 from django.contrib import admin
-from jobs.models import Role, RoleTrainingRequirement, Shift
+from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement, Shift
+
+
+class RoleCertificateRequirementInline(admin.TabularInline):
+    model = RoleCertificateRequirement
+    extra = 1
 
 
 class RoleTrainingRequirementInline(admin.TabularInline):
@@ -8,7 +13,7 @@ class RoleTrainingRequirementInline(admin.TabularInline):
 
 
 class RoleAdmin(admin.ModelAdmin):
-    inlines = [RoleTrainingRequirementInline]
+    inlines = [RoleTrainingRequirementInline, RoleCertificateRequirementInline]
 
 
 @admin.register(Shift)

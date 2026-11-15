@@ -257,6 +257,15 @@ class UserCertification(models.Model):
             return 'rejected'
         return 'pending'
 
+    @classmethod
+    def valid_certificate_ids(cls, user):
+        """IDs of the certificates the user holds right now: verified and not expired."""
+        if not user.is_authenticated:
+            return set()
+        return set(cls.objects.filter(user=user, verified=True).filter(
+            models.Q(expiration_date__isnull=True) | models.Q(expiration_date__gt=timezone.now()),
+        ).values_list('certificate_id', flat=True))
+
     def __str__(self):
         return f"{self.user.username} - {self.certificate.name} Certification"
 

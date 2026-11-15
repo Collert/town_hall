@@ -5,6 +5,7 @@ from django.conf import settings
 import uuid
 
 from django.db import models
+from base.fields import ServiceURLField
 from django.db.models import Q
 from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
@@ -419,7 +420,7 @@ class EventTaskList(models.Model):
     # zone cleaners get separate lists. Only lists of the same area merge.
     area = models.ForeignKey('EventArea', on_delete=models.SET_NULL, blank=True, null=True, related_name='task_lists')
     name = models.CharField(max_length=200)
-    belltower_url = models.URLField()
+    belltower_url = ServiceURLField()
     belltower_id = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 

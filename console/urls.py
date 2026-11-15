@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (
-    certificates, chain, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
+    api_keys, certificates, chain, communication, dashboard, event_tasks, events, roles, settings as settings_views, training, translate, venues,
     volunteers,
 )
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('events/search/', events.event_history, name='console_event_history'),
     path('events/new/', events.event_edit, name='console_event_create'),
     path('events/<int:event_id>/', events.event_edit, name='console_event_edit'),
+    path('events/<int:event_id>/duplicate/', events.event_duplicate, name='console_event_duplicate'),
     path('events/<int:event_id>/roles/', events.event_roles, name='console_event_roles'),
     path('events/<int:event_id>/roles/add/', events.add_role_slots, name='console_add_role_slots'),
     path('events/<int:event_id>/roles/slot-row/', events.slot_row, name='console_slot_row'),
@@ -54,6 +55,8 @@ urlpatterns = [
     path('roles/<int:role_id>/delete/', roles.role_delete, name='console_role_delete'),
     path('roles/module-search/', roles.module_search, name='console_role_module_search'),
     path('roles/module-row/', roles.module_row, name='console_role_module_row'),
+    path('roles/certificate-search/', roles.certificate_search, name='console_role_certificate_search'),
+    path('roles/certificate-row/', roles.certificate_row, name='console_role_certificate_row'),
 
     # Venues
     path('venues/', venues.venue_list, name='console_venues'),
@@ -112,6 +115,8 @@ urlpatterns = [
     # Organization
     path('settings/', settings_views.organization_settings, name='console_settings'),
     path('settings/backend/', settings_views.backend_settings, name='console_settings_backend'),
+    path('settings/api/', api_keys.api_keys, name='console_settings_api'),
+    path('settings/api/<int:key_id>/revoke/', api_keys.api_key_revoke, name='console_settings_api_revoke'),
     path('settings/home/', settings_views.home_page_settings, name='console_settings_home'),
     path('settings/levels/', settings_views.level_settings, name='console_settings_levels'),
     path('settings/skills/', settings_views.skill_settings, name='console_settings_skills'),

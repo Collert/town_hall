@@ -36,7 +36,22 @@
                     </li>
                     {% endfor %}
                 </ul>
-                {% if not training_ok %}<p class="invite-warn">{% trans "Complete the training above before accepting. Your invitation will wait for you." %}</p>{% endif %}
+                {% if not modules_ok %}<p class="invite-warn">{% trans "Complete the training above before accepting. Your invitation will wait for you." %}</p>{% endif %}
+            </div>
+            {% endif %}
+
+            {% if certificates %}
+            <div class="invite-training">
+                <h2>{% trans "Required certificates" %}</h2>
+                <ul>
+                    {% for c in certificates %}
+                    <li class="{% if c.done %}done{% endif %}">
+                        <span class="material-symbols-outlined">{% if c.done %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+                        <a href="{% url 'submit_certificate' c.certificate.pk %}">{{ c.certificate.name }}</a>{% if c.certificate.issuer %} <small>&middot; {{ c.certificate.issuer }}</small>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if not certificates_ok %}<p class="invite-warn">{% trans "Get the certificates above verified before accepting. Your invitation will wait for you." %}</p>{% endif %}
             </div>
             {% endif %}
 

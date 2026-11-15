@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.decorators.http import require_POST
 
-from education.models import Skill, TrainingModule
-from jobs.models import Role, RoleTrainingRequirement
+from education.models import ExternalCertificate, Skill, TrainingModule
+from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement
 
 from ..decorators import staff_required
 from ..forms import RoleForm
@@ -22,6 +22,7 @@ DIFFICULTY_LABELS = {
 def role_list(request):
     roles = Role.objects.filter(system_key__isnull=True).annotate(
         module_count=Count('training_modules', filter=Q(roletrainingrequirement__mandatory=True), distinct=True),
+        certificate_count=Count('certificates', filter=Q(rolecertificaterequirement__mandatory=True), distinct=True),
         slot_count=Count('opportunities', distinct=True),
     ).prefetch_related('preferred_skills', 'venue').order_by('name')
 
@@ -67,6 +68,7 @@ def role_edit(request, role_id=None):
     if request.method == 'POST':
         form = RoleForm(with_custom_icon(request.POST), instance=role)
         module_ids = posted_ids(request, 'module_ids')
+        certificate_ids = posted_ids(request, 'certificate_ids')
         skill_ids = posted_ids(request, 'skill_ids')
         if form.is_valid():
             with transaction.atomic():
@@ -78,6 +80,12 @@ def role_edit(request, role_id=None):
                         role=role, training_module=module,
                         defaults={'mandatory': request.POST.get(f'mandatory_{module.pk}') == 'on'},
                     )
+                RoleCertificateRequirement.objects.filter(role=role).exclude(certificate_id__in=certificate_ids).delete()
+                for certificate in ExternalCertificate.objects.filter(pk__in=certificate_ids):
+                    RoleCertificateRequirement.objects.update_or_create(
+                        role=role, certificate=certificate,
+                        defaults={'mandatory': request.POST.get(f'cert_mandatory_{certificate.pk}') == 'on'},
+                    )
             messages.success(request, _('Role template "%(name)s" saved.') % {'name': role.name})
             return redirect('console_roles')
         messages.error(request, _('Please fix the highlighted fields.'))
@@ -86,12 +94,20 @@ def role_edit(request, role_id=None):
             {'module': m, 'mandatory': request.POST.get(f'mandatory_{m.pk}') == 'on'}
             for m in TrainingModule.objects.filter(pk__in=module_ids)
         ]
+        certificate_requirements = [
+            {'certificate': c, 'mandatory': request.POST.get(f'cert_mandatory_{c.pk}') == 'on'}
+            for c in ExternalCertificate.objects.filter(pk__in=certificate_ids)
+        ]
     else:
         form = RoleForm(instance=role, initial={} if role else {'icon': ROLE_ICONS[0]})
         selected_skills = role.preferred_skills.all() if role else Skill.objects.none()
         requirements = [
             {'module': r.training_module, 'mandatory': r.mandatory}
             for r in RoleTrainingRequirement.objects.filter(role=role).select_related('training_module')
+        ] if role else []
+        certificate_requirements = [
+            {'certificate': r.certificate, 'mandatory': r.mandatory}
+            for r in RoleCertificateRequirement.objects.filter(role=role).select_related('certificate')
         ] if role else []
 
     selected_ids = [s.pk for s in selected_skills]
@@ -106,6 +122,7 @@ def role_edit(request, role_id=None):
         'selected_skills': selected_skills,
         'suggestions': suggestions,
         'requirements': requirements,
+        'certificate_requirements': certificate_requirements,
         'total_roles': Role.objects.filter(system_key__isnull=True).count(),
     })
 
@@ -141,4 +158,25 @@ def module_row(request):
     module = get_object_or_404(TrainingModule, pk=request.GET.get('module_id'))
     return render(request, 'console/partials/module_requirement_row.html', {
         'req': {'module': module, 'mandatory': True},
+    })
+
+
+@staff_required
+def certificate_search(request):
+    query = request.GET.get('certificate_q', '').strip()
+    exclude = ids_from(request.GET, 'certificate_ids')
+    certificates = ExternalCertificate.objects.exclude(pk__in=exclude).order_by('name')
+    if query:
+        certificates = certificates.filter(Q(name__icontains=query) | Q(issuer__icontains=query) | Q(description__icontains=query))
+    return render(request, 'console/partials/certificate_search_results.html', {
+        'certificates': certificates[:6] if query else certificates[:4],
+        'query': query,
+    })
+
+
+@staff_required
+def certificate_row(request):
+    certificate = get_object_or_404(ExternalCertificate, pk=request.GET.get('certificate_id'))
+    return render(request, 'console/partials/certificate_requirement_row.html', {
+        'req': {'certificate': certificate, 'mandatory': True},
     })

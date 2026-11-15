@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from education.models import TrainingModule, TrainingModuleCompletion
+from education.models import ExternalCertificate, TrainingModule, TrainingModuleCompletion, UserCertification
 from django.utils import timezone
 
 class Role(models.Model):
@@ -13,6 +13,7 @@ class Role(models.Model):
     regular_number_of_beneficiaries = models.PositiveIntegerField(help_text='Typical number of beneficiaries served by this role per hour (used for impact points calculation for permanent roles)', blank=True, null=True)
     venue = models.ManyToManyField('base.Venue', related_name='roles', blank=True, help_text='Venues where this role is applicable. Leave blank if the role is not venue-specific. Used mainly for permanent roles.')
     training_modules = models.ManyToManyField(TrainingModule, through='RoleTrainingRequirement', related_name='roles', blank=True)
+    certificates = models.ManyToManyField(ExternalCertificate, through='RoleCertificateRequirement', related_name='roles', blank=True)
     points_weight = models.DecimalField(max_digits=3, decimal_places=1, blank=True, null=True,
                                         help_text='Impact points multiplier. Leave empty to set it from training length.')
     preferred_skills = models.ManyToManyField('education.Skill', related_name='preferred_for_roles', blank=True, help_text='Non-mandatory skills that improve volunteer matching')
@@ -96,6 +97,23 @@ class Role(models.Model):
                 return False
         return True
 
+    def missing_certificates(self, user):
+        """Mandatory external certificates the user doesn't hold right now (verified, not expired)."""
+        required = ExternalCertificate.objects.filter(
+            rolecertificaterequirement__role=self, rolecertificaterequirement__mandatory=True,
+        ).distinct()
+        if not user.is_authenticated:
+            return list(required)
+        held = UserCertification.valid_certificate_ids(user)
+        return [cert for cert in required if cert.pk not in held]
+
+    def has_user_required_certificates(self, user):
+        return user.is_authenticated and not self.missing_certificates(user)
+
+    def meets_requirements(self, user):
+        """Mandatory training finished and mandatory certificates held: what sign-up needs."""
+        return self.has_user_completed_required_training(user) and self.has_user_required_certificates(user)
+
     def is_assigned_to(self, user):
         """Permanent roles can only be worked by people staff assigned them to (Profile.permanent_roles)."""
         if not self.permanent:
@@ -112,6 +130,19 @@ class RoleTrainingRequirement(models.Model):
 
     def __str__(self):
         return f"{self.training_module.title} for {self.role.name} {'(Mandatory)' if self.mandatory else ''}"
+
+class RoleCertificateRequirement(models.Model):
+    """An external certificate a role asks for. Mandatory ones must be verified (and not
+    expired) before a volunteer can sign up; optional ones are recommended."""
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    certificate = models.ForeignKey(ExternalCertificate, on_delete=models.CASCADE)
+    mandatory = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('role', 'certificate')
+
+    def __str__(self):
+        return f"{self.certificate.name} for {self.role.name} {'(Mandatory)' if self.mandatory else ''}"
 
 class Shift(models.Model):
     event_role_slot = models.ForeignKey('events.EventRoleSlot', on_delete=models.CASCADE, related_name='shifts', blank=True, null=True)

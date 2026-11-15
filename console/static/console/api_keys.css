@@ -1,0 +1,165 @@
+/* Organization > API */
+
+.api-intro {
+    margin: -0.75rem 0 1.25rem;
+}
+
+.api-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+}
+
+/* The key just created, shown once */
+.api-new-key {
+    margin-bottom: 2rem;
+    background: rgba(from var(--color-primary-light) r g b / 0.3);
+}
+
+.api-new-key .c-muted {
+    margin: -0.75rem 0 1rem;
+}
+
+.api-copy {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.api-copy .c-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.api-key-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.api-key-row {
+    gap: 1rem;
+    padding: 0.85rem 0.75rem 0.85rem 1.25rem;
+}
+
+.api-key-row .c-list-item-main small {
+    display: block;
+}
+
+.api-key-icon {
+    flex-shrink: 0;
+    color: var(--color-primary-vivid);
+}
+
+.api-key-row form {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.api-revoke:hover {
+    color: var(--color-error);
+}
+
+.api-key-row.is-inactive {
+    opacity: 0.6;
+}
+
+.api-key-row.is-inactive .api-key-icon {
+    color: var(--color-text-tertiary);
+}
+
+.api-inactive {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.api-inactive summary {
+    cursor: pointer;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.api-shift-row {
+    gap: 0.9rem;
+}
+
+/* Create form */
+.api-roles {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.api-role-option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 1rem;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.api-role-option input {
+    accent-color: var(--color-primary-vivid);
+}
+
+.api-role-option .material-symbols-outlined {
+    font-size: 1.15rem;
+    color: var(--color-text-secondary);
+}
+
+/* How to connect */
+.api-code {
+    margin: 1rem 0 0;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    font-size: 0.8125rem;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.api-connect-help {
+    margin-bottom: 1rem;
+}
+
+.api-subhead {
+    margin: 1.5rem 0 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.api-role-ids {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.api-role-ids li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 1rem;
+    background: var(--color-surface);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+}
+
+@media (max-width: 640px) {
+    .api-copy {
+        flex-direction: column;
+    }
+}

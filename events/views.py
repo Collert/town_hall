@@ -13,8 +13,8 @@ from django.views.decorators.http import require_POST
 from base.email import notify
 from base.models import Endorsement
 from base.utils import photos_first, qr_svg, short_datetime, slot_when
-from education.models import TrainingModule, TrainingModuleCompletion
-from jobs.models import RoleTrainingRequirement, Shift
+from education.models import ExternalCertificate, TrainingModule, TrainingModuleCompletion, UserCertification
+from jobs.models import RoleCertificateRequirement, RoleTrainingRequirement, Shift
 
 from . import leadership, reliability
 from .history import finished_shifts, worked_events
@@ -132,6 +132,13 @@ def event_detail(request, event_id):
     completed_modules = set(
         TrainingModuleCompletion.objects.filter(user=user).values_list('training_module', flat=True)
     ) if user.is_authenticated else set()
+    held_certificates = UserCertification.valid_certificate_ids(user)
+    # Pending / rejected / expired submissions, so the modal can say where each one stands.
+    certificate_status = {
+        uc.certificate_id: uc.status
+        for uc in UserCertification.objects.filter(user=user).annotate(n_files=Count('files'))
+        if uc.verified or uc.rejected or uc.n_files
+    } if user.is_authenticated else {}
 
     # Every shift the user holds, at any event, for the overlap check below.
     user_windows = list(EventRoleSlot.objects.filter(signups=user).values_list('start_time', 'end_time')) if user.is_authenticated else []
@@ -181,12 +188,32 @@ def event_detail(request, event_id):
                 'required': is_mandatory,
             })
 
+        mandatory_cert_ids = set(RoleCertificateRequirement.objects.filter(
+            role=slot.role, mandatory=True,
+        ).values_list('certificate_id', flat=True))
+        certificate_data = []
+        for cert in ExternalCertificate.objects.filter(roles=slot.role).distinct():
+            is_held = cert.pk in held_certificates
+            is_mandatory = cert.pk in mandatory_cert_ids
+            if is_mandatory and not is_held:
+                all_completed = False
+            certificate_data.append({
+                'id': cert.pk,
+                'title': cert.name,
+                'issuer': cert.issuer,
+                'completed': is_held,
+                'status': certificate_status.get(cert.pk),
+                'icon': cert.icon or 'workspace_premium',
+                'required': is_mandatory,
+            })
+
         role_slots_data[slot.pk] = {
             'role_names': slot.role.name,
             'role_icons': [slot.role.icon] if slot.role.icon else [],
             'role_desc': slot.role.description,
             'slots': timeslot_data,
             'training': training_data,
+            'certificates': certificate_data,
             'all_completed': all_completed,
             'user_can_signup': user.is_authenticated and all_completed and selected is not None,
         }
@@ -275,6 +302,10 @@ def role_slot_signup(request, slot_id):
         messages.error(request, _("You haven't completed the required training modules for %(role)s.") % {'role': slot.role.name})
         return redirect('opportunity_detail', event_id=event_id)
 
+    if not slot.role.has_user_required_certificates(request.user):
+        messages.error(request, _("You don't have the verified certificates %(role)s requires yet.") % {'role': slot.role.name})
+        return redirect('opportunity_detail', event_id=event_id)
+
     if slot.is_fully_staffed():
         messages.error(request, _('Sorry, this slot just filled up!'))
         return redirect('opportunity_detail', event_id=event_id)
@@ -339,6 +370,9 @@ def respond_to_invite(request, token):
         elif not slot.role.has_user_completed_required_training(request.user):
             messages.error(request, _('Finish the required training first, then accept the invitation.'))
             return redirect('respond_to_invite', token=token)
+        elif not slot.role.has_user_required_certificates(request.user):
+            messages.error(request, _('Get the required certificates verified first, then accept the invitation.'))
+            return redirect('respond_to_invite', token=token)
         elif slot.overstaffing_slots_left() <= 0:
             messages.error(request, _('Sorry, this slot is already full.'))
         elif slot.user_has_conflict(request.user):
@@ -354,12 +388,19 @@ def respond_to_invite(request, token):
 
     required = RoleTrainingRequirement.objects.filter(role=slot.role, mandatory=True).select_related('training_module')
     completed = set(TrainingModuleCompletion.objects.filter(user=request.user).values_list('training_module_id', flat=True))
+    required_certs = RoleCertificateRequirement.objects.filter(role=slot.role, mandatory=True).select_related('certificate')
+    held = UserCertification.valid_certificate_ids(request.user)
+    modules_ok = all(r.training_module_id in completed for r in required)
+    certificates_ok = all(r.certificate_id in held for r in required_certs)
     return render(request, 'events/respond_to_invite.html', {
         'invite': invite,
         'slot': slot,
         'event': slot.event,
         'training': [{'module': r.training_module, 'done': r.training_module_id in completed} for r in required],
-        'training_ok': all(r.training_module_id in completed for r in required),
+        'modules_ok': modules_ok,
+        'certificates_ok': certificates_ok,
+        'training_ok': modules_ok and certificates_ok,
+        'certificates': [{'certificate': r.certificate, 'done': r.certificate_id in held} for r in required_certs],
         'conflict': slot.user_has_conflict(request.user) and not slot.user_signed_up(request.user),
     })
 

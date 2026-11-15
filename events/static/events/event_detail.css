@@ -473,6 +473,7 @@ dialog.modal-dialog {
     display: flex;
     flex-direction: column;
     max-height: 90vh;
+    max-height: 90dvh;
     border: none;
     padding: 0;
     margin: 0;
@@ -482,7 +483,27 @@ dialog.modal-dialog:not([open]) {
     display: none;
 }
 
+/* The frame and its scrolling body size from their content (flex-basis auto) and
+   shrink to the dialog's max-height. A 0% basis (`flex: 1`) collapses to zero
+   height in Safari when the dialog has no fixed height, which hid the dialog and
+   left only the blurred backdrop. */
+.modal-frame {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-body-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 dialog.modal-dialog::backdrop {
+    background: color-mix(in srgb, var(--color-primary) 40%, transparent);
     background: rgba(from var(--color-primary) r g b / 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -900,6 +921,18 @@ Since the background is already primary-light usually, let's keep it that way fo
     align-items: center;
 }
 
+.training-badge .material-symbols-outlined {
+    margin-right: 4px;
+    font-size: 1.25rem;
+    font-variation-settings: 'FILL' 1;
+}
+
+/* Certificate groups hide themselves when nothing falls into them. */
+.cert-group-mandatory:not(:has(.training-item)),
+.cert-group-recommended:not(:has(.training-item)),
+.cert-group-completed:not(:has(.training-item)) {
+    display: none;
+}
 
 /* ========================================
    Responsive

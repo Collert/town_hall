@@ -50,6 +50,23 @@
                 </div>
                 <p class="c-help module-help">{% trans "Mandatory modules must be completed before a volunteer can sign up. Optional modules are recommended." %}</p>
             </section>
+
+            <section class="c-card">
+                <div class="c-card-title role-modules-title">
+                    <span class="material-symbols-outlined">workspace_premium</span>{% trans "Required Certificates" %}
+                    <div class="c-input-icon c-search c-card-title-aside">
+                        <span class="material-symbols-outlined">search</span>
+                        <input type="search" name="certificate_q" class="c-input" placeholder="{% trans 'Search certificates...' %}" autocomplete="off"
+                               hx-get="{% url 'console_role_certificate_search' %}" hx-trigger="input changed delay:250ms, focus once"
+                               hx-include="#certificate-rows" hx-target="#certificate-results">
+                    </div>
+                </div>
+                <div id="certificate-results" class="module-results"></div>
+                <div class="c-list" id="certificate-rows">
+                    {% for req in certificate_requirements %}{% include 'console/partials/certificate_requirement_row.html' %}{% endfor %}
+                </div>
+                <p class="c-help module-help">{% trans "External certificates issued by another authority (first aid, food safety, background checks). Mandatory ones must be verified, and not expired, before a volunteer can sign up. Optional ones are recommended." %}</p>
+            </section>
         </div>
 
         <aside class="c-stack">

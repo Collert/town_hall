@@ -127,7 +127,7 @@ def _eligible_event_slots(event, user):
              .select_related('role').annotate(n=Count('signups')).order_by('start_time'))
     return [
         s for s in slots
-        if s.n < s.required_qty + s.allowed_overstaffing_qty and s.role.has_user_completed_required_training(user)
+        if s.n < s.required_qty + s.allowed_overstaffing_qty and s.role.meets_requirements(user)
     ]
 
 
