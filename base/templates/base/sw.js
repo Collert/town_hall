@@ -21,8 +21,11 @@ self.addEventListener('activate', (event) => {
 });
 
 // Pages always come from the network; the offline page only stands in when that fails.
+// Only GET navigations: re-sending a form POST from here makes Safari drop multipart bodies
+// with files (the profile photo upload then arrives with no CSRF token), so POSTs go
+// straight to the network.
 self.addEventListener('fetch', (event) => {
-    if (event.request.mode !== 'navigate') return;
+    if (event.request.mode !== 'navigate' || event.request.method !== 'GET') return;
     event.respondWith(fetch(event.request).catch(() => caches.match(OFFLINE_URL)));
 });
 
