@@ -158,6 +158,11 @@ LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'America/Vancouver'
 
+# Use the pip tzdata package instead of the image's zoneinfo files.
+# BC went permanent UTC-7 in tzdata 2026b.
+import zoneinfo
+zoneinfo.reset_tzpath(to=[])
+
 USE_I18N = True
 
 USE_L10N = True
