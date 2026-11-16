@@ -11726,3 +11726,23 @@ msgstr "Тагальська"
 
 #~ msgid "Confirming..."
 #~ msgstr "Підтвердження..."
+
+#: base/templates/base/layout.html
+msgid "Powered by Hamlet"
+msgstr "Працює на Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Hamlet"
+msgstr "Про Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Town Hall"
+msgstr "Про Town Hall"
+
+#: base/templates/base/layout.html
+msgid "Report a bug"
+msgstr "Повідомити про помилку"
+
+#: base/templates/base/layout.html
+msgid "Request a feature"
+msgstr "Запропонувати функцію"

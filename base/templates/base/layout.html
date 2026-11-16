@@ -341,6 +341,16 @@
                     {% endif %}
                 </div>
             </div>
+            {# Town Hall is one of Hamlet's apps: where to read about it, report a bug or ask for a feature. #}
+            <nav class="footer-hamlet" aria-label="Hamlet">
+                <span class="footer-hamlet-title">{% trans "Powered by Hamlet" %}</span>
+                <ul>
+                    <li><a href="https://hamlet.software/" target="_blank" rel="noopener">{% trans "About Hamlet" %}</a></li>
+                    <li><a href="https://hamlet.software/town-hall" target="_blank" rel="noopener">{% trans "About Town Hall" %}</a></li>
+                    <li><a href="https://hamlet.software/feedback/report/town-hall" target="_blank" rel="noopener">{% trans "Report a bug" %}</a></li>
+                    <li><a href="https://hamlet.software/feedback/request/town-hall" target="_blank" rel="noopener">{% trans "Request a feature" %}</a></li>
+                </ul>
+            </nav>
             <div class="footer-bottom">
                 <p>&copy; {% now "Y" %} {{ company_name }}. {% trans "All rights reserved." %}</p>
                 <div class="footer-bottom-links">

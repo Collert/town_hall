@@ -10995,3 +10995,23 @@ msgstr ""
 #: town_hall/settings.py:179
 msgid "Tagalog"
 msgstr ""
+
+#: base/templates/base/layout.html
+msgid "Powered by Hamlet"
+msgstr "由 Hamlet 提供技術支援"
+
+#: base/templates/base/layout.html
+msgid "About Hamlet"
+msgstr "關於 Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Town Hall"
+msgstr "關於 Town Hall"
+
+#: base/templates/base/layout.html
+msgid "Report a bug"
+msgstr "回報錯誤"
+
+#: base/templates/base/layout.html
+msgid "Request a feature"
+msgstr "建議新功能"

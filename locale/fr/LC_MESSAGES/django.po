@@ -11781,3 +11781,23 @@ msgstr "Tagalog"
 
 #~ msgid "Confirming..."
 #~ msgstr "Confirmation..."
+
+#: base/templates/base/layout.html
+msgid "Powered by Hamlet"
+msgstr "Propulsé par Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Hamlet"
+msgstr "À propos de Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Town Hall"
+msgstr "À propos de Town Hall"
+
+#: base/templates/base/layout.html
+msgid "Report a bug"
+msgstr "Signaler un bug"
+
+#: base/templates/base/layout.html
+msgid "Request a feature"
+msgstr "Demander une fonctionnalité"

@@ -516,3 +516,18 @@ class MarkdownTableTests(TestCase):
         html = render_markdown('An example:\n| Step | Points |\n| --- | --- |\n| Start | 30 |')
         self.assertIn('<div class="md-table"><table>', html)
         self.assertIn('<td>Start</td>', html)
+
+
+class HamletFooterTests(TestCase):
+    """The footer links to Hamlet, Town Hall's page there, and where to send bugs and ideas."""
+
+    def test_footer_links_to_hamlet(self):
+        User.objects.create_user('someone', 'someone@example.com', 'pw')  # skip first-run setup
+        response = self.client.get(reverse('terms_of_service'))
+        for address in (
+            'https://hamlet.software/',
+            'https://hamlet.software/town-hall',
+            'https://hamlet.software/feedback/report/town-hall',
+            'https://hamlet.software/feedback/request/town-hall',
+        ):
+            self.assertContains(response, f'href="{address}"')

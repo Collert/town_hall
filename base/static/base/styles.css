@@ -531,6 +531,44 @@ ul {
     font-size: 0.875rem;
 }
 
+/* Quick links to Hamlet, the project Town Hall belongs to */
+.footer-hamlet {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 2rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+}
+
+.footer-hamlet-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary-light);
+}
+
+.footer-hamlet ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-hamlet a {
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.footer-hamlet a:hover {
+    opacity: 1;
+}
+
 .footer-bottom {
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);

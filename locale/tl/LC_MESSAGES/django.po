@@ -11076,3 +11076,23 @@ msgstr ""
 #: town_hall/settings.py:179
 msgid "Tagalog"
 msgstr ""
+
+#: base/templates/base/layout.html
+msgid "Powered by Hamlet"
+msgstr "Pinapagana ng Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Hamlet"
+msgstr "Tungkol sa Hamlet"
+
+#: base/templates/base/layout.html
+msgid "About Town Hall"
+msgstr "Tungkol sa Town Hall"
+
+#: base/templates/base/layout.html
+msgid "Report a bug"
+msgstr "Mag-ulat ng bug"
+
+#: base/templates/base/layout.html
+msgid "Request a feature"
+msgstr "Humiling ng feature"
