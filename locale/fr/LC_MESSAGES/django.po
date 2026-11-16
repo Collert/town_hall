@@ -11783,8 +11783,8 @@ msgstr "Tagalog"
 #~ msgstr "Confirmation..."
 
 #: base/templates/base/layout.html
-msgid "Powered by Hamlet"
-msgstr "Propulsé par Hamlet"
+msgid "Town Hall is part of Hamlet"
+msgstr "Town Hall fait partie de Hamlet"
 
 #: base/templates/base/layout.html
 msgid "About Hamlet"

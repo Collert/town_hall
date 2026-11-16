@@ -11728,8 +11728,8 @@ msgstr "Тагальська"
 #~ msgstr "Підтвердження..."
 
 #: base/templates/base/layout.html
-msgid "Powered by Hamlet"
-msgstr "Працює на Hamlet"
+msgid "Town Hall is part of Hamlet"
+msgstr "Town Hall — частина Hamlet"
 
 #: base/templates/base/layout.html
 msgid "About Hamlet"

@@ -10997,8 +10997,8 @@ msgid "Tagalog"
 msgstr ""
 
 #: base/templates/base/layout.html
-msgid "Powered by Hamlet"
-msgstr "由 Hamlet 提供技術支援"
+msgid "Town Hall is part of Hamlet"
+msgstr "Town Hall 是 Hamlet 的一部分"
 
 #: base/templates/base/layout.html
 msgid "About Hamlet"

@@ -11078,8 +11078,8 @@ msgid "Tagalog"
 msgstr ""
 
 #: base/templates/base/layout.html
-msgid "Powered by Hamlet"
-msgstr "Pinapagana ng Hamlet"
+msgid "Town Hall is part of Hamlet"
+msgstr "Bahagi ng Hamlet ang Town Hall"
 
 #: base/templates/base/layout.html
 msgid "About Hamlet"
