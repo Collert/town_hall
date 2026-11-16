@@ -11746,3 +11746,7 @@ msgstr "Повідомити про помилку"
 #: base/templates/base/layout.html
 msgid "Request a feature"
 msgstr "Запропонувати функцію"
+
+#: console/templates/console/console_layout.html
+msgid "Give feedback"
+msgstr "Залишити відгук"

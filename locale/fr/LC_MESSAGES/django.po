@@ -11801,3 +11801,7 @@ msgstr "Signaler un bug"
 #: base/templates/base/layout.html
 msgid "Request a feature"
 msgstr "Demander une fonctionnalité"
+
+#: console/templates/console/console_layout.html
+msgid "Give feedback"
+msgstr "Donner votre avis"

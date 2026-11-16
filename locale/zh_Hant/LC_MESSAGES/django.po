@@ -11015,3 +11015,7 @@ msgstr "回報錯誤"
 #: base/templates/base/layout.html
 msgid "Request a feature"
 msgstr "建議新功能"
+
+#: console/templates/console/console_layout.html
+msgid "Give feedback"
+msgstr "提供意見"

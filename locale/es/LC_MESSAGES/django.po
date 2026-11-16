@@ -11269,3 +11269,7 @@ msgstr "Informar de un error"
 #: base/templates/base/layout.html
 msgid "Request a feature"
 msgstr "Solicitar una función"
+
+#: console/templates/console/console_layout.html
+msgid "Give feedback"
+msgstr "Enviar comentarios"

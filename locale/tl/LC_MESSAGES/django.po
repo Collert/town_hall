@@ -11096,3 +11096,7 @@ msgstr "Mag-ulat ng bug"
 #: base/templates/base/layout.html
 msgid "Request a feature"
 msgstr "Humiling ng feature"
+
+#: console/templates/console/console_layout.html
+msgid "Give feedback"
+msgstr "Magbigay ng feedback"

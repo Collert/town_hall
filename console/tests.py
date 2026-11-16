@@ -104,6 +104,10 @@ class ConsolePageTests(ConsoleFixture):
     def setUp(self):
         self.client.force_login(self.staff)
 
+    def test_sidebar_links_to_feedback(self):
+        response = self.client.get(reverse('console_dashboard'))
+        self.assertContains(response, 'href="https://hamlet.software/feedback"')
+
     def test_console_pages_render(self):
         pages = [
             ('console_dashboard', []),
