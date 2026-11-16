@@ -1,6 +1,10 @@
 // Shared console behaviour. Prefer HTMX attributes in templates; this file only
 // holds the few interactions HTMX cannot express.
 (function () {
+    // The sidebar's page list scrolls on short screens: start with the current page's link in view.
+    const current = document.querySelector('.console-nav .console-nav-link.active');
+    if (current) current.scrollIntoView({ block: 'nearest' });
+
     // <dialog> helpers: [data-dialog-open="id"] opens, [data-dialog-close] closes,
     // clicking the backdrop closes.
     document.addEventListener('click', (e) => {
