@@ -38,6 +38,9 @@ Town Hall includes an **MCP server** with its own OAuth 2.1 server. Add `https:/
 ### Task lists with Bell Tower 🔔
 Connect your organization's [Bell Tower](#integrations) server and every event gets a planning list, day-of lists, and one list per role. Volunteers join their role's list automatically when they sign up. In the console you can drag tasks between lists and merge lists.
 
+### Workflows with Switchboard 🔀
+Connect a Switchboard, the no-code workflow builder for your organization's apps, and things that happen in Town Hall can start steps elsewhere: a volunteer reaching a level, registering, finishing training, signing up for or completing a shift, or an event being published. Workflows can also look up or add a volunteer and send notifications. Connecting starts in Switchboard (type your Town Hall address and approve as staff); Organization → Backend lists the connections and their recent deliveries.
+
 ### Speaks your volunteers' language 🌍
 The interface ships in **English, Spanish, French, Ukrainian, Traditional Chinese and Tagalog**. Content fields (events, roles, lessons) are translatable, and an **Auto-translate** button fills in missing translations through LibreTranslate, Google, DeepL or MyMemory.
 
@@ -123,6 +126,7 @@ python manage.py assign_shift_leads
 | --- | --- | --- |
 | [listmonk](https://listmonk.app) | Transactional email, event announcements, newsletter sign-up, password reset | Recommended |
 | Bell Tower | Shared task lists for events and roles | Optional |
+| Switchboard | Workflows between your apps: Town Hall sends events (signed webhooks) and runs actions | Optional |
 | S3-compatible storage | Media uploads in production | Production |
 | Nominatim (OpenStreetMap) | Geocoding venue and event addresses | Automatic |
 | LibreTranslate / Google / DeepL / MyMemory | Auto-translating content | Optional |
@@ -140,6 +144,7 @@ python manage.py assign_shift_leads
 | `education` | Training modules, lessons, quizzes, certificates, skills |
 | `console` | The staff portal |
 | `mcp_server` | MCP endpoint and OAuth server for the Claude connector |
+| `switchboard` | Switchboard integration: manifest, connecting, events out, actions in |
 | `api` | API-key-authenticated endpoints for kiosk devices (not routed yet) |
 | `town_hall` | Project settings, URLs and startup site configuration |
 

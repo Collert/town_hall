@@ -69,7 +69,8 @@ The console sidebar has these sections, each covered in its own lesson:
 4. Write your **Training Modules**.
 5. Create **Roles** and attach the training they need.
 6. Create your first **Event**, add role slots, and publish it.
-7. Optionally connect email (listmonk), task lists (Bell Tower) and the Claude connector.
+7. Optionally connect email (listmonk), task lists (Bell Tower), workflows (Switchboard) and the
+   Claude connector.
 
 The rest of this guide follows that order.
 """),
@@ -667,6 +668,21 @@ must be assigned to the role. Python applications use the `town-hall-connector` 
 While someone works, the application sends a heartbeat about once a minute. If none arrives for
 5 minutes, Town Hall ends the shift at the last heartbeat. **On shift through the API** shows who is
 on such a shift now, and **Revoke** stops a key working immediately.
+
+## Workflows with Switchboard
+
+**Switchboard** is a separate app where your organization builds workflows without code: something
+that happens in one app starts steps in another. Town Hall tells it when a volunteer registers,
+reaches a level, finishes a training module, or signs up for, leaves or completes a shift, and when an
+event is published. A workflow can also look a volunteer up by email, add a volunteer, or send one a
+notification. People are matched between apps by their email address.
+
+Connecting starts in Switchboard: add Town Hall there and type the address shown under
+**Organization > Backend > Workflows (Switchboard)**. You'll be brought to Town Hall to approve with
+your staff account. The same section lists every connected Switchboard with its **recent
+deliveries**. **Failing** means the latest events didn't arrive and are being retried; **Broken**
+means Switchboard no longer knows the connection, so disconnect it and connect again from
+Switchboard. **Disconnect** stops events and switches that Switchboard's key off at once.
 
 ## The Django admin
 
