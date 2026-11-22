@@ -110,9 +110,9 @@ class FirstRunMiddleware:
         if User.objects.exists():
             FirstRunMiddleware.has_users = True
             return None
-        # The setup page itself, media, icons, the language switcher and the machine-facing MCP/OAuth and API endpoints.
+        # The setup page itself, media, icons, the language switcher and the machine-facing MCP/OAuth, API and Switchboard endpoints.
         name = request.resolver_match.url_name if request.resolver_match else None
-        if name in ('first_run_setup', 'set_language', 'favicon', 'web_manifest', 'service_worker', 'offline') or view_func.__module__.startswith(('django.views.static', 'mcp_server', 'api.')):
+        if name in ('first_run_setup', 'set_language', 'favicon', 'web_manifest', 'service_worker', 'offline') or view_func.__module__.startswith(('django.views.static', 'mcp_server', 'api.', 'switchboard.')):
             return None
         from django.shortcuts import redirect
 

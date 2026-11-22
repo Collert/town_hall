@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'jobs',
     'console',
     'mcp_server',
+    'switchboard',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +84,7 @@ MIDDLEWARE = [
     'events.middleware.ShiftReminderMiddleware',
     'base.middleware.ProfileReminderMiddleware',
     'api.middleware.StaleShiftMiddleware',
+    'switchboard.middleware.SwitchboardDeliveryMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

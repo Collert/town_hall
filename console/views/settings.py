@@ -339,6 +339,29 @@ def mcp_disconnect(request, token_id):
     return redirect(reverse('console_settings_backend') + '#mcp')
 
 
+def _switchboard_context(request):
+    """Switchboards connected to this Town Hall and what was sent to them lately."""
+    from switchboard.models import Delivery, SwitchboardConnection
+    return {
+        'switchboard_address': f'{request.scheme}://{request.get_host()}',
+        'switchboard_connections': list(SwitchboardConnection.objects.select_related('created_by')),
+        'switchboard_deliveries': list(Delivery.objects.select_related('connection')[:12]),
+    }
+
+
+@staff_required
+@require_POST
+def switchboard_disconnect(request, connection_id):
+    """Forget a Switchboard: its key stops working and no more events are sent to it."""
+    from switchboard.models import SwitchboardConnection
+    connection = SwitchboardConnection.objects.filter(pk=connection_id).first()
+    if connection:
+        name = connection.name or connection.host
+        connection.delete()
+        messages.success(request, _('%(name)s is disconnected. Its workflows can no longer use Town Hall.') % {'name': name})
+    return redirect(reverse('console_settings_backend') + '#switchboard')
+
+
 @staff_required
 def backend_settings(request):
     site = SiteSettings.get_settings()
@@ -398,6 +421,7 @@ def backend_settings(request):
         'belltower_linkable': User.objects.filter(is_active=True).exclude(email='').count() if belltower_me else 0,
         'mcp_url': request.build_absolute_uri('/mcp'),
         'mcp_connections': _mcp_connections(),
+        **_switchboard_context(request),
         'env_overrides': {
             name: bool(os.environ.get(env)) for name, env in (
                 ('libretranslate_url', 'LIBRETRANSLATE_URL'), ('google_translate_api_key', 'GOOGLE_TRANSLATE_API_KEY'),

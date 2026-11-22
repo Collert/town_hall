@@ -174,6 +174,66 @@
                 </ul>
                 {% endif %}
             </section>
+
+            <section class="c-card" id="switchboard">
+                <h2 class="c-card-title"><span class="material-symbols-outlined">account_tree</span>{% trans "Workflows (Switchboard)" %}</h2>
+                <p class="c-muted backend-intro">{% trans "Switchboard is your organization's workflow builder. Something that happens here, such as a volunteer reaching a level or completing a shift, can start steps in your other apps, and their workflows can look up or add volunteers and send notifications here. Connecting starts in Switchboard: add Town Hall there and type this address." %}</p>
+                <div class="c-field">
+                    <label class="c-label" for="switchboard-address">{% trans "This Town Hall's address" %}</label>
+                    <div class="switchboard-address">
+                        <input type="text" id="switchboard-address" class="c-input" value="{{ switchboard_address }}" readonly onclick="this.select()">
+                        <button type="button" class="c-btn c-btn-surface" onclick="navigator.clipboard.writeText(document.getElementById('switchboard-address').value); this.querySelector('span:last-child').textContent = '{% trans "Copied" %}'">
+                            <span class="material-symbols-outlined">content_copy</span><span>{% trans "Copy" %}</span>
+                        </button>
+                    </div>
+                    <span class="c-help">{% trans "You'll be brought back here to approve the connection with your staff account." %}</span>
+                </div>
+                {% if switchboard_connections %}
+                <h3 class="backend-subhead">{% trans "Connected Switchboards" %}</h3>
+                <ul class="switchboard-connections">
+                    {% for connection in switchboard_connections %}
+                    <li class="switchboard-connection is-{{ connection.state }}">
+                        <span class="material-symbols-outlined">{% if connection.state == 'broken' %}link_off{% elif connection.state == 'failing' %}warning{% else %}account_tree{% endif %}</span>
+                        <span class="switchboard-connection-text">
+                            <strong>{{ connection.name|default:connection.host }}
+                                {% if connection.state == 'broken' %}<span class="c-badge c-badge-danger">{% trans "Broken" %}</span>{% elif connection.state == 'failing' %}<span class="c-badge c-badge-warning">{% trans "Failing" %}</span>{% endif %}
+                            </strong>
+                            <small>{{ connection.host }} · {% if connection.created_by %}{% blocktrans with person=connection.created_by|display_name when=connection.created_at|date:"DATE_FORMAT" %}connected {{ when }} by {{ person }}{% endblocktrans %}{% else %}{% blocktrans with when=connection.created_at|date:"DATE_FORMAT" %}connected {{ when }}{% endblocktrans %}{% endif %} · {% if connection.last_delivery_at %}{% blocktrans with ago=connection.last_delivery_at|timesince %}last delivery {{ ago }} ago{% endblocktrans %}{% else %}{% trans "nothing delivered yet" %}{% endif %}</small>
+                            {% if connection.state == 'broken' %}
+                            <small class="switchboard-connection-problem">{% trans "Switchboard no longer knows this connection, so nothing is sent to it. Disconnect it, then connect again from Switchboard." %}</small>
+                            {% elif connection.state == 'failing' %}
+                            <small class="switchboard-connection-problem">{% blocktrans count n=connection.failures with error=connection.last_error %}The last delivery attempt failed: {{ error }}{% plural %}The last {{ n }} delivery attempts failed: {{ error }}{% endblocktrans %}</small>
+                            {% endif %}
+                        </span>
+                        <button type="submit" form="switchboard-disconnect-{{ connection.pk }}" class="c-btn c-btn-ghost c-btn-sm"
+                                onclick="return confirm('{% trans "Disconnect this Switchboard? Its workflows will stop hearing from Town Hall and can no longer use it." %}')">
+                            <span class="material-symbols-outlined">link_off</span>{% trans "Disconnect" %}
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if switchboard_deliveries %}
+                <h3 class="backend-subhead">{% trans "Recent deliveries" %}</h3>
+                <ul class="switchboard-deliveries">
+                    {% for delivery in switchboard_deliveries %}
+                    <li class="switchboard-delivery is-{{ delivery.status }}">
+                        <span class="material-symbols-outlined">{% if delivery.status == 'delivered' %}check_circle{% elif delivery.status == 'failed' %}error{% else %}schedule{% endif %}</span>
+                        <span class="switchboard-delivery-text">
+                            <strong>{{ delivery.summary|default:delivery.event_type }}</strong>
+                            <small><code>{{ delivery.event_type }}</code> · {{ delivery.connection.name|default:delivery.connection.host }} · {{ delivery.created_at|date:"SHORT_DATETIME_FORMAT" }}{% if delivery.status != 'delivered' and delivery.error %} · {{ delivery.error }}{% endif %}</small>
+                        </span>
+                        <span class="switchboard-delivery-state">
+                            {% if delivery.status == 'delivered' %}{% trans "Delivered" %}{% elif delivery.status == 'failed' %}{% trans "Failed" %}{% else %}{% trans "Retrying" %}{% endif %}
+                            <small>{% blocktrans count n=delivery.attempts %}{{ n }} attempt{% plural %}{{ n }} attempts{% endblocktrans %}</small>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% else %}
+                <p class="backend-status switchboard-empty"><span class="material-symbols-outlined">link_off</span>{% trans "No Switchboard is connected, so nothing is sent anywhere." %}</p>
+                {% endif %}
+            </section>
         </div>
 
         <aside class="c-stack">
@@ -224,6 +284,7 @@
 {# Outside the settings form: these post to their own views. #}
 <form id="belltower-disconnect-form" method="post" action="{% url 'console_belltower_disconnect' %}">{% csrf_token %}</form>
 <form id="belltower-link-users-form" method="post" action="{% url 'console_belltower_link_users' %}">{% csrf_token %}</form>
+{% for connection in switchboard_connections %}<form id="switchboard-disconnect-{{ connection.pk }}" method="post" action="{% url 'console_switchboard_disconnect' connection.pk %}">{% csrf_token %}</form>{% endfor %}
 {% for token in mcp_connections %}<form id="mcp-disconnect-{{ token.pk }}" method="post" action="{% url 'console_mcp_disconnect' token.pk %}">{% csrf_token %}</form>{% endfor %}
 <dialog class="c-dialog belltower-dialog" id="belltower-dialog">
     <form method="post" action="{% url 'console_belltower_connect' %}">

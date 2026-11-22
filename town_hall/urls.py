@@ -40,6 +40,8 @@ urlpatterns = [
     path('push/listmonk/', push_views.listmonk_messenger, name='push_listmonk'),
     # JSON API for other applications (API keys at Console > Organization > API): fixed paths
     path('api/v1/', include('api.urls')),
+    # Switchboard (workflow builder): its manifest, consent page and API; fixed paths
+    path('', include('switchboard.urls')),
 ]
 
 # URLs that should be prefixed with language code

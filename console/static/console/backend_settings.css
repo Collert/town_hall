@@ -358,3 +358,123 @@
     color: var(--color-text-tertiary);
     font-size: 0.8rem;
 }
+
+/* ---------- Switchboard ---------- */
+.switchboard-address {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.switchboard-address .c-input {
+    flex: 1;
+    min-width: 0;
+    font-family: ui-monospace, monospace;
+}
+
+.switchboard-empty {
+    margin-top: 1rem;
+}
+
+.switchboard-connections,
+.switchboard-deliveries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.switchboard-connection,
+.switchboard-delivery {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 1.25rem;
+    background: var(--color-bg-secondary);
+}
+
+.switchboard-connection > .material-symbols-outlined {
+    color: var(--color-success);
+}
+
+.switchboard-connection.is-failing > .material-symbols-outlined {
+    color: var(--color-warning);
+}
+
+.switchboard-connection.is-broken > .material-symbols-outlined {
+    color: var(--color-error);
+}
+
+.switchboard-connection-text,
+.switchboard-delivery-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.switchboard-connection-text strong {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-primary);
+}
+
+.switchboard-connection-text small,
+.switchboard-delivery-text small,
+.switchboard-delivery-state small {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+}
+
+.switchboard-connection-text .switchboard-connection-problem {
+    margin-top: 0.25rem;
+    color: var(--color-error);
+}
+
+.switchboard-delivery {
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+}
+
+.switchboard-delivery:nth-child(even) {
+    background: var(--color-bg-tertiary);
+}
+
+.switchboard-delivery > .material-symbols-outlined {
+    font-size: 1.25rem;
+    color: var(--color-text-tertiary);
+}
+
+.switchboard-delivery.is-delivered > .material-symbols-outlined {
+    color: var(--color-success);
+}
+
+.switchboard-delivery.is-failed > .material-symbols-outlined {
+    color: var(--color-error);
+}
+
+.switchboard-delivery-text strong {
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.switchboard-delivery-state {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .switchboard-address,
+    .switchboard-connection {
+        flex-wrap: wrap;
+    }
+}

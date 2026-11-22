@@ -1,0 +1,64 @@
+{% extends 'base/bare_layout.html' %}
+{% load static i18n avatar_tags %}
+
+{% block title %}{% trans "Connect Switchboard" %} | {{ company_name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'switchboard/authorize.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="sb-connect">
+    <section class="sb-connect-card">
+        <header class="sb-connect-head">
+            <span class="sb-connect-mark">
+                {% if site_settings.logo %}<img src="{{ site_settings.logo.url }}" alt="">{% else %}<img src="{% static 'base/town-hall.svg' %}" alt="">{% endif %}
+            </span>
+            <span class="material-symbols-outlined sb-connect-link-icon">sync_alt</span>
+            <span class="sb-connect-mark sb-connect-mark-app"><span class="material-symbols-outlined">account_tree</span></span>
+        </header>
+
+        <h1 class="sb-connect-title">{% blocktrans %}Connect Switchboard to {{ company_name }}{% endblocktrans %}</h1>
+        <p class="sb-connect-lead">
+            {% if switchboard_name %}{% blocktrans with name=switchboard_name host=callback_host %}{{ name }}'s Switchboard at {{ host }} wants to use Town Hall in its workflows.{% endblocktrans %}{% else %}{% blocktrans with host=callback_host %}The Switchboard at {{ host }} wants to use Town Hall in its workflows.{% endblocktrans %}{% endif %}
+        </p>
+
+        <div class="sb-connect-account">
+            {% avatar user 'sm' %}
+            <span><small>{% trans "Signed in as" %}</small><strong>{{ user|display_name }}</strong></span>
+        </div>
+
+        <div class="sb-connect-lists">
+            <div class="sb-connect-list is-can">
+                <h2><span class="material-symbols-outlined">check_circle</span>{% trans "It can" %}</h2>
+                <ul>
+                    <li>{% trans "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts" %}</li>
+                    <li>{% trans "Be told when events are published" %}</li>
+                    <li>{% trans "Look volunteers up: name, email, level, points and hours" %}</li>
+                    <li>{% trans "Add a volunteer by email and send volunteers notifications" %}</li>
+                </ul>
+            </div>
+            <div class="sb-connect-list is-cannot">
+                <h2><span class="material-symbols-outlined">block</span>{% trans "It can't" %}</h2>
+                <ul>
+                    <li>{% trans "Sign in as anyone or see passwords" %}</li>
+                    <li>{% trans "Change or delete events, shifts or profiles" %}</li>
+                    <li>{% trans "Change organization settings" %}</li>
+                </ul>
+            </div>
+        </div>
+
+        <form method="post" class="sb-connect-actions">
+            {% csrf_token %}
+            {% for name, value in fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+            <button type="submit" name="decision" value="deny" class="sb-connect-btn">{% trans "Cancel" %}</button>
+            <button type="submit" name="decision" value="allow" class="sb-connect-btn sb-connect-btn-primary">
+                <span class="material-symbols-outlined">link</span>{% trans "Allow" %}
+            </button>
+        </form>
+        <p class="sb-connect-foot">
+            {% blocktrans with host=callback_host %}You'll go back to {{ host }}. You can disconnect any time in Organization &gt; Backend.{% endblocktrans %}
+        </p>
+    </section>
+</main>
+{% endblock %}
