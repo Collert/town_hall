@@ -11019,3 +11019,146 @@ msgstr "建議新功能"
 #: console/templates/console/console_layout.html
 msgid "Give feedback"
 msgstr "提供意見"
+
+#: console/templates/console/backend_settings.html
+msgid "Workflows (Switchboard)"
+msgstr "工作流程（Switchboard）"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard is your organization's workflow builder. Something that happens here, such as a volunteer reaching a level or completing a shift, can start steps in your other apps, and their workflows can look up or add volunteers and send notifications here. Connecting starts in Switchboard: add Town Hall there and type this address."
+msgstr "Switchboard 是貴組織的工作流程建立工具。這裡發生的事（例如志工升級或完成班次）可以啟動其他應用程式中的步驟，而它們的工作流程也可以在這裡查詢或新增志工並傳送通知。連線要從 Switchboard 開始：在那裡新增 Town Hall 並輸入這個網址。"
+
+#: console/templates/console/backend_settings.html
+msgid "This Town Hall's address"
+msgstr "這個 Town Hall 的網址"
+
+#: console/templates/console/backend_settings.html
+msgid "You'll be brought back here to approve the connection with your staff account."
+msgstr "系統會帶您回到這裡，用您的職員帳號核准連線。"
+
+#: console/templates/console/backend_settings.html
+msgid "Connected Switchboards"
+msgstr "已連線的 Switchboard"
+
+#: console/templates/console/backend_settings.html
+msgid "Broken"
+msgstr "已中斷"
+
+#: console/templates/console/backend_settings.html
+msgid "Failing"
+msgstr "傳送失敗中"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s by %(person)s"
+msgstr "%(person)s 於 %(when)s 連線"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s"
+msgstr "於 %(when)s 連線"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "last delivery %(ago)s ago"
+msgstr "上次送達於 %(ago)s前"
+
+#: console/templates/console/backend_settings.html
+msgid "nothing delivered yet"
+msgstr "尚未送達任何事件"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard no longer knows this connection, so nothing is sent to it. Disconnect it, then connect again from Switchboard."
+msgstr "Switchboard 已不認得這個連線，因此不會再傳送任何內容。請先中斷連線，再從 Switchboard 重新連線。"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "The last delivery attempt failed: %(error)s"
+msgid_plural "The last %(n)s delivery attempts failed: %(error)s"
+msgstr[0] "最近 %(n)s 次傳送嘗試失敗：%(error)s"
+
+#: console/templates/console/backend_settings.html
+msgid "Disconnect this Switchboard? Its workflows will stop hearing from Town Hall and can no longer use it."
+msgstr "要中斷這個 Switchboard 的連線嗎？它的工作流程將不再收到 Town Hall 的事件，也無法再使用 Town Hall。"
+
+#: console/templates/console/backend_settings.html
+msgid "Recent deliveries"
+msgstr "最近的傳送紀錄"
+
+#: console/templates/console/backend_settings.html
+msgid "Delivered"
+msgstr "已送達"
+
+#: console/templates/console/backend_settings.html
+msgid "Failed"
+msgstr "失敗"
+
+#: console/templates/console/backend_settings.html
+msgid "Retrying"
+msgstr "重試中"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "%(n)s attempt"
+msgid_plural "%(n)s attempts"
+msgstr[0] "%(n)s 次嘗試"
+
+#: console/templates/console/backend_settings.html
+msgid "No Switchboard is connected, so nothing is sent anywhere."
+msgstr "尚未連線任何 Switchboard，因此不會傳送任何內容。"
+
+#: console/views/settings.py
+#, python-format
+msgid "%(name)s is disconnected. Its workflows can no longer use Town Hall."
+msgstr "已中斷 %(name)s 的連線。它的工作流程無法再使用 Town Hall。"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Connect Switchboard"
+msgstr "連線 Switchboard"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "Connect Switchboard to %(company_name)s"
+msgstr "將 Switchboard 連線到 %(company_name)s"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "%(name)s's Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "%(name)s 位於 %(host)s 的 Switchboard 想在其工作流程中使用 Town Hall。"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "位於 %(host)s 的 Switchboard 想在其工作流程中使用 Town Hall。"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
+msgstr "在志工註冊、升級、完成培訓，以及報名、退出或完成班次時收到通知"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when events are published"
+msgstr "在活動發布時收到通知"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look volunteers up: name, email, level, points and hours"
+msgstr "查詢志工：姓名、電子郵件、等級、點數與時數"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add a volunteer by email and send volunteers notifications"
+msgstr "以電子郵件新增志工，並向志工傳送通知"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign in as anyone or see passwords"
+msgstr "以任何人的身分登入或查看密碼"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change or delete events, shifts or profiles"
+msgstr "變更或刪除活動、班次或個人檔案"
+
+#: switchboard/views.py
+msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
+msgstr "這個連線連結無效或已過期。請從 Switchboard 重新開始連線。"
+
+#: switchboard/views.py
+msgid "Only staff accounts can connect Switchboard to Town Hall."
+msgstr "只有職員帳號可以將 Switchboard 連線到 Town Hall。"

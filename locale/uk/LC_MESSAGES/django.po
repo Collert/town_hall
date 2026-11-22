@@ -11750,3 +11750,152 @@ msgstr "Запропонувати функцію"
 #: console/templates/console/console_layout.html
 msgid "Give feedback"
 msgstr "Залишити відгук"
+
+#: console/templates/console/backend_settings.html
+msgid "Workflows (Switchboard)"
+msgstr "Робочі процеси (Switchboard)"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard is your organization's workflow builder. Something that happens here, such as a volunteer reaching a level or completing a shift, can start steps in your other apps, and their workflows can look up or add volunteers and send notifications here. Connecting starts in Switchboard: add Town Hall there and type this address."
+msgstr "Switchboard — це конструктор робочих процесів вашої організації. Те, що відбувається тут, наприклад волонтер досягає рівня або завершує зміну, може запускати кроки в інших ваших застосунках, а їхні процеси можуть шукати чи додавати волонтерів і надсилати сповіщення тут. Підключення починається у Switchboard: додайте там Town Hall і введіть цю адресу."
+
+#: console/templates/console/backend_settings.html
+msgid "This Town Hall's address"
+msgstr "Адреса цього Town Hall"
+
+#: console/templates/console/backend_settings.html
+msgid "You'll be brought back here to approve the connection with your staff account."
+msgstr "Вас буде повернуто сюди, щоб схвалити підключення своїм обліковим записом персоналу."
+
+#: console/templates/console/backend_settings.html
+msgid "Connected Switchboards"
+msgstr "Підключені Switchboard"
+
+#: console/templates/console/backend_settings.html
+msgid "Broken"
+msgstr "Розірвано"
+
+#: console/templates/console/backend_settings.html
+msgid "Failing"
+msgstr "Збої"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s by %(person)s"
+msgstr "підключено %(when)s, %(person)s"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s"
+msgstr "підключено %(when)s"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "last delivery %(ago)s ago"
+msgstr "остання доставка %(ago)s тому"
+
+#: console/templates/console/backend_settings.html
+msgid "nothing delivered yet"
+msgstr "ще нічого не доставлено"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard no longer knows this connection, so nothing is sent to it. Disconnect it, then connect again from Switchboard."
+msgstr "Switchboard більше не знає цього підключення, тому йому нічого не надсилається. Відключіть його, а потім підключіться знову зі Switchboard."
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "The last delivery attempt failed: %(error)s"
+msgid_plural "The last %(n)s delivery attempts failed: %(error)s"
+msgstr[0] "Остання %(n)s спроба доставки не вдалася: %(error)s"
+msgstr[1] "Останні %(n)s спроби доставки не вдалися: %(error)s"
+msgstr[2] "Останні %(n)s спроб доставки не вдалися: %(error)s"
+msgstr[3] "Останні %(n)s спроби доставки не вдалися: %(error)s"
+
+#: console/templates/console/backend_settings.html
+msgid "Disconnect this Switchboard? Its workflows will stop hearing from Town Hall and can no longer use it."
+msgstr "Відключити цей Switchboard? Його робочі процеси більше не отримуватимуть подій від Town Hall і не зможуть ним користуватися."
+
+#: console/templates/console/backend_settings.html
+msgid "Recent deliveries"
+msgstr "Останні доставки"
+
+#: console/templates/console/backend_settings.html
+msgid "Delivered"
+msgstr "Доставлено"
+
+#: console/templates/console/backend_settings.html
+msgid "Failed"
+msgstr "Не вдалося"
+
+#: console/templates/console/backend_settings.html
+msgid "Retrying"
+msgstr "Повторна спроба"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "%(n)s attempt"
+msgid_plural "%(n)s attempts"
+msgstr[0] "%(n)s спроба"
+msgstr[1] "%(n)s спроби"
+msgstr[2] "%(n)s спроб"
+msgstr[3] "%(n)s спроби"
+
+#: console/templates/console/backend_settings.html
+msgid "No Switchboard is connected, so nothing is sent anywhere."
+msgstr "Жоден Switchboard не підключено, тож нічого нікуди не надсилається."
+
+#: console/views/settings.py
+#, python-format
+msgid "%(name)s is disconnected. Its workflows can no longer use Town Hall."
+msgstr "%(name)s відключено. Його робочі процеси більше не можуть користуватися Town Hall."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Connect Switchboard"
+msgstr "Підключити Switchboard"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "Connect Switchboard to %(company_name)s"
+msgstr "Підключити Switchboard до %(company_name)s"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "%(name)s's Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "Switchboard організації %(name)s на %(host)s хоче використовувати Town Hall у своїх робочих процесах."
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "Switchboard на %(host)s хоче використовувати Town Hall у своїх робочих процесах."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
+msgstr "Дізнаватися, коли волонтери реєструються, досягають рівня, завершують навчання, а також записуються на зміни, залишають або завершують їх"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when events are published"
+msgstr "Дізнаватися, коли публікуються події"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look volunteers up: name, email, level, points and hours"
+msgstr "Шукати волонтерів: ім'я, електронна пошта, рівень, бали та години"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add a volunteer by email and send volunteers notifications"
+msgstr "Додавати волонтера за електронною поштою та надсилати волонтерам сповіщення"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign in as anyone or see passwords"
+msgstr "Входити від чийогось імені чи бачити паролі"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change or delete events, shifts or profiles"
+msgstr "Змінювати чи видаляти події, зміни або профілі"
+
+#: switchboard/views.py
+msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
+msgstr "Це посилання для підключення недійсне або застаріле. Почніть підключення знову зі Switchboard."
+
+#: switchboard/views.py
+msgid "Only staff accounts can connect Switchboard to Town Hall."
+msgstr "Лише облікові записи персоналу можуть підключати Switchboard до Town Hall."

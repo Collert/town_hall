@@ -11805,3 +11805,148 @@ msgstr "Demander une fonctionnalité"
 #: console/templates/console/console_layout.html
 msgid "Give feedback"
 msgstr "Donner votre avis"
+
+#: console/templates/console/backend_settings.html
+msgid "Workflows (Switchboard)"
+msgstr "Flux de travail (Switchboard)"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard is your organization's workflow builder. Something that happens here, such as a volunteer reaching a level or completing a shift, can start steps in your other apps, and their workflows can look up or add volunteers and send notifications here. Connecting starts in Switchboard: add Town Hall there and type this address."
+msgstr "Switchboard est l'outil de création de flux de travail de votre organisation. Un événement qui se produit ici, comme un bénévole qui atteint un niveau ou termine un quart, peut déclencher des étapes dans vos autres applications, et leurs flux peuvent rechercher ou ajouter des bénévoles et envoyer des notifications ici. La connexion se lance depuis Switchboard : ajoutez-y Town Hall et saisissez cette adresse."
+
+#: console/templates/console/backend_settings.html
+msgid "This Town Hall's address"
+msgstr "Adresse de ce Town Hall"
+
+#: console/templates/console/backend_settings.html
+msgid "You'll be brought back here to approve the connection with your staff account."
+msgstr "Vous serez ramené ici pour approuver la connexion avec votre compte du personnel."
+
+#: console/templates/console/backend_settings.html
+msgid "Connected Switchboards"
+msgstr "Switchboards connectés"
+
+#: console/templates/console/backend_settings.html
+msgid "Broken"
+msgstr "Rompue"
+
+#: console/templates/console/backend_settings.html
+msgid "Failing"
+msgstr "En échec"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s by %(person)s"
+msgstr "connecté le %(when)s par %(person)s"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s"
+msgstr "connecté le %(when)s"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "last delivery %(ago)s ago"
+msgstr "dernière livraison il y a %(ago)s"
+
+#: console/templates/console/backend_settings.html
+msgid "nothing delivered yet"
+msgstr "rien n'a encore été livré"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard no longer knows this connection, so nothing is sent to it. Disconnect it, then connect again from Switchboard."
+msgstr "Switchboard ne reconnaît plus cette connexion, donc rien ne lui est envoyé. Déconnectez-la, puis reconnectez depuis Switchboard."
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "The last delivery attempt failed: %(error)s"
+msgid_plural "The last %(n)s delivery attempts failed: %(error)s"
+msgstr[0] "La dernière tentative de livraison a échoué : %(error)s"
+msgstr[1] "Les %(n)s dernières tentatives de livraison ont échoué : %(error)s"
+
+#: console/templates/console/backend_settings.html
+msgid "Disconnect this Switchboard? Its workflows will stop hearing from Town Hall and can no longer use it."
+msgstr "Déconnecter ce Switchboard ? Ses flux de travail ne recevront plus rien de Town Hall et ne pourront plus l'utiliser."
+
+#: console/templates/console/backend_settings.html
+msgid "Recent deliveries"
+msgstr "Livraisons récentes"
+
+#: console/templates/console/backend_settings.html
+msgid "Delivered"
+msgstr "Livré"
+
+#: console/templates/console/backend_settings.html
+msgid "Failed"
+msgstr "Échec"
+
+#: console/templates/console/backend_settings.html
+msgid "Retrying"
+msgstr "Nouvelle tentative"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "%(n)s attempt"
+msgid_plural "%(n)s attempts"
+msgstr[0] "%(n)s tentative"
+msgstr[1] "%(n)s tentatives"
+
+#: console/templates/console/backend_settings.html
+msgid "No Switchboard is connected, so nothing is sent anywhere."
+msgstr "Aucun Switchboard n'est connecté, donc rien n'est envoyé nulle part."
+
+#: console/views/settings.py
+#, python-format
+msgid "%(name)s is disconnected. Its workflows can no longer use Town Hall."
+msgstr "%(name)s est déconnecté. Ses flux de travail ne peuvent plus utiliser Town Hall."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Connect Switchboard"
+msgstr "Connecter Switchboard"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "Connect Switchboard to %(company_name)s"
+msgstr "Connecter Switchboard à %(company_name)s"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "%(name)s's Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "Le Switchboard de %(name)s sur %(host)s souhaite utiliser Town Hall dans ses flux de travail."
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "Le Switchboard sur %(host)s souhaite utiliser Town Hall dans ses flux de travail."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
+msgstr "Être informé lorsque des bénévoles s'inscrivent, atteignent un niveau, terminent une formation, et s'inscrivent à des quarts, les quittent ou les terminent"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when events are published"
+msgstr "Être informé lorsque des événements sont publiés"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look volunteers up: name, email, level, points and hours"
+msgstr "Rechercher des bénévoles : nom, courriel, niveau, points et heures"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add a volunteer by email and send volunteers notifications"
+msgstr "Ajouter un bénévole par courriel et envoyer des notifications aux bénévoles"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign in as anyone or see passwords"
+msgstr "Se connecter à la place de quelqu'un ni voir les mots de passe"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change or delete events, shifts or profiles"
+msgstr "Modifier ou supprimer des événements, des quarts ou des profils"
+
+#: switchboard/views.py
+msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
+msgstr "Ce lien de connexion est invalide ou périmé. Relancez la connexion depuis Switchboard."
+
+#: switchboard/views.py
+msgid "Only staff accounts can connect Switchboard to Town Hall."
+msgstr "Seuls les comptes du personnel peuvent connecter Switchboard à Town Hall."

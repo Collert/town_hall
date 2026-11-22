@@ -11100,3 +11100,148 @@ msgstr "Humiling ng feature"
 #: console/templates/console/console_layout.html
 msgid "Give feedback"
 msgstr "Magbigay ng feedback"
+
+#: console/templates/console/backend_settings.html
+msgid "Workflows (Switchboard)"
+msgstr "Mga workflow (Switchboard)"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard is your organization's workflow builder. Something that happens here, such as a volunteer reaching a level or completing a shift, can start steps in your other apps, and their workflows can look up or add volunteers and send notifications here. Connecting starts in Switchboard: add Town Hall there and type this address."
+msgstr "Ang Switchboard ang tagabuo ng workflow ng inyong organisasyon. Ang nangyayari rito, gaya ng pag-abot ng boluntaryo sa isang level o pagtapos ng shift, ay maaaring magsimula ng mga hakbang sa iba ninyong app, at ang mga workflow nila ay maaaring maghanap o magdagdag ng mga boluntaryo at magpadala ng mga abiso rito. Sa Switchboard nagsisimula ang pagkonekta: idagdag doon ang Town Hall at i-type ang address na ito."
+
+#: console/templates/console/backend_settings.html
+msgid "This Town Hall's address"
+msgstr "Address ng Town Hall na ito"
+
+#: console/templates/console/backend_settings.html
+msgid "You'll be brought back here to approve the connection with your staff account."
+msgstr "Ibabalik ka rito para aprubahan ang koneksyon gamit ang iyong staff account."
+
+#: console/templates/console/backend_settings.html
+msgid "Connected Switchboards"
+msgstr "Mga nakakonektang Switchboard"
+
+#: console/templates/console/backend_settings.html
+msgid "Broken"
+msgstr "Sira"
+
+#: console/templates/console/backend_settings.html
+msgid "Failing"
+msgstr "Pumapalya"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s by %(person)s"
+msgstr "ikinonekta noong %(when)s ni %(person)s"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "connected %(when)s"
+msgstr "ikinonekta noong %(when)s"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "last delivery %(ago)s ago"
+msgstr "huling naihatid %(ago)s ang nakalipas"
+
+#: console/templates/console/backend_settings.html
+msgid "nothing delivered yet"
+msgstr "wala pang naihahatid"
+
+#: console/templates/console/backend_settings.html
+msgid "Switchboard no longer knows this connection, so nothing is sent to it. Disconnect it, then connect again from Switchboard."
+msgstr "Hindi na kilala ng Switchboard ang koneksyong ito, kaya walang ipinapadala rito. Idiskonekta ito, pagkatapos ay kumonekta muli mula sa Switchboard."
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "The last delivery attempt failed: %(error)s"
+msgid_plural "The last %(n)s delivery attempts failed: %(error)s"
+msgstr[0] "Pumalya ang huling pagsubok na maghatid: %(error)s"
+msgstr[1] "Pumalya ang huling %(n)s pagsubok na maghatid: %(error)s"
+
+#: console/templates/console/backend_settings.html
+msgid "Disconnect this Switchboard? Its workflows will stop hearing from Town Hall and can no longer use it."
+msgstr "Idiskonekta ang Switchboard na ito? Hindi na makakatanggap ng balita mula sa Town Hall ang mga workflow nito at hindi na ito magagamit."
+
+#: console/templates/console/backend_settings.html
+msgid "Recent deliveries"
+msgstr "Mga kamakailang paghahatid"
+
+#: console/templates/console/backend_settings.html
+msgid "Delivered"
+msgstr "Naihatid"
+
+#: console/templates/console/backend_settings.html
+msgid "Failed"
+msgstr "Pumalya"
+
+#: console/templates/console/backend_settings.html
+msgid "Retrying"
+msgstr "Sinusubukan muli"
+
+#: console/templates/console/backend_settings.html
+#, python-format
+msgid "%(n)s attempt"
+msgid_plural "%(n)s attempts"
+msgstr[0] "%(n)s pagsubok"
+msgstr[1] "%(n)s pagsubok"
+
+#: console/templates/console/backend_settings.html
+msgid "No Switchboard is connected, so nothing is sent anywhere."
+msgstr "Walang nakakonektang Switchboard, kaya walang ipinapadala kahit saan."
+
+#: console/views/settings.py
+#, python-format
+msgid "%(name)s is disconnected. Its workflows can no longer use Town Hall."
+msgstr "Nadiskonekta na ang %(name)s. Hindi na magagamit ng mga workflow nito ang Town Hall."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Connect Switchboard"
+msgstr "Ikonekta ang Switchboard"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "Connect Switchboard to %(company_name)s"
+msgstr "Ikonekta ang Switchboard sa %(company_name)s"
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "%(name)s's Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "Gustong gamitin ng Switchboard ng %(name)s sa %(host)s ang Town Hall sa mga workflow nito."
+
+#: switchboard/templates/switchboard/authorize.html
+#, python-format
+msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
+msgstr "Gustong gamitin ng Switchboard sa %(host)s ang Town Hall sa mga workflow nito."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
+msgstr "Masabihan kapag nagrehistro ang mga boluntaryo, umabot sa isang level, natapos ang training, at nag-sign up, umalis o nakatapos ng mga shift"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told when events are published"
+msgstr "Masabihan kapag may na-publish na mga event"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look volunteers up: name, email, level, points and hours"
+msgstr "Maghanap ng mga boluntaryo: pangalan, email, level, puntos at oras"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add a volunteer by email and send volunteers notifications"
+msgstr "Magdagdag ng boluntaryo gamit ang email at magpadala ng mga abiso sa mga boluntaryo"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign in as anyone or see passwords"
+msgstr "Mag-sign in bilang sinuman o makita ang mga password"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change or delete events, shifts or profiles"
+msgstr "Baguhin o burahin ang mga event, shift o profile"
+
+#: switchboard/views.py
+msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
+msgstr "Hindi wasto o luma na ang link ng koneksyong ito. Simulan muli ang pagkonekta mula sa Switchboard."
+
+#: switchboard/views.py
+msgid "Only staff accounts can connect Switchboard to Town Hall."
+msgstr "Mga staff account lang ang makakapagkonekta ng Switchboard sa Town Hall."
