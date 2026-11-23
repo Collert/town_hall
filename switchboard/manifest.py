@@ -4,6 +4,8 @@ Switchboard builds its nodes from this, and workflows store the `type` and `name
 they must never be renamed. Titles and descriptions are shown to people in Switchboard, in
 English (the protocol's language), so they aren't translated here.
 """
+from django.templatetags.static import static
+
 PROTOCOL = '1'
 BUILDING = 'town-hall'
 NAME = 'Town Hall'
@@ -201,6 +203,8 @@ def build(request):
         'building': BUILDING,
         'name': NAME,
         'instance': instance_name(),
+        # Town Hall's mark, so Switchboard draws this building's steps with it.
+        'icon': base + static('base/town-hall.svg'),
         'authorize_url': base + '/switchboard/authorize',
         'token_url': base + '/switchboard/v1/token',
         'api_base': base + '/switchboard/v1',

@@ -96,6 +96,7 @@ class ManifestTests(SwitchboardTestCase):
         data = response.json()
         self.assertEqual((data['protocol'], data['building'], data['name']), ('1', 'town-hall', 'Town Hall'))
         self.assertEqual(data['authorize_url'], 'https://volunteers.example.org/switchboard/authorize')
+        self.assertEqual(data['icon'], 'https://volunteers.example.org/static/base/town-hall.svg')
         self.assertEqual(data['token_url'], 'https://volunteers.example.org/switchboard/v1/token')
         self.assertEqual(data['api_base'], 'https://volunteers.example.org/switchboard/v1')
         self.assertTrue(data['instance'])
