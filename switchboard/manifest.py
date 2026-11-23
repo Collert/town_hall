@@ -8,6 +8,11 @@ aren't translated here.
 Shapes shared by many entries, so workflows can mix them: a person is `person.id|name|email`,
 a role slot of an event is `shift.*` with its `event.id|title|place` (`shift.id` is always the
 slot's ID, the one the shift actions take), an event is `event.*`.
+
+Lists (`listing`) are what a "For each" step loops over. Their items use the flat keys the
+actions answer (`person_id`, `name`, `email`, `shift_id`, `event_id`, ...) in events too, so a
+person or a shift in a list looks the same wherever it came from. A list holds at most 200
+items in the order its label gives, and a count field next to it says how many there are in all.
 """
 from django.templatetags.static import static
 
@@ -32,6 +37,60 @@ def param(key, type_, label, required=False, help='', **limits):
 
 def choices(*pairs):
     return [{'value': value, 'label': label} for value, label in pairs]
+
+
+LIST_LIMIT = 200
+
+
+def listing(key, label, order, items):
+    """A list field. `order` says how it is sorted (shown in the label, with the cap); `items`
+    are the fields of each item (no dotted keys, no lists inside)."""
+    return {'key': key, 'type': 'list', 'label': f'{label} ({order}, at most {LIST_LIMIT})', 'items': items,
+            'example': [{item['key']: item['example'] for item in items}]}
+
+
+# What the items of lists are made of.
+PERSON_ITEM = [
+    field('person_id', 'string', 'Person ID', '42'),
+    field('name', 'string', 'Name', 'Maria K.'),
+    field('email', 'string', 'Email', 'maria@example.org'),
+]
+SHIFT_ITEM = [
+    field('shift_id', 'string', 'Shift ID', '318'),
+    field('role', 'string', 'Role', 'Greeter'),
+    field('role_id', 'string', 'Role ID', '8'),
+    field('starts_at', 'datetime', 'Shift starts', '2026-12-06T09:00:00-08:00'),
+    field('ends_at', 'datetime', 'Shift ends', '2026-12-06T13:00:00-08:00'),
+    field('event_id', 'string', 'Event ID', '17'),
+    field('event_title', 'string', 'Event', 'Christmas Bazaar'),
+    field('place', 'string', 'Place', 'Parish Hall'),
+    field('area', 'string', 'Area', 'Kitchen'),
+    field('needed', 'int', 'Volunteers needed', 4),
+    field('taken', 'int', 'Volunteers signed up', 3),
+    field('open_spots', 'int', 'Open spots', 1),
+    field('invite_only', 'bool', 'By invitation only', False),
+]
+EVENT_VOLUNTEER_ITEM = PERSON_ITEM + [
+    field('role', 'string', 'Role (all of them, if they have several shifts)', 'Greeter'),
+    field('shift_id', 'string', 'Shift ID (their first shift)', '318'),
+    field('starts_at', 'datetime', 'Their first shift starts', '2026-12-06T09:00:00-08:00'),
+]
+
+# Lists that events about an event or a shift carry.
+def event_lists(whose="The event's", shifts=True, volunteers=True):
+    found = []
+    if shifts:
+        found += [listing('shifts', f'{whose} shifts', 'earliest first', SHIFT_ITEM),
+                  field('shift_count', 'int', f'{whose} shifts: how many', 6)]
+    if volunteers:
+        found += [listing('volunteers', f'{whose} volunteers: everyone signed up for a shift', 'by name', EVENT_VOLUNTEER_ITEM),
+                  field('volunteer_count', 'int', f'{whose} volunteers: how many people', 17)]
+    return found
+
+
+EVENT_SHIFTS = event_lists(volunteers=False)
+EVENT_VOLUNTEERS = event_lists(shifts=False)
+SHIFT_VOLUNTEERS = [listing('volunteers', 'Volunteers signed up for the shift', 'by name', PERSON_ITEM)]
 
 
 # ---------------------------------------------------------------------------
@@ -204,17 +263,19 @@ TRIGGERS = [
     {
         'type': 'shift.filled',
         'title': 'Shift is fully staffed',
-        'description': 'Starts when a shift gets the last volunteer it needs.',
+        'description': 'Starts when a shift gets the last volunteer it needs. It carries everyone on the shift '
+                       'as a list (Volunteers signed up says how many).',
         'summary': '{shift.role} at {event.title} is fully staffed',
-        'fields': SLOT,
+        'fields': SLOT + SHIFT_VOLUNTEERS,
     },
     {
         'type': 'shift.understaffed',
         'title': 'Shift is still short of volunteers',
         'description': 'Starts once for a shift of a published event that still needs volunteers 48 hours before it '
-                       'begins (or when Town Hall first notices, if that is later).',
+                       'begins (or when Town Hall first notices, if that is later). It carries the people signed up '
+                       'so far as a list (Volunteers signed up says how many).',
         'summary': '{shift.role} at {event.title} still needs {shift.open_spots}',
-        'fields': SLOT + [HOURS_UNTIL],
+        'fields': SLOT + [HOURS_UNTIL] + SHIFT_VOLUNTEERS,
     },
     {
         'type': 'shift.starting_soon',
@@ -317,51 +378,61 @@ TRIGGERS = [
     {
         'type': 'event.published',
         'title': 'Event published',
-        'description': 'Starts when an event becomes visible to volunteers.',
+        'description': 'Starts when an event becomes visible to volunteers. It carries the shifts the event has '
+                       'at that moment as a list.',
         'summary': '{event.title} was published',
-        'fields': EVENT,
+        'fields': EVENT + EVENT_SHIFTS,
     },
     {
         'type': 'event.unpublished',
         'title': 'Event hidden',
-        'description': 'Starts when staff hide a published event from volunteers again, for example because it is called off.',
+        'description': 'Starts when staff hide a published event from volunteers again, for example because it is '
+                       'called off. It carries everyone signed up as a list, so a workflow can tell each of them.',
         'summary': '{event.title} was hidden from volunteers',
-        'fields': EVENT,
+        'fields': EVENT + EVENT_VOLUNTEERS,
     },
     {
         'type': 'event.rescheduled',
         'title': 'Event moved to another time',
-        'description': "Starts when an event's start or end time changes.",
+        'description': "Starts when an event's start or end time changes. It carries everyone signed up as a list, "
+                       'so a workflow can tell each of them.',
         'summary': '{event.title} now starts {event.starts_at}',
         'fields': EVENT + [
             field('event.published', 'bool', 'Visible to volunteers', True),
             field('previous_starts_at', 'datetime', 'Used to start', '2026-12-05T09:00:00-08:00'),
             field('previous_ends_at', 'datetime', 'Used to end', '2026-12-05T17:00:00-08:00'),
-        ],
+        ] + EVENT_VOLUNTEERS,
     },
     {
         'type': 'event.starting_soon',
         'title': 'Event starts within 24 hours',
-        'description': 'Starts once for a published event when it is 24 hours away, with how its staffing stands.',
+        'description': 'Starts once for a published event when it is 24 hours away, with how its staffing stands, '
+                       'its shifts and everyone signed up as lists.',
         'summary': '{event.title} starts soon ({open_spots} spots open)',
-        'fields': EVENT + STAFFING + [HOURS_UNTIL],
+        'fields': EVENT + STAFFING + [HOURS_UNTIL] + EVENT_SHIFTS + EVENT_VOLUNTEERS,
     },
     {
         'type': 'event.started',
         'title': 'Event started',
-        'description': "Starts once when a published event's start time arrives.",
+        'description': "Starts once when a published event's start time arrives, with its shifts and everyone "
+                       'signed up as lists.',
         'summary': '{event.title} started',
-        'fields': EVENT + STAFFING,
+        'fields': EVENT + STAFFING + EVENT_SHIFTS + EVENT_VOLUNTEERS,
     },
     {
         'type': 'event.ended',
         'title': 'Event ended',
-        'description': "Starts once when a published event's end time has passed, with what was logged so far.",
+        'description': "Starts once when a published event's end time has passed, with what was logged so far "
+                       'and the people who checked in as a list.',
         'summary': '{event.title} ended: {volunteers} volunteers, {hours} h',
         'fields': EVENT + [
             field('volunteers', 'int', 'Volunteers who checked in', 21),
             field('hours', 'number', 'Hours logged', 88.5),
             field('volunteers_signed_up', 'int', 'Volunteers signed up', 24),
+            listing('people', 'Volunteers who checked in', 'by name', PERSON_ITEM + [
+                field('role', 'string', 'Role (all of them, if they worked several)', 'Greeter'),
+                field('hours', 'number', 'Hours logged', 4.17),
+            ]),
         ],
     },
     {
@@ -558,6 +629,8 @@ EVENT_FIELDS = [
 ]
 FOUND = field('found', 'bool', 'Found', True)
 COUNT = field('count', 'int', 'How many matched', 3)
+DAYS_LEFT = field('days_left', 'int', 'Days left', 12)
+DAYS_AHEAD = dict(min=1, max=365, default=30)
 ROLE_PARAM = param('role', 'string', 'Role', True, 'The name of the role exactly as it is in Town Hall, or its ID.')
 
 ACTIONS = [
@@ -583,8 +656,9 @@ ACTIONS = [
         'kind': 'lookup',
         'title': 'Search volunteers',
         'description': 'Finds active volunteers by name, level, permanent role or the event they signed up for. '
-                       'You get how many matched, the best match (most impact points) in full, and everyone\'s names '
-                       'and emails as text. Leave everything empty to count all active volunteers.',
+                       'You get how many matched, the best match (most impact points) in full, everyone\'s names '
+                       'and emails as text, and everyone as a list to loop over. Leave everything empty for all '
+                       'active volunteers.',
         'params': [
             param('query', 'string', 'Name or email contains', False, max_length=100),
             param('min_level', 'int', 'At least level', False, '1 is the lowest level.', min=1, max=100),
@@ -594,16 +668,21 @@ ACTIONS = [
         'output': [FOUND, COUNT] + PERSON_FIELDS + [
             field('names', 'string', f'Names ({LIST_HELP})', 'Maria K., Petro S., Ivan D.'),
             field('emails', 'string', f'Emails ({LIST_HELP})', 'maria@example.org, petro@example.org, ivan@example.org'),
+            listing('people', 'Everyone who matched', 'most impact points first', PERSON_ITEM + [
+                field('level', 'int', 'Level', 3),
+                field('level_name', 'string', 'Level name', 'Pillar'),
+                field('impact_points', 'int', 'Impact points', 1250),
+            ]),
         ],
     },
     {
         'name': 'person.next_shift',
         'kind': 'lookup',
         'title': "Get volunteer's next shift",
-        'description': 'The next shift a volunteer is signed up for that has not ended, and how many they have coming up. '
-                       'Found is false when they have none.',
+        'description': 'The next shift a volunteer is signed up for that has not ended, how many they have coming up, '
+                       'and all of those as a list. Found is false when they have none.',
         'params': [PERSON_ID],
-        'output': [FOUND, COUNT] + SLOT_BRIEF,
+        'output': [FOUND, COUNT] + SLOT_BRIEF + [listing('shifts', 'Their upcoming shifts', 'soonest first', SHIFT_ITEM)],
     },
     {
         'name': 'shift.current',
@@ -635,6 +714,14 @@ ACTIONS = [
             field('assigned', 'bool', 'Has this permanent role', False),
             field('role_id', 'string', 'Role ID', '8'),
             field('role', 'string', 'Role', 'Greeter'),
+            listing('missing', 'What is still missing', 'training by title, then certificates by name', [
+                field('kind', 'string', 'What it is', 'training',
+                      choices=choices(('training', 'Training module'), ('certificate', 'Certificate'))),
+                field('id', 'string', 'Module or certificate ID', '5'),
+                field('name', 'string', 'Name', 'Food Safety Basics'),
+                field('url', 'string', 'Link (training modules only)', 'https://volunteers.example.org/en/training/module/5/'),
+            ]),
+            field('missing_count', 'int', 'How many things are missing', 1),
         ],
     },
     {
@@ -798,7 +885,8 @@ ACTIONS = [
         'name': 'role.find',
         'kind': 'lookup',
         'title': 'Find role',
-        'description': 'Looks for a role by name. You get how many matched, the first in full and all their names.',
+        'description': 'Looks for a role by name. You get how many matched, the first in full, all their names as '
+                       'text, and all of them as a list.',
         'params': [param('name', 'string', 'Name contains', False, 'Leave empty for every role.', max_length=50)],
         'output': [
             FOUND, COUNT,
@@ -807,6 +895,11 @@ ACTIONS = [
             field('permanent', 'bool', 'Permanent role', False),
             field('description', 'string', 'Description', 'Welcomes guests at the door.'),
             field('names', 'string', f'Names ({LIST_HELP})', 'Greeter, Kitchen helper'),
+            listing('roles', 'Roles that matched', 'by name', [
+                field('role_id', 'string', 'Role ID', '8'),
+                field('name', 'string', 'Role', 'Greeter'),
+                field('permanent', 'bool', 'Permanent role', False),
+            ]),
         ],
     },
     {
@@ -846,25 +939,42 @@ ACTIONS = [
         'name': 'event.get',
         'kind': 'lookup',
         'title': 'Get event',
-        'description': 'Looks an event up by its ID, with how its staffing stands.',
+        'description': 'Looks an event up by its ID, with how its staffing stands, its shifts as a list and '
+                       'everyone signed up as a list.',
         'params': [EVENT_ID],
-        'output': [FOUND] + EVENT_FIELDS,
+        'output': [FOUND] + EVENT_FIELDS + event_lists(),
     },
     {
         'name': 'event.find',
         'kind': 'lookup',
         'title': 'Find events',
-        'description': 'Looks for events by title. You get how many matched, the soonest upcoming one (or the latest '
-                       'past one) in full, and all their titles.',
+        'description': 'Looks for events by title and by how soon they are. You get how many matched, the soonest '
+                       'upcoming one (or the latest past one) in full with its shifts and volunteers as lists, all '
+                       'their titles as text, and all the events as a list.',
         'params': [
             param('query', 'string', 'Title contains', False, 'Leave empty for every event.', max_length=100),
             param('when', 'string', 'When', False, default='upcoming',
                   choices=choices(('upcoming', 'Upcoming or happening now'), ('past', 'Over'))),
             param('include_hidden', 'bool', 'Include events hidden from volunteers', False, default=False),
+            param('within_days', 'int', 'Within days', False,
+                  'Only events that start within this many days (or, for events that are over, ended within them). '
+                  'Leave empty for no limit.', min=1, max=365),
         ],
         'output': [FOUND, COUNT] + EVENT_FIELDS + [
             field('titles', 'string', f'Titles ({LIST_HELP})', 'Christmas Bazaar, New Year Dinner'),
-        ],
+            listing('events', 'Events that matched', 'soonest first, or latest first for events that are over', [
+                field('event_id', 'string', 'Event ID', '17'),
+                field('title', 'string', 'Event', 'Christmas Bazaar'),
+                field('place', 'string', 'Place', 'Parish Hall'),
+                field('starts_at', 'datetime', 'Event starts', '2026-12-06T09:00:00-08:00'),
+                field('ends_at', 'datetime', 'Event ends', '2026-12-06T17:00:00-08:00'),
+                field('published', 'bool', 'Visible to volunteers', True),
+                field('url', 'string', 'Link', 'https://volunteers.example.org/en/opportunities/17/'),
+                field('volunteers_needed', 'int', 'Volunteers needed', 24),
+                field('volunteers_signed_up', 'int', 'Volunteers signed up', 19),
+                field('open_spots', 'int', 'Open spots', 5),
+            ]),
+        ] + event_lists("The first event's"),
     },
     {
         'name': 'event.create',
@@ -965,28 +1075,82 @@ ACTIONS = [
             field('title', 'string', 'Event', 'Christmas Bazaar'),
         ],
     },
+    {
+        'name': 'event.find_absent',
+        'kind': 'lookup',
+        'title': "List volunteers who haven't checked in",
+        'description': "Everyone signed up for a shift at the event that has started and not ended yet, who hasn't "
+                       'checked in for it. Run it while the event is on to chase people. Found is false when '
+                       'nobody is missing.',
+        'params': [
+            EVENT_ID,
+            param('minutes_late', 'int', 'At least this many minutes late', False,
+                  'Only shifts that started at least this long ago.', min=0, max=720, default=0),
+        ],
+        'output': [
+            FOUND, COUNT,
+            field('event_id', 'string', 'Event ID', '17'),
+            field('title', 'string', 'Event', 'Christmas Bazaar'),
+            listing('people', "Volunteers who haven't checked in", 'by when their shift started, then by name', PERSON_ITEM + [
+                field('role', 'string', 'Role', 'Greeter'),
+                field('shift_id', 'string', 'Shift ID', '318'),
+                field('starts_at', 'datetime', 'Shift started', '2026-12-06T09:00:00-08:00'),
+                field('ends_at', 'datetime', 'Shift ends', '2026-12-06T13:00:00-08:00'),
+                field('minutes_late', 'int', 'Minutes since the shift started', 20),
+            ]),
+        ],
+    },
 
     # -- shifts at events ----------------------------------------------------
     {
         'name': 'shift.get',
         'kind': 'lookup',
         'title': 'Get shift',
-        'description': 'Looks a shift of an event up by its ID: its role, times, who is on it and how many spots are open.',
+        'description': 'Looks a shift of an event up by its ID: its role, times, who is on it (as text, and as a '
+                       'list that says who has checked in) and how many spots are open.',
         'params': [SHIFT_ID],
-        'output': [FOUND] + SLOT_FIELDS,
+        'output': [FOUND] + SLOT_FIELDS + [
+            listing('people', 'Volunteers signed up', 'by name', PERSON_ITEM + [
+                field('checked_in', 'bool', 'Has checked in for this shift', False),
+            ]),
+        ],
     },
     {
         'name': 'shift.find',
         'kind': 'lookup',
         'title': 'Find shift at an event',
-        'description': "Looks through an event's shifts, earliest first. You get how many matched and the first in "
-                       'full, so you can sign someone up for it or invite them.',
+        'description': "Looks through an event's shifts, earliest first. You get how many matched, the first in "
+                       'full, so you can sign someone up for it or invite them, and all of them as a list.',
         'params': [
             EVENT_ID,
             param('role', 'string', 'Role', False, "Only shifts of this role: its name or ID."),
             param('open_only', 'bool', 'Only shifts with open spots', False, default=False),
         ],
-        'output': [FOUND, COUNT] + SLOT_FIELDS,
+        'output': [FOUND, COUNT] + SLOT_FIELDS + [listing('shifts', 'Shifts that matched', 'earliest first', SHIFT_ITEM)],
+    },
+    {
+        'name': 'invite.find_pending',
+        'kind': 'lookup',
+        'title': 'List invitations waiting for an answer',
+        'description': 'Invitations to shifts that have not ended which the volunteer has neither accepted nor declined, '
+                       'for one shift, one event, or (with both left empty) everywhere. Use it to remind people.',
+        'params': [
+            param('event_id', 'string', 'Event ID', False, 'Only invitations to shifts of this event.'),
+            param('shift_id', 'string', 'Shift ID', False, 'Only invitations to this shift.'),
+            param('older_than_days', 'int', 'Sent at least this many days ago', False, min=0, max=365, default=0),
+        ],
+        'output': [
+            FOUND, COUNT,
+            listing('invites', 'Invitations waiting for an answer', 'oldest first', PERSON_ITEM + [
+                field('invite_id', 'string', 'Invitation ID', '230'),
+                field('invited_at', 'datetime', 'Invited', '2026-11-19T16:20:04-08:00'),
+                field('shift_id', 'string', 'Shift ID', '318'),
+                field('role', 'string', 'Role', 'Greeter'),
+                field('starts_at', 'datetime', 'Shift starts', '2026-12-06T09:00:00-08:00'),
+                field('event_id', 'string', 'Event ID', '17'),
+                field('event_title', 'string', 'Event', 'Christmas Bazaar'),
+            ]),
+        ],
     },
     {
         'name': 'shift.sign_up',
@@ -1074,7 +1238,8 @@ ACTIONS = [
         'name': 'training.find',
         'kind': 'lookup',
         'title': 'Find training module',
-        'description': 'Looks for a training module by title. You get how many matched, the first in full and all their titles.',
+        'description': 'Looks for a training module by title. You get how many matched, the first in full, all '
+                       'their titles as text, and all of them as a list.',
         'params': [param('title', 'string', 'Title contains', False, 'Leave empty for every module.', max_length=100)],
         'output': [
             FOUND, COUNT,
@@ -1084,13 +1249,61 @@ ACTIONS = [
             field('minutes', 'int', 'Length in minutes', 35),
             field('url', 'string', 'Link', 'https://volunteers.example.org/en/training/module/5/'),
             field('titles', 'string', f'Titles ({LIST_HELP})', 'Food Safety Basics, Welcome Desk'),
+            listing('modules', 'Modules that matched', 'by title', [
+                field('module_id', 'string', 'Module ID', '5'),
+                field('title', 'string', 'Module', 'Food Safety Basics'),
+                field('published', 'bool', 'Available to volunteers', True),
+                field('url', 'string', 'Link', 'https://volunteers.example.org/en/training/module/5/'),
+            ]),
+        ],
+    },
+    {
+        'name': 'training.find_expiring',
+        'kind': 'lookup',
+        'title': 'List training about to expire',
+        'description': 'Active volunteers whose completed training has to be renewed within the days you choose, '
+                       'for one module or for every module that expires. Found is false when there are none.',
+        'params': [
+            param('days', 'int', 'Expires within days', False, **DAYS_AHEAD),
+            param('module', 'string', 'Training module', False, "Only this module: its title exactly as it is in Town Hall, or its ID."),
+        ],
+        'output': [
+            FOUND, COUNT,
+            listing('people', 'Volunteers whose training expires', 'soonest first', PERSON_ITEM + [
+                field('module_id', 'string', 'Module ID', '5'),
+                field('module_title', 'string', 'Module', 'Food Safety Basics'),
+                field('completed_at', 'datetime', 'Completed', '2025-12-05T16:20:04-08:00'),
+                field('expires_at', 'datetime', 'Expires', '2026-12-05T16:20:04-08:00'),
+                DAYS_LEFT,
+            ]),
+        ],
+    },
+    {
+        'name': 'certificate.find_expiring',
+        'kind': 'lookup',
+        'title': 'List certificates about to expire',
+        'description': 'Active volunteers whose verified certificate (such as First Aid) expires within the days you '
+                       'choose, for one certificate or for all of them. Found is false when there are none.',
+        'params': [
+            param('days', 'int', 'Expires within days', False, **DAYS_AHEAD),
+            param('certificate', 'string', 'Certificate', False, "Only this certificate: its name exactly as it is in Town Hall, or its ID."),
+        ],
+        'output': [
+            FOUND, COUNT,
+            listing('people', 'Volunteers whose certificate expires', 'soonest first', PERSON_ITEM + [
+                field('certificate_id', 'string', 'Certificate ID', '3'),
+                field('certificate', 'string', 'Certificate', 'First Aid'),
+                field('expires_at', 'datetime', 'Valid until', '2026-12-05T23:59:59-08:00'),
+                DAYS_LEFT,
+            ]),
         ],
     },
     {
         'name': 'venue.find',
         'kind': 'lookup',
         'title': 'Find venue',
-        'description': 'Looks for a saved venue by name. You get how many matched, the first in full and all their names.',
+        'description': 'Looks for a saved venue by name. You get how many matched, the first in full, all their '
+                       'names as text, and all of them as a list.',
         'params': [param('name', 'string', 'Name contains', False, 'Leave empty for every venue.', max_length=100)],
         'output': [
             FOUND, COUNT,
@@ -1100,6 +1313,13 @@ ACTIONS = [
             field('phone', 'string', 'Phone', '604 555 0100'),
             field('url', 'string', 'Link', 'https://volunteers.example.org/en/venues/2/'),
             field('names', 'string', f'Names ({LIST_HELP})', 'Parish Hall, Community Kitchen'),
+            listing('venues', 'Venues that matched', 'by name', [
+                field('venue_id', 'string', 'Venue ID', '2'),
+                field('name', 'string', 'Venue', 'Parish Hall'),
+                field('address', 'string', 'Address', '501 4th Ave, New Westminster'),
+                field('phone', 'string', 'Phone', '604 555 0100'),
+                field('url', 'string', 'Link', 'https://volunteers.example.org/en/venues/2/'),
+            ]),
         ],
     },
     {

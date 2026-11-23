@@ -62,6 +62,10 @@ class Sender:
         self.event_type, self.sent = event_type, 0
         self.done = set(EmittedOnce.objects.filter(kind=event_type).values_list('key', flat=True))
 
+    def wants(self, key):
+        """Whether this is still to send: ask before building data that costs queries (lists)."""
+        return str(key)[:100] not in self.done
+
     def __call__(self, key, subject, data, **emit_kwargs):
         key = str(key)[:100]
         if key not in self.done:
@@ -89,10 +93,12 @@ def events_starting_soon(now, since):
     send = Sender('event.starting_soon')
     for event in Event.objects.filter(published=True, start_date__gt=now, start_date__lte=now + SOON).select_related('venue'):
         # Keyed by its start as well: an event moved to another day is announced again.
-        send(f'{event.pk}:{events.iso(event.start_date)}', events.event_subject(event),
-             {'event': events.event_data(event), **events.event_staffing(event),
-              'hours_until': _hours_until(event.start_date, now)},
-             links=events.event_links(event))
+        key = f'{event.pk}:{events.iso(event.start_date)}'
+        if send.wants(key):
+            send(key, events.event_subject(event),
+                 {'event': events.event_data(event), **events.event_staffing(event), **events.event_lists(event),
+                  'hours_until': _hours_until(event.start_date, now)},
+                 links=events.event_links(event))
     return send.sent
 
 
@@ -100,9 +106,10 @@ def events_started(now, since):
     from events.models import Event
     send = Sender('event.started')
     for event in Event.objects.filter(published=True, start_date__gte=since, start_date__lte=now, end_date__gt=now).select_related('venue'):
-        send(event.pk, events.event_subject(event),
-             {'event': events.event_data(event), **events.event_staffing(event)},
-             links=events.event_links(event), occurred_at=event.start_date)
+        if send.wants(event.pk):
+            send(event.pk, events.event_subject(event),
+                 {'event': events.event_data(event), **events.event_staffing(event), **events.event_lists(event)},
+                 links=events.event_links(event), occurred_at=event.start_date)
     return send.sent
 
 
@@ -110,15 +117,32 @@ def events_ended(now, since):
     from events.models import Event
     send = Sender('event.ended')
     for event in Event.objects.filter(published=True, end_date__gte=since, end_date__lte=now).select_related('venue'):
-        shifts = list(event.shifts())
+        if not send.wants(event.pk):
+            continue
+        shifts = list(event.shifts().select_related('user', 'role', 'event_role_slot__role'))
         hours = sum(((shift.end_time or now) - shift.start_time).total_seconds() for shift in shifts) / 3600
         send(event.pk, events.event_subject(event), {
             'event': events.event_data(event),
             'volunteers': len({shift.user_id for shift in shifts}),
             'hours': round(hours, 2),
             'volunteers_signed_up': events.event_staffing(event)['volunteers_signed_up'],
+            'people': _worked(shifts, now),
         }, links=events.event_links(event), occurred_at=event.end_date)
     return send.sent
+
+
+def _worked(shifts, now):
+    """Who checked in at an event, by name, each with the hours logged so far and their roles."""
+    people = {}
+    for shift in shifts:
+        person = people.setdefault(shift.user_id, {'user': shift.user, 'seconds': 0, 'roles': {}})
+        person['seconds'] += ((shift.end_time or now) - shift.start_time).total_seconds()
+        role = shift.role or (shift.event_role_slot.role if shift.event_role_slot_id else None)
+        if role:
+            person['roles'][role.name] = True
+    ordered = sorted(people.values(), key=lambda p: (p['user'].first_name, p['user'].last_name, p['user'].pk))
+    return [{**events.person_item(p['user']), 'role': ', '.join(p['roles']), 'hours': round(p['seconds'] / 3600, 2)}
+            for p in ordered[:events.LIST_LIMIT]]
 
 
 # -- shifts ------------------------------------------------------------------
@@ -128,8 +152,10 @@ def shifts_understaffed(now, since):
     slots = (_slots(start_time__gt=now, start_time__lte=now + UNDERSTAFFED_BEFORE)
              .exclude(role__system_key__isnull=False).filter(taken__lt=F('required_qty')))
     for slot in slots:
-        send(slot.pk, events.slot_subject(slot),
-             {**events.slot_data(slot, slot.taken), 'hours_until': _hours_until(slot.start_time, now)})
+        if send.wants(slot.pk):
+            send(slot.pk, events.slot_subject(slot),
+                 {**events.slot_data(slot, slot.taken), 'hours_until': _hours_until(slot.start_time, now),
+                  'volunteers': events.slot_volunteer_items(slot)[0]})
     return send.sent
 
 
