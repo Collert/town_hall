@@ -7,6 +7,8 @@ is Switchboard's docs/PROTOCOL.md (version 1); names, paths and JSON shapes here
 - views.py      the manifest, the consent page, the token exchange and the bearer-key API
 - actions.py    the actions Switchboard can call (person.find, person.invite, ...)
 - signals.py    where events come from: model signals on the real things that happen
+- timed.py      events that come due with time (an event starting, a missed shift), each sent once
+- contract.py   checks answers and events against the manifest (used by the tests)
 - events.py     builds an event's envelope and queues it for every connection
 - delivery.py   signs and posts deliveries, retries them and keeps the log
 """

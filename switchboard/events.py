@@ -5,7 +5,8 @@ queues the sending for after the transaction commits, off the request thread
 (switchboard/delivery.py). Nothing here may break or slow down what caused the event: with no
 connection it costs one cheap query, and every failure is logged, never raised.
 
-The `*_data` helpers build the `data` shapes the manifest's dotted field keys describe.
+The `*_data` helpers build the `data` shapes the manifest's dotted field keys describe. A
+field with nothing to say is '' for text and None (left out by Switchboard) for a time.
 """
 import json
 import logging
@@ -22,6 +23,11 @@ logger = logging.getLogger(__name__)
 def iso(value):
     """ISO 8601 with the organization's UTC offset, or '' for no time."""
     return timezone.localtime(value).isoformat(timespec='seconds') if value else ''
+
+
+def when(value):
+    """Like `iso`, but None for no time: an empty text is not a time the manifest allows."""
+    return iso(value) or None
 
 
 def is_connected():
@@ -56,12 +62,72 @@ def level_of(points, ordered=None):
     return number, current
 
 
-def slot_data(slot):
+def slot_data(slot, taken=None):
+    """A role slot of an event and how its staffing stands (`taken`: its sign-ups, if already counted)."""
     event = slot.event
+    taken = slot.signups.count() if taken is None else taken
     return {
-        'shift': {'id': str(slot.pk), 'role': slot.role.name, 'starts_at': iso(slot.start_time), 'ends_at': iso(slot.end_time)},
+        'shift': {'id': str(slot.pk), 'role': slot.role.name, 'starts_at': iso(slot.start_time), 'ends_at': iso(slot.end_time),
+                  'area': slot.area.name if slot.area_id else '', 'needed': slot.required_qty, 'taken': taken,
+                  'open_spots': max(0, slot.required_qty - taken)},
         'event': {'id': str(event.pk), 'title': event.title, 'place': event.place_name or ''},
     }
+
+
+def slot_subject(slot):
+    return {'type': 'shift', 'id': str(slot.pk), 'name': f'{slot.role.name} at {slot.event.title}'}
+
+
+def event_data(event):
+    """An event, without its link (see `event_links`)."""
+    return {'id': str(event.pk), 'title': event.title, 'place': event.place_name or '',
+            'starts_at': iso(event.start_date), 'ends_at': iso(event.end_date)}
+
+
+def event_subject(event):
+    return {'type': 'event', 'id': str(event.pk), 'name': event.title}
+
+
+def site_path(name, *args):
+    """A page's path in the organization's default language (events aren't sent from a request)."""
+    from django.conf import settings
+    from django.urls import reverse
+    from django.utils import translation
+    with translation.override(settings.LANGUAGE_CODE):
+        return reverse(name, args=args)
+
+
+def event_links(event):
+    return {'event.url': site_path('opportunity_detail', event.pk)}
+
+
+def event_staffing(event):
+    needed, taken, open_spots = 0, 0, 0
+    from django.db.models import Count
+    for required, count in (event.role_slots.exclude(role__system_key__isnull=False)
+                            .annotate(n=Count('signups')).values_list('required_qty', 'n')):
+        needed, taken, open_spots = needed + required, taken + count, open_spots + max(0, required - count)
+    return {'volunteers_needed': needed, 'volunteers_signed_up': taken, 'open_spots': open_spots}
+
+
+def module_data(module):
+    return {'id': str(module.pk), 'title': module.title}
+
+
+def certificate_data(certificate):
+    return {'id': str(certificate.pk), 'name': certificate.name}
+
+
+def invite_declined(invite):
+    """A volunteer said no to an invitation. Called by the one view where that happens
+    (events.views.respond_to_invite) just before the invitation is deleted: a deleted row alone
+    can't tell a decline from an event's clean-up. Never raises."""
+    try:
+        if invite.user_id and is_connected():
+            emit('invite.declined', person_subject(invite.user),
+                 {'person': person_data(invite.user), **slot_data(invite.event_role_slot)})
+    except Exception:
+        logger.exception('Switchboard: invite.declined failed')
 
 
 def _summary(event_type, data):

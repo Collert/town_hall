@@ -91,16 +91,38 @@ class SwitchboardTestCase(TestCase):
             self.assertEqual(contract.mismatches(trigger['fields'], envelope['data']), [], f'{envelope["type"]} broke its manifest')
             self.assertEqual(contract.undeclared(trigger['fields'], envelope['data']), [],
                              f'{envelope["type"]} carries fields its manifest leaves out')
+            # ...and carries every field it lists (one with nothing to say is '' or null, not left out).
+            for spec in trigger['fields']:
+                value = envelope['data']
+                for part in spec['key'].split('.'):
+                    self.assertIn(part, value, f'{envelope["type"]} lacks {spec["key"]}')
+                    value = value[part]
+            if any(spec['key'] == 'person.email' for spec in trigger['fields']):
+                self.assertEqual(envelope['subject']['email'], envelope['data']['person']['email'])
 
-    def event_with_slot(self, published=True):
-        now = timezone.now()
+    def event_with_slot(self, published=True, starts_in=timedelta(days=3), **slot_fields):
+        start = timezone.now() + starts_in
         event = Event.objects.create(title='Christmas Bazaar', description='x', location='Parish Hall',
-                                     start_date=now + timedelta(days=3), end_date=now + timedelta(days=3, hours=8),
+                                     start_date=start, end_date=start + timedelta(hours=8),
                                      latitude=1, longitude=1, published=published)
         role = Role.objects.create(name='Greeter', icon='waving_hand')
-        slot = EventRoleSlot.objects.create(event=event, role=role, required_qty=2,
-                                            start_time=now + timedelta(days=3), end_time=now + timedelta(days=3, hours=4))
+        slot = EventRoleSlot.objects.create(event=event, role=role, start_time=start, end_time=start + timedelta(hours=4),
+                                            **{'required_qty': 2, **slot_fields})
         return event, slot
+
+    def person(self, username, **fields):
+        return User.objects.create_user(username=username, email=f'{username}@example.org', password='pw',
+                                        **{'first_name': username.title(), **fields})
+
+    def committing(self):
+        """Run what the block queues for after the commit: that is when events are sent."""
+        return self.captureOnCommitCallbacks(execute=True)
+
+    def one(self, event_type):
+        """The only event of this type sent so far."""
+        found = self.fake.of_type(event_type)
+        self.assertEqual(len(found), 1, f'{len(found)} {event_type} events, expected one')
+        return found[0]
 
 
 class ManifestTests(SwitchboardTestCase):
@@ -121,9 +143,10 @@ class ManifestTests(SwitchboardTestCase):
 
         types = {'string', 'int', 'number', 'bool', 'datetime', 'money'}
         triggers = {t['type']: t for t in data['triggers']}
-        self.assertEqual(set(triggers), {
+        # Workflows store these, so the list only ever grows (the protocol's section 5).
+        self.assertLessEqual({
             'volunteer.level_reached', 'volunteer.registered', 'shift.signed_up', 'shift.cancelled',
-            'shift.completed', 'event.published', 'training.completed'})
+            'shift.completed', 'event.published', 'training.completed'}, set(triggers))
         for trigger in data['triggers']:
             self.assertTrue(trigger['title'] and trigger['description'] and trigger['summary'])
             for f in trigger['fields']:
@@ -138,7 +161,7 @@ class ManifestTests(SwitchboardTestCase):
         self.assertLessEqual({'person.id', 'shift.role', 'hours', 'points', 'event.title'}, keys('shift.completed'))
 
         actions = {a['name']: a for a in data['actions']}
-        self.assertEqual(set(actions), {'person.find', 'person.get', 'person.invite', 'notification.send'})
+        self.assertLessEqual({'person.find', 'person.get', 'person.invite', 'notification.send'}, set(actions))
         for action in data['actions']:
             self.assertEqual(action['method'], 'POST')
             self.assertEqual(action['path'], f"/actions/{action['name']}")
@@ -150,8 +173,8 @@ class ManifestTests(SwitchboardTestCase):
                 self.assertIn('example', f)
         self.assertEqual((actions['person.find']['kind'], actions['person.get']['kind']), ('lookup', 'lookup'))
         self.assertEqual((actions['person.invite']['kind'], actions['notification.send']['kind']), ('action', 'action'))
-        self.assertEqual({f['key'] for f in actions['person.find']['output']}, {
-            'found', 'person_id', 'name', 'email', 'level', 'level_name', 'impact_points', 'total_hours'})
+        self.assertLessEqual({'found', 'person_id', 'name', 'email', 'level', 'level_name', 'impact_points', 'total_hours'},
+                             {f['key'] for f in actions['person.find']['output']})
         self.assertEqual([p['key'] for p in actions['notification.send']['params'] if p['required']],
                          ['person_id', 'title', 'message'])
 
@@ -448,7 +471,7 @@ class EventTests(SwitchboardTestCase):
         connection, _key = self.connect()
         with self.captureOnCommitCallbacks(execute=True):
             PointsEntry.objects.create(user=self.volunteer, amount=120, source=PointsEntry.ADJUSTMENT)
-        (url, body, headers), = self.fake.requests
+        (url, body, headers), = [r for r in self.fake.requests if r[2]['X-Switchboard-Event'] == 'volunteer.level_reached']
         envelope = json.loads(body)
         self.assertEqual(url, WEBHOOK)
         self.assertRegex(envelope['id'], r'^evt_[0-9a-f]{20}$')
@@ -466,7 +489,7 @@ class EventTests(SwitchboardTestCase):
         expected = hmac.new(connection.webhook_secret.encode(), body, hashlib.sha256).hexdigest()
         self.assertEqual(headers['X-Switchboard-Signature'], f'sha256={expected}')
 
-        row = Delivery.objects.get()
+        row = Delivery.objects.get(event_type='volunteer.level_reached')
         self.assertEqual((row.status, row.attempts, row.response_status, row.body), ('delivered', 1, 200, ''))
         self.assertEqual(row.summary, 'Maria K. reached level 2')
         connection.refresh_from_db()
@@ -509,13 +532,15 @@ class EventTests(SwitchboardTestCase):
         self.assertEqual(envelope['data']['person']['email'], 'Maria@example.org')
         self.assertEqual(envelope['data']['shift'], {
             'id': str(slot.pk), 'role': 'Greeter',
-            'starts_at': events.iso(slot.start_time), 'ends_at': events.iso(slot.end_time)})
+            'starts_at': events.iso(slot.start_time), 'ends_at': events.iso(slot.end_time),
+            'area': '', 'needed': 2, 'taken': 1, 'open_spots': 1})
         self.assertEqual(envelope['data']['event'], {'id': str(event.pk), 'title': 'Christmas Bazaar', 'place': 'Parish Hall'})
 
         with self.captureOnCommitCallbacks(execute=True):
             self.volunteer.commitments.remove(slot)   # the other side of the M2M
         (cancelled,) = self.fake.of_type('shift.cancelled')
         self.assertEqual(cancelled['data']['shift']['id'], str(slot.pk))
+        self.assertEqual((cancelled['data']['shift']['taken'], cancelled['data']['late']), (0, False))
         self.assertEqual(cancelled['subject']['id'], str(self.volunteer.pk))
         self.assertNotEqual(cancelled['id'], envelope['id'])
 
@@ -580,31 +605,6 @@ class EventTests(SwitchboardTestCase):
         (envelope,) = self.fake.of_type('training.completed')
         self.assertEqual(envelope['data']['module'], {'id': str(module.pk), 'title': 'Food Safety Basics'})
         self.assertEqual(envelope['data']['person']['email'], 'Maria@example.org')
-
-    def test_every_event_matches_its_manifest_fields(self):
-        """Each emitted `data` has every dotted key the manifest lists for its type."""
-        event, slot = self.event_with_slot(published=False)
-        module = TrainingModule.objects.create(title='Food Safety Basics', description='x')
-        self.connect()
-        with self.captureOnCommitCallbacks(execute=True):
-            User.objects.create_user(username='new', email='new@example.org')
-            event.published = True
-            event.save()
-            slot.add_signup(self.volunteer)
-            shift = Shift.objects.create(user=self.volunteer, event_role_slot=slot)
-            shift.end_shift()
-            PointsEntry.objects.create(user=self.volunteer, amount=600, source=PointsEntry.ADJUSTMENT)
-            TrainingModuleCompletion.objects.create(training_module=module, user=self.volunteer)
-            slot.signups.remove(self.volunteer)
-        seen = set()
-        for envelope in self.fake.envelopes:
-            seen.add(envelope['type'])
-            for spec in manifest.TRIGGERS_BY_TYPE[envelope['type']]['fields']:
-                value = envelope['data']
-                for part in spec['key'].split('.'):
-                    self.assertIn(part, value, f"{envelope['type']} lacks {spec['key']}")
-                    value = value[part]
-        self.assertEqual(seen, set(manifest.TRIGGERS_BY_TYPE))
 
     def test_same_event_id_for_every_connection_each_signed_with_its_secret(self):
         first, _k = self.connect()

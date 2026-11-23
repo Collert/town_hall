@@ -360,6 +360,8 @@ def respond_to_invite(request, token):
 
     if request.method == 'POST':
         if request.POST.get('response') == 'decline':
+            from switchboard.events import invite_declined
+            invite_declined(invite)  # tells connected Switchboards; the row is about to go
             invite.delete()
             messages.info(request, _('Invitation declined. Thanks for letting us know.'))
             return redirect('explore_opportunities')

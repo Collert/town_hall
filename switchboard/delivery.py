@@ -159,13 +159,16 @@ def run_due(now=None):
 
 
 def prune(now=None):
-    """Drop the delivery log, stored action answers and used codes after two weeks."""
+    """Drop the delivery log, stored action answers and used codes after two weeks, and old
+    marks of time-based events (switchboard/timed.py)."""
     from .models import AuthorizeCode, Delivery, IdempotencyRecord
 
     cutoff = (now or timezone.now()) - KEEP_LOG
     Delivery.objects.filter(created_at__lt=cutoff).exclude(status=Delivery.PENDING).delete()
     IdempotencyRecord.objects.filter(created_at__lt=cutoff).delete()
     AuthorizeCode.objects.filter(expires_at__lt=cutoff).delete()
+    from . import timed
+    timed.prune(now)
 
 
 def run_due_if_idle():

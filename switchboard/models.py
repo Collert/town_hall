@@ -139,3 +139,19 @@ class Delivery(models.Model):
 
     def __str__(self):
         return f'{self.event_type} {self.event_id} -> {self.connection_id} ({self.status})'
+
+
+class EmittedOnce(models.Model):
+    """A time-based event that went out ("the bazaar starts in 24 hours", "Maria missed her
+    shift"): `kind` is the trigger type and `key` what it was about. The row is created in the
+    same transaction as the deliveries, so the unique pair keeps each to one event even with
+    several workers (switchboard/timed.py). Pruned after 60 days, long after anything is due."""
+    kind = models.CharField(max_length=100)
+    key = models.CharField(max_length=100)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['kind', 'key'], name='unique_switchboard_emitted_once')]
+
+    def __str__(self):
+        return f'{self.kind} {self.key}'

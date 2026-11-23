@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Delivery, SwitchboardConnection
+from .models import Delivery, EmittedOnce, SwitchboardConnection
 
 
 @admin.register(SwitchboardConnection)
@@ -19,6 +19,16 @@ class DeliveryAdmin(admin.ModelAdmin):
     list_display = ['event_type', 'connection', 'status', 'attempts', 'response_status', 'created_at']
     list_filter = ['status', 'event_type']
     exclude = ['body']
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(EmittedOnce)
+class EmittedOnceAdmin(admin.ModelAdmin):
+    """Which time-based events went out (switchboard/timed.py). Deleting a row lets its event go out again."""
+    list_display = ['kind', 'key', 'created_at']
+    list_filter = ['kind']
 
     def has_add_permission(self, request):
         return False
