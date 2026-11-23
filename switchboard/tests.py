@@ -354,7 +354,9 @@ class ApiTests(SwitchboardTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
             'found': True, 'person_id': str(self.volunteer.pk), 'name': 'Maria K.', 'email': 'Maria@example.org',
-            'level': 2, 'level_name': 'Pillar', 'impact_points': 150, 'total_hours': 2.0})
+            'level': 2, 'level_name': 'Pillar', 'impact_points': 150, 'total_hours': 2.0,
+            'active': True, 'staff': False, 'phone': '', 'location': '', 'skills': '', 'permanent_roles': '',
+            'reliability': 100, 'joined_at': events.iso(self.volunteer.date_joined)})
         self.assertEqual(set(response.json()), {f['key'] for f in manifest.ACTIONS_BY_NAME['person.find']['output']})
 
         missing = self.action('person.find', self.key, {'email': 'nobody@example.org'})

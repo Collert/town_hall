@@ -13,15 +13,16 @@ Errors are {"error": {"code", "message"}}.
 import json
 import logging
 import secrets
-from datetime import timedelta
+from datetime import datetime, timedelta
 from functools import wraps
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.db import IntegrityError, transaction
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 
@@ -200,28 +201,82 @@ def connection_view(request, connection):
     return _json({'ok': True})
 
 
+def _number(value, whole):
+    """`value` as an int or float, or None when it isn't a number. Text such as "3" counts:
+    a workflow may pass along a number another app sent as text."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, str):
+        try:
+            value = float(value.strip())
+        except ValueError:
+            return None
+    if not isinstance(value, (int, float)) or value != value or value in (float('inf'), float('-inf')):
+        return None
+    if whole:
+        return int(value) if float(value).is_integer() else None
+    return value
+
+
+def _datetime(value):
+    """An ISO 8601 time as an aware datetime (without an offset it is the organization's local time), or None."""
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace('Z', '+00:00'))
+    except ValueError:
+        return None
+    return timezone.make_aware(parsed) if timezone.is_naive(parsed) else parsed
+
+
 def _check_params(spec, body):
-    """The action's params from the request body: required ones present, strings as strings.
-    IDs may arrive as numbers; they are read as text. Raises ActionError (422) naming the param."""
+    """The action's params from the request body, each as its manifest type and within its limits
+    (max_length, min, max, choices): text as str, `int` and `number` as numbers, `bool` as a bool
+    and `datetime` as an aware datetime. IDs may arrive as numbers; they are read as text.
+    Missing optional params are left out. Raises ActionError (422) naming the param."""
     params = {}
     for item in spec['params']:
-        key, value = item['key'], body.get(item['key'])
-        if isinstance(value, (int, float)) and not isinstance(value, bool) and item['type'] == 'string':
-            value = str(value)
+        key, type_, value = item['key'], item['type'], body.get(item['key'])
+        if isinstance(value, (int, float)) and not isinstance(value, bool) and type_ == 'string':
+            value = str(int(value)) if float(value).is_integer() else str(value)
         if value is None or (isinstance(value, str) and not value.strip()):
             if item['required']:
                 raise actions.invalid(f'{key} is required.')
             continue
-        if not isinstance(value, str):
-            raise actions.invalid(f'{key} must be text.')
+        if type_ == 'string':
+            if not isinstance(value, str):
+                raise actions.invalid(f'{key} must be text.')
+            if 'max_length' in item and len(value.strip()) > item['max_length']:
+                raise actions.invalid(f'{key} is too long ({item["max_length"]} characters at most).')
+        elif type_ in ('int', 'number', 'money'):
+            value = _number(value, whole=type_ == 'int')
+            if value is None:
+                raise actions.invalid(f'{key} must be a {"whole number" if type_ == "int" else "number"}.')
+            if 'min' in item and value < item['min']:
+                raise actions.invalid(f'{key} must be at least {item["min"]}.')
+            if 'max' in item and value > item['max']:
+                raise actions.invalid(f'{key} must be at most {item["max"]}.')
+        elif type_ == 'bool':
+            if isinstance(value, str) and value.strip().lower() in ('true', 'false', 'yes', 'no'):
+                value = value.strip().lower() in ('true', 'yes')
+            if not isinstance(value, bool):
+                raise actions.invalid(f'{key} must be true or false.')
+        elif type_ == 'datetime':
+            value = _datetime(value)
+            if value is None:
+                raise actions.invalid(f'{key} must be a date and time like 2026-12-06T09:00:00-08:00.')
+        if 'choices' in item and value not in [choice['value'] for choice in item['choices']]:
+            raise actions.invalid(f'{key} must be one of: ' + ', '.join(str(choice['value']) for choice in item['choices']) + '.')
         params[key] = value
     return params
 
 
 def _run_action(request, connection, name, spec, body):
-    """(status, body) for one action call. The work runs in a transaction, so an error leaves nothing half-done."""
+    """(status, body) for one action call. The work runs in a transaction, so an error leaves
+    nothing half-done, and in the organization's default language: names are matched and
+    written in it, whatever language Switchboard's request asked for."""
     try:
-        with transaction.atomic():
+        with transaction.atomic(), translation.override(settings.LANGUAGE_CODE):
             return 200, actions.HANDLERS[name](connection, _check_params(spec, body), request)
     except actions.ActionError as exc:
         return exc.status, {'error': {'code': exc.code, 'message': exc.message}}
