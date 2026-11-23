@@ -11019,7 +11019,7 @@ msgstr ""
 
 #: mcp_server/templates/mcp_server/authorize.html:44
 msgid "Delete anything"
-msgstr ""
+msgstr "Magbura ng anuman"
 
 #: mcp_server/templates/mcp_server/authorize.html:45
 msgid "Change anyone's profile"
@@ -11215,28 +11215,8 @@ msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
 msgstr "Gustong gamitin ng Switchboard sa %(host)s ang Town Hall sa mga workflow nito."
 
 #: switchboard/templates/switchboard/authorize.html
-msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
-msgstr "Masabihan kapag nagrehistro ang mga boluntaryo, umabot sa isang level, natapos ang training, at nag-sign up, umalis o nakatapos ng mga shift"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Be told when events are published"
-msgstr "Masabihan kapag may na-publish na mga event"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Look volunteers up: name, email, level, points and hours"
-msgstr "Maghanap ng mga boluntaryo: pangalan, email, level, puntos at oras"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Add a volunteer by email and send volunteers notifications"
-msgstr "Magdagdag ng boluntaryo gamit ang email at magpadala ng mga abiso sa mga boluntaryo"
-
-#: switchboard/templates/switchboard/authorize.html
 msgid "Sign in as anyone or see passwords"
 msgstr "Mag-sign in bilang sinuman o makita ang mga password"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Change or delete events, shifts or profiles"
-msgstr "Baguhin o burahin ang mga event, shift o profile"
 
 #: switchboard/views.py
 msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
@@ -11245,3 +11225,43 @@ msgstr "Hindi wasto o luma na ang link ng koneksyong ito. Simulan muli ang pagko
 #: switchboard/views.py
 msgid "Only staff accounts can connect Switchboard to Town Hall."
 msgstr "Mga staff account lang ang makakapagkonekta ng Switchboard sa Town Hall."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told what happens with volunteers: registering, levels and points, profile and account changes, permanent roles, endorsements, training and certificates"
+msgstr "Masabihan sa mga nangyayari sa mga boluntaryo: pagrehistro, mga level at puntos, mga pagbabago sa profile at account, mga permanenteng role, mga endorsement, training at mga sertipiko"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told about events and shifts: events created, published, moved, starting and ending, and sign-ups, invitations, check-ins, completed and missed shifts, and feedback"
+msgstr "Masabihan tungkol sa mga event at shift: mga event na ginawa, na-publish, inilipat, nagsisimula at natatapos, at mga sign-up, imbitasyon, check-in, natapos at hindi nasiputang shift, at feedback"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look up volunteers (name, email, phone, level, points, hours, skills and reliability), events, shifts, roles, training and venues"
+msgstr "Maghanap ng mga boluntaryo (pangalan, email, telepono, level, puntos, oras, mga kasanayan at pagiging maaasahan), mga event, shift, role, training at venue"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add volunteers, change their name, phone and location, assign permanent roles, and deactivate or reactivate volunteers (never staff)"
+msgstr "Magdagdag ng mga boluntaryo, baguhin ang kanilang pangalan, telepono at lokasyon, magtalaga ng mga permanenteng role, at i-deactivate o i-reactivate ang mga boluntaryo (hindi kailanman ang staff)"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Award or take away impact points, and give endorsements in a person's name"
+msgstr "Magbigay o magbawas ng impact points, at magbigay ng mga endorsement sa ngalan ng isang tao"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Create and edit events, publish or hide them, and add shifts"
+msgstr "Gumawa at mag-edit ng mga event, i-publish o itago ang mga ito, at magdagdag ng mga shift"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign volunteers up for shifts under the usual rules, cancel sign-ups, send invitations, and check volunteers in and out"
+msgstr "I-sign up ang mga boluntaryo sa mga shift ayon sa karaniwang mga patakaran, kanselahin ang mga sign-up, magpadala ng mga imbitasyon, at i-check in at i-check out ang mga boluntaryo"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Send volunteers notifications and messages, and post notices at venues"
+msgstr "Magpadala ng mga abiso at mensahe sa mga boluntaryo, at mag-post ng mga paunawa sa mga venue"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign anyone up without the training and certificates a role requires"
+msgstr "I-sign up ang sinuman nang wala ang training at mga sertipikong hinihingi ng isang role"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change emails, passwords, staff access or organization settings"
+msgstr "Baguhin ang mga email, password, access ng staff o mga setting ng organisasyon"

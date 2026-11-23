@@ -11869,28 +11869,8 @@ msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
 msgstr "Switchboard на %(host)s хоче використовувати Town Hall у своїх робочих процесах."
 
 #: switchboard/templates/switchboard/authorize.html
-msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
-msgstr "Дізнаватися, коли волонтери реєструються, досягають рівня, завершують навчання, а також записуються на зміни, залишають або завершують їх"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Be told when events are published"
-msgstr "Дізнаватися, коли публікуються події"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Look volunteers up: name, email, level, points and hours"
-msgstr "Шукати волонтерів: ім'я, електронна пошта, рівень, бали та години"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Add a volunteer by email and send volunteers notifications"
-msgstr "Додавати волонтера за електронною поштою та надсилати волонтерам сповіщення"
-
-#: switchboard/templates/switchboard/authorize.html
 msgid "Sign in as anyone or see passwords"
 msgstr "Входити від чийогось імені чи бачити паролі"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Change or delete events, shifts or profiles"
-msgstr "Змінювати чи видаляти події, зміни або профілі"
 
 #: switchboard/views.py
 msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
@@ -11899,3 +11879,43 @@ msgstr "Це посилання для підключення недійсне �
 #: switchboard/views.py
 msgid "Only staff accounts can connect Switchboard to Town Hall."
 msgstr "Лише облікові записи персоналу можуть підключати Switchboard до Town Hall."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told what happens with volunteers: registering, levels and points, profile and account changes, permanent roles, endorsements, training and certificates"
+msgstr "Дізнаватися, що відбувається з волонтерами: реєстрація, рівні та бали, зміни профілю й облікового запису, постійні ролі, рекомендації, навчання та сертифікати"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told about events and shifts: events created, published, moved, starting and ending, and sign-ups, invitations, check-ins, completed and missed shifts, and feedback"
+msgstr "Дізнаватися про події та зміни: події створено, опубліковано, перенесено, вони починаються й закінчуються, а також записи, запрошення, відмітки про прибуття, завершені та пропущені зміни й відгуки"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look up volunteers (name, email, phone, level, points, hours, skills and reliability), events, shifts, roles, training and venues"
+msgstr "Шукати волонтерів (ім'я, електронна пошта, телефон, рівень, бали, години, навички та надійність), події, зміни, ролі, навчання та локації"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add volunteers, change their name, phone and location, assign permanent roles, and deactivate or reactivate volunteers (never staff)"
+msgstr "Додавати волонтерів, змінювати їхнє ім'я, телефон і місцезнаходження, призначати постійні ролі, а також деактивувати чи знову активувати волонтерів (але не персонал)"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Award or take away impact points, and give endorsements in a person's name"
+msgstr "Нараховувати чи знімати бали впливу та давати рекомендації від імені людини"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Create and edit events, publish or hide them, and add shifts"
+msgstr "Створювати й редагувати події, публікувати чи приховувати їх і додавати зміни"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign volunteers up for shifts under the usual rules, cancel sign-ups, send invitations, and check volunteers in and out"
+msgstr "Записувати волонтерів на зміни за звичайними правилами, скасовувати записи, надсилати запрошення та відмічати прибуття й вихід волонтерів"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Send volunteers notifications and messages, and post notices at venues"
+msgstr "Надсилати волонтерам сповіщення й повідомлення та публікувати оголошення на локаціях"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign anyone up without the training and certificates a role requires"
+msgstr "Записувати когось без навчання та сертифікатів, яких вимагає роль"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change emails, passwords, staff access or organization settings"
+msgstr "Змінювати електронні адреси, паролі, доступ персоналу чи налаштування організації"

@@ -11186,7 +11186,7 @@ msgstr ""
 
 #: mcp_server/templates/mcp_server/authorize.html:44
 msgid "Delete anything"
-msgstr ""
+msgstr "Eliminar nada"
 
 #: mcp_server/templates/mcp_server/authorize.html:45
 #, fuzzy
@@ -11390,28 +11390,8 @@ msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
 msgstr "El Switchboard en %(host)s quiere usar Town Hall en sus flujos de trabajo."
 
 #: switchboard/templates/switchboard/authorize.html
-msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
-msgstr "Recibir avisos cuando los voluntarios se registran, alcanzan un nivel, terminan una formación y se apuntan a turnos, los dejan o los completan"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Be told when events are published"
-msgstr "Recibir avisos cuando se publican eventos"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Look volunteers up: name, email, level, points and hours"
-msgstr "Buscar voluntarios: nombre, correo, nivel, puntos y horas"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Add a volunteer by email and send volunteers notifications"
-msgstr "Añadir un voluntario por correo y enviar notificaciones a los voluntarios"
-
-#: switchboard/templates/switchboard/authorize.html
 msgid "Sign in as anyone or see passwords"
 msgstr "Iniciar sesión como otra persona ni ver contraseñas"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Change or delete events, shifts or profiles"
-msgstr "Cambiar ni eliminar eventos, turnos o perfiles"
 
 #: switchboard/views.py
 msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
@@ -11420,3 +11400,43 @@ msgstr "Este enlace de conexión no es válido o ha caducado. Vuelve a iniciar l
 #: switchboard/views.py
 msgid "Only staff accounts can connect Switchboard to Town Hall."
 msgstr "Solo las cuentas de personal pueden conectar Switchboard a Town Hall."
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told what happens with volunteers: registering, levels and points, profile and account changes, permanent roles, endorsements, training and certificates"
+msgstr "Recibir avisos de lo que pasa con los voluntarios: registros, niveles y puntos, cambios de perfil y de cuenta, roles permanentes, recomendaciones, formación y certificados"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told about events and shifts: events created, published, moved, starting and ending, and sign-ups, invitations, check-ins, completed and missed shifts, and feedback"
+msgstr "Recibir avisos sobre eventos y turnos: eventos creados, publicados, cambiados de fecha, que empiezan y terminan, e inscripciones, invitaciones, registros de entrada, turnos completados y perdidos, y opiniones"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look up volunteers (name, email, phone, level, points, hours, skills and reliability), events, shifts, roles, training and venues"
+msgstr "Buscar voluntarios (nombre, correo, teléfono, nivel, puntos, horas, habilidades y fiabilidad), eventos, turnos, roles, formación y lugares"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add volunteers, change their name, phone and location, assign permanent roles, and deactivate or reactivate volunteers (never staff)"
+msgstr "Añadir voluntarios, cambiar su nombre, teléfono y ubicación, asignar roles permanentes y desactivar o reactivar voluntarios (nunca al personal)"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Award or take away impact points, and give endorsements in a person's name"
+msgstr "Dar o quitar puntos de impacto y dar recomendaciones en nombre de una persona"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Create and edit events, publish or hide them, and add shifts"
+msgstr "Crear y editar eventos, publicarlos u ocultarlos y añadir turnos"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign volunteers up for shifts under the usual rules, cancel sign-ups, send invitations, and check volunteers in and out"
+msgstr "Apuntar voluntarios a turnos con las reglas habituales, cancelar inscripciones, enviar invitaciones y registrar la entrada y la salida de los voluntarios"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Send volunteers notifications and messages, and post notices at venues"
+msgstr "Enviar notificaciones y mensajes a los voluntarios y publicar avisos en los lugares"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign anyone up without the training and certificates a role requires"
+msgstr "Apuntar a nadie sin la formación y los certificados que exige un rol"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change emails, passwords, staff access or organization settings"
+msgstr "Cambiar correos, contraseñas, accesos del personal ni los ajustes de la organización"

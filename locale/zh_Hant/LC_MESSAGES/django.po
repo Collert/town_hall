@@ -10938,7 +10938,7 @@ msgstr ""
 
 #: mcp_server/templates/mcp_server/authorize.html:44
 msgid "Delete anything"
-msgstr ""
+msgstr "刪除任何內容"
 
 #: mcp_server/templates/mcp_server/authorize.html:45
 msgid "Change anyone's profile"
@@ -11132,28 +11132,8 @@ msgid "The Switchboard at %(host)s wants to use Town Hall in its workflows."
 msgstr "位於 %(host)s 的 Switchboard 想在其工作流程中使用 Town Hall。"
 
 #: switchboard/templates/switchboard/authorize.html
-msgid "Be told when volunteers register, reach a level, finish training, and sign up for, leave or complete shifts"
-msgstr "在志工註冊、升級、完成培訓，以及報名、退出或完成班次時收到通知"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Be told when events are published"
-msgstr "在活動發布時收到通知"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Look volunteers up: name, email, level, points and hours"
-msgstr "查詢志工：姓名、電子郵件、等級、點數與時數"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Add a volunteer by email and send volunteers notifications"
-msgstr "以電子郵件新增志工，並向志工傳送通知"
-
-#: switchboard/templates/switchboard/authorize.html
 msgid "Sign in as anyone or see passwords"
 msgstr "以任何人的身分登入或查看密碼"
-
-#: switchboard/templates/switchboard/authorize.html
-msgid "Change or delete events, shifts or profiles"
-msgstr "變更或刪除活動、班次或個人檔案"
 
 #: switchboard/views.py
 msgid "This connection link is invalid or out of date. Start connecting again from Switchboard."
@@ -11162,3 +11142,43 @@ msgstr "這個連線連結無效或已過期。請從 Switchboard 重新開始�
 #: switchboard/views.py
 msgid "Only staff accounts can connect Switchboard to Town Hall."
 msgstr "只有職員帳號可以將 Switchboard 連線到 Town Hall。"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told what happens with volunteers: registering, levels and points, profile and account changes, permanent roles, endorsements, training and certificates"
+msgstr "在志工有動態時收到通知：註冊、等級與點數、個人檔案與帳號變更、常設角色、推薦、培訓與證書"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Be told about events and shifts: events created, published, moved, starting and ending, and sign-ups, invitations, check-ins, completed and missed shifts, and feedback"
+msgstr "收到活動與班次的通知：活動建立、發布、改期、開始與結束，以及報名、邀請、簽到、完成與缺席的班次和回饋"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Look up volunteers (name, email, phone, level, points, hours, skills and reliability), events, shifts, roles, training and venues"
+msgstr "查詢志工（姓名、電子郵件、電話、等級、點數、時數、技能與可靠度）、活動、班次、角色、培訓與場地"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Add volunteers, change their name, phone and location, assign permanent roles, and deactivate or reactivate volunteers (never staff)"
+msgstr "新增志工、變更其姓名、電話與所在地、指派常設角色，以及停用或重新啟用志工（絕不包含工作人員）"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Award or take away impact points, and give endorsements in a person's name"
+msgstr "給予或扣除影響力點數，並以某人的名義給予推薦"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Create and edit events, publish or hide them, and add shifts"
+msgstr "建立與編輯活動、發布或隱藏活動，以及新增班次"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign volunteers up for shifts under the usual rules, cancel sign-ups, send invitations, and check volunteers in and out"
+msgstr "依照一般規則為志工報名班次、取消報名、傳送邀請，以及為志工簽到與簽退"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Send volunteers notifications and messages, and post notices at venues"
+msgstr "向志工傳送通知與訊息，並在場地張貼公告"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Sign anyone up without the training and certificates a role requires"
+msgstr "在未完成角色所需的培訓與證書時為任何人報名"
+
+#: switchboard/templates/switchboard/authorize.html
+msgid "Change emails, passwords, staff access or organization settings"
+msgstr "變更電子郵件、密碼、工作人員權限或組織設定"
