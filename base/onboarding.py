@@ -672,10 +672,42 @@ on such a shift now, and **Revoke** stops a key working immediately.
 ## Workflows with Switchboard
 
 **Switchboard** is a separate app where your organization builds workflows without code: something
-that happens in one app starts steps in another. Town Hall tells it when a volunteer registers,
-reaches a level, finishes a training module, or signs up for, leaves or completes a shift, and when an
-event is published. A workflow can also look a volunteer up by email, add a volunteer, or send one a
-notification. People are matched between apps by their email address.
+that happens in one app starts steps in another. People are matched between apps by their email
+address.
+
+Town Hall tells Switchboard what happens here, and each of these can start a workflow:
+
+- **Volunteers**: registering, completing their profile, reaching a level, every line of impact
+  points, an endorsement, a permanent role given or taken away, an email change, an account
+  deactivated or reactivated.
+- **Events**: created, published, hidden, moved to another time, starting within 24 hours, started,
+  ended, a coordinator added, feedback left.
+- **Shifts**: signing up, leaving (and whether it was less than 24 hours ahead), a shift filled or
+  still short 48 hours ahead, invitations sent, accepted and declined, shift and area leads picked,
+  a reminder 24 hours ahead, checking in, completing a shift, and missing one.
+- **Training and certificates**: a module published, started, a quiz passed, a module completed or
+  expired, a certificate sent in, approved, rejected, about to expire and expired.
+- **Venues**: a notice posted.
+
+A workflow can also do things in Town Hall:
+
+- **Look up** a volunteer (by email, or by name, level, permanent role or event), their next shift,
+  whether they are on a shift, their training and certificates and whether they qualify for a role,
+  and events, shifts, roles, training modules and venues.
+- **People**: add a volunteer, change their name, phone and location, deactivate or reactivate them
+  (never staff), assign permanent roles, award or take away impact points with a reason, give an
+  endorsement in a person's name, and send notifications.
+- **Events**: create one (always hidden until it is published), edit it, publish or hide it, add
+  shifts, and message everyone signed up.
+- **Shifts**: sign a volunteer up, take them off, invite them, and check them in and out.
+- **Venues**: post a notice.
+
+A workflow gets no further than a person would. Signing someone up still needs the role's training
+and certificates, an open spot and no clash; cancelling less than 24 hours ahead still counts against
+their reliability; points go into the same history you see on a volunteer's page. Nothing can be
+deleted, and emails, passwords, staff access and organization settings can't be changed. Events
+about time (starting soon, started, ended, short-staffed, missed shifts, expiring certificates) are
+noticed within about five minutes while people are using Town Hall.
 
 Connecting starts in Switchboard: add Town Hall there and type the address shown under
 **Organization > Backend > Workflows (Switchboard)**. You'll be brought to Town Hall to approve with
