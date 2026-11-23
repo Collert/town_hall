@@ -67,7 +67,7 @@ def slot_data(slot, taken=None):
     event = slot.event
     taken = slot.signups.count() if taken is None else taken
     return {
-        'shift': {'id': str(slot.pk), 'role': slot.role.name, 'starts_at': iso(slot.start_time), 'ends_at': iso(slot.end_time),
+        'shift': {'id': str(slot.pk), 'role': slot.role.name, 'role_id': slot.role.pk, 'starts_at': iso(slot.start_time), 'ends_at': iso(slot.end_time),
                   'area': slot.area.name if slot.area_id else '', 'needed': slot.required_qty, 'taken': taken,
                   'open_spots': max(0, slot.required_qty - taken)},
         'event': {'id': str(event.pk), 'title': event.title, 'place': event.place_name or ''},

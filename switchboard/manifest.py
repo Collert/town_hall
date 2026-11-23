@@ -46,6 +46,7 @@ PERSON = [
 SLOT = [
     field('shift.id', 'string', 'Shift ID', '318'),
     field('shift.role', 'string', 'Role', 'Greeter'),
+    field('shift.role_id', 'int', 'Role ID', 34),
     field('shift.starts_at', 'datetime', 'Shift starts', '2026-12-06T09:00:00-08:00'),
     field('shift.ends_at', 'datetime', 'Shift ends', '2026-12-06T13:00:00-08:00'),
     field('event.id', 'string', 'Event ID', '17'),
