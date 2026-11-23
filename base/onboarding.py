@@ -694,6 +694,11 @@ A workflow can also do things in Town Hall:
 - **Look up** a volunteer (by email, or by name, level, permanent role or event), their next shift,
   whether they are on a shift, their training and certificates and whether they qualify for a role,
   and events, shifts, roles, training modules and venues.
+- **Go through lists**, one step for each: the volunteers a search found, everyone signed up for an
+  event or a shift, an event's shifts, the events coming up in the next days, who hasn't checked in
+  for a shift that is on, invitations nobody answered, and training or certificates about to
+  expire. Events that are about many people (an event starting, ending, moved or hidden, a shift
+  filled or still short) carry those people as a list too. A list holds 200 at most.
 - **People**: add a volunteer, change their name, phone and location, deactivate or reactivate them
   (never staff), assign permanent roles, award or take away impact points with a reason, give an
   endorsement in a person's name, and send notifications.
