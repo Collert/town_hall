@@ -17,7 +17,7 @@ from education.models import TrainingModule, TrainingModuleCompletion
 from events.models import Event, EventRoleSlot
 from jobs.models import Role, Shift
 
-from . import delivery, events, manifest
+from . import contract, delivery, events, manifest
 from .models import AuthorizeCode, Delivery, IdempotencyRecord, SwitchboardConnection, digest
 
 User = get_user_model()
@@ -60,6 +60,7 @@ class SwitchboardTestCase(TestCase):
         patcher = patch('switchboard.delivery._http', self.fake)
         patcher.start()
         self.addCleanup(patcher.stop)
+        self.addCleanup(self.check_events_against_the_manifest)
 
     def connect(self, webhook=WEBHOOK, name='Holy Eucharist workflows'):
         connection, key = SwitchboardConnection.create(webhook, name=name, base_url='https://volunteers.example.org',
@@ -75,7 +76,21 @@ class SwitchboardTestCase(TestCase):
         return call(path, **extra)
 
     def action(self, name, key, data=None, **headers):
-        return self.api('post', f'/switchboard/v1/actions/{name}', key, data, **headers)
+        response = self.api('post', f'/switchboard/v1/actions/{name}', key, data, **headers)
+        # Every answer is held to the manifest, whatever the test was about.
+        if response.status_code == 200 and name in manifest.ACTIONS_BY_NAME:
+            output = manifest.ACTIONS_BY_NAME[name]['output']
+            self.assertEqual(contract.mismatches(output, response.json()), [], f'{name} broke its manifest')
+            self.assertEqual(contract.undeclared(output, response.json()), [], f'{name} answered fields its manifest leaves out')
+        return response
+
+    def check_events_against_the_manifest(self):
+        for envelope in self.fake.envelopes:
+            trigger = manifest.TRIGGERS_BY_TYPE.get(envelope['type'])
+            self.assertIsNotNone(trigger, f'{envelope["type"]} is not in the manifest')
+            self.assertEqual(contract.mismatches(trigger['fields'], envelope['data']), [], f'{envelope["type"]} broke its manifest')
+            self.assertEqual(contract.undeclared(trigger['fields'], envelope['data']), [],
+                             f'{envelope["type"]} carries fields its manifest leaves out')
 
     def event_with_slot(self, published=True):
         now = timezone.now()
@@ -89,6 +104,9 @@ class SwitchboardTestCase(TestCase):
 
 
 class ManifestTests(SwitchboardTestCase):
+    def test_the_manifest_keeps_its_own_rules(self):
+        self.assertEqual(contract.manifest_problems(manifest.TRIGGERS, manifest.ACTIONS), [])
+
     def test_manifest_shape(self):
         response = self.client.get('/.well-known/switchboard', secure=True, HTTP_HOST='volunteers.example.org')
         self.assertEqual(response.status_code, 200)
