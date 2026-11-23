@@ -9,9 +9,11 @@ one that is missing or null is fine (a lookup that finds nothing answers only `f
 field is an array of objects, each held to the field's `items`.
 """
 import datetime
+import re
 
 TYPES = ('string', 'int', 'number', 'bool', 'datetime', 'money', 'list')
 LIST_LIMIT = 200
+OPTIONS_NAME = re.compile(r'[a-z]+(?:[._][a-z]+)*')
 
 
 def type_error(value, type_):
@@ -86,9 +88,27 @@ def undeclared(fields, data, prefix=''):
     return found
 
 
-def manifest_problems(triggers, actions):
-    """Slips in the manifest itself: unknown types, and examples or defaults of the wrong type."""
+def manifest_problems(triggers, actions, sources=None):
+    """Slips in the manifest itself: unknown types, and examples or defaults of the wrong type.
+    A param's `options` must name a list (lowercase words joined by dots or underscores), one of
+    `sources` when they are given; only params name options."""
     found = []
+    for action in actions:
+        for param in action.get('params', []):
+            if 'options' not in param:
+                continue
+            name = param['options']
+            if not isinstance(name, str) or not OPTIONS_NAME.fullmatch(name):
+                found.append(f'action {action["name"]} params: "{param["key"]}" names options that are not a list name: {name!r}')
+            elif sources is not None and name not in sources:
+                found.append(f'action {action["name"]} params: "{param["key"]}" names options nobody serves: {name}')
+        for field in action.get('output', []):
+            if 'options' in field:
+                found.append(f'action {action["name"]} output: "{field["key"]}" has options; only params do')
+    for trigger in triggers:
+        for field in trigger.get('fields', []):
+            if 'options' in field:
+                found.append(f'event {trigger["type"]}: "{field["key"]}" has options; only params do')
     for where, fields in ([(f'event {t["type"]}', t.get('fields', [])) for t in triggers]
                           + [(f'action {a["name"]} output', a.get('output', [])) for a in actions]
                           + [(f'action {a["name"]} params', a.get('params', [])) for a in actions]):

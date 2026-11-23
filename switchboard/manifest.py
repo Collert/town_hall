@@ -27,7 +27,9 @@ def field(key, type_, label, example, **extra):
 
 def param(key, type_, label, required=False, help='', **limits):
     """A setting of an action. `limits`: max_length (text), min / max (numbers), choices
-    ([{'value', 'label'}]) and default; the API refuses values outside them (views._check_params)."""
+    ([{'value', 'label'}]) and default; the API refuses values outside them (views._check_params).
+    `options` names a list in options.SOURCES that Switchboard offers as a dropdown (a suggestion,
+    not a limit: the action still checks the value)."""
     spec = {'key': key, 'type': type_, 'label': label, 'required': required}
     if help:
         spec['help'] = help
@@ -563,7 +565,8 @@ TRIGGERS = [
 LIST_HELP = 'at most 50'
 PERSON_ID = param('person_id', 'string', 'Person ID', True, 'The ID an event or another step gave you.')
 SHIFT_ID = param('shift_id', 'string', 'Shift ID', True, 'The ID of the shift at an event, from an event or a Find shift step.')
-EVENT_ID = param('event_id', 'string', 'Event ID', True, 'The ID an event or a Find event step gave you.')
+EVENT_ID = param('event_id', 'string', 'Event ID', True, 'Pick an event, or use the ID an event or a Find event step gave you.',
+                 options='events')
 
 PERSON_FIELDS = [
     field('person_id', 'string', 'Person ID', '42'),
@@ -631,7 +634,9 @@ FOUND = field('found', 'bool', 'Found', True)
 COUNT = field('count', 'int', 'How many matched', 3)
 DAYS_LEFT = field('days_left', 'int', 'Days left', 12)
 DAYS_AHEAD = dict(min=1, max=365, default=30)
-ROLE_PARAM = param('role', 'string', 'Role', True, 'The name of the role exactly as it is in Town Hall, or its ID.')
+ROLE_PARAM = param('role', 'string', 'Role', True, 'Pick a role, or give its exact name or ID.', options='roles')
+PERMANENT_ROLE_PARAM = param('role', 'string', 'Role', True, 'Pick a permanent role, or give its exact name or ID.',
+                             options='roles.permanent')
 
 ACTIONS = [
     # -- people: looking up --------------------------------------------------
@@ -662,8 +667,10 @@ ACTIONS = [
         'params': [
             param('query', 'string', 'Name or email contains', False, max_length=100),
             param('min_level', 'int', 'At least level', False, '1 is the lowest level.', min=1, max=100),
-            param('role', 'string', 'Has permanent role', False, "The role's name or ID."),
-            param('event_id', 'string', 'Signed up for event', False, 'An event ID: only people signed up for a shift there.'),
+            param('role', 'string', 'Has permanent role', False, "Pick a permanent role, or give its name or ID.",
+                  options='roles.permanent'),
+            param('event_id', 'string', 'Signed up for event', False, 'Only people signed up for a shift at this event (pick one, or its ID).',
+                  options='events'),
         ],
         'output': [FOUND, COUNT] + PERSON_FIELDS + [
             field('names', 'string', f'Names ({LIST_HELP})', 'Maria K., Petro S., Ivan D.'),
@@ -729,7 +736,8 @@ ACTIONS = [
         'kind': 'lookup',
         'title': "Check a volunteer's training",
         'description': 'Says whether a volunteer has completed a training module, how far along they are, and whether it has expired.',
-        'params': [PERSON_ID, param('module', 'string', 'Training module', True, "The module's title exactly as it is in Town Hall, or its ID.")],
+        'params': [PERSON_ID, param('module', 'string', 'Training module', True, "Pick a module, or give its exact title or ID.",
+                                         options='training.modules')],
         'output': [
             FOUND,
             field('completed', 'bool', 'Completed', True),
@@ -746,7 +754,8 @@ ACTIONS = [
         'kind': 'lookup',
         'title': "Check a volunteer's certificate",
         'description': 'Says where a volunteer stands with an external certificate such as First Aid.',
-        'params': [PERSON_ID, param('certificate', 'string', 'Certificate', True, "The certificate's name exactly as it is in Town Hall, or its ID.")],
+        'params': [PERSON_ID, param('certificate', 'string', 'Certificate', True, "Pick a certificate, or give its exact name or ID.",
+                                         options='certificates')],
         'output': [
             FOUND,
             field('status', 'string', 'Status', 'verified', choices=choices(
@@ -851,9 +860,9 @@ ACTIONS = [
         'params': [
             PERSON_ID,
             param('from_person_id', 'string', 'Endorsed by (person ID)', True, 'The person giving the endorsement.'),
-            param('skill', 'string', 'Skill', True, "The skill's name exactly as it is in Town Hall, or its ID."),
+            param('skill', 'string', 'Skill', True, "Pick a skill, or give its exact name or ID.", options='skills'),
             param('message', 'string', 'Message', False, max_length=1000),
-            param('event_id', 'string', 'Event ID', False, 'The event they worked at together, if any.'),
+            param('event_id', 'string', 'Event ID', False, 'The event they worked at together, if any.', options='events'),
         ],
         'output': [
             field('endorsement_id', 'string', 'Endorsement ID', '77'),
@@ -908,7 +917,7 @@ ACTIONS = [
         'title': 'Assign a permanent role',
         'description': 'Gives a volunteer a permanent role (a standing position such as Librarian), so they can start '
                        'shifts in it at the kiosk or from another app.',
-        'params': [PERSON_ID, ROLE_PARAM],
+        'params': [PERSON_ID, PERMANENT_ROLE_PARAM],
         'output': [
             field('person_id', 'string', 'Person ID', '42'),
             field('role_id', 'string', 'Role ID', '8'),
@@ -923,7 +932,7 @@ ACTIONS = [
         'kind': 'action',
         'title': 'Take a permanent role away',
         'description': 'Takes a permanent role away from a volunteer. Their past shifts and points stay.',
-        'params': [PERSON_ID, ROLE_PARAM],
+        'params': [PERSON_ID, PERMANENT_ROLE_PARAM],
         'output': [
             field('person_id', 'string', 'Person ID', '42'),
             field('role_id', 'string', 'Role ID', '8'),
@@ -987,7 +996,7 @@ ACTIONS = [
             param('starts_at', 'datetime', 'Starts', True),
             param('ends_at', 'datetime', 'Ends', True),
             param('description', 'string', 'Description', False, max_length=5000),
-            param('venue', 'string', 'Venue', False, 'The name of a saved venue exactly as it is in Town Hall, or its ID.'),
+            param('venue', 'string', 'Venue', False, 'Pick a saved venue, or give its exact name or ID.', options='venues'),
             param('place', 'string', 'Address', False, 'A one-off address, used when there is no venue.', max_length=200),
             param('attendees', 'int', 'Expected attendees', False, min=0, max=1000000),
             param('coordinator_id', 'string', 'Coordinator (person ID)', False,
@@ -1050,7 +1059,7 @@ ACTIONS = [
         'description': 'Adds a shift for a role to an event: when it runs and how many volunteers it needs.',
         'params': [
             EVENT_ID,
-            param('role', 'string', 'Role', True, 'The name of an event role exactly as it is in Town Hall, or its ID.'),
+            param('role', 'string', 'Role', True, 'Pick an event role, or give its exact name or ID.', options='roles.event'),
             param('starts_at', 'datetime', 'Starts', True),
             param('ends_at', 'datetime', 'Ends', True),
             param('needed', 'int', 'Volunteers needed', False, min=1, max=500, default=1),
@@ -1123,7 +1132,8 @@ ACTIONS = [
                        'full, so you can sign someone up for it or invite them, and all of them as a list.',
         'params': [
             EVENT_ID,
-            param('role', 'string', 'Role', False, "Only shifts of this role: its name or ID."),
+            param('role', 'string', 'Role', False, "Only shifts of this role: pick one, or give its name or ID.",
+                  options='roles.event'),
             param('open_only', 'bool', 'Only shifts with open spots', False, default=False),
         ],
         'output': [FOUND, COUNT] + SLOT_FIELDS + [listing('shifts', 'Shifts that matched', 'earliest first', SHIFT_ITEM)],
@@ -1135,7 +1145,7 @@ ACTIONS = [
         'description': 'Invitations to shifts that have not ended which the volunteer has neither accepted nor declined, '
                        'for one shift, one event, or (with both left empty) everywhere. Use it to remind people.',
         'params': [
-            param('event_id', 'string', 'Event ID', False, 'Only invitations to shifts of this event.'),
+            param('event_id', 'string', 'Event ID', False, 'Only invitations to shifts of this event.', options='events'),
             param('shift_id', 'string', 'Shift ID', False, 'Only invitations to this shift.'),
             param('older_than_days', 'int', 'Sent at least this many days ago', False, min=0, max=365, default=0),
         ],
@@ -1203,7 +1213,8 @@ ACTIONS = [
         'params': [
             PERSON_ID,
             param('shift_id', 'string', 'Shift ID', False, 'A shift at an event. Leave empty for a permanent role.'),
-            param('role', 'string', 'Permanent role', False, "The permanent role's name or ID. Leave empty for a shift at an event."),
+            param('role', 'string', 'Permanent role', False, "Pick the permanent role, or give its name or ID. Leave empty for a shift at an event.",
+                  options='roles.permanent'),
         ],
         'output': [
             field('started', 'bool', 'Was checked in just now', True),
@@ -1265,7 +1276,8 @@ ACTIONS = [
                        'for one module or for every module that expires. Found is false when there are none.',
         'params': [
             param('days', 'int', 'Expires within days', False, **DAYS_AHEAD),
-            param('module', 'string', 'Training module', False, "Only this module: its title exactly as it is in Town Hall, or its ID."),
+            param('module', 'string', 'Training module', False, "Only this module: pick one, or give its exact title or ID.",
+                  options='training.modules'),
         ],
         'output': [
             FOUND, COUNT,
@@ -1286,7 +1298,8 @@ ACTIONS = [
                        'choose, for one certificate or for all of them. Found is false when there are none.',
         'params': [
             param('days', 'int', 'Expires within days', False, **DAYS_AHEAD),
-            param('certificate', 'string', 'Certificate', False, "Only this certificate: its name exactly as it is in Town Hall, or its ID."),
+            param('certificate', 'string', 'Certificate', False, "Only this certificate: pick one, or give its exact name or ID.",
+                  options='certificates'),
         ],
         'output': [
             FOUND, COUNT,
@@ -1329,7 +1342,7 @@ ACTIONS = [
         'description': "Posts a short notice on a venue's page and kiosk (for example \"Side entrance closed\"). "
                        'It disappears by itself after the days you choose.',
         'params': [
-            param('venue', 'string', 'Venue', True, "The venue's name exactly as it is in Town Hall, or its ID."),
+            param('venue', 'string', 'Venue', True, "Pick a venue, or give its exact name or ID.", options='venues'),
             param('note', 'string', 'Notice', True, max_length=500),
             param('days', 'int', 'Show for', False, default=7, choices=choices(
                 (1, '1 day'), (3, '3 days'), (7, '1 week'), (14, '2 weeks'), (30, '30 days'), (365, '1 year'))),

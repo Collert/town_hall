@@ -4,7 +4,7 @@ does, and what it refuses. `SwitchboardTestCase.action` holds every answer to th
 from datetime import timedelta
 from unittest.mock import patch
 
-from django.utils import timezone
+from django.utils import timezone, translation
 
 from api.models import APIKey, ShiftHeartbeat
 from base.models import Endorsement, Level, Notification, PointsEntry, Venue, VenueNote
@@ -13,7 +13,7 @@ from education.models import (ExternalCertificate, Skill, TrainingLesson, Traini
 from events.models import (Event, EventArea, EventRoleSlot, EventSlotInvite, SlotCancellation, SlotSignup)
 from jobs.models import Role, RoleCertificateRequirement, RoleTrainingRequirement, Shift
 
-from . import events
+from . import events, options
 from .models import IdempotencyRecord
 from .tests import SwitchboardTestCase, User
 
@@ -1139,3 +1139,135 @@ class EveryActionTests(ActionTestCase):
         for action in manifest.ACTIONS:
             self.assertNotRegex(action['name'], r'delete|remove|destroy', action['name'])
         self.assertTrue(User.objects.filter(pk=self.volunteer.pk).exists())
+
+
+class OptionsTests(ActionTestCase):
+    """GET /switchboard/v1/options/<name>: the lists params offer as dropdowns (switchboard/options.py)."""
+
+    def setUp(self):
+        super().setUp()
+        # Names are written in the active language; make it the default one, whatever ran before.
+        translation.activate('en')
+        self.addCleanup(translation.deactivate)
+
+    def options(self, name, key=None, **headers):
+        response = self.api('get', f'/switchboard/v1/options/{name}', key or self.key, **headers)
+        self.assertEqual(response.status_code, 200, response.content)
+        self.assertEqual(response['Cache-Control'], 'no-store')
+        found = response.json()['options']
+        for option in found:
+            self.assertEqual(set(option), {'value', 'label'})
+            self.assertTrue(isinstance(option['value'], str) and option['value'] and option['label'])
+        return [(option['value'], option['label']) for option in found]
+
+    def test_the_key_is_required_and_unknown_lists_are_404(self):
+        self.assertEqual(self.api('get', '/switchboard/v1/options/roles', None).status_code, 401)
+        self.assertEqual(self.api('get', '/switchboard/v1/options/roles', 'sbk_wrong').json()['error']['code'], 'unauthorized')
+        self.assertEqual(self.api('post', '/switchboard/v1/options/roles', self.key).status_code, 405)
+        response = self.api('get', '/switchboard/v1/options/dragons', self.key)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json()['error']['code'], 'unknown_options')
+        self.assertIn('dragons', response.json()['error']['message'])
+
+    def test_every_list_the_manifest_names_is_served(self):
+        from . import manifest
+        named = {param['options'] for action in manifest.ACTIONS for param in action['params'] if 'options' in param}
+        self.assertEqual(named, {'roles', 'roles.permanent', 'roles.event', 'training.modules', 'certificates',
+                                 'skills', 'venues', 'events'})
+        for name in named:
+            self.options(name)
+
+    def test_roles(self):
+        Role.area_lead()   # built in: never offered
+        greeter = Role.objects.create(name='Greeter', icon='x')
+        librarian = Role.objects.create(name='Librarian', icon='x', permanent=True)
+        cook = Role.objects.create(name='cook', icon='x')
+        twin_a = Role.objects.create(name='Usher', icon='x')
+        twin_b = Role.objects.create(name='usher', icon='x', permanent=True)
+        numbered = Role.objects.create(name='42', icon='x')
+        self.assertEqual(self.options('roles'), [
+            (str(numbered.pk), '42'), ('cook', 'cook'), ('Greeter', 'Greeter'), ('Librarian', 'Librarian (permanent)'),
+            (str(twin_a.pk), f'Usher (ID {twin_a.pk})'), (str(twin_b.pk), f'usher (permanent) (ID {twin_b.pk})')])
+        # Two roles of different kinds share a name: the action can't tell them apart by it, so the ID.
+        self.assertEqual(self.options('roles.permanent'), [
+            ('Librarian', 'Librarian'), (str(twin_b.pk), f'usher (ID {twin_b.pk})')])
+        self.assertEqual([value for value, _label in self.options('roles.event')],
+                         [str(numbered.pk), 'cook', 'Greeter', str(twin_a.pk)])
+        # Every value is one the actions take.
+        for value, _label in self.options('roles.permanent'):
+            self.ok('role.assign', {'person_id': self.me, 'role': value})
+        self.assertEqual(set(self.volunteer.profile.permanent_roles.all()), {librarian, twin_b})
+        for value, _label in self.options('roles'):
+            self.assertIs(self.ok('role.check', {'person_id': self.me, 'role': value})['found'], True)
+        self.assertEqual(greeter.name, 'Greeter')
+        self.assertEqual(cook.name, 'cook')
+
+    def test_names_are_offered_in_the_default_language(self):
+        role = Role.objects.create(name='Greeter', icon='x')
+        role.name_uk = 'Зустрічальник'
+        role.save()
+        self.assertEqual(self.options('roles', **{'Accept-Language': 'uk'}), [('Greeter', 'Greeter')])
+        # A role named only in another language can't be matched by name: it is offered by its ID.
+        with translation.override('uk'):
+            only_uk = Role.objects.create(name='Кухар', icon='x')
+        self.assertEqual(Role.objects.get(pk=only_uk.pk).name_en or '', '')
+        self.assertEqual(self.options('roles')[0][0], str(only_uk.pk))
+        self.assertIs(self.ok('role.check', {'person_id': self.me, 'role': str(only_uk.pk)})['found'], True)
+
+    def test_training_modules_leave_out_staff_guides(self):
+        TrainingModule.objects.create(title='Admin guide', description='x', icon='x', staff_only=True)
+        TrainingModule.objects.create(title='Welcome Desk', description='x', icon='x')
+        TrainingModule.objects.create(title='Food Safety Basics', description='x', icon='x', published=True)
+        self.assertEqual(self.options('training.modules'), [
+            ('Food Safety Basics', 'Food Safety Basics'), ('Welcome Desk', 'Welcome Desk (not published)')])
+        self.assertIs(self.ok('training.status', {'person_id': self.me, 'module': 'Welcome Desk'})['found'], True)
+
+    def test_certificates_skills_and_venues(self):
+        ExternalCertificate.objects.create(name='Food Safe', issuer='BC Centre', description='x')
+        ExternalCertificate.objects.create(name='CPR', description='x')
+        Skill.objects.create(name='Cooking')
+        Skill.objects.create(name='Baking')
+        Venue.objects.create(name='Parish Hall', latitude=1, longitude=1)
+        Venue.objects.create(name='Community Kitchen', latitude=1, longitude=1)
+        self.assertEqual(self.options('certificates'), [('CPR', 'CPR'), ('Food Safe', 'Food Safe (BC Centre)')])
+        self.assertEqual([value for value, _label in self.options('skills')], ['Baking', 'Cooking'])
+        self.assertEqual(self.options('venues'), [('Community Kitchen', 'Community Kitchen'), ('Parish Hall', 'Parish Hall')])
+        self.ok('venue.post_note', {'venue': 'Community Kitchen', 'note': 'Closed'})
+
+    def test_events_by_id_upcoming_first_then_past(self):
+        now = timezone.now()
+
+        def event(title, starts_in, **fields):
+            start = now + starts_in
+            return Event.objects.create(title=title, description='x', location='Hall', start_date=start,
+                                        end_date=start + timedelta(hours=2), latitude=1, longitude=1, **fields)
+
+        later = event('Christmas Bazaar', timedelta(days=10))
+        soon = event('Pancake Breakfast', timedelta(days=2), published=False)
+        running = event('Food Drive', timedelta(hours=-1))
+        old = event('Easter Picnic', timedelta(days=-200))
+        recent = event('Fall Fair', timedelta(days=-20))
+        found = self.options('events')
+        self.assertEqual([value for value, _label in found], [str(e.pk) for e in (running, soon, later, recent, old)])
+        day = lambda e: options._day(e.start_date)
+        self.assertEqual(found[1], (str(soon.pk), f'Pancake Breakfast · {day(soon)} (hidden)'))
+        self.assertEqual(found[2], (str(later.pk), f'Christmas Bazaar · {day(later)}'))
+        self.assertIs(self.ok('event.get', {'event_id': found[1][0]})['found'], True)
+
+    def test_each_list_takes_a_fixed_number_of_queries(self):
+        for many in (1, 12):
+            for index in range(many):
+                Role.objects.create(name=f'Role {many} {index}', icon='x')
+                Venue.objects.create(name=f'Venue {many} {index}', latitude=1, longitude=1)
+                start = timezone.now() + timedelta(days=index - 5)
+                Event.objects.create(title=f'Event {index}', description='x', location='Hall', start_date=start,
+                                     end_date=start + timedelta(hours=1), latitude=1, longitude=1)
+            for name, queries in (('roles', 2), ('venues', 2), ('events', 2)):
+                with self.assertNumQueries(queries):
+                    options.SOURCES[name]()
+
+    def test_lists_are_capped(self):
+        Skill.objects.bulk_create([Skill(name=f'Skill {index:03}') for index in range(options.OPTIONS_LIMIT + 5)])
+        found = self.options('skills')
+        self.assertEqual(len(found), options.OPTIONS_LIMIT)
+        self.assertEqual(found[0][0], 'Skill 000')

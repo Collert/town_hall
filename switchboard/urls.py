@@ -10,5 +10,6 @@ urlpatterns = [
     path('switchboard/v1', views.index),
     path('switchboard/v1/', views.index, name='switchboard_index'),
     path('switchboard/v1/actions/<str:name>', views.action, name='switchboard_action'),
+    path('switchboard/v1/options/<str:name>', views.options_view, name='switchboard_options'),
     path('switchboard/v1/connection', views.connection_view, name='switchboard_connection'),
 ]

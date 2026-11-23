@@ -17,7 +17,7 @@ from education.models import TrainingModule, TrainingModuleCompletion
 from events.models import Event, EventRoleSlot
 from jobs.models import Role, Shift
 
-from . import contract, delivery, events, manifest
+from . import contract, delivery, events, manifest, options
 from .models import AuthorizeCode, Delivery, IdempotencyRecord, SwitchboardConnection, digest
 
 User = get_user_model()
@@ -127,7 +127,18 @@ class SwitchboardTestCase(TestCase):
 
 class ManifestTests(SwitchboardTestCase):
     def test_the_manifest_keeps_its_own_rules(self):
-        self.assertEqual(contract.manifest_problems(manifest.TRIGGERS, manifest.ACTIONS), [])
+        self.assertEqual(contract.manifest_problems(manifest.TRIGGERS, manifest.ACTIONS, options.SOURCES), [])
+
+    def test_options_must_name_a_list_that_is_served(self):
+        def action(**extra):
+            return [{'name': 'x.y', 'params': [{'key': 'role', 'type': 'string', 'required': False, **extra}], 'output': []}]
+        self.assertEqual(contract.manifest_problems([], action(options='roles'), options.SOURCES), [])
+        self.assertIn('nobody serves', contract.manifest_problems([], action(options='dragons'), options.SOURCES)[0])
+        for wrong in ('', 'Roles', 'roles/all', 'roles.', 3):
+            self.assertIn('not a list name', contract.manifest_problems([], action(options=wrong), options.SOURCES)[0])
+        output = [{'name': 'x.y', 'params': [], 'output': [
+            {'key': 'role', 'type': 'string', 'label': 'Role', 'example': 'Cook', 'options': 'roles'}]}]
+        self.assertIn('only params do', contract.manifest_problems([], output)[0])
 
     def test_manifest_shape(self):
         response = self.client.get('/.well-known/switchboard', secure=True, HTTP_HOST='volunteers.example.org')
