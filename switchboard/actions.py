@@ -14,8 +14,12 @@ What they hold to:
   through the training, certificate, capacity and clash checks of the volunteer's own sign-up,
   cancelling through events/reliability.py, points through the ledger (base/points.py), and
   everything else calls what the console or the AI connector calls.
-- Lists come back as a count, the first match in full and names joined into text: Switchboard
-  has no loops, so a step can only use one of each field.
+- A lookup that can match several answers how many matched (`count`), the first match in
+  full, names joined into text, and the matches as a list a workflow can loop over: at most
+  `events.LIST_LIMIT` items in the order the manifest gives, `[]` when nothing matched. An
+  item holds what a later step needs to act on it (IDs, a name, an email for a person), and
+  only what the same lookups already tell about one of them. Lists are built with a fixed
+  number of queries, never one per item.
 """
 import secrets
 from datetime import timedelta
@@ -32,6 +36,7 @@ from django.utils.translation import gettext as _
 from . import events
 
 LIST_MAX = 50  # names or emails joined into one text field
+LIST_LIMIT = events.LIST_LIMIT  # items in a list
 
 
 class ActionError(Exception):
@@ -196,8 +201,8 @@ def slot_brief(slot):
     }
 
 
-def slot_output(slot):
-    people = list(slot.signups.order_by('first_name', 'last_name', 'pk'))
+def slot_output(slot, people=None):
+    people = list(slot.signups.order_by(*events.BY_NAME)) if people is None else people
     return {
         **slot_brief(slot),
         'open_spots': max(0, slot.required_qty - len(people)),
@@ -233,12 +238,48 @@ def event_output(event, request):
     }
 
 
-def _listed(queryset, output, names):
-    """A list lookup's answer: how many matched, the first in full, and all their names as text."""
-    count = queryset.count()
+def _listed(queryset, output, names, key, items):
+    """A list lookup's answer: how many matched, the first in full, all their names as text
+    (`names`, of the first LIST_MAX) and the matches as the list `key` (`items` turns the
+    first LIST_LIMIT into its items)."""
+    some, count = events.capped(queryset)
     if not count:
-        return {'found': False, 'count': 0}
-    return {'found': True, 'count': count, **output(queryset[0]), **names(queryset[:LIST_MAX])}
+        return {'found': False, 'count': 0, key: []}
+    return {'found': True, 'count': count, **output(some[0]), **names(some[:LIST_MAX]), key: items(some)}
+
+
+def _found(key, items, count=None, **more):
+    """The answer of a lookup that is only a list: `found` says whether it holds anything."""
+    count = len(items) if count is None else count
+    return {'found': bool(count), 'count': count, **more, key: items}
+
+
+def _event_lists(event):
+    shifts, shift_count = events.event_shift_items(event)
+    volunteers, volunteer_count = events.event_volunteer_items(event)
+    return {'shifts': shifts, 'shift_count': shift_count, 'volunteers': volunteers, 'volunteer_count': volunteer_count}
+
+
+def _event_items(found, request):
+    """Events as list items, with each one's staffing from one query for all of them."""
+    from events.models import EventRoleSlot
+    staffing = {event.pk: [0, 0, 0] for event in found}
+    for event_id, required, taken in (
+            EventRoleSlot.objects.filter(event__in=list(staffing)).exclude(role__system_key__isnull=False)
+            .annotate(n=Count('signups')).values_list('event_id', 'required_qty', 'n')):
+        numbers = staffing[event_id]
+        numbers[0], numbers[1], numbers[2] = numbers[0] + required, numbers[1] + taken, numbers[2] + max(0, required - taken)
+    return [{
+        'event_id': str(event.pk), 'title': event.title, 'place': event.place_name or '',
+        'starts_at': events.iso(event.start_date), 'ends_at': events.iso(event.end_date),
+        'published': event.published, 'url': _event_url(request, event),
+        'volunteers_needed': staffing[event.pk][0], 'volunteers_signed_up': staffing[event.pk][1],
+        'open_spots': staffing[event.pk][2],
+    } for event in found]
+
+
+def _days_left(moment, now):
+    return max(0, (moment - now).days)
 
 
 # ---------------------------------------------------------------------------
@@ -260,19 +301,26 @@ def person_search(connection, params, request):
     for word in params.get('query', '').split():
         people = people.filter(Q(first_name__icontains=word) | Q(last_name__icontains=word)
                                | Q(email__icontains=word) | Q(username__icontains=word))
+    ordered = events.levels()
     if 'min_level' in params:
-        ordered = events.levels()
         if params['min_level'] > len(ordered):
-            return {'found': False, 'count': 0}
+            return {'found': False, 'count': 0, 'people': []}
         people = people.filter(profile__impact_points__gte=ordered[params['min_level'] - 1].min_points)
     if 'role' in params:
         people = people.filter(profile__permanent_roles=_permanent_role(params['role']))
     if 'event_id' in params:
         people = people.filter(commitments__event=_need_event(params))
     people = people.distinct().order_by('-profile__impact_points', 'pk')
+
+    def item(user):
+        number, level = events.level_of(user.profile.impact_points, ordered)
+        return {**events.person_item(user), 'level': number, 'level_name': level.name if level else '',
+                'impact_points': user.profile.impact_points}
+
     return _listed(people, lambda user: {key: value for key, value in person_output(user).items() if key != 'found'},
                    lambda some: {'names': _joined(events.person_name(user) for user in some),
-                                 'emails': _joined(user.email for user in some)})
+                                 'emails': _joined(user.email for user in some)},
+                   'people', lambda some: [item(user) for user in some])
 
 
 def person_next_shift(connection, params, request):
@@ -280,8 +328,7 @@ def person_next_shift(connection, params, request):
     if not user:
         return {'found': False}
     upcoming = _slots().filter(signups=user, end_time__gt=timezone.now()).order_by('start_time', 'pk')
-    count = upcoming.count()
-    return {'found': True, 'count': count, **slot_brief(upcoming[0])} if count else {'found': False, 'count': 0}
+    return _listed(upcoming, slot_brief, lambda some: {}, 'shifts', events.shift_items)
 
 
 def shift_current(connection, params, request):
@@ -306,13 +353,21 @@ def role_check(connection, params, request):
     done = set(TrainingModuleCompletion.objects.filter(user=user).values_list('training_module_id', flat=True))
     required = TrainingModule.objects.filter(
         roletrainingrequirement__role=role, roletrainingrequirement__mandatory=True).distinct().order_by('title')
+    modules = [module for module in required if module.pk not in done]
+    lacking = role.missing_certificates(user)
+    certificates = sorted(lacking, key=lambda certificate: (certificate.name, certificate.pk))
+    missing = ([{'kind': 'training', 'id': str(module.pk), 'name': module.title,
+                 'url': request.build_absolute_uri(reverse('module_overview', args=[module.pk]))} for module in modules]
+               + [{'kind': 'certificate', 'id': str(certificate.pk), 'name': certificate.name, 'url': ''}
+                  for certificate in certificates])
     return {
         'found': True,
         'qualified': role.meets_requirements(user),
-        'missing_training': _joined(module.title for module in required if module.pk not in done),
-        'missing_certificates': _joined(certificate.name for certificate in role.missing_certificates(user)),
+        'missing_training': _joined(module.title for module in modules),
+        'missing_certificates': _joined(certificate.name for certificate in lacking),
         'assigned': bool(role.permanent and role.is_assigned_to(user)),
         'role_id': str(role.pk), 'role': role.name,
+        'missing': missing[:LIST_LIMIT], 'missing_count': len(missing),
     }
 
 
@@ -516,7 +571,9 @@ def role_find(connection, params, request):
         roles = roles.filter(name__icontains=params['name'].strip())
     return _listed(roles, lambda role: {'role_id': str(role.pk), 'name': role.name, 'permanent': role.permanent,
                                         'description': role.description or ''},
-                   lambda some: {'names': _joined(role.name for role in some)})
+                   lambda some: {'names': _joined(role.name for role in some)},
+                   'roles', lambda some: [{'role_id': str(role.pk), 'name': role.name, 'permanent': role.permanent}
+                                          for role in some])
 
 
 def _assign(params, assign):
@@ -546,7 +603,7 @@ def role_unassign(connection, params, request):
 
 def event_get(connection, params, request):
     event = _by_id(_events(), params['event_id'])
-    return {'found': True, **event_output(event, request)} if event else {'found': False}
+    return {'found': True, **event_output(event, request), **_event_lists(event)} if event else {'found': False}
 
 
 def event_find(connection, params, request):
@@ -554,14 +611,20 @@ def event_find(connection, params, request):
     found = _events()
     if not params.get('include_hidden', False):
         found = found.filter(published=True)
+    within = timedelta(days=params['within_days']) if 'within_days' in params else None
     if params.get('when', 'upcoming') == 'past':
         found = found.filter(end_date__lt=now).order_by('-start_date', 'pk')
+        if within:
+            found = found.filter(end_date__gte=now - within)
     else:
         found = found.filter(end_date__gte=now).order_by('start_date', 'pk')
+        if within:
+            found = found.filter(start_date__lte=now + within)
     if 'query' in params:
         found = found.filter(title__icontains=params['query'].strip())
-    return _listed(found, lambda event: event_output(event, request),
-                   lambda some: {'titles': _joined(event.title for event in some)})
+    return _listed(found, lambda event: {**event_output(event, request), **_event_lists(event)},
+                   lambda some: {'titles': _joined(event.title for event in some)},
+                   'events', lambda some: _event_items(some, request))
 
 
 def _translated(instance, name, value):
@@ -675,25 +738,78 @@ def event_notify_volunteers(connection, params, request):
     return {'sent': len(volunteers), 'event_id': str(event.pk), 'title': event.title}
 
 
+def event_find_absent(connection, params, request):
+    """Who is signed up for a shift that is on right now and has no check-in for it (no `Shift`
+    row for that slot, the same thing the no-show rule looks at once the shift is over)."""
+    from jobs.models import Shift
+    event = _by_id(_events(), params['event_id'])
+    if not event:
+        return _found('people', [])
+    now = timezone.now()
+    slots = {slot.pk: slot for slot in event.role_slots.select_related('role').filter(
+        start_time__lte=now - timedelta(minutes=params.get('minutes_late', 0)), end_time__gt=now)}
+    arrived = set(Shift.objects.filter(event_role_slot__in=list(slots)).values_list('event_role_slot_id', 'user_id'))
+    signups = (events.signups().filter(eventroleslot__in=list(slots)).select_related('user')
+               .order_by('eventroleslot__start_time', 'user__first_name', 'user__last_name', 'user_id', 'eventroleslot_id'))
+    people = []
+    for signup in signups:
+        if (signup.eventroleslot_id, signup.user_id) not in arrived:
+            slot = slots[signup.eventroleslot_id]
+            people.append({
+                **events.person_item(signup.user), 'role': slot.role.name, 'shift_id': str(slot.pk),
+                'starts_at': events.iso(slot.start_time), 'ends_at': events.iso(slot.end_time),
+                'minutes_late': int((now - slot.start_time).total_seconds() // 60),
+            })
+    return _found('people', people[:LIST_LIMIT], len(people), event_id=str(event.pk), title=event.title)
+
+
 # ---------------------------------------------------------------------------
 # Shifts at events
 # ---------------------------------------------------------------------------
 
 def shift_get(connection, params, request):
+    from jobs.models import Shift
     slot = _by_id(_slots(), params['shift_id'])
-    return {'found': True, **slot_output(slot)} if slot else {'found': False}
+    if not slot:
+        return {'found': False}
+    people = list(slot.signups.order_by(*events.BY_NAME))
+    arrived = set(Shift.objects.filter(event_role_slot=slot).values_list('user_id', flat=True))
+    return {'found': True, **slot_output(slot, people),
+            'people': [{**events.person_item(user), 'checked_in': user.pk in arrived} for user in people[:LIST_LIMIT]]}
 
 
 def shift_find(connection, params, request):
     event = _by_id(_events(), params['event_id'])
     if not event:
-        return {'found': False, 'count': 0}
+        return {'found': False, 'count': 0, 'shifts': []}
     slots = _slots().filter(event=event).exclude(role__system_key__isnull=False).order_by('start_time', 'pk')
     if 'role' in params:
         slots = slots.filter(role=_need_named(_roles(), params['role'], 'role'))
     if params.get('open_only', False):
         slots = slots.annotate(taken=Count('signups')).filter(taken__lt=F('required_qty'), end_time__gt=timezone.now())
-    return _listed(slots, slot_output, lambda some: {})
+    return _listed(slots, slot_output, lambda some: {}, 'shifts', events.shift_items)
+
+
+def invite_find_pending(connection, params, request):
+    """Invitations nobody answered: accepting marks one, declining deletes it, so what is left
+    unaccepted for a shift that hasn't ended is still waiting."""
+    from events.models import EventSlotInvite
+    now = timezone.now()
+    invites = (EventSlotInvite.objects.filter(accepted=False, user__isnull=False, event_role_slot__end_time__gt=now)
+               .select_related('user', 'event_role_slot__role', 'event_role_slot__event').order_by('sent_at', 'pk'))
+    if 'shift_id' in params:
+        invites = invites.filter(event_role_slot=_need_slot(params))
+    if 'event_id' in params:
+        invites = invites.filter(event_role_slot__event=_need_event(params))
+    if params.get('older_than_days'):
+        invites = invites.filter(sent_at__lte=now - timedelta(days=params['older_than_days']))
+    some, count = events.capped(invites)
+    return _found('invites', [{
+        **events.person_item(invite.user), 'invite_id': str(invite.pk), 'invited_at': events.iso(invite.sent_at),
+        'shift_id': str(invite.event_role_slot_id), 'role': invite.event_role_slot.role.name,
+        'starts_at': events.iso(invite.event_role_slot.start_time),
+        'event_id': str(invite.event_role_slot.event_id), 'event_title': invite.event_role_slot.event.title,
+    } for invite in some], count)
 
 
 def shift_sign_up(connection, params, request):
@@ -862,7 +978,58 @@ def training_find(connection, params, request):
         'module_id': str(module.pk), 'title': module.title, 'published': module.published,
         'minutes': module.get_total_length(),
         'url': request.build_absolute_uri(reverse('module_overview', args=[module.pk])),
-    }, lambda some: {'titles': _joined(module.title for module in some)})
+    }, lambda some: {'titles': _joined(module.title for module in some)},
+        'modules', lambda some: [{
+            'module_id': str(module.pk), 'title': module.title, 'published': module.published,
+            'url': request.build_absolute_uri(reverse('module_overview', args=[module.pk])),
+        } for module in some])
+
+
+def training_find_expiring(connection, params, request):
+    """Completions of modules that have to be renewed (`expires_after_days`) whose expiry falls
+    in the coming days: one query per such module, like the `training.expired` event."""
+    from education.models import TrainingModule, TrainingModuleCompletion
+    now, ahead = timezone.now(), timedelta(days=params.get('days', 30))
+    modules = TrainingModule.objects.filter(staff_only=False, expires_after_days__gt=0)
+    if 'module' in params:
+        modules = [_need_named(TrainingModule.objects.filter(staff_only=False), params['module'], 'training module', 'title')]
+    people, count = [], 0
+    for module in modules:
+        if not module.expires_after_days:
+            continue
+        lasts = timedelta(days=module.expires_after_days)
+        # Expires after now and by now + ahead; the ones expiring soonest were completed first.
+        some, total = events.capped(TrainingModuleCompletion.objects.filter(
+            training_module=module, user__is_active=True, completed_at__gt=now - lasts, completed_at__lte=now + ahead - lasts,
+        ).select_related('user').order_by('completed_at', 'pk'))
+        count += total
+        for completion in some:
+            expires_at = completion.completed_at + lasts
+            people.append((expires_at, completion.pk, {
+                **events.person_item(completion.user), 'module_id': str(module.pk), 'module_title': module.title,
+                'completed_at': events.iso(completion.completed_at), 'expires_at': events.iso(expires_at),
+                'days_left': _days_left(expires_at, now),
+            }))
+    people.sort(key=lambda row: row[:2])
+    return _found('people', [item for _expires_at, _pk, item in people[:LIST_LIMIT]], count)
+
+
+def certificate_find_expiring(connection, params, request):
+    """Verified certificates of active people that run out in the coming days (what the
+    `certificate.expiring` event reports 30 days ahead, for any number of days)."""
+    from education.models import ExternalCertificate, UserCertification
+    now = timezone.now()
+    held = UserCertification.objects.filter(
+        verified=True, user__is_active=True, expiration_date__gt=now,
+        expiration_date__lte=now + timedelta(days=params.get('days', 30)),
+    ).select_related('user', 'certificate').order_by('expiration_date', 'pk')
+    if 'certificate' in params:
+        held = held.filter(certificate=_need_named(ExternalCertificate.objects, params['certificate'], 'certificate'))
+    some, count = events.capped(held)
+    return _found('people', [{
+        **events.person_item(one.user), 'certificate_id': str(one.certificate_id), 'certificate': one.certificate.name,
+        'expires_at': events.iso(one.expiration_date), 'days_left': _days_left(one.expiration_date, now),
+    } for one in some], count)
 
 
 def venue_find(connection, params, request):
@@ -873,7 +1040,11 @@ def venue_find(connection, params, request):
     return _listed(venues, lambda venue: {
         'venue_id': str(venue.pk), 'name': venue.name, 'address': venue.address or '', 'phone': venue.phone_number or '',
         'url': request.build_absolute_uri(reverse('venue_detail', args=[venue.pk])),
-    }, lambda some: {'names': _joined(venue.name for venue in some)})
+    }, lambda some: {'names': _joined(venue.name for venue in some)},
+        'venues', lambda some: [{
+            'venue_id': str(venue.pk), 'name': venue.name, 'address': venue.address or '', 'phone': venue.phone_number or '',
+            'url': request.build_absolute_uri(reverse('venue_detail', args=[venue.pk])),
+        } for venue in some])
 
 
 def venue_post_note(connection, params, request):
@@ -911,14 +1082,18 @@ HANDLERS = {
     'event.unpublish': event_unpublish,
     'event.add_shift': event_add_shift,
     'event.notify_volunteers': event_notify_volunteers,
+    'event.find_absent': event_find_absent,
     'shift.get': shift_get,
     'shift.find': shift_find,
+    'invite.find_pending': invite_find_pending,
     'shift.sign_up': shift_sign_up,
     'shift.cancel': shift_cancel,
     'shift.invite': shift_invite,
     'shift.start': shift_start,
     'shift.end': shift_end,
     'training.find': training_find,
+    'training.find_expiring': training_find_expiring,
+    'certificate.find_expiring': certificate_find_expiring,
     'venue.find': venue_find,
     'venue.post_note': venue_post_note,
 }

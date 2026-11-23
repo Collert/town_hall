@@ -260,7 +260,7 @@ def signups_changed(sender, instance, action, reverse, pk_set, **kwargs):
                 events.emit('shift.cancelled', *_about(user, **data, late=is_late(slot)))
         # The sign-up that brought it to the number it needs (not every one after that).
         if added and not slot.is_area_lead and slot.taken - len(users) < slot.required_qty <= slot.taken:
-            events.emit('shift.filled', events.slot_subject(slot), data)
+            events.emit('shift.filled', events.slot_subject(slot), {**data, 'volunteers': events.slot_volunteer_items(slot)[0]})
 
 
 # -- shift.lead_assigned -------------------------------------------------------
@@ -328,12 +328,13 @@ def event_saved(sender, instance, created, **kwargs):
         events.emit('event.rescheduled', subject, {
             'event': {**data, 'published': bool(instance.published)},
             'previous_starts_at': events.iso(before['start_date']), 'previous_ends_at': events.iso(before['end_date']),
+            **events.event_lists(instance, shifts=False),
         }, links=links)
     was_published = bool(before.get('published'))
     if instance.published and not was_published:
-        events.emit('event.published', subject, {'event': data}, links=links)
+        events.emit('event.published', subject, {'event': data, **events.event_lists(instance, volunteers=False)}, links=links)
     elif was_published and not instance.published:
-        events.emit('event.unpublished', subject, {'event': data}, links=links)
+        events.emit('event.unpublished', subject, {'event': data, **events.event_lists(instance, shifts=False)}, links=links)
 
 
 # -- event.coordinator_added / event.feedback_submitted ----------------------------

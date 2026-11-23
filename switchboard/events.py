@@ -7,6 +7,12 @@ connection it costs one cheap query, and every failure is logged, never raised.
 
 The `*_data` helpers build the `data` shapes the manifest's dotted field keys describe. A
 field with nothing to say is '' for text and None (left out by Switchboard) for a time.
+
+The `*_items` helpers build lists a workflow can loop over (the protocol's `list` type). They
+are shared with the actions, so an item looks the same wherever it comes from: flat keys
+(`person_id`, `shift_id`, ...), at most LIST_LIMIT items in a stable order, and the number
+there really are returned next to them for a count field. Each costs a fixed number of
+queries, whatever the size of the event.
 """
 import json
 import logging
@@ -18,6 +24,9 @@ from django.utils import timezone
 from . import manifest
 
 logger = logging.getLogger(__name__)
+
+LIST_LIMIT = 200  # the protocol's cap on a list; how many there are in all goes in a count field
+BY_NAME = ('first_name', 'last_name', 'pk')
 
 
 def iso(value):
@@ -108,6 +117,93 @@ def event_staffing(event):
                             .annotate(n=Count('signups')).values_list('required_qty', 'n')):
         needed, taken, open_spots = needed + required, taken + count, open_spots + max(0, required - count)
     return {'volunteers_needed': needed, 'volunteers_signed_up': taken, 'open_spots': open_spots}
+
+
+# -- lists ---------------------------------------------------------------------
+
+def capped(queryset):
+    """(the first LIST_LIMIT rows, how many there are in all)."""
+    some = list(queryset[:LIST_LIMIT])
+    return some, len(some) if len(some) < LIST_LIMIT else queryset.count()
+
+
+def person_item(user):
+    return {'person_id': str(user.pk), 'name': person_name(user), 'email': user.email}
+
+
+def signups():
+    from events.models import EventRoleSlot
+    return EventRoleSlot.signups.through.objects
+
+
+def taken_by_slot(slot_ids):
+    """{slot ID: how many signed up}, in one query."""
+    from django.db.models import Count
+    return dict(signups().filter(eventroleslot_id__in=slot_ids).values_list('eventroleslot_id').annotate(n=Count('pk')))
+
+
+def shift_items(slots):
+    """Role slots (with their event, role and area loaded) as list items."""
+    slots = list(slots)
+    taken = taken_by_slot([slot.pk for slot in slots])
+    items = []
+    for slot in slots:
+        event, signed_up = slot.event, taken.get(slot.pk, 0)
+        items.append({
+            'shift_id': str(slot.pk), 'role': slot.role.name, 'role_id': str(slot.role_id),
+            'starts_at': iso(slot.start_time), 'ends_at': iso(slot.end_time),
+            'event_id': str(event.pk), 'event_title': event.title, 'place': event.place_name or '',
+            'area': slot.area.name if slot.area_id else '',
+            'needed': slot.required_qty, 'taken': signed_up, 'open_spots': max(0, slot.required_qty - signed_up),
+            'invite_only': not slot.is_public,
+        })
+    return items
+
+
+def event_shift_items(event):
+    """(an event's volunteer shifts, earliest first; how many it has). Area lead shifts are
+    left out, as they are from its staffing numbers."""
+    slots, total = capped(event.role_slots.exclude(role__system_key__isnull=False)
+                          .select_related('role', 'area').order_by('start_time', 'pk'))
+    for slot in slots:
+        slot.event = event
+    return shift_items(slots), total
+
+
+def event_volunteer_items(event):
+    """(everyone signed up for a shift at the event, by name; how many people that is). One
+    item per person: someone on several shifts has their roles joined and their first shift."""
+    people, total = capped(event.volunteers().order_by(*BY_NAME))
+    theirs = {}
+    for signup in (signups().filter(eventroleslot__event=event, user_id__in=[user.pk for user in people])
+                   .select_related('eventroleslot__role').order_by('eventroleslot__start_time', 'eventroleslot_id')):
+        theirs.setdefault(signup.user_id, []).append(signup.eventroleslot)
+    items = []
+    for user in people:
+        slots = theirs.get(user.pk, [])
+        items.append({
+            **person_item(user),
+            'role': ', '.join(dict.fromkeys(slot.role.name for slot in slots)),
+            'shift_id': str(slots[0].pk) if slots else '',
+            'starts_at': when(slots[0].start_time) if slots else None,
+        })
+    return items, total
+
+
+def slot_volunteer_items(slot):
+    """(the people signed up for a shift, by name; how many)."""
+    people, total = capped(slot.signups.order_by(*BY_NAME))
+    return [person_item(user) for user in people], total
+
+
+def event_lists(event, shifts=True, volunteers=True):
+    """The list fields events about an event carry, with their counts."""
+    data = {}
+    if shifts:
+        data['shifts'], data['shift_count'] = event_shift_items(event)
+    if volunteers:
+        data['volunteers'], data['volunteer_count'] = event_volunteer_items(event)
+    return data
 
 
 def module_data(module):

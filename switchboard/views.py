@@ -5,6 +5,7 @@
 - ``POST /switchboard/v1/token``      Switchboard trades the code for its API key and webhook secret
 - ``GET  /switchboard/v1/``           checks a key
 - ``POST /switchboard/v1/actions/<name>``  runs an action (switchboard/actions.py)
+- ``GET  /switchboard/v1/options/<name>``  a list a param offers as a dropdown (switchboard/options.py)
 - ``DELETE /switchboard/v1/connection``    Switchboard disconnecting
 
 These paths sit outside the language prefix: Switchboard builds them from the manifest.
@@ -26,7 +27,7 @@ from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 
-from . import actions, manifest
+from . import actions, manifest, options
 from .models import AuthorizeCode, IdempotencyRecord, SwitchboardConnection, digest
 
 logger = logging.getLogger(__name__)
@@ -193,6 +194,16 @@ def api_view(*methods):
 def index(request, connection):
     return _json({'ok': True, 'building': manifest.BUILDING, 'instance': manifest.instance_name(),
                   'connection_id': str(connection.pk)})
+
+
+@api_view('GET')
+def options_view(request, connection, name):
+    source = options.SOURCES.get(name)
+    if not source:
+        return _error(404, 'unknown_options', f'Town Hall has no list of options called "{name}".')
+    # Names are offered in the default language: the one actions match them in.
+    with translation.override(settings.LANGUAGE_CODE):
+        return _json({'options': source()[:options.OPTIONS_LIMIT]})
 
 
 @api_view('DELETE')

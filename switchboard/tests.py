@@ -17,7 +17,7 @@ from education.models import TrainingModule, TrainingModuleCompletion
 from events.models import Event, EventRoleSlot
 from jobs.models import Role, Shift
 
-from . import contract, delivery, events, manifest
+from . import contract, delivery, events, manifest, options
 from .models import AuthorizeCode, Delivery, IdempotencyRecord, SwitchboardConnection, digest
 
 User = get_user_model()
@@ -127,7 +127,18 @@ class SwitchboardTestCase(TestCase):
 
 class ManifestTests(SwitchboardTestCase):
     def test_the_manifest_keeps_its_own_rules(self):
-        self.assertEqual(contract.manifest_problems(manifest.TRIGGERS, manifest.ACTIONS), [])
+        self.assertEqual(contract.manifest_problems(manifest.TRIGGERS, manifest.ACTIONS, options.SOURCES), [])
+
+    def test_options_must_name_a_list_that_is_served(self):
+        def action(**extra):
+            return [{'name': 'x.y', 'params': [{'key': 'role', 'type': 'string', 'required': False, **extra}], 'output': []}]
+        self.assertEqual(contract.manifest_problems([], action(options='roles'), options.SOURCES), [])
+        self.assertIn('nobody serves', contract.manifest_problems([], action(options='dragons'), options.SOURCES)[0])
+        for wrong in ('', 'Roles', 'roles/all', 'roles.', 3):
+            self.assertIn('not a list name', contract.manifest_problems([], action(options=wrong), options.SOURCES)[0])
+        output = [{'name': 'x.y', 'params': [], 'output': [
+            {'key': 'role', 'type': 'string', 'label': 'Role', 'example': 'Cook', 'options': 'roles'}]}]
+        self.assertIn('only params do', contract.manifest_problems([], output)[0])
 
     def test_manifest_shape(self):
         response = self.client.get('/.well-known/switchboard', secure=True, HTTP_HOST='volunteers.example.org')
@@ -142,6 +153,7 @@ class ManifestTests(SwitchboardTestCase):
         self.assertTrue(data['instance'])
 
         types = {'string', 'int', 'number', 'bool', 'datetime', 'money'}
+        output_types = types | {'list'}     # outputs and events may hold lists; params stay single values
         triggers = {t['type']: t for t in data['triggers']}
         # Workflows store these, so the list only ever grows (the protocol's section 5).
         self.assertLessEqual({
@@ -150,7 +162,7 @@ class ManifestTests(SwitchboardTestCase):
         for trigger in data['triggers']:
             self.assertTrue(trigger['title'] and trigger['description'] and trigger['summary'])
             for f in trigger['fields']:
-                self.assertIn(f['type'], types)
+                self.assertIn(f['type'], output_types)
                 self.assertIn('example', f)
                 self.assertTrue(f['label'])
         keys = lambda t: {f['key'] for f in triggers[t]['fields']}
@@ -170,6 +182,7 @@ class ManifestTests(SwitchboardTestCase):
                 self.assertIn(p['type'], types)
                 self.assertIn('required', p)
             for f in action['output']:
+                self.assertIn(f['type'], output_types)
                 self.assertIn('example', f)
         self.assertEqual((actions['person.find']['kind'], actions['person.get']['kind']), ('lookup', 'lookup'))
         self.assertEqual((actions['person.invite']['kind'], actions['notification.send']['kind']), ('action', 'action'))
@@ -177,6 +190,33 @@ class ManifestTests(SwitchboardTestCase):
                              {f['key'] for f in actions['person.find']['output']})
         self.assertEqual([p['key'] for p in actions['notification.send']['params'] if p['required']],
                          ['person_id', 'title', 'message'])
+
+    def test_every_list_says_what_it_holds_its_order_and_how_many_there_are(self):
+        """The protocol's rules for lists: items with an id and a name, an example, the cap and
+        the order in the label, and a count field next to it for the true total."""
+        lists = 0
+        for where, fields in ([(t['type'], t['fields']) for t in manifest.TRIGGERS]
+                              + [(a['name'], a['output']) for a in manifest.ACTIONS]):
+            keys = {f['key'] for f in fields}
+            for f in fields:
+                if f['type'] != 'list':
+                    continue
+                lists += 1
+                item_keys = [item['key'] for item in f['items']]
+                self.assertEqual(len(item_keys), len(set(item_keys)), f'{where} {f["key"]}')
+                self.assertFalse([key for key in item_keys if '.' in key], f'{where} {f["key"]}')
+                self.assertTrue(any(key == 'id' or key.endswith('_id') for key in item_keys), f'{where} {f["key"]} items have no id')
+                self.assertTrue({'name', 'title'} & set(item_keys) or 'role' in item_keys, f'{where} {f["key"]} items have no name')
+                if 'person_id' in item_keys:
+                    self.assertLessEqual({'name', 'email'}, set(item_keys), f'{where} {f["key"]}')
+                self.assertEqual(len(f['example']), 1)
+                self.assertEqual(set(f['example'][0]), set(item_keys))
+                self.assertIn('at most 200', f['label'], f'{where} {f["key"]}')
+                self.assertTrue(keys & {'count', f['key'].rstrip('s') + '_count', 'missing_count', 'shift.taken', 'taken',
+                                        'volunteers'} - {f['key']}, f'{where} {f["key"]} has no count next to it')
+        self.assertGreater(lists, 20)
+        for action in manifest.ACTIONS:
+            self.assertFalse([p['key'] for p in action['params'] if p['type'] == 'list'], action['name'])
 
     def test_every_handler_and_summary_matches_the_manifest(self):
         from .actions import HANDLERS

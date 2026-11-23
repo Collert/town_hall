@@ -163,6 +163,9 @@ class ShiftTriggerTests(SwitchboardTestCase):
         filled = self.one('shift.filled')
         self.assertEqual(filled['subject'], {'type': 'shift', 'id': str(self.slot.pk), 'name': 'Greeter at Christmas Bazaar'})
         self.assertEqual((filled['data']['shift']['taken'], filled['data']['shift']['open_spots']), (2, 0))
+        self.assertEqual(filled['data']['volunteers'], [    # everyone on it, by name
+            {'person_id': str(self.volunteer.pk), 'name': 'Maria K.', 'email': 'Maria@example.org'},
+            {'person_id': str(self.petro.pk), 'name': 'Petro', 'email': 'petro@example.org'}])
         with self.committing():
             self.slot.signups.remove(self.petro, self.volunteer)
             self.petro.commitments.add(self.slot)        # filled a second time is a second event
@@ -317,10 +320,50 @@ class EventTriggerTests(SwitchboardTestCase):
             event.published = False
             event.save(update_fields=['published'])
             event.save()
-        self.one('event.published')
-        self.assertEqual(self.one('event.unpublished')['data']['event']['title'], 'Christmas Bazaar 2026')
+        published = self.one('event.published')['data']
+        self.assertEqual(([s['shift_id'] for s in published['shifts']], published['shift_count']), ([str(_slot.pk)], 1))
+        self.assertNotIn('volunteers', published)
+        hidden = self.one('event.unpublished')['data']
+        self.assertEqual(hidden['event']['title'], 'Christmas Bazaar 2026')
+        self.assertEqual((hidden['volunteers'], hidden['volunteer_count']), ([], 0))
+        self.assertEqual((moved['data']['volunteers'], moved['data']['volunteer_count']), ([], 0))
         self.one('event.created')
         self.one('event.rescheduled')
+
+    def test_published_carries_the_shifts_and_hidden_or_moved_the_people_to_tell(self):
+        event, slot = self.event_with_slot(published=False)
+        cook = Role.objects.create(name='Cook', icon='x')
+        earlier = EventRoleSlot.objects.create(event=event, role=cook, start_time=slot.start_time - timedelta(hours=1),
+                                               end_time=slot.start_time)
+        anna = self.person('anna')
+        slot.signups.add(self.volunteer, anna)
+        earlier.signups.add(self.volunteer)
+        self.fake.requests.clear()
+        with self.committing():
+            event.published = True
+            event.save()
+        shifts = self.one('event.published')['data']['shifts']
+        self.assertEqual([(s['shift_id'], s['role'], s['needed'], s['taken'], s['open_spots']) for s in shifts],
+                         [(str(earlier.pk), 'Cook', 1, 1, 0), (str(slot.pk), 'Greeter', 2, 2, 0)])   # earliest first
+        self.assertEqual(shifts[1], {
+            'shift_id': str(slot.pk), 'role': 'Greeter', 'role_id': str(slot.role_id),
+            'starts_at': events.iso(slot.start_time), 'ends_at': events.iso(slot.end_time),
+            'event_id': str(event.pk), 'event_title': 'Christmas Bazaar', 'place': 'Parish Hall', 'area': '',
+            'needed': 2, 'taken': 2, 'open_spots': 0, 'invite_only': False})
+
+        with self.committing():
+            event.start_date += timedelta(hours=1)
+            event.save()
+            event.published = False
+            event.save()
+        expected = [
+            {'person_id': str(anna.pk), 'name': 'Anna', 'email': 'anna@example.org', 'role': 'Greeter',
+             'shift_id': str(slot.pk), 'starts_at': events.iso(slot.start_time)},
+            {'person_id': str(self.volunteer.pk), 'name': 'Maria K.', 'email': 'Maria@example.org', 'role': 'Cook, Greeter',
+             'shift_id': str(earlier.pk), 'starts_at': events.iso(earlier.start_time)}]
+        for event_type in ('event.rescheduled', 'event.unpublished'):
+            data = self.one(event_type)['data']
+            self.assertEqual((data['volunteers'], data['volunteer_count']), (expected, 2), event_type)
 
     def test_an_event_created_published_is_both(self):
         with self.committing():
@@ -461,8 +504,16 @@ class TimedTests(SwitchboardTestCase):
 
         self.run_due(self.now + timedelta(hours=10))
         soon = self.one('event.starting_soon')
+        shift_item = {
+            'shift_id': str(slot.pk), 'role': 'Greeter', 'role_id': str(slot.role_id),
+            'starts_at': events.iso(slot.start_time), 'ends_at': events.iso(slot.end_time),
+            'event_id': str(event.pk), 'event_title': 'Christmas Bazaar', 'place': 'Parish Hall', 'area': '',
+            'needed': 2, 'taken': 1, 'open_spots': 1, 'invite_only': False}
+        person_item = {'person_id': str(self.volunteer.pk), 'name': 'Maria K.', 'email': 'Maria@example.org'}
+        volunteer_item = {**person_item, 'role': 'Greeter', 'shift_id': str(slot.pk), 'starts_at': events.iso(slot.start_time)}
         self.assertEqual({k: v for k, v in soon['data'].items() if k != 'event'}, {
-            'volunteers_needed': 2, 'volunteers_signed_up': 1, 'open_spots': 1, 'hours_until': 20.0})
+            'volunteers_needed': 2, 'volunteers_signed_up': 1, 'open_spots': 1, 'hours_until': 20.0,
+            'shifts': [shift_item], 'shift_count': 1, 'volunteers': [volunteer_item], 'volunteer_count': 1})
         self.assertEqual(soon['data']['event']['url'], f'https://volunteers.example.org/en/opportunities/{event.pk}/')
         self.assertEqual(self.fake.of_type('event.started'), [])
 
@@ -472,15 +523,64 @@ class TimedTests(SwitchboardTestCase):
         self.run_due(event.start_date + timedelta(minutes=5))
         started = self.one('event.started')
         self.assertEqual((started['occurred_at'], started['data']['volunteers_signed_up']), (events.iso(event.start_date), 1))
+        self.assertEqual((started['data']['shifts'], started['data']['shift_count'], started['data']['volunteers'],
+                          started['data']['volunteer_count']), ([shift_item], 1, [volunteer_item], 1))
         self.assertEqual(self.fake.of_type('event.ended'), [])
 
         self.run_due(event.end_date + timedelta(minutes=5))
         ended = self.one('event.ended')
         self.assertEqual({k: v for k, v in ended['data'].items() if k != 'event'},
-                         {'volunteers': 1, 'hours': 4.0, 'volunteers_signed_up': 1})
+                         {'volunteers': 1, 'hours': 4.0, 'volunteers_signed_up': 1,
+                          'people': [{**person_item, 'role': 'Greeter', 'hours': 4.0}]})
         self.assertEqual(ended['occurred_at'], events.iso(event.end_date))
         self.one('event.starting_soon')
         self.one('event.started')
+
+    def test_event_lists_are_in_order_capped_and_cost_the_same_for_a_big_event(self):
+        from django.contrib.auth import get_user_model
+        from django.db import connection
+        from django.test.utils import CaptureQueriesContext
+        from base.models import Profile
+        User = get_user_model()
+        event, slot = self.event_with_slot(starts_in=timedelta(hours=10), required_qty=300)
+        cook = Role.objects.create(name='Cook', icon='x')
+        kitchen = EventRoleSlot.objects.create(event=event, role=cook, start_time=slot.start_time - timedelta(hours=1),
+                                               end_time=slot.end_time)
+        empty_event, _empty = self.event_with_slot(starts_in=timedelta(hours=12))
+        made = User.objects.bulk_create([
+            User(username=f'v{n:03}', email=f'v{n:03}@example.org', first_name='Volunteer', last_name=f'{n:03}')
+            for n in range(205)])
+        Profile.objects.bulk_create([Profile(user=user, id_code=f'{700000 + n}') for n, user in enumerate(made)])
+        slot.signups.add(*made)
+        kitchen.signups.add(made[3])
+        Shift.objects.bulk_create([Shift(user=user, event_role_slot=slot) for user in made[:202]])
+        Shift.objects.create(user=made[0], event_role_slot=kitchen)     # worked two roles
+        self.fake.requests.clear()
+
+        by_name = 'ORDER BY "auth_user"."first_name"'      # how the lists of people are read
+        with CaptureQueriesContext(connection) as first:
+            self.run_due(times=1)
+        # Once for each of the two events and each of the two short-staffed shifts, however many people.
+        self.assertEqual(len([q for q in first if by_name in q['sql']]), 4)
+        with CaptureQueriesContext(connection) as again:    # nothing new to send: no list is built
+            self.assertEqual(timed.run_due(self.now), 0)
+        self.assertEqual([q['sql'] for q in again if by_name in q['sql']], [])
+        soon = {e['data']['event']['id']: e['data'] for e in self.fake.of_type('event.starting_soon')}
+        big, small = soon[str(event.pk)], soon[str(empty_event.pk)]
+        self.assertEqual((small['volunteers'], small['volunteer_count'], small['shift_count']), ([], 0, 1))
+        self.assertEqual([s['role'] for s in big['shifts']], ['Cook', 'Greeter'])
+        self.assertEqual((len(big['volunteers']), big['volunteer_count'], big['volunteers_signed_up']), (200, 205, 206))
+        self.assertEqual([v['name'] for v in big['volunteers'][:2]], ['Volunteer 000', 'Volunteer 001'])
+        self.assertEqual(big['volunteers'][-1]['name'], 'Volunteer 199')
+        self.assertEqual((big['volunteers'][3]['role'], big['volunteers'][3]['shift_id']), ('Cook, Greeter', str(kitchen.pk)))
+
+        self.run_due(empty_event.end_date + timedelta(minutes=1), times=1)
+        ended = next(e['data'] for e in self.fake.of_type('event.ended') if e['data']['event']['id'] == str(event.pk))
+        self.assertEqual((ended['volunteers'], len(ended['people'])), (202, 200))
+        self.assertEqual((ended['people'][0]['name'], ended['people'][0]['role']), ('Volunteer 000', 'Greeter, Cook'))
+        self.assertGreater(ended['people'][0]['hours'], ended['people'][1]['hours'])
+        quiet = next(e['data'] for e in self.fake.of_type('event.ended') if e['data']['event']['id'] == str(empty_event.pk))
+        self.assertEqual((quiet['volunteers'], quiet['people']), (0, []))
 
     def test_a_moved_event_is_announced_again(self):
         event, _slot = self.event_with_slot(starts_in=timedelta(hours=10))
@@ -503,6 +603,13 @@ class TimedTests(SwitchboardTestCase):
         envelope = self.one('shift.understaffed')
         self.assertEqual(envelope['subject']['type'], 'shift')
         self.assertEqual((envelope['data']['shift']['open_spots'], envelope['data']['hours_until']), (1, 40.0))
+        self.assertEqual(envelope['data']['volunteers'],
+                         [{'person_id': str(self.volunteer.pk), 'name': 'Maria K.', 'email': 'Maria@example.org'}])
+
+    def test_an_understaffed_shift_with_nobody_on_it_has_an_empty_list(self):
+        self.event_with_slot(starts_in=timedelta(hours=30))
+        self.run_due()
+        self.assertEqual(self.one('shift.understaffed')['data']['volunteers'], [])
 
     def test_a_full_shift_is_not_understaffed(self):
         _event, slot = self.event_with_slot(starts_in=timedelta(hours=30))
